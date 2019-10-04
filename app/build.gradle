@@ -4,6 +4,8 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+apply plugin: 'com.google.gms.google-services'  // Google Play services Gradle plugin
+
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.0"
@@ -26,7 +28,7 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 }
-repositories{
+repositories {
     maven {
         url "https://maven.chirp.io/release"
     }
@@ -45,4 +47,10 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0-alpha02'
 
     implementation "io.chirp:chirpsdk:3.8.+"
+
+    implementation 'com.google.firebase:firebase-analytics:17.2.0'
+    implementation 'com.google.firebase:firebase-auth:19.1.0'
+    implementation 'com.firebaseui:firebase-ui-auth:4.3.1'
+    implementation 'com.google.firebase:firebase-firestore:21.1.1'
+
 }
