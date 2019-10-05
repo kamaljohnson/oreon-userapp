@@ -24,6 +24,13 @@ class ItemAdapter(val items : ArrayList<Item>, val context: Context) : RecyclerV
         if (holder.name != null) holder.name.text = items[position].name
         if (holder.cost != null) holder.cost.text = items[position].cost + " Rs"
         if (holder.quantity != null) holder.quantity.text = items[position].quantity
+        if (holder.items_left != null) {
+            if(items[position].items_left == "") {
+                holder.items_left.text = ""
+            } else {
+                    holder.items_left.text = items[position].items_left + " left"
+            }
+        }
     }
 }
 
@@ -31,10 +38,12 @@ class ItemViewHolder (view: View) : RecyclerView.ViewHolder(view) {
     var name = view.name
     var cost = view.cost
     var quantity = view.quantity
+    var items_left = view.items_left
 }
 
 class Item {
     lateinit var name:String
     lateinit var cost:String
     lateinit var quantity:String
+    lateinit var items_left:String
 }

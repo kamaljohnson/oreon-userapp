@@ -24,6 +24,17 @@
             android:paddingLeft="10dp"
             android:paddingBottom="5dp"
             android:textSize="15sp" />
+
+        <TextView
+                android:text="25 left"
+                android:id="@+id/items_left"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true">
+
+        </TextView>
+
         <TextView
             android:text="100 RS"
             android:id="@+id/cost"
