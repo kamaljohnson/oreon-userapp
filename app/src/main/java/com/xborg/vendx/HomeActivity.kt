@@ -2,6 +2,7 @@ package com.xborg.vendx
 
 import android.Manifest
 import android.app.PendingIntent.getActivity
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
@@ -74,6 +75,10 @@ class HomeActivity : AppCompatActivity() {
 //            }
             Log.v("Chirp", "volume changed")
         }
+
+        inventory_request_button.setOnClickListener{
+            requestInventory()
+        }
     }
 
 
@@ -136,6 +141,12 @@ class HomeActivity : AppCompatActivity() {
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+    fun requestInventory() {
+        val intent = Intent(this, InventoryActivity::class.java)
+        intent.putExtra("mid", "")
+        startActivity(intent)
     }
 
 }

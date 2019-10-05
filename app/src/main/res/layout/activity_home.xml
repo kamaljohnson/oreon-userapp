@@ -21,7 +21,7 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include layout="@layout/content_home"/>
+    <include layout="@layout/content_home" />
 
     <ImageButton
             android:id="@+id/home_vent_btn"
@@ -38,4 +38,11 @@
             android:text="status"
             android:layout_gravity="bottom"
     />
+
+    <Button
+            android:id="@+id/inventory_request_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Inventory Request" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
