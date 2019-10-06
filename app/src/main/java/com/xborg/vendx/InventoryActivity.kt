@@ -15,7 +15,11 @@ class InventoryActivity : AppCompatActivity() {
     val db = FirebaseFirestore.getInstance()
     private var TAG = "InventoryActivity"
 
-    val items: ArrayList<Item> = ArrayList()
+
+    companion object{
+        val items: ArrayList<Item> = ArrayList()               //all the items in the inventory list
+        var cart_items : HashMap<String, Int> = HashMap()        //list of item_ids added to cart along with number of purchases
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,6 +29,21 @@ class InventoryActivity : AppCompatActivity() {
             getAllItems()
         } else {
             getAllItems(mid)
+        }
+
+        buy_button.setOnClickListener{
+            cart_items.forEach{
+                Log.d(TAG, it.key + " => " + it.value)
+            }
+            val order = HashMap<String, Any>()
+            order["Cart"] = cart_items
+            order["Status"] = "Init"
+            db.collection("Orders")
+                .add(order)
+                .addOnSuccessListener { orderRef ->
+                    Log.d(TAG, "billReference created with ID: ${orderRef.id}")
+                    val order_id = orderRef.id
+                }
         }
     }
 
@@ -48,6 +67,7 @@ class InventoryActivity : AppCompatActivity() {
 
                             val item = Item()
 
+                            item.item_id = document.id
                             item.name = document.data?.get("Name").toString()
                             item.cost = document.data?.get("Cost").toString()
                             item.quantity = document.data?.get("Quantity").toString()
@@ -78,6 +98,7 @@ class InventoryActivity : AppCompatActivity() {
 
                     val item = Item()
 
+                    item.item_id = document.id
                     item.name = document.data["Name"].toString()
                     item.cost = document.data["Cost"].toString()
                     item.quantity = document.data["Quantity"].toString()

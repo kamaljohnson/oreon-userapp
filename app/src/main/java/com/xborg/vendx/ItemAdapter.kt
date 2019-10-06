@@ -1,7 +1,7 @@
 package com.xborg.vendx
 
+import android.annotation.SuppressLint
 import android.content.Context
-import android.service.autofill.OnClickAction
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -13,7 +13,6 @@ private var TAG = "ItemAdapter"
 
 class ItemAdapter(val items : ArrayList<Item>, val context: Context) : RecyclerView.Adapter<ItemViewHolder>() {
 
-
     // Gets the number of animals in the list
     override fun getItemCount(): Int {
         return items.size
@@ -24,23 +23,23 @@ class ItemAdapter(val items : ArrayList<Item>, val context: Context) : RecyclerV
         return ItemViewHolder(LayoutInflater.from(context).inflate(R.layout.inventory_item, parent, false))
     }
 
-    // Binds each animal in the ArrayList to a view
+    // Binds each item in the ArrayList to a view
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
-        if (holder.name != null) holder.name.text = items[position].name
-        if (holder.cost != null) holder.cost.text = "₹ " + items[position].cost
-        if (holder.quantity != null) holder.quantity.text = items[position].quantity
-        if (holder.items_left != null) {
-            if(items[position].items_left == "") {
-                holder.items_left.text = ""
-            } else {
-                    holder.items_left.text = items[position].items_left + " left"
-            }
+        holder.item_id.text = items[position].item_id
+        holder.name.text = items[position].name
+        holder.cost.text = "₹ ${items[position].cost}"
+        holder.quantity.text = items[position].quantity
+        if(items[position].items_left == "") {
+            holder.items_left.text = ""
+        } else {
+                holder.items_left.text = "${items[position].items_left} left"
         }
-
     }
 }
 
 class ItemViewHolder (view: View) : RecyclerView.ViewHolder(view) {
+    var item_id = view.item_id
     var name = view.name
     var cost = view.cost
     var quantity = view.quantity
@@ -49,32 +48,38 @@ class ItemViewHolder (view: View) : RecyclerView.ViewHolder(view) {
     var add_button = view.add_button
     var remove_button = view.remove_button
 
+    var purchase_count = view.purchase_count
+
     init {
+        var count = purchase_count.text.toString().toInt()
+
         add_button.setOnClickListener{
             Log.d(TAG, "add button clicked")
-            var count = view.purchase_count.text.toString().toInt()
             if(count == 0){
-                view.purchase_count.visibility = View.VISIBLE
+                purchase_count.visibility = View.VISIBLE
                 remove_button.visibility = View.VISIBLE
             }
             count+=1
-            view.purchase_count.text = count.toString()
+            InventoryActivity.cart_items[view.item_id.text.toString()] = count
+            purchase_count.text = count.toString()
         }
 
         remove_button.setOnClickListener{
             Log.d(TAG, "remove button clicked")
-            var count = view.purchase_count.text.toString().toInt()
-            if(count == 1){
-                view.purchase_count.visibility = View.INVISIBLE
-                remove_button.visibility = View.INVISIBLE
-            }
             count-=1
-            view.purchase_count.text = count.toString()
+            InventoryActivity.cart_items[view.item_id.text.toString()] = count
+            if(count == 0){
+                purchase_count.visibility = View.INVISIBLE
+                remove_button.visibility = View.INVISIBLE
+                InventoryActivity.cart_items.remove(view.item_id.toString())
+            }
+            purchase_count.text = count.toString()
         }
     }
 }
 
 class Item {
+    lateinit var item_id:String
     lateinit var name:String
     lateinit var cost:String
     lateinit var quantity:String

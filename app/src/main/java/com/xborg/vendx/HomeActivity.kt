@@ -145,7 +145,7 @@ class HomeActivity : AppCompatActivity() {
 
     fun requestInventory() {
         val intent = Intent(this, InventoryActivity::class.java)
-        intent.putExtra("mid", "yDWzDc79Uu1IO2lEeVyG")
+        intent.putExtra("mid", "")
         startActivity(intent)
     }
 
