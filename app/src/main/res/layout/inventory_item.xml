@@ -47,6 +47,7 @@
         </TextView>
 
 
+
         <ImageView
                 android:id="@+id/add_button"
                 android:layout_width="wrap_content"
@@ -56,13 +57,25 @@
                 android:src="@drawable/add_icon"
                 android:text="Add"></ImageView>
 
+        <TextView
+                android:id="@+id/purchase_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@id/add_button"
+                android:text="0"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp"
+                android:textSize="20dp"
+                android:visibility="invisible">
+        </TextView>
+
         <ImageView
                 android:id="@+id/remove_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="20dp"
                 android:visibility="invisible"
-                android:layout_toLeftOf="@id/add_button"
+                android:layout_toLeftOf="@id/purchase_count"
                 android:src="@drawable/remove_icon"
                 android:text="Remove"></ImageView>
     </RelativeLayout>

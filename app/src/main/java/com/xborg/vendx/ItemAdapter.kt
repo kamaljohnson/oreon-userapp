@@ -52,10 +52,24 @@ class ItemViewHolder (view: View) : RecyclerView.ViewHolder(view) {
     init {
         add_button.setOnClickListener{
             Log.d(TAG, "add button clicked")
+            var count = view.purchase_count.text.toString().toInt()
+            if(count == 0){
+                view.purchase_count.visibility = View.VISIBLE
+                remove_button.visibility = View.VISIBLE
+            }
+            count+=1
+            view.purchase_count.text = count.toString()
         }
 
         remove_button.setOnClickListener{
             Log.d(TAG, "remove button clicked")
+            var count = view.purchase_count.text.toString().toInt()
+            if(count == 1){
+                view.purchase_count.visibility = View.INVISIBLE
+                remove_button.visibility = View.INVISIBLE
+            }
+            count-=1
+            view.purchase_count.text = count.toString()
         }
     }
 }
