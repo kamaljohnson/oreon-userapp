@@ -47,19 +47,12 @@ class InventoryActivity : AppCompatActivity() {
                 .add(order)
                 .addOnSuccessListener { orderRef ->
                     Log.d(TAG, "billReference created with ID: ${orderRef.id}")
-                    val order_id = orderRef.id
 
+                    val order_id = orderRef.id
                     val intent = Intent(this, PaymentActivity::class.java)
-                    var total_payable_amount = 0f
-                    var i = 0
-                    for(item in cart_items) {
-                        total_payable_amount += items[i].cost.toFloat() * item.value
-                        Log.d(TAG, item.value.toString() + " -> " + item.key + " -> " + items[i].cost.toFloat())
-                        i+=1
-                    }
                     intent.putExtra("order_id", order_id)
-                    intent.putExtra("amount", total_payable_amount)
                     startActivity(intent)
+
                 }
                 .addOnFailureListener{
                     Log.d(TAG, "Failed to place order")
