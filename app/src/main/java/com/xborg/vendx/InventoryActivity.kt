@@ -1,5 +1,6 @@
 package com.xborg.vendx
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -25,6 +26,8 @@ class InventoryActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_inventory)
         var mid: String = intent.getStringExtra("mid")
+        items.clear()
+        cart_items.clear()
         if(mid == "") {
             getAllItems()
         } else {
@@ -38,11 +41,28 @@ class InventoryActivity : AppCompatActivity() {
             val order = HashMap<String, Any>()
             order["Cart"] = cart_items
             order["Status"] = "Init"
+
+
             db.collection("Orders")
                 .add(order)
                 .addOnSuccessListener { orderRef ->
                     Log.d(TAG, "billReference created with ID: ${orderRef.id}")
                     val order_id = orderRef.id
+
+                    val intent = Intent(this, PaymentActivity::class.java)
+                    var total_payable_amount = 0f
+                    var i = 0
+                    for(item in cart_items) {
+                        total_payable_amount += items[i].cost.toFloat() * item.value
+                        Log.d(TAG, item.value.toString() + " -> " + item.key + " -> " + items[i].cost.toFloat())
+                        i+=1
+                    }
+                    intent.putExtra("order_id", order_id)
+                    intent.putExtra("amount", total_payable_amount)
+                    startActivity(intent)
+                }
+                .addOnFailureListener{
+                    Log.d(TAG, "Failed to place order")
                 }
         }
     }
@@ -89,7 +109,6 @@ class InventoryActivity : AppCompatActivity() {
     }
     //get all the items
     private fun getAllItems() {
-        // [START get_all_users]
         db.collection("Inventory")
             .get()
             .addOnSuccessListener { result ->
@@ -103,7 +122,6 @@ class InventoryActivity : AppCompatActivity() {
                     item.cost = document.data["Cost"].toString()
                     item.quantity = document.data["Quantity"].toString()
                     item.items_left = ""
-
                     items.add(item)
                 }
 
