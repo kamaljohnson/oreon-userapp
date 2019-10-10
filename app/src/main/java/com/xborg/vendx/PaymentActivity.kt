@@ -15,6 +15,9 @@ import android.widget.EditText
 import android.widget.Toast
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_payment.*
+import java.security.Timestamp
+import java.util.*
+import kotlin.collections.ArrayList
 
 class PaymentActivity : AppCompatActivity() {
 
@@ -35,7 +38,7 @@ class PaymentActivity : AppCompatActivity() {
 
 
         pay_button.setOnClickListener{
-            payUsingUpi(amount = amount_text.text.toString(), upiId = bank_upi_id, name = "kamal", note = "napkin payment")
+            payUsingUpi(amount = amount_text.text.toString(), upiId = bank_upi_id, name = "kamal", note = "VendX Purchase")
         }
     }
 
@@ -74,6 +77,7 @@ class PaymentActivity : AppCompatActivity() {
     //D/UPI: onActivityResult: txnId=AXI23ae9611d45f4c9ca6d0fdcfdb61ee6f&responseCode=00&Status=SUCCESS&txnRef=912414555047
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+
         Log.d("UPI", resultCode.toString()) //when user simply back without payment
         if (Activity.RESULT_OK == resultCode || resultCode === 11 || requestCode == 777) {
             if (data != null) {
@@ -120,9 +124,27 @@ class PaymentActivity : AppCompatActivity() {
 
             if (status == "success") {
                 //Code to handle successful transaction here.
-                Toast.makeText(this@PaymentActivity, "Transaction successful.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@PaymentActivity, "Payment successful.", Toast.LENGTH_SHORT).show()
+
+                db.collection("Orders").document("${order_id_text.text}")
+                    .update("Status", "Payment Completed")
+                    .addOnSuccessListener {
+                        Log.d(TAG, "Status : Payment Completed")
+                    }
+                    .addOnFailureListener{
+                        Log.d(TAG, "Failed to update Status")
+                    }
             } else if ("Payment cancelled by user." == paymentCancel) {
                 Toast.makeText(this@PaymentActivity, "Payment cancelled by user.", Toast.LENGTH_SHORT).show()
+
+                db.collection("Orders").document("${order_id_text.text}")
+                    .update("Status", "Payment Cancelled")
+                    .addOnSuccessListener {
+                        Log.d(TAG, "Status : Payment Cancelled")
+                    }
+                    .addOnFailureListener{
+                        Log.d(TAG, "Failed to update Status")
+                    }
             } else {
 
             }
