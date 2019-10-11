@@ -63,7 +63,12 @@ class ItemViewHolder (view: View) : RecyclerView.ViewHolder(view) {
                 purchase_count.visibility = View.VISIBLE
                 remove_button.visibility = View.VISIBLE
             }
-            count+=1
+            if(count < item_limit.text.toString().split(' ')[0].toInt()) {
+                count+=1
+            } else {
+                add_button.visibility = View.INVISIBLE
+            }
+
             InventoryActivity.cart_items[view.item_id.text.toString()] = count
             purchase_count.text = count.toString()
         }
@@ -71,6 +76,7 @@ class ItemViewHolder (view: View) : RecyclerView.ViewHolder(view) {
         remove_button.setOnClickListener{
             Log.d(TAG, "remove button clicked")
             count-=1
+            add_button.visibility = View.VISIBLE
             InventoryActivity.cart_items[view.item_id.text.toString()] = count
             if(count == 0){
                 purchase_count.visibility = View.INVISIBLE

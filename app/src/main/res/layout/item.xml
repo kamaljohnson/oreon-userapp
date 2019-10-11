@@ -52,7 +52,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:text="25 left"
-                android:visibility="invisible">
+                android:visibility="visible">
 
         </TextView>
 
