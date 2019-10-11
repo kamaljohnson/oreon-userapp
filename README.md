@@ -3,7 +3,7 @@ android app for the vendx customer.
 
 ### Todo:
 
-- [ ] Authentication
+- [x] Authentication
 - [x] Chirp transmission
 - [ ] API calls
 - [ ] Payment system

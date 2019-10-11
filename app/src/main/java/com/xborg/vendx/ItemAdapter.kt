@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.inventory_item.view.*
+import kotlinx.android.synthetic.main.item.view.*
 
 private var TAG = "ItemAdapter"
 
@@ -20,7 +20,7 @@ class ItemAdapter(val items : ArrayList<Item>, val context: Context) : RecyclerV
 
     // Inflates the item views
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
-        return ItemViewHolder(LayoutInflater.from(context).inflate(R.layout.inventory_item, parent, false))
+        return ItemViewHolder(LayoutInflater.from(context).inflate(R.layout.item, parent, false))
     }
 
     // Binds each item in the ArrayList to a view
@@ -28,12 +28,16 @@ class ItemAdapter(val items : ArrayList<Item>, val context: Context) : RecyclerV
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         holder.item_id.text = items[position].item_id
         holder.name.text = items[position].name
-        holder.cost.text = "₹ ${items[position].cost}"
-        holder.quantity.text = items[position].quantity
-        if(items[position].items_left == "") {
-            holder.items_left.text = ""
+        if(items[position].cost != "-1") {
+            holder.cost.text = "₹ ${items[position].cost}"
         } else {
-                holder.items_left.text = "${items[position].items_left} left"
+            holder.cost.text = ""
+        }
+        holder.quantity.text = items[position].quantity
+        if(items[position].item_limit == "") {
+            holder.item_limit.text = ""
+        } else {
+                holder.item_limit.text = "${items[position].item_limit} left"
         }
     }
 }
@@ -43,7 +47,7 @@ class ItemViewHolder (view: View) : RecyclerView.ViewHolder(view) {
     var name = view.name
     var cost = view.cost
     var quantity = view.quantity
-    var items_left = view.items_left
+    var item_limit = view.item_limit
 
     var add_button = view.add_button
     var remove_button = view.remove_button
@@ -83,5 +87,5 @@ class Item {
     lateinit var name:String
     lateinit var cost:String
     lateinit var quantity:String
-    lateinit var items_left:String
+    lateinit var item_limit:String
 }

@@ -4,12 +4,12 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_inventory.*
-import kotlin.reflect.typeOf
 
 class InventoryActivity : AppCompatActivity() {
 
@@ -29,16 +29,18 @@ class InventoryActivity : AppCompatActivity() {
         items.clear()
         cart_items.clear()
         if(mid == "") {
-            getAllItems()
+            getItems()
         } else {
-            getAllItems(mid)
+            getItems(mid)
         }
 
         buy_button.setOnClickListener{
+            buy_button.visibility = View.INVISIBLE
             cart_items.forEach{
                 Log.d(TAG, it.key + " => " + it.value)
             }
             val order = HashMap<String, Any>()
+            order["UID"] = FirebaseAuth.getInstance().uid.toString()
             order["Cart"] = cart_items
             order["Status"] = "Init"
 
@@ -61,19 +63,19 @@ class InventoryActivity : AppCompatActivity() {
     }
 
     //get item inside machine mid
-    private fun getAllItems(mid:String){
+    private fun getItems(mid:String){
         db.document("Machines/$mid")
             .get()
             .addOnSuccessListener { machineSnap ->
-                var inventoryArray:ArrayList<Map<String, String>> = machineSnap.data?.get("Inventory") as ArrayList<Map<String, String>>
-                for (inventory in inventoryArray){
-                    Log.d(TAG, inventory.getValue("Quantity").toString())
-                    Log.d(TAG, inventory.getValue("Item").toString())
+                var inventoryItems: Map<String, Number> = machineSnap.data?.get("Inventory") as Map<String, Number>
+                for (inventoryItem in inventoryItems){
+                    Log.d(TAG, inventoryItem.key)
+                    Log.d(TAG, inventoryItem.value.toString())
 
-                    var itemRef = inventory.getValue("Item").toString()
-                    var quantity = inventory.getValue("Quantity").toString()
+                    var itemId = inventoryItem.key
+                    var quantity = inventoryItem.value
 
-                    db.document(itemRef)
+                    db.document("Inventory/${itemId}")
                         .get()
                         .addOnSuccessListener { document ->
                             Log.d(TAG, "${document.id} => ${document.data}")
@@ -84,10 +86,10 @@ class InventoryActivity : AppCompatActivity() {
                             item.name = document.data?.get("Name").toString()
                             item.cost = document.data?.get("Cost").toString()
                             item.quantity = document.data?.get("Quantity").toString()
-                            item.items_left = quantity
+                            item.item_limit = quantity.toString()
 
                             items.add(item)
-                            if(items.size == inventory.size) {
+                            if(items.size == inventoryItems.size) {
                                 addItemsToRV()
                             }
                         }
@@ -101,7 +103,7 @@ class InventoryActivity : AppCompatActivity() {
             }
     }
     //get all the items
-    private fun getAllItems() {
+    private fun getItems() {
         db.collection("Inventory")
             .get()
             .addOnSuccessListener { result ->
@@ -114,7 +116,7 @@ class InventoryActivity : AppCompatActivity() {
                     item.name = document.data["Name"].toString()
                     item.cost = document.data["Cost"].toString()
                     item.quantity = document.data["Quantity"].toString()
-                    item.items_left = ""
+                    item.item_limit = ""
                     items.add(item)
                 }
 

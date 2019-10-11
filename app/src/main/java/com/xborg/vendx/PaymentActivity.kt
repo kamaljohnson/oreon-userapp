@@ -45,16 +45,26 @@ class PaymentActivity : AppCompatActivity() {
     private fun calculateBill() : Float {
         var bill = 0f
 
-        var i = 0
-        for(item in InventoryActivity.cart_items) {
-            bill += InventoryActivity.items[i].cost.toFloat() * item.value
-            Log.d(TAG, item.value.toString() + " -> " + item.key + " -> " + InventoryActivity.items[i].cost.toFloat())
-            i+=1
+        for(cart_item in InventoryActivity.cart_items) {
+            val item_id = cart_item.key
+            val item_count = cart_item.value
+            for(item in InventoryActivity.items) {
+                if(item.item_id == item_id) {
+                    bill += item.cost.toFloat() * item_count
+                    Log.d(TAG, item_id + " -> " + item_count + " -> " + item.cost)
+                }
+            }
         }
         return bill
     }
 
-    fun payUsingUpi(amount:String, upiId:String, name:String, note:String) {
+    //TODO: call this when Order>Status -> Payment Checked
+    private fun onPaymentSuccessful() {
+        val intent = Intent(this, VendShelfActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun payUsingUpi(amount:String, upiId:String, name:String, note:String) {
 
         var uri: Uri = Uri.parse("upi://pay").buildUpon()
             .appendQueryParameter("pa", upiId)
@@ -130,6 +140,7 @@ class PaymentActivity : AppCompatActivity() {
                     .update("Status", "Payment Completed")
                     .addOnSuccessListener {
                         Log.d(TAG, "Status : Payment Completed")
+                        onPaymentSuccessful()
                     }
                     .addOnFailureListener{
                         Log.d(TAG, "Failed to update Status")
@@ -138,9 +149,12 @@ class PaymentActivity : AppCompatActivity() {
                 Toast.makeText(this@PaymentActivity, "Payment cancelled by user.", Toast.LENGTH_SHORT).show()
 
                 db.collection("Orders").document("${order_id_text.text}")
-                    .update("Status", "Payment Cancelled")
+                    //TODO: change to Payment Cancelled after phone UPI check working
+                    .update("Status", "Payment Complete")
                     .addOnSuccessListener {
                         Log.d(TAG, "Status : Payment Cancelled")
+                        //TODO: remove this after phone UPI check working
+                        onPaymentSuccessful()
                     }
                     .addOnFailureListener{
                         Log.d(TAG, "Failed to update Status")
