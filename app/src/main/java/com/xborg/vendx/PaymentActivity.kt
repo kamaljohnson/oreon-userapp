@@ -8,18 +8,13 @@ import android.net.ConnectivityManager
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.View
-import android.widget.EditText
 import android.widget.TableRow
 import android.widget.TextView
 import android.widget.Toast
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_payment.*
-import java.security.Timestamp
-import java.util.*
 import kotlin.collections.ArrayList
 
 class PaymentActivity : AppCompatActivity() {
@@ -43,6 +38,28 @@ class PaymentActivity : AppCompatActivity() {
         pay_button.setOnClickListener{
             payUsingUpi(amount = bill_amount, upiId = bank_upi_id, name = "kamal", note = "VendX Purchase")
         }
+
+        done_button.setOnClickListener{
+            val intent = Intent(this, VendShelfActivity::class.java)
+            startActivity(intent)
+        }
+        statusListener()
+    }
+
+    private fun statusListener() {
+        // [START listen_document]
+        val docRef = db.collection("Orders").document("${intent.getStringExtra("order_id")}")
+        docRef.addSnapshotListener { snapshot, e ->
+            if (e != null) {
+                Log.w(TAG, "Listen failed.", e)
+                return@addSnapshotListener
+            }
+
+            if (snapshot != null && snapshot.exists()) {
+                payment_status.text = snapshot.data?.get("Status") as String
+            }
+        }
+        // [END listen_document]
     }
 
     private fun calculateBill() : Float {
@@ -104,8 +121,8 @@ class PaymentActivity : AppCompatActivity() {
 
     //TODO: call this when Order>Status -> Payment Checked
     private fun onPaymentSuccessful() {
-        val intent = Intent(this, VendShelfActivity::class.java)
-        startActivity(intent)
+        pay_button.visibility = View.INVISIBLE
+        done_button.visibility = View.VISIBLE
     }
 
     private fun payUsingUpi(amount:String, upiId:String, name:String, note:String) {
