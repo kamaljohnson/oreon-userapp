@@ -3,6 +3,7 @@ package com.xborg.vendx
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.Typeface
 import android.net.ConnectivityManager
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
@@ -12,6 +13,8 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.EditText
+import android.widget.TableRow
+import android.widget.TextView
 import android.widget.Toast
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_payment.*
@@ -34,27 +37,68 @@ class PaymentActivity : AppCompatActivity() {
         val order_id: String = intent.getStringExtra("order_id")
 
         order_id_text.text = order_id
-        amount_text.text = calculateBill().toString()
+        val bill_amount = calculateBill().toString()
 
 
         pay_button.setOnClickListener{
-            payUsingUpi(amount = amount_text.text.toString(), upiId = bank_upi_id, name = "kamal", note = "VendX Purchase")
+            payUsingUpi(amount = bill_amount, upiId = bank_upi_id, name = "kamal", note = "VendX Purchase")
         }
     }
 
     private fun calculateBill() : Float {
         var bill = 0f
 
+        var bill_table = bill_table
+        var table_start = trStart
+
         for(cart_item in InventoryActivity.cart_items) {
             val item_id = cart_item.key
             val item_count = cart_item.value
             for(item in InventoryActivity.items) {
                 if(item.item_id == item_id) {
+                    // creating item row and adding to table
+                    var item_tr = TableRow(this)
+
+                    var item_name = TextView(this)
+                    var item_quantity = TextView(this)
+                    var item_cost = TextView(this)
+
+                    item_name.text = item.name
+                    item_name.setTypeface(null, Typeface.BOLD)
+                    item_quantity.text = item_count.toString()
+                    item_quantity.textDirection = View.TEXT_DIRECTION_RTL
+                    item_quantity.setTypeface(null, Typeface.BOLD)
+                    item_cost.text = (item.cost.toFloat() * item_count).toString()
+                    item_cost.textDirection = View.TEXT_DIRECTION_RTL
+                    item_cost.setTypeface(null, Typeface.BOLD)
+
+                    item_tr.addView(item_name)
+                    item_tr.addView(item_quantity)
+                    item_tr.addView(item_cost)
+
+                    bill_table.addView(item_tr)
                     bill += item.cost.toFloat() * item_count
                     Log.d(TAG, item_id + " -> " + item_count + " -> " + item.cost)
                 }
             }
         }
+
+        var total_tr = TableRow(this)
+        var total_text = TextView(this)
+        var amount_text = TextView(this)
+
+        total_text.text = "Total"
+        total_text.setTypeface(null, Typeface.BOLD)
+        amount_text.text = bill.toString()
+        amount_text.textDirection = View.TEXT_DIRECTION_RTL
+        amount_text.setTypeface(null, Typeface.BOLD)
+
+        total_tr.addView(total_text)
+        total_tr.addView(TextView(this))
+        total_tr.addView(amount_text)
+
+        bill_table.addView(total_tr)
+
         return bill
     }
 

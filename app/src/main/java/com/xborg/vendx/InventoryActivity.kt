@@ -42,7 +42,7 @@ class InventoryActivity : AppCompatActivity() {
             val order = HashMap<String, Any>()
             order["UID"] = FirebaseAuth.getInstance().uid.toString()
             order["Cart"] = cart_items
-            order["Status"] = "Init"
+            order["Status"] = "Payment Pending"
 
 
             db.collection("Orders")

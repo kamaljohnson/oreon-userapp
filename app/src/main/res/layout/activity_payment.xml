@@ -8,60 +8,74 @@
 
 
         <TextView
-                android:id="@+id/amount_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:text="0"
-                app:layout_constraintEnd_toEndOf="@+id/order_id_text"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/order_id_text"
-                app:layout_constraintTop_toBottomOf="@+id/order_id_text" />
-
-        <TextView
                 android:id="@+id/order_id_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
                 android:text="order ID"
-                app:layout_constraintBottom_toBottomOf="@+id/textView3"
-                app:layout_constraintStart_toEndOf="@+id/textView3"
-                app:layout_constraintTop_toTopOf="@+id/textView3" />
-
-        <TextView
-                android:id="@+id/textView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Amount"
-                app:layout_constraintBottom_toTopOf="@+id/pay_button"
-                app:layout_constraintEnd_toEndOf="@+id/textView3"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/textView3"
-                app:layout_constraintTop_toBottomOf="@+id/textView3"
-                app:layout_constraintVertical_bias="0.101" />
+                app:layout_constraintBottom_toBottomOf="@+id/invoice_text"
+                app:layout_constraintEnd_toEndOf="@+id/bill_table"
+                app:layout_constraintTop_toTopOf="@+id/invoice_text"
+                app:layout_constraintVertical_bias="0.0" />
 
         <Button
                 android:id="@+id/pay_button"
                 android:layout_width="200dp"
                 android:layout_height="70dp"
+                android:layout_marginBottom="68dp"
                 android:text="Pay"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.498"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/amount_text"
-                app:layout_constraintVertical_bias="0.711"></Button>
+                app:layout_constraintHorizontal_bias="0.497"
+                app:layout_constraintStart_toStartOf="parent"></Button>
 
         <TextView
-                android:id="@+id/textView3"
+                android:id="@+id/invoice_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Order ID:"
+                android:text="INVOICE"
+                android:textSize="25dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.263"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/bill_table"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.25" />
+                app:layout_constraintVertical_bias="0.117" />
+
+        <TableLayout
+                android:id="@+id/bill_table"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginStart="50dp"
+                android:layout_marginTop="50dp"
+                android:layout_marginEnd="50dp"
+                android:layout_marginBottom="16dp"
+                app:layout_constraintBottom_toTopOf="@+id/pay_button"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/invoice_text"
+                tools:visibility="visible">
+
+                <TableRow android:id="@+id/trStart">
+
+                        <TextView
+                                android:layout_width="159dp"
+                                android:paddingVertical="5dp"
+                                android:text="Name"
+                                android:textSize="15dp"></TextView>
+
+                        <TextView
+                                android:layout_width="69dp"
+                                android:paddingVertical="5dp"
+                                android:text="Quantity"
+                                android:textDirection="rtl"
+                                android:textSize="15dp"></TextView>
+
+                        <TextView
+                                android:layout_width="83dp"
+                                android:paddingVertical="5dp"
+                                android:text="Cost"
+                                android:textDirection="rtl"
+                                android:textSize="15dp"></TextView>
+                </TableRow>
+
+        </TableLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
