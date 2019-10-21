@@ -86,6 +86,11 @@ class HomeActivity : AppCompatActivity() {
 //            }
             Log.v("Chirp", "volume changed")
         }
+
+        test_button.setOnClickListener{
+            val intent = Intent(this, ShelfActivity::class.java)
+            startActivity(intent)
+        }
     }
 
 

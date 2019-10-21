@@ -10,7 +10,8 @@
     <ImageView
             android:id="@+id/image"
             android:layout_width="170dp"
-            android:layout_height="150dp">
+            android:layout_height="150dp"
+            android:src="@drawable/common_google_signin_btn_icon_dark">
 
     </ImageView>
 
@@ -79,7 +80,7 @@
 
         </ImageView>
 
-    </RelativeLayout>
+    </RelativeLayout>b
 
 
 </LinearLayout>

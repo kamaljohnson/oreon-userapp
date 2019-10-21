@@ -59,6 +59,10 @@ class ItemViewHolder (view: View) : RecyclerView.ViewHolder(view) {
         item_limit.text = "10"
         var count = purchase_count.text.toString().toInt()
 
+        if(cost.text == "-1") { //prevents displaying the item cost in shelf activity
+            cost.text = ""
+        }
+
         add_button.setOnClickListener{
             Log.d(TAG, "add button clicked")
             if(count == 0){
