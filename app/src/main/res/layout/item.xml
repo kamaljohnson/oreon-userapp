@@ -58,11 +58,23 @@
 
         </ImageView>
 
+        <TextView
+                android:id="@+id/item_count"
+                android:layout_width="35dp"
+                android:layout_height="30dp"
+                android:text="0"
+                android:textAlignment="center"
+                android:gravity="center"
+                android:visibility="invisible"
+                android:layout_toLeftOf="@id/add_button">
+        </TextView>
+
         <ImageView
-                android:layout_toLeftOf="@id/add_button"
+                android:layout_toLeftOf="@id/item_count"
                 android:id="@+id/remove_button"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
+                android:visibility="invisible"
                 android:src="@drawable/remove_icon">
 
         </ImageView>
