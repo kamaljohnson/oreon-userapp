@@ -1,7 +1,6 @@
 package com.xborg.vendx
 
 import android.Manifest
-import android.app.PendingIntent.getActivity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -11,11 +10,20 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 import io.chirp.connect.ChirpConnect
-import io.chirp.connect.interfaces.ConnectEventListener
 import kotlinx.android.synthetic.main.activity_home.*
-import kotlinx.android.synthetic.main.content_home.*
+import android.graphics.BitmapFactory
+import android.graphics.Bitmap
+import android.media.Image
+import android.widget.ImageView
+import com.bumptech.glide.Glide
+import kotlin.math.log
+
 
 /**
  *  Keys used for chrip lib. visit https://developers.chirp.io/ for details.
@@ -27,15 +35,24 @@ const val CHIRP_APP_CONFIG = "gHpaLZyR83XICW560DT8fx9VF0M6DP9VM++zm5/GFwA8hOqMVV
 private const val REQUEST_RECORD_AUDIO = 1
 private const val MIN_CHIRP_VOLUME = 0.3
 
+
 class HomeActivity : AppCompatActivity() {
     private lateinit var chirp:ChirpConnect
     private lateinit var parentLayout: View
 
+    val db = FirebaseFirestore.getInstance()
+    private var TAG = "HomeActivity"
+
+    companion object{
+        val items: ArrayList<Item> = ArrayList()               //all the items in the inventory list
+        var cart_items : HashMap<String, Int> = HashMap()        //list of item_ids added to cart along with number of purchases
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
-        setSupportActionBar(toolbar)
         parentLayout =  findViewById<View>(android.R.id.content)
+
+        getItems()
 
         chirp = ChirpConnect(this, CHIRP_APP_KEY, CHIRP_APP_SECRET)
         val error = chirp.setConfig(CHIRP_APP_CONFIG)
@@ -45,12 +62,6 @@ class HomeActivity : AppCompatActivity() {
             Log.e("ChirpError: ", error.message)
         }
 
-        home_vent_btn.setOnClickListener { view ->
-            status_txt.text = chirp.version
-            sendPayload()
-//            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                .setAction("Action", null).show()
-        }
         chirp.onReceived { payload: ByteArray?, channel: Int ->
             if (payload != null) {
                 val identifier = String(payload)
@@ -74,10 +85,6 @@ class HomeActivity : AppCompatActivity() {
 //                    .show()
 //            }
             Log.v("Chirp", "volume changed")
-        }
-
-        inventory_request_button.setOnClickListener{
-            requestInventory()
         }
     }
 
@@ -115,8 +122,7 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun sendPayload() {
-        home_vent_btn.isClickable = false
-        val identifier = input_data.text.toString()
+        val identifier = "text"
         val payload: ByteArray = identifier.toByteArray()
         val error = chirp.send(payload)
         if (error.code > 0) {
@@ -124,7 +130,6 @@ class HomeActivity : AppCompatActivity() {
         } else {
             Log.v("ChirpSDK: ", "Sent $identifier")
         }
-        home_vent_btn.isClickable = true
     }
 
     override fun onPause() {
@@ -143,10 +148,36 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
-    fun requestInventory() {
-        val intent = Intent(this, InventoryActivity::class.java)
-        intent.putExtra("mid", "yDWzDc79Uu1IO2lEeVyG")
-        startActivity(intent)
+    private fun getItems() {
+        db.collection("Inventory")
+            .get()
+            .addOnSuccessListener { result ->
+                for (document in result) {
+                    Log.d(TAG, "${document.id} => ${document.data}")
+
+                    val item = Item()
+
+                    item.item_id = document.id
+                    item.name = document.data["Name"].toString()
+                    item.cost = document.data["Cost"].toString()
+                    item.quantity = document.data["Quantity"].toString()
+                    item.item_limit = ""
+                    item.image_src = document.data["Image"].toString()
+
+                    items.add(item)
+
+                }
+                addItemsToRV()
+
+            }
+            .addOnFailureListener { exception ->
+                Log.w(TAG, "Error getting documents.", exception)
+            }
     }
 
+    private fun addItemsToRV(){
+        rv_items_list.layoutManager = LinearLayoutManager(this)
+        rv_items_list.layoutManager = GridLayoutManager(this, 2)
+        rv_items_list.adapter = ItemAdapter(items, this)
+    }
 }
