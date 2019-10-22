@@ -23,8 +23,8 @@ class ShelfActivity : AppCompatActivity() {
     }
 
     private fun getShelfItems(){
-        InventoryActivity.items.clear()
-        InventoryActivity.cart_items.clear()
+        HomeActivity.items.clear()
+        HomeActivity.cart_items.clear()
 
         db.document("Users/$uid")
             .get()
@@ -51,8 +51,8 @@ class ShelfActivity : AppCompatActivity() {
                             item.item_limit = quantity.toString()
                             item.image_src = document.data?.get("Image").toString()
 
-                            InventoryActivity.items.add(item)
-                            if(InventoryActivity.items.size == shelfItems.size) {
+                            HomeActivity.items.add(item)
+                            if(HomeActivity.items.size == shelfItems.size) {
                                 addItemsToRV()
                             }
                         }
@@ -69,6 +69,6 @@ class ShelfActivity : AppCompatActivity() {
     private fun addItemsToRV(){
         rv_items_list.layoutManager = LinearLayoutManager(this)
         rv_items_list.layoutManager = GridLayoutManager(this, 2)
-        rv_items_list.adapter = ItemAdapter(InventoryActivity.items, this)
+        rv_items_list.adapter = ItemAdapter(HomeActivity.items, this)
     }
 }

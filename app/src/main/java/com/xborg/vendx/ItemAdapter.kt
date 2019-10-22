@@ -32,8 +32,10 @@ class ItemAdapter(val items : ArrayList<Item>, val context: Context) : RecyclerV
         holder.name.text = items[position].name
         if(items[position].cost != "-1") {
             holder.cost.text = "₹ ${items[position].cost}"
+            holder.item_limit.text = "10"
         } else {
             holder.cost.text = ""
+            holder.item_limit.text = items[position].item_limit
         }
 
         Glide
@@ -49,7 +51,7 @@ class ItemViewHolder (view: View) : RecyclerView.ViewHolder(view) {
     var cost = view.cost
     var image = view.image
 
-    var item_limit = TextView(view.context)
+    var item_limit = view.item_limit
 
     var purchase_count = view.item_count
     var add_button = view.add_button
@@ -61,7 +63,6 @@ class ItemViewHolder (view: View) : RecyclerView.ViewHolder(view) {
 
         }
 
-        item_limit.text = "10"
         var count = purchase_count.text.toString().toInt()
 
         if(cost.text == "-1") { //prevents displaying the item cost in shelf activity

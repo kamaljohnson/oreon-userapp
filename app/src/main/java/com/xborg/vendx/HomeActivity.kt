@@ -123,11 +123,21 @@ class HomeActivity : AppCompatActivity() {
                     Log.d(TAG, "Failed to place order")
                 }
         }
+
+        show_shelf.setOnClickListener{
+            val intent = Intent(this, ShelfActivity::class.java)
+            startActivity(intent)
+        }
     }
 
 
     override fun onResume() {
         super.onResume()
+
+        cart_items.clear()
+        items.clear()
+        getItems()
+        getShelfItems()
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.RECORD_AUDIO), REQUEST_RECORD_AUDIO)
@@ -198,7 +208,7 @@ class HomeActivity : AppCompatActivity() {
                     item.name = document.data["Name"].toString()
                     item.cost = document.data["Cost"].toString()
                     item.quantity = document.data["Quantity"].toString()
-                    item.item_limit = ""
+                    item.item_limit = "0"
                     item.image_src = document.data["Image"].toString()
 
                     items.add(item)

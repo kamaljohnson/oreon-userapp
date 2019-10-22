@@ -9,17 +9,24 @@
 
     <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_items_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            />
+
+    <com.google.android.material.button.MaterialButton
+            android:id="@+id/get_button"
+            android:layout_width="130dp"
+            android:layout_height="60dp"
+            android:layout_marginBottom="@dimen/fui_body_padding_bottom"
+            android:text="Get"
+            android:textStyle="bold"
+            android:textSize="20dp"
             app:fabSize="normal"
-            app:layout_anchor="@id/bottom_app_bar">
+            app:layout_anchor="@id/rv_items_list"
+            app:layout_anchorGravity="center|bottom">
 
-    </com.google.android.material.floatingactionbutton.FloatingActionButton>
-
+    </com.google.android.material.button.MaterialButton>
     <com.google.android.material.bottomappbar.BottomAppBar
             android:id="@+id/bottom_app_bar"
             android:layout_width="match_parent"
