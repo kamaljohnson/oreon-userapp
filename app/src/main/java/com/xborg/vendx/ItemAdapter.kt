@@ -28,7 +28,7 @@ class ItemAdapter(val items : ArrayList<Item>, val context: Context) : RecyclerV
     // Binds each item in the ArrayList to a view
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
-//        holder.item_id.text = items[position].item_id
+        holder.item_id.text = items[position].item_id
         holder.name.text = items[position].name
         if(items[position].cost != "-1") {
             holder.cost.text = "₹ ${items[position].cost}"
@@ -44,7 +44,7 @@ class ItemAdapter(val items : ArrayList<Item>, val context: Context) : RecyclerV
 }
 
 class ItemViewHolder (view: View) : RecyclerView.ViewHolder(view) {
-//    var item_id = view.item_id
+    var item_id = view.item_id
     var name = view.name
     var cost = view.cost
     var image = view.image
@@ -56,6 +56,11 @@ class ItemViewHolder (view: View) : RecyclerView.ViewHolder(view) {
     var remove_button = view.remove_button
 
     init {
+
+        if(HomeActivity.cart_items.count() > 0) {
+
+        }
+
         item_limit.text = "10"
         var count = purchase_count.text.toString().toInt()
 
@@ -75,7 +80,8 @@ class ItemViewHolder (view: View) : RecyclerView.ViewHolder(view) {
                 add_button.visibility = View.INVISIBLE
             }
 
-//            InventoryActivity.cart_items[view.item_id.text.toString()] = count
+            HomeActivity.cart_items[view.item_id.text.toString()] = count
+
             purchase_count.text = count.toString()
         }
 
@@ -83,11 +89,11 @@ class ItemViewHolder (view: View) : RecyclerView.ViewHolder(view) {
             Log.d(TAG, "remove button clicked")
             count-=1
             add_button.visibility = View.VISIBLE
-//            InventoryActivity.cart_items[view.item_id.text.toString()] = count
+            HomeActivity.cart_items[view.item_id.text.toString()] = count
             if(count == 0){
                 purchase_count.visibility = View.INVISIBLE
                 remove_button.visibility = View.INVISIBLE
-//                InventoryActivity.cart_items.remove(view.item_id.toString())
+                HomeActivity.cart_items.remove(view.item_id.toString())
             }
             purchase_count.text = count.toString()
         }

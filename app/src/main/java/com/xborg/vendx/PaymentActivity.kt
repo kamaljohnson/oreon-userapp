@@ -65,56 +65,159 @@ class PaymentActivity : AppCompatActivity() {
     private fun calculateBill() : Float {
         var bill = 0f
 
-        var bill_table = bill_table
-        var table_start = trStart
+        var table = bill_table
 
-        for(cart_item in InventoryActivity.cart_items) {
+        var row = TableRow(this)
+        var col_1_text = TextView(this)
+        var col_2_text = TextView(this)
+        var col_3_text = TextView(this)
+
+        col_2_text.text = "Cart"
+        col_2_text.setTypeface(null, Typeface.BOLD)
+
+        row.addView(col_1_text)
+        row.addView(col_2_text)
+        row.addView(col_3_text)
+
+        table.addView(row)
+
+        for(cart_item in HomeActivity.cart_items) {
             val item_id = cart_item.key
             val item_count = cart_item.value
-            for(item in InventoryActivity.items) {
-                if(item.item_id == item_id) {
+            for (item in HomeActivity.items) {
+                if (item.item_id == item_id) {
                     // creating item row and adding to table
-                    var item_tr = TableRow(this)
 
-                    var item_name = TextView(this)
-                    var item_quantity = TextView(this)
-                    var item_cost = TextView(this)
+                    row = TableRow(this)
+                    col_1_text = TextView(this)
+                    col_2_text = TextView(this)
+                    col_3_text = TextView(this)
 
-                    item_name.text = item.name
-                    item_name.setTypeface(null, Typeface.BOLD)
-                    item_quantity.text = item_count.toString()
-                    item_quantity.textDirection = View.TEXT_DIRECTION_RTL
-                    item_quantity.setTypeface(null, Typeface.BOLD)
-                    item_cost.text = (item.cost.toFloat() * item_count).toString()
-                    item_cost.textDirection = View.TEXT_DIRECTION_RTL
-                    item_cost.setTypeface(null, Typeface.BOLD)
+                    col_1_text.text = item.name
+                    col_1_text.setTypeface(null, Typeface.BOLD)
 
-                    item_tr.addView(item_name)
-                    item_tr.addView(item_quantity)
-                    item_tr.addView(item_cost)
+                    col_2_text.text = item_count.toString()
+                    col_2_text.textDirection = View.TEXT_DIRECTION_RTL
+                    col_2_text.setTypeface(null, Typeface.BOLD)
 
-                    bill_table.addView(item_tr)
+                    row.addView(col_1_text)
+                    row.addView(col_2_text)
+                    row.addView(col_3_text)
+
+                    table.addView(row)
+                }
+            }
+        }
+
+        row = TableRow(this)
+        col_2_text = TextView(this)
+
+
+        col_1_text = TextView(this)
+        col_2_text.text = "From Shelf"
+        col_2_text.setTypeface(null, Typeface.BOLD)
+        col_3_text = TextView(this)
+
+        row.addView(col_1_text)
+        row.addView(col_2_text)
+        row.addView(col_3_text)
+        table.addView(row)
+
+        for(cart_item in HomeActivity.cart_items_from_shelf) {
+            val item_id = cart_item.key
+            val item_count = cart_item.value
+            for (item in HomeActivity.items) {
+                if (item.item_id == item_id) {
+                    // creating item row and adding to table
+
+                    row = TableRow(this)
+                    col_1_text = TextView(this)
+                    col_2_text = TextView(this)
+                    col_3_text = TextView(this)
+
+                    col_1_text.text = item.name
+                    col_1_text.setTypeface(null, Typeface.BOLD)
+
+                    col_2_text.text = item_count.toString()
+                    col_2_text.textDirection = View.TEXT_DIRECTION_RTL
+                    col_2_text.setTypeface(null, Typeface.BOLD)
+
+                    row.addView(col_1_text)
+                    row.addView(col_2_text)
+                    row.addView(col_3_text)
+
+                    table.addView(row)
+                }
+            }
+        }
+
+        row = TableRow(this)
+        col_2_text = TextView(this)
+
+
+        col_1_text = TextView(this)
+        col_2_text.text = "Bill"
+        col_2_text.setTypeface(null, Typeface.BOLD)
+        col_3_text = TextView(this)
+
+        row.addView(col_1_text)
+        row.addView(col_2_text)
+        row.addView(col_3_text)
+        table.addView(row)
+
+        for (cart_item in HomeActivity.billing_cart) {
+            val item_id = cart_item.key
+            val item_count = cart_item.value
+            for (item in HomeActivity.items) {
+                if (item.item_id == item_id) {
+                    // creating item row and adding to table
+
+                    row = TableRow(this)
+                    col_1_text = TextView(this)
+                    col_2_text = TextView(this)
+                    col_3_text = TextView(this)
+
+
+                    col_1_text.text = item.name
+                    col_1_text.setTypeface(null, Typeface.BOLD)
+
+                    col_2_text.text = item_count.toString()
+                    col_2_text.textDirection = View.TEXT_DIRECTION_RTL
+                    col_2_text.setTypeface(null, Typeface.BOLD)
+
+                    col_3_text.text = (item.cost.toFloat() * item_count).toString()
+                    col_3_text.textDirection = View.TEXT_DIRECTION_RTL
+                    col_3_text.setTypeface(null, Typeface.BOLD)
+
+                    row.addView(col_1_text)
+                    row.addView(col_2_text)
+                    row.addView(col_3_text)
+
+                    table.addView(row)
                     bill += item.cost.toFloat() * item_count
                     Log.d(TAG, item_id + " -> " + item_count + " -> " + item.cost)
                 }
             }
         }
 
-        var total_tr = TableRow(this)
-        var total_text = TextView(this)
-        var amount_text = TextView(this)
+        row = TableRow(this)
+        col_1_text = TextView(this)
+        col_2_text = TextView(this)
+        col_3_text = TextView(this)
 
-        total_text.text = "Total"
-        total_text.setTypeface(null, Typeface.BOLD)
-        amount_text.text = bill.toString()
-        amount_text.textDirection = View.TEXT_DIRECTION_RTL
-        amount_text.setTypeface(null, Typeface.BOLD)
 
-        total_tr.addView(total_text)
-        total_tr.addView(TextView(this))
-        total_tr.addView(amount_text)
+        col_1_text.text = "Total"
+        col_1_text.setTypeface(null, Typeface.BOLD)
 
-        bill_table.addView(total_tr)
+        col_3_text.text = bill.toString()
+        col_3_text.textDirection = View.TEXT_DIRECTION_RTL
+        col_3_text.setTypeface(null, Typeface.BOLD)
+
+        row.addView(col_1_text)
+        row.addView(col_2_text)
+        row.addView(col_3_text)
+
+        table.addView(row)
 
         return bill
     }

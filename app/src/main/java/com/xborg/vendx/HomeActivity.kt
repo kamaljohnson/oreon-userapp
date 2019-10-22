@@ -14,15 +14,9 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
 import io.chirp.connect.ChirpConnect
 import kotlinx.android.synthetic.main.activity_home.*
-import android.graphics.BitmapFactory
-import android.graphics.Bitmap
-import android.media.Image
-import android.widget.ImageView
-import com.bumptech.glide.Glide
-import kotlin.math.log
+import com.google.firebase.auth.FirebaseAuth
 
 
 /**
@@ -35,24 +29,31 @@ const val CHIRP_APP_CONFIG = "gHpaLZyR83XICW560DT8fx9VF0M6DP9VM++zm5/GFwA8hOqMVV
 private const val REQUEST_RECORD_AUDIO = 1
 private const val MIN_CHIRP_VOLUME = 0.3
 
-
 class HomeActivity : AppCompatActivity() {
     private lateinit var chirp:ChirpConnect
     private lateinit var parentLayout: View
 
     val db = FirebaseFirestore.getInstance()
+    val uid =  FirebaseAuth.getInstance().uid.toString()
+
     private var TAG = "HomeActivity"
 
     companion object{
         val items: ArrayList<Item> = ArrayList()               //all the items in the inventory list
+        val shelf_items: HashMap<String, Int> = HashMap()               //list of item_ids with count of shelf items
+        var cart_items_from_shelf: HashMap<String, Int> = HashMap()
         var cart_items : HashMap<String, Int> = HashMap()        //list of item_ids added to cart along with number of purchases
+        var billing_cart : HashMap<String, Int> = HashMap()        //list of item_ids added to cart along with number of purchases
+
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_home)
         parentLayout =  findViewById<View>(android.R.id.content)
 
         getItems()
+        getShelfItems()
 
         chirp = ChirpConnect(this, CHIRP_APP_KEY, CHIRP_APP_SECRET)
         val error = chirp.setConfig(CHIRP_APP_CONFIG)
@@ -87,9 +88,40 @@ class HomeActivity : AppCompatActivity() {
             Log.v("Chirp", "volume changed")
         }
 
-        test_button.setOnClickListener{
-            val intent = Intent(this, ShelfActivity::class.java)
-            startActivity(intent)
+        get_button.setOnClickListener{
+            createBillingCart()
+
+            Log.d(TAG, "_______ BILLING CART _______")
+            billing_cart.forEach{
+                Log.d(TAG, it.key + " => " + it.value)
+            }
+            val order = HashMap<String, Any>()
+            order["UID"] = FirebaseAuth.getInstance().uid.toString()
+            order["Cart"] = billing_cart
+
+            if(billing_cart.size == 0) {
+                order["Status"] = "From Shelf"
+            } else {
+                order["Status"] = "Payment Pending"
+            }
+
+            db.collection("Orders")
+                .add(order)
+                .addOnSuccessListener { orderRef ->
+                    Log.d(TAG, "billReference created with ID: ${orderRef.id}")
+
+                    val order_id = orderRef.id
+
+                    val intent = Intent(this, PaymentActivity::class.java)
+                    intent.putExtra("order_id", order_id)
+                    intent.putExtra("cart_items", cart_items)
+                    intent.putExtra("billing_cart", billing_cart)
+                    startActivity(intent)
+
+                }
+                .addOnFailureListener{
+                    Log.d(TAG, "Failed to place order")
+                }
         }
     }
 
@@ -142,7 +174,7 @@ class HomeActivity : AppCompatActivity() {
         chirp.stop()
     }
 
-    // Release memmory reserved by Chirp SDK
+    // Release memory reserved by Chirp SDK
     override fun onDestroy() {
         super.onDestroy()
         chirp.stop()
@@ -180,9 +212,57 @@ class HomeActivity : AppCompatActivity() {
             }
     }
 
+    private fun getShelfItems() {
+        db.document("Users/$uid")
+            .get()
+            .addOnSuccessListener { userSnap ->
+                val shelfItems: Map<String, Number> = userSnap.data?.get("Shelf") as Map<String, Number>
+                for (shelfItem in shelfItems){
+                    Log.d(TAG, shelfItem.key)
+                    Log.d(TAG, shelfItem.value.toString())
+
+                    val itemId = shelfItem.key
+                    val quantity = shelfItem.value
+
+                        shelf_items[itemId] = quantity.toString().toInt()
+
+                }
+            }
+            .addOnFailureListener {exception ->
+                Log.w(TAG, "Error getting documents.", exception)
+            }
+    }
+
     private fun addItemsToRV(){
         rv_items_list.layoutManager = LinearLayoutManager(this)
         rv_items_list.layoutManager = GridLayoutManager(this, 2)
         rv_items_list.adapter = ItemAdapter(items, this)
+    }
+
+    /*
+     * creates the billing cart using cart and shelf data
+    */
+    private fun createBillingCart() {
+        Log.d(TAG, "_______ CART ITEMS _______")
+        cart_items.forEach{item -> //key: id, value: count
+
+            Log.d(TAG, item.key + " => " + item.value)
+            val cart_id = item.key
+            val cart_item_count = item.value
+
+            if(shelf_items[cart_id] != null) {
+
+                val shelf_item_count = shelf_items[cart_id]
+
+                if(cart_item_count > shelf_item_count!!) {
+                    billing_cart[cart_id] = shelf_items[cart_id]?.let { cart_items[cart_id]?.minus(it) } !!
+                    cart_items_from_shelf[cart_id] = shelf_item_count
+                } else {
+                    cart_items_from_shelf[cart_id] = cart_item_count
+                }
+            } else {
+                billing_cart[cart_id] = cart_item_count
+            }
+        }
     }
 }
