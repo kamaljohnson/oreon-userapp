@@ -77,7 +77,9 @@ class ItemViewHolder (view: View) : RecyclerView.ViewHolder(view) {
             }
             if(count < item_limit.text.toString().split(' ')[0].toInt()) {
                 count+=1
-            } else {
+            }
+
+            if(count == item_limit.text.toString().split(' ')[0].toInt()) {
                 add_button.visibility = View.INVISIBLE
             }
 

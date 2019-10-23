@@ -1,5 +1,6 @@
 package com.xborg.vendx
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -20,6 +21,35 @@ class ShelfActivity : AppCompatActivity() {
         setContentView(R.layout.activity_shelf)
 
         getShelfItems()
+
+        get_button.setOnClickListener{
+            val order = HashMap<String, Any>()
+            order["UID"] = FirebaseAuth.getInstance().uid.toString()
+            order["Cart"] = HomeActivity.billing_cart
+
+            HomeActivity.billing_cart.clear()
+            HomeActivity.cart_items_from_shelf = HomeActivity.cart_items
+
+            order["Status"] = "From Shelf"
+
+            db.collection("Orders")
+                .add(order)
+                .addOnSuccessListener { orderRef ->
+                    Log.d(TAG, "billReference created with ID: ${orderRef.id}")
+
+                    val order_id = orderRef.id
+
+                    val intent = Intent(this, PaymentActivity::class.java)
+                    intent.putExtra("order_id", order_id)
+                    intent.putExtra("cart_items", HomeActivity.cart_items)
+                    intent.putExtra("billing_cart", HomeActivity.billing_cart)
+                    startActivity(intent)
+
+                }
+                .addOnFailureListener{
+                    Log.d(TAG, "Failed to place order")
+                }
+        }
     }
 
     private fun getShelfItems(){
