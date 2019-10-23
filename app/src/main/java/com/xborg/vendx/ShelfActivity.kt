@@ -52,36 +52,41 @@ class ShelfActivity : AppCompatActivity() {
         db.document("Users/$uid")
             .get()
             .addOnSuccessListener { userSnap ->
-                var shelfItems: Map<String, Number> = userSnap.data?.get("Shelf") as Map<String, Number>
-                for (shelfItem in shelfItems){
-                    Log.d(TAG, shelfItem.key)
-                    Log.d(TAG, shelfItem.value.toString())
+                if(userSnap.data?.get("Shelf")  == null) {
+                    Log.d(TAG, "shelf is empty")
+                    Toast.makeText(this, "Your Shelf is Empty", Toast.LENGTH_SHORT).show()
+                } else {
+                    var shelfItems: Map<String, Number> = userSnap.data?.get("Shelf") as Map<String, Number>
+                    for (shelfItem in shelfItems){
+                        Log.d(TAG, shelfItem.key)
+                        Log.d(TAG, shelfItem.value.toString())
 
-                    var itemId = shelfItem.key
-                    var quantity = shelfItem.value
+                        var itemId = shelfItem.key
+                        var quantity = shelfItem.value
 
-                    db.document("Inventory/${itemId}")
-                        .get()
-                        .addOnSuccessListener { document ->
-                            Log.d(TAG, "${document.id} => ${document.data}")
+                        db.document("Inventory/${itemId}")
+                            .get()
+                            .addOnSuccessListener { document ->
+                                Log.d(TAG, "${document.id} => ${document.data}")
 
-                            val item = Item()
+                                val item = Item()
 
-                            item.item_id = document.id
-                            item.name = document.data?.get("Name").toString()
-                            item.quantity = document.data?.get("Quantity").toString()
-                            item.cost = "-1"    // shelf items are already bought, no need to show the cost
-                            item.item_limit = quantity.toString()
-                            item.image_src = document.data?.get("Image").toString()
+                                item.item_id = document.id
+                                item.name = document.data?.get("Name").toString()
+                                item.quantity = document.data?.get("Quantity").toString()
+                                item.cost = "-1"    // shelf items are already bought, no need to show the cost
+                                item.item_limit = quantity.toString()
+                                item.image_src = document.data?.get("Image").toString()
 
-                            HomeActivity.items.add(item)
-                            if(HomeActivity.items.size == shelfItems.size) {
-                                addItemsToRV()
+                                HomeActivity.items.add(item)
+                                if(HomeActivity.items.size == shelfItems.size) {
+                                    addItemsToRV()
+                                }
                             }
-                        }
-                        .addOnFailureListener{exception ->
-                            Log.w(TAG, "Error getting documents.", exception)
-                        }
+                            .addOnFailureListener{exception ->
+                                Log.w(TAG, "Error getting documents.", exception)
+                            }
+                    }
                 }
             }
             .addOnFailureListener {exception ->

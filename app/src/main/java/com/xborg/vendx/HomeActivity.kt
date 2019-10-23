@@ -136,18 +136,18 @@ class HomeActivity : AppCompatActivity() {
         }
 
         show_shelf.setOnClickListener{
-            val intent = Intent(this, ShelfActivity::class.java)
-            startActivity(intent)
+            if(shelf_items.size == 0) {
+                Toast.makeText(this, "Your Shelf is Empty", Toast.LENGTH_SHORT).show()
+            } else {
+                val intent = Intent(this, ShelfActivity::class.java)
+                startActivity(intent)
+            }
         }
     }
 
 
     override fun onResume() {
         super.onResume()
-
-        clearCarts()
-        getItems()
-        getShelfItems()
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.RECORD_AUDIO), REQUEST_RECORD_AUDIO)
@@ -194,6 +194,13 @@ class HomeActivity : AppCompatActivity() {
         chirp.stop()
     }
 
+    override fun onRestart() {
+        super.onRestart()
+        clearCarts()
+        getItems()
+        getShelfItems()
+    }
+
     // Release memory reserved by Chirp SDK
     override fun onDestroy() {
         super.onDestroy()
@@ -233,19 +240,24 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun getShelfItems() {
+        var shelfItems: Map<String, Number>
+
         db.document("Users/$uid")
             .get()
             .addOnSuccessListener { userSnap ->
-                val shelfItems: Map<String, Number> = userSnap.data?.get("Shelf") as Map<String, Number>
-                for (shelfItem in shelfItems){
-                    Log.d(TAG, shelfItem.key)
-                    Log.d(TAG, shelfItem.value.toString())
+                if(userSnap.data?.get("Shelf") == null) {
+                    Log.d(TAG, "shelf is empty")
+                } else {
+                    shelfItems = userSnap.data?.get("Shelf") as Map<String, Number>
+                    for (shelfItem in shelfItems){
+                        Log.d(TAG, shelfItem.key)
+                        Log.d(TAG, shelfItem.value.toString())
 
-                    val itemId = shelfItem.key
-                    val quantity = shelfItem.value
+                        val itemId = shelfItem.key
+                        val quantity = shelfItem.value
 
                         shelf_items[itemId] = quantity.toString().toInt()
-
+                    }
                 }
             }
             .addOnFailureListener {exception ->
@@ -292,5 +304,6 @@ class HomeActivity : AppCompatActivity() {
         cart_items.clear()
         cart_items_from_shelf.clear()
         billing_cart.clear()
+        rv_items_list.removeAllViews()
     }
 }

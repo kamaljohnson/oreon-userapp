@@ -15,7 +15,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 val db = FirebaseFirestore.getInstance()
 private var TAG = "LoginActivity"
 
-
 class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
