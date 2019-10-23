@@ -9,7 +9,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.android.synthetic.main.activity_shelf.*
+import kotlinx.android.synthetic.main.activity_shelf.get_button
+import kotlinx.android.synthetic.main.activity_shelf.rv_items_list
 
 class ShelfActivity : AppCompatActivity() {
 
@@ -37,12 +38,10 @@ class ShelfActivity : AppCompatActivity() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-
+    override fun onRestart() {
+        super.onRestart()
         clearCarts()
         getShelfItems()
-
     }
 
     private fun getShelfItems(){
@@ -106,6 +105,8 @@ class ShelfActivity : AppCompatActivity() {
         HomeActivity.cart_items.clear()
         HomeActivity.cart_items_from_shelf.clear()
         HomeActivity.billing_cart.clear()
+        rv_items_list.removeAllViews()
+
     }
 
 }

@@ -14,8 +14,17 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name=".OfferActivity"></activity>
-        <activity android:name=".VendingActivity" />
+        <activity
+                android:name=".ItemInfoActivity"
+                android:screenOrientation="portrait"/>
+
+        <activity
+                android:name=".OfferActivity"
+                android:screenOrientation="portrait" />
+
+        <activity
+                android:name=".VendingActivity"
+                android:screenOrientation="portrait"/>
         <activity
                 android:name=".ShelfActivity"
                 android:screenOrientation="portrait" />

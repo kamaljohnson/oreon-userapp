@@ -45,6 +45,9 @@ class HomeActivity : AppCompatActivity() {
         var cart_items : HashMap<String, Int> = HashMap()        //list of item_ids added to cart along with number of purchases
         var billing_cart : HashMap<String, Int> = HashMap()        //list of item_ids added to cart along with number of purchases
 
+        fun showItemInfo(item_id: String) {
+
+        }
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -306,4 +309,5 @@ class HomeActivity : AppCompatActivity() {
         billing_cart.clear()
         rv_items_list.removeAllViews()
     }
+
 }

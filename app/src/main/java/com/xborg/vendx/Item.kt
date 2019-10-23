@@ -1,7 +1,5 @@
 package com.xborg.vendx
 
-import android.widget.ImageView
-
 class Item {
     lateinit var item_id:String
     lateinit var name:String

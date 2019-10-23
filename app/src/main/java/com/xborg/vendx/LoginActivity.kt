@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
@@ -24,6 +23,7 @@ class LoginActivity : AppCompatActivity() {
             createSignInIntent()
         } else {
             val intent = Intent(this, HomeActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
         }
     }
@@ -54,21 +54,44 @@ class LoginActivity : AppCompatActivity() {
             if (resultCode == Activity.RESULT_OK) {
                 // Successfully signed in
 
+                /*TODO: check
+                 * if user already present in database
+                 *  -
+                 * else
+                 *  - create user with id = uid
+                 *  - init shelf {}
+                */
                 val uid = FirebaseAuth.getInstance().uid.toString()
-                val user = HashMap<String, Any>()
+                val usersRef = db.collection("Users").document(uid)
+                usersRef.get()
+                    .addOnSuccessListener { document ->
+                        if (!document.exists()) {
+                            val user = HashMap<String, Any>()
+                            val shelf = HashMap<String, Number>()
+                            user["Shelf"] = shelf
+                            db.collection("Users").document(uid)
+                                .set(user)
+                                .addOnSuccessListener { userRef ->
+                                    Log.d(TAG, "---> UserReference created with ID: $uid")
 
-                db.collection("Users").document("${uid}")
-                    .set(user)
-                    .addOnSuccessListener { userRef ->
-                        Log.d(TAG, "UserReference created with ID: ${uid}")
+                                    val intent = Intent(this, HomeActivity::class.java)
+                                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                    startActivity(intent)
 
-                        val intent = Intent(this, HomeActivity::class.java)
-                        startActivity(intent)
+                                }
+                                .addOnFailureListener{
+                                    Log.d(TAG, "Failed to create the user")
+                                }
+                        } else {
+                            Log.e(TAG, "--> already present in database")
+                            val intent = Intent(this, HomeActivity::class.java)
+                            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            startActivity(intent)
+                        }
 
                     }
-                    .addOnFailureListener{
-                        Log.d(TAG, "Failed to place order")
-                    }
+
+
             } else {
                 // Sign in failed. If response is null the user canceled the
                 // sign-in flow using the back button. Otherwise check

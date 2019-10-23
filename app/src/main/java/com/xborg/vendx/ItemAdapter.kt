@@ -2,11 +2,13 @@ package com.xborg.vendx
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.item.view.*
@@ -56,6 +58,9 @@ class ItemViewHolder (view: View) : RecyclerView.ViewHolder(view) {
     var purchase_count = view.item_count
     var add_button = view.add_button
     var remove_button = view.remove_button
+    var info_button = view.info_button
+
+    var context = itemView.getContext()
 
     init {
 
@@ -99,6 +104,12 @@ class ItemViewHolder (view: View) : RecyclerView.ViewHolder(view) {
                 HomeActivity.cart_items.remove(view.item_id.toString())
             }
             purchase_count.text = count.toString()
+        }
+
+        info_button.setOnClickListener{
+            val intent = Intent(context, ItemInfoActivity::class.java)
+            intent.putExtra("item_id", item_id.text.toString())
+            context.startActivity(intent)
         }
     }
 }
