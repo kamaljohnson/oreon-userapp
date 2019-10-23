@@ -52,6 +52,7 @@ class HomeActivity : AppCompatActivity() {
         setContentView(R.layout.activity_home)
         parentLayout =  findViewById<View>(android.R.id.content)
 
+        clearCarts()
         getItems()
         getShelfItems()
 
@@ -89,39 +90,49 @@ class HomeActivity : AppCompatActivity() {
         }
 
         get_button.setOnClickListener{
-            createBillingCart()
-
-            Log.d(TAG, "_______ BILLING CART _______")
-            billing_cart.forEach{
-                Log.d(TAG, it.key + " => " + it.value)
-            }
-            val order = HashMap<String, Any>()
-            order["UID"] = FirebaseAuth.getInstance().uid.toString()
-            order["Cart"] = billing_cart
-
-            if(billing_cart.size == 0) {
-                order["Status"] = "From Shelf"
+            if(cart_items.size == 0) {
+                Toast.makeText(this, "Your Cart is Empty", Toast.LENGTH_SHORT).show()
             } else {
-                order["Status"] = "Payment Pending"
-            }
+                createBillingCart()
 
-            db.collection("Orders")
-                .add(order)
-                .addOnSuccessListener { orderRef ->
-                    Log.d(TAG, "billReference created with ID: ${orderRef.id}")
+                Log.d(TAG, "_______ BILLING CART _______")
+                billing_cart.forEach{
+                    Log.d(TAG, it.key + " => " + it.value)
+                }
 
-                    val order_id = orderRef.id
+                if(billing_cart.size == 0) {
 
-                    val intent = Intent(this, PaymentActivity::class.java)
-                    intent.putExtra("order_id", order_id)
+                    val intent = Intent(this, VendingActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                     intent.putExtra("cart_items", cart_items)
-                    intent.putExtra("billing_cart", billing_cart)
                     startActivity(intent)
 
+                } else {
+                    val order = HashMap<String, Any>()
+                    order["UID"] = FirebaseAuth.getInstance().uid.toString()
+                    order["Cart"] = billing_cart
+                    order["Status"] = "Payment Pending"
+
+                    db.collection("Orders")
+                        .add(order)
+                        .addOnSuccessListener { orderRef ->
+                            Log.d(TAG, "billReference created with ID: ${orderRef.id}")
+
+                            val order_id = orderRef.id
+
+                            val intent = Intent(this, PaymentActivity::class.java)
+                            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            intent.putExtra("order_id", order_id)
+                            intent.putExtra("cart_items", cart_items)
+                            intent.putExtra("billing_cart", billing_cart)
+                            startActivity(intent)
+
+                        }
+                        .addOnFailureListener{
+                            Log.d(TAG, "Failed to place order")
+                        }
                 }
-                .addOnFailureListener{
-                    Log.d(TAG, "Failed to place order")
-                }
+            }
         }
 
         show_shelf.setOnClickListener{
@@ -134,8 +145,7 @@ class HomeActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        cart_items.clear()
-        items.clear()
+        clearCarts()
         getItems()
         getShelfItems()
 
@@ -274,5 +284,13 @@ class HomeActivity : AppCompatActivity() {
                 billing_cart[cart_id] = cart_item_count
             }
         }
+    }
+
+    private fun clearCarts() {
+        items.clear()
+        shelf_items.clear()
+        cart_items.clear()
+        cart_items_from_shelf.clear()
+        billing_cart.clear()
     }
 }

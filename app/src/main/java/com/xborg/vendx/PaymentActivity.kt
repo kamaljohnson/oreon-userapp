@@ -34,13 +34,13 @@ class PaymentActivity : AppCompatActivity() {
         order_id_text.text = order_id
         val bill_amount = calculateBill().toString()
 
-
         pay_button.setOnClickListener{
             payUsingUpi(amount = bill_amount, upiId = bank_upi_id, name = "kamal", note = "VendX Purchase")
         }
 
         done_button.setOnClickListener{
-            val intent = Intent(this, VendShelfActivity::class.java)
+            val intent = Intent(this, VendingActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
         }
         statusListener()

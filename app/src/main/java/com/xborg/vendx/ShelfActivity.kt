@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
@@ -20,36 +21,28 @@ class ShelfActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_shelf)
 
+        clearCarts()
         getShelfItems()
 
         get_button.setOnClickListener{
-            val order = HashMap<String, Any>()
-            order["UID"] = FirebaseAuth.getInstance().uid.toString()
-            order["Cart"] = HomeActivity.billing_cart
 
-            HomeActivity.billing_cart.clear()
-            HomeActivity.cart_items_from_shelf = HomeActivity.cart_items
+            if(HomeActivity.cart_items.size == 0) {
+                Toast.makeText(this, "Your Cart is Empty", Toast.LENGTH_SHORT).show()
+            } else {
 
-            order["Status"] = "From Shelf"
-
-            db.collection("Orders")
-                .add(order)
-                .addOnSuccessListener { orderRef ->
-                    Log.d(TAG, "billReference created with ID: ${orderRef.id}")
-
-                    val order_id = orderRef.id
-
-                    val intent = Intent(this, PaymentActivity::class.java)
-                    intent.putExtra("order_id", order_id)
-                    intent.putExtra("cart_items", HomeActivity.cart_items)
-                    intent.putExtra("billing_cart", HomeActivity.billing_cart)
-                    startActivity(intent)
-
-                }
-                .addOnFailureListener{
-                    Log.d(TAG, "Failed to place order")
-                }
+                val intent = Intent(this, VendingActivity::class.java)
+                intent.putExtra("cart_items", HomeActivity.cart_items)
+                startActivity(intent)
+            }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        clearCarts()
+        getShelfItems()
+
     }
 
     private fun getShelfItems(){
@@ -101,4 +94,13 @@ class ShelfActivity : AppCompatActivity() {
         rv_items_list.layoutManager = GridLayoutManager(this, 2)
         rv_items_list.adapter = ItemAdapter(HomeActivity.items, this)
     }
+
+    private fun clearCarts() {
+        HomeActivity.items.clear()
+        HomeActivity.shelf_items.clear()
+        HomeActivity.cart_items.clear()
+        HomeActivity.cart_items_from_shelf.clear()
+        HomeActivity.billing_cart.clear()
+    }
+
 }

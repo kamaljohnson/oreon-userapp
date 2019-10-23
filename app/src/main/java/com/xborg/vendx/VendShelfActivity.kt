@@ -11,7 +11,7 @@ import kotlinx.android.synthetic.main.activity_vend_shelf.*
 
 class VendShelfActivity : AppCompatActivity() {
 
-    val db = FirebaseFirestore.getInstance()
+    /*val db = FirebaseFirestore.getInstance()
     val uid =  FirebaseAuth.getInstance().uid.toString()
     private var TAG = "VendShelfActivity"
 
@@ -69,5 +69,5 @@ class VendShelfActivity : AppCompatActivity() {
         rv_items_list.layoutManager = LinearLayoutManager(this)
         rv_items_list.layoutManager = GridLayoutManager(this, 1)
         rv_items_list.adapter = ItemAdapter(InventoryActivity.items, this)
-    }
+    }*/
 }

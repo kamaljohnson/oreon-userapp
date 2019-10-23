@@ -13,21 +13,25 @@ import kotlinx.android.synthetic.main.activity_inventory.*
 
 class InventoryActivity : AppCompatActivity() {
 
-    val db = FirebaseFirestore.getInstance()
+    /*val db = FirebaseFirestore.getInstance()
     private var TAG = "InventoryActivity"
 
 
     companion object{
-        val items: ArrayList<Item> = ArrayList()               //all the items in the inventory list
-        var cart_items : HashMap<String, Int> = HashMap()        //list of item_ids added to cart along with number of purchases
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_inventory)
         var mid: String = intent.getStringExtra("mid")
-        items.clear()
-        cart_items.clear()
+
+        HomeActivity.items.clear()
+        HomeActivity.shelf_items.clear()
+        HomeActivity.cart_items.clear()
+        HomeActivity.cart_items_from_shelf.clear()
+        HomeActivity.billing_cart.clear()
+
         if(mid == "") {
             getItems()
         } else {
@@ -36,12 +40,12 @@ class InventoryActivity : AppCompatActivity() {
 
         buy_button.setOnClickListener{
             buy_button.visibility = View.INVISIBLE
-            cart_items.forEach{
+            HomeActivity.cart_items.forEach{
                 Log.d(TAG, it.key + " => " + it.value)
             }
             val order = HashMap<String, Any>()
             order["UID"] = FirebaseAuth.getInstance().uid.toString()
-            order["Cart"] = cart_items
+            order["Cart"] = HomeActivity.cart_items
             order["Status"] = "Payment Pending"
 
 
@@ -88,8 +92,8 @@ class InventoryActivity : AppCompatActivity() {
                             item.quantity = document.data?.get("Quantity").toString()
                             item.item_limit = quantity.toString()
 
-                            items.add(item)
-                            if(items.size == inventoryItems.size) {
+                            HomeActivity.items.add(item)
+                            if(HomeActivity.items.size == inventoryItems.size) {
                                 addItemsToRV()
                             }
                         }
@@ -117,7 +121,7 @@ class InventoryActivity : AppCompatActivity() {
                     item.cost = document.data["Cost"].toString()
                     item.quantity = document.data["Quantity"].toString()
                     item.item_limit = ""
-                    items.add(item)
+                    HomeActivity.items.add(item)
                 }
 
                 addItemsToRV()
@@ -130,6 +134,6 @@ class InventoryActivity : AppCompatActivity() {
     private fun addItemsToRV(){
         rv_items_list.layoutManager = LinearLayoutManager(this)
         rv_items_list.layoutManager = GridLayoutManager(this, 1)
-        rv_items_list.adapter = ItemAdapter(items, this)
-    }
+        rv_items_list.adapter = ItemAdapter(HomeActivity.items, this)
+    }*/
 }
