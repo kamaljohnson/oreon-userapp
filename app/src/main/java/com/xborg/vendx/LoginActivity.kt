@@ -10,7 +10,6 @@ import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
-
 val db = FirebaseFirestore.getInstance()
 private var TAG = "LoginActivity"
 

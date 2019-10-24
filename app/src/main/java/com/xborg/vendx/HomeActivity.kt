@@ -1,17 +1,26 @@
 package com.xborg.vendx
 
 import android.Manifest
+import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Location
+import android.location.LocationManager
+import android.media.audiofx.BassBoost
 import android.os.Bundle
+import android.os.Looper
+import android.provider.Settings
 import android.util.Log
 import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.gms.location.*
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.FirebaseFirestore
 import io.chirp.connect.ChirpConnect
@@ -28,13 +37,23 @@ const val CHIRP_APP_CONFIG = "gHpaLZyR83XICW560DT8fx9VF0M6DP9VM++zm5/GFwA8hOqMVV
 
 private const val REQUEST_RECORD_AUDIO = 1
 private const val MIN_CHIRP_VOLUME = 0.3
+private const val REQUEST_LOCATION = 42
 
 class HomeActivity : AppCompatActivity() {
     private lateinit var chirp:ChirpConnect
     private lateinit var parentLayout: View
 
+    lateinit var mFusedLocationClient: FusedLocationProviderClient
+    private val mLocationCallback = object : LocationCallback() {
+        override fun onLocationResult(locationResult: LocationResult) {
+            var mLastLocation: Location = locationResult.lastLocation
+            findViewById<TextView>(R.id.location).text = mLastLocation.longitude.toString()
+        }
+    }
+
     val db = FirebaseFirestore.getInstance()
     val uid =  FirebaseAuth.getInstance().uid.toString()
+
 
     private var TAG = "HomeActivity"
 
@@ -58,6 +77,13 @@ class HomeActivity : AppCompatActivity() {
         clearCarts()
         getItems()
         getShelfItems()
+
+//        region location
+
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        getLastLocation()
+
+//        endregion location
 
         chirp = ChirpConnect(this, CHIRP_APP_KEY, CHIRP_APP_SECRET)
         val error = chirp.setConfig(CHIRP_APP_CONFIG)
@@ -163,6 +189,14 @@ class HomeActivity : AppCompatActivity() {
                 Log.v("ChirpSDK: ", "Started ChirpSDK")
             }
         }
+
+//        region location
+
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        getLastLocation()
+
+//        endregion location
+
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
@@ -177,6 +211,11 @@ class HomeActivity : AppCompatActivity() {
                     }
                 }
                 return
+            }
+            REQUEST_LOCATION -> {
+                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    // Granted. Start getting the location information
+                }
             }
         }
     }
@@ -202,6 +241,13 @@ class HomeActivity : AppCompatActivity() {
         clearCarts()
         getItems()
         getShelfItems()
+
+//        region location
+
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        getLastLocation()
+
+//        endregion location
     }
 
     // Release memory reserved by Chirp SDK
@@ -308,6 +354,69 @@ class HomeActivity : AppCompatActivity() {
         cart_items_from_shelf.clear()
         billing_cart.clear()
         rv_items_list.removeAllViews()
+    }
+
+    private fun checkPermissions(): Boolean {
+        // Locations Permissions
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+            ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+            return true
+        }
+        return false
+    }
+
+    private fun requestPermissions() {
+        ActivityCompat.requestPermissions(
+            this,
+            arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION),
+            REQUEST_LOCATION
+        )
+    }
+
+    private fun isLocationEnabled(): Boolean {
+        var locationManager: LocationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
+            LocationManager.NETWORK_PROVIDER
+        )
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun getLastLocation() {
+        if (checkPermissions()) {
+            if (isLocationEnabled()) {
+
+                mFusedLocationClient.lastLocation.addOnCompleteListener(this) { task ->
+                    var location: Location? = task.result
+                    if (location == null) {
+                        requestNewLocationData()
+                    } else {
+                        Toast.makeText(this, "location found", Toast.LENGTH_SHORT).show()
+                        findViewById<TextView>(R.id.location).text = location.latitude.toString()
+                    }
+                }
+            } else {
+                Toast.makeText(this, "Turn on location", Toast.LENGTH_LONG).show()
+                val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+                startActivity(intent)
+            }
+        } else {
+            requestPermissions()
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun requestNewLocationData() {
+        var mLocationRequest = LocationRequest()
+        mLocationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        mLocationRequest.interval = 0
+        mLocationRequest.fastestInterval = 0
+        mLocationRequest.numUpdates = 1
+
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        mFusedLocationClient!!.requestLocationUpdates(
+            mLocationRequest, mLocationCallback,
+            Looper.myLooper()
+        )
     }
 
 }

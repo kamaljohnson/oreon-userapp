@@ -49,4 +49,15 @@
 
     </com.google.android.material.bottomappbar.BottomAppBar>
 
+    <TextView
+        android:id="@+id/location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="location"
+        app:layout_anchor="@id/bottom_app_bar"
+        app:layout_anchorGravity="bottom"
+        android:paddingBottom="30dp"
+        android:paddingLeft="10dp">
+    </TextView>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
