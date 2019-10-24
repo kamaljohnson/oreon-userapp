@@ -7,7 +7,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
-import android.media.audiofx.BassBoost
 import android.os.Bundle
 import android.os.Looper
 import android.provider.Settings
@@ -63,11 +62,8 @@ class HomeActivity : AppCompatActivity() {
         var cart_items_from_shelf: HashMap<String, Int> = HashMap()
         var cart_items : HashMap<String, Int> = HashMap()        //list of item_ids added to cart along with number of purchases
         var billing_cart : HashMap<String, Int> = HashMap()        //list of item_ids added to cart along with number of purchases
-
-        fun showItemInfo(item_id: String) {
-
-        }
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -174,7 +170,6 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
-
     override fun onResume() {
         super.onResume()
 
@@ -199,6 +194,35 @@ class HomeActivity : AppCompatActivity() {
 
     }
 
+    override fun onRestart() {
+        super.onRestart()
+        clearCarts()
+        getItems()
+        getShelfItems()
+
+//        region location
+
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        getLastLocation()
+
+//        endregion location
+    }
+
+    override fun onPause() {
+        super.onPause()
+        chirp.stop()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        chirp.stop()
+        try {
+            chirp.close()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
             REQUEST_RECORD_AUDIO -> {
@@ -220,47 +244,23 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
-    private fun sendPayload() {
-        val identifier = "text"
-        val payload: ByteArray = identifier.toByteArray()
+    /**
+     * sends the message string via audio
+     * @param message the message to be send via audio
+     */
+    private fun sendPayload(message: String) {
+        val payload: ByteArray = message.toByteArray()
         val error = chirp.send(payload)
         if (error.code > 0) {
             Log.e("ChirpError: ", error.message)
         } else {
-            Log.v("ChirpSDK: ", "Sent $identifier")
+            Log.v("ChirpSDK: ", "Sent $message")
         }
     }
 
-    override fun onPause() {
-        super.onPause()
-        chirp.stop()
-    }
-
-    override fun onRestart() {
-        super.onRestart()
-        clearCarts()
-        getItems()
-        getShelfItems()
-
-//        region location
-
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-        getLastLocation()
-
-//        endregion location
-    }
-
-    // Release memory reserved by Chirp SDK
-    override fun onDestroy() {
-        super.onDestroy()
-        chirp.stop()
-        try {
-            chirp.close()
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
-
+    /**
+     * get all the items in the inventory
+     */
     private fun getItems() {
         db.collection("Inventory")
             .get()
@@ -288,6 +288,9 @@ class HomeActivity : AppCompatActivity() {
             }
     }
 
+    /**
+     * get all the items in the users' shelf
+     */
     private fun getShelfItems() {
         var shelfItems: Map<String, Number>
 
@@ -314,15 +317,22 @@ class HomeActivity : AppCompatActivity() {
             }
     }
 
+    /**
+     * adds all the items to the recycler view
+     * as item cards
+     */
     private fun addItemsToRV(){
         rv_items_list.layoutManager = LinearLayoutManager(this)
         rv_items_list.layoutManager = GridLayoutManager(this, 2)
         rv_items_list.adapter = ItemAdapter(items, this)
     }
 
-    /*
-     * creates the billing cart using cart and shelf data
-    */
+    /**
+     * calculates the billing_cart using
+     *  - cart_items
+     *  - shelf_items
+     * the billing_cart is used in PaymentActivity
+     */
     private fun createBillingCart() {
         Log.d(TAG, "_______ CART ITEMS _______")
         cart_items.forEach{item -> //key: id, value: count
@@ -347,6 +357,17 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * clears
+     *  - shelf_items
+     *  - cart_items
+     *  - cart_items_from_shelf
+     *  - billing_cart
+     *  - rv_items_list
+     * called when activity is
+     *  - created
+     *  - restarted
+     */
     private fun clearCarts() {
         items.clear()
         shelf_items.clear()
@@ -356,6 +377,13 @@ class HomeActivity : AppCompatActivity() {
         rv_items_list.removeAllViews()
     }
 
+    /**
+     * checks the permissions required for the activity
+     * permissions:
+     *  - ACCESS_COARSE_LOCATION
+     *  - ACCESS_FINE_LOCATION
+     * @return true if PERMISSION_GRANTED else false
+     */
     private fun checkPermissions(): Boolean {
         // Locations Permissions
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
