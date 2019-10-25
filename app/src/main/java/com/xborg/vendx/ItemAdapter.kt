@@ -8,12 +8,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.item.view.*
 
 private var TAG = "ItemAdapter"
+
+var previous_view: View? = null
 
 class ItemAdapter(val items : ArrayList<Item>, val context: Context) : RecyclerView.Adapter<ItemViewHolder>() {
 
@@ -34,10 +37,10 @@ class ItemAdapter(val items : ArrayList<Item>, val context: Context) : RecyclerV
         holder.name.text = items[position].name
         if(items[position].cost != "-1") {
             holder.cost.text = "₹ ${items[position].cost}"
-            holder.item_limit.text = "10"
+            holder.item_limit.text = "10 left"
         } else {
             holder.cost.text = ""
-            holder.item_limit.text = items[position].item_limit
+            holder.item_limit.text = items[position].item_limit + " left"
         }
 
         Glide
@@ -58,7 +61,7 @@ class ItemViewHolder (view: View) : RecyclerView.ViewHolder(view) {
     var purchase_count = view.item_count
     var add_button = view.add_button
     var remove_button = view.remove_button
-    var info_button = view.info_button
+    var info_button= view.info_button
 
     var context = itemView.getContext()
 
@@ -74,6 +77,23 @@ class ItemViewHolder (view: View) : RecyclerView.ViewHolder(view) {
             cost.text = ""
         }
 
+        view.setOnClickListener{
+            if(view.item_interaction_view.visibility == View.INVISIBLE) {
+                view.item_interaction_view.visibility = View.VISIBLE
+                if(view.item_count.text.toString() == "0") {
+                    count++
+                    purchase_count.visibility = View.VISIBLE
+                    remove_button.visibility = View.VISIBLE
+                    purchase_count.text = count.toString()
+
+                }
+            }
+            if(previous_view != view && previous_view != null) {
+                previous_view!!.item_interaction_view.visibility = View.INVISIBLE
+            }
+            previous_view = view
+        }
+
         add_button.setOnClickListener{
             Log.d(TAG, "add button clicked")
             if(count == 0){
@@ -85,7 +105,7 @@ class ItemViewHolder (view: View) : RecyclerView.ViewHolder(view) {
             }
 
             if(count == item_limit.text.toString().split(' ')[0].toInt()) {
-                add_button.visibility = View.INVISIBLE
+                Toast.makeText(context, "You have reached the purchase limit for this item", Toast.LENGTH_SHORT).show()
             }
 
             HomeActivity.cart_items[view.item_id.text.toString()] = count
@@ -99,8 +119,8 @@ class ItemViewHolder (view: View) : RecyclerView.ViewHolder(view) {
             add_button.visibility = View.VISIBLE
             HomeActivity.cart_items[view.item_id.text.toString()] = count
             if(count == 0){
+                view.item_interaction_view.visibility = View.INVISIBLE
                 purchase_count.visibility = View.INVISIBLE
-                remove_button.visibility = View.INVISIBLE
                 HomeActivity.cart_items.remove(view.item_id.toString())
             }
             purchase_count.text = count.toString()

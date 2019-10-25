@@ -76,8 +76,8 @@ class HomeActivity : AppCompatActivity() {
 
 //        region location
 
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-        getLastLocation()
+//        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+//        getLastLocation()
 
 //        endregion location
 
@@ -187,8 +187,8 @@ class HomeActivity : AppCompatActivity() {
 
 //        region location
 
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-        getLastLocation()
+//        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+//        getLastLocation()
 
 //        endregion location
 
@@ -202,8 +202,8 @@ class HomeActivity : AppCompatActivity() {
 
 //        region location
 
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-        getLastLocation()
+//        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+//        getLastLocation()
 
 //        endregion location
     }

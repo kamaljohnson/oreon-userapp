@@ -1,19 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:orientation="vertical" android:layout_width="wrap_content"
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingHorizontal="10dp"
         android:paddingVertical="10dp">
 
 
-    <ImageView
-            android:id="@+id/image"
-            android:layout_width="170dp"
-            android:layout_height="150dp"
-            android:src="@drawable/common_google_signin_btn_icon_dark">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    </ImageView>
+        <ImageView
+                android:id="@+id/image"
+                android:layout_width="170dp"
+                android:layout_height="150dp"
+                android:src="@drawable/common_google_signin_btn_icon_dark">
+
+        </ImageView>
+
+        <TextView
+            android:id="@+id/item_count"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentRight="true"
+            android:text="0"
+            android:textSize="18dp"
+            android:visibility="invisible"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:background="@color/orange">
+
+        </TextView>
+
+        <ImageView
+            android:id="@+id/info_button"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignBottom="@+id/image"
+            android:gravity="center"
+            android:src="@drawable/info_icon"
+            android:textStyle="bold">
+
+        </ImageView>
+
+    </RelativeLayout>
+
 
     <TextView
             android:id="@+id/cost"
@@ -45,29 +79,22 @@
     </TextView>
 
     <RelativeLayout
-            android:layout_width="170dp"
-            android:layout_height="wrap_content">
-
-
-        <ImageView
-                android:id="@+id/info_button"
-                android:src="@drawable/info_icon"
-                android:layout_width="30dp"
-                android:layout_height="30dp">
-
-        </ImageView>
+        android:id="@+id/item_interaction_view"
+        android:layout_width="170dp"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        android:background="@color/cyan">
 
         <TextView
                 android:id="@+id/item_limit"
-                android:layout_width="35dp"
+                android:layout_width="70dp"
                 android:layout_height="30dp"
-                android:text="0"
+                android:text="10"
                 android:textSize="18dp"
                 android:textStyle="bold"
-                android:textColor="@color/blue"
-                android:textAlignment="center"
-                android:gravity="center"
-                android:layout_toRightOf="@id/info_button">
+                android:visibility="invisible"
+                android:textColor="@color/warning"
+                android:gravity="center">
         </TextView>
 
         <ImageView
@@ -79,24 +106,13 @@
 
         </ImageView>
 
-        <TextView
-                android:id="@+id/item_count"
-                android:layout_width="35dp"
-                android:layout_height="30dp"
-                android:text="0"
-                android:textSize="18dp"
-                android:textStyle="bold"
-                android:textAlignment="center"
-                android:gravity="center"
-                android:visibility="invisible"
-                android:layout_toLeftOf="@id/add_button">
-        </TextView>
 
         <ImageView
-                android:layout_toLeftOf="@id/item_count"
+                android:layout_toLeftOf="@id/add_button"
                 android:id="@+id/remove_button"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
+                android:layout_toRightOf="@+id/item_limit"
                 android:visibility="invisible"
                 android:src="@drawable/remove_icon">
 

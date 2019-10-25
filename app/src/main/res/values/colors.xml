@@ -5,4 +5,7 @@
     <color name="colorAccent">#D81B60</color>
     <color name="warning">#C0290E</color>
     <color name="blue">#007AFF</color>
+    <color name="orange">#FF9800</color>
+    <color name="green">#8BC34A</color>
+    <color name="cyan">#CAEFF5</color>
 </resources>
