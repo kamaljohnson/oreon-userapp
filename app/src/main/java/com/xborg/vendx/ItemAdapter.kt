@@ -82,6 +82,7 @@ class ItemViewHolder (view: View) : RecyclerView.ViewHolder(view) {
                 view.item_interaction_view.visibility = View.VISIBLE
                 if(view.item_count.text.toString() == "0") {
                     count++
+                    HomeActivity.cart_items[view.item_id.text.toString()] = count
                     purchase_count.visibility = View.VISIBLE
                     remove_button.visibility = View.VISIBLE
                     purchase_count.text = count.toString()
