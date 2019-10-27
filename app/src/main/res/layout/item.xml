@@ -71,7 +71,7 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/item_count"
+                android:id="@+id/purchase_count"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:text="0"

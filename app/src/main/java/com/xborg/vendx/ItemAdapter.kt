@@ -7,12 +7,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import android.widget.Toast
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import kotlinx.android.synthetic.main.activity_home.view.*
 import kotlinx.android.synthetic.main.item.view.*
 
 private var TAG = "ItemAdapter"
@@ -44,6 +41,11 @@ class ItemAdapter(val items : ArrayList<Item>, val context: Context) : RecyclerV
             holder.item_limit.text = items[position].item_limit + " left"
         }
 
+        if(HomeActivity.cart_items[items[position].item_id] != null) {
+            holder.purchase_count.text = HomeActivity.cart_items[items[position].item_id].toString()
+            holder.purchase_count.visibility = View.VISIBLE
+        }
+
         Glide
             .with(context)
             .load(items[position].image_src)
@@ -59,7 +61,7 @@ class ItemViewHolder (view: View) : RecyclerView.ViewHolder(view) {
 
     var item_limit = view.item_limit
 
-    var purchase_count = view.item_count
+    var purchase_count = view.purchase_count
     var add_button = view.add_button
     var remove_button = view.remove_button
     var info_button= view.info_button
@@ -67,23 +69,26 @@ class ItemViewHolder (view: View) : RecyclerView.ViewHolder(view) {
     var context = itemView.getContext()
 
     init {
+            if(purchase_count.text == "0") {
+            purchase_count.visibility = View.INVISIBLE
+        }
 
         add_button.visibility = View.INVISIBLE
         remove_button.visibility = View.INVISIBLE
         info_button.visibility = View.INVISIBLE
-        purchase_count.visibility = View.INVISIBLE
 
         if(HomeActivity.cart_items.count() > 0) {
 
         }
 
-        var count = purchase_count.text.toString().toInt()
+        Log.e(TAG, "item count : " + purchase_count.text.toString())
 
         if(cost.text == "-1") { //prevents displaying the item cost in shelf activity
             cost.text = ""
         }
 
         image.setOnClickListener{
+            var count = purchase_count.text.toString().toInt()
 
             if(previous_view != view && previous_view != null) {
                 previous_view!!.add_button.visibility = View.INVISIBLE
@@ -112,11 +117,12 @@ class ItemViewHolder (view: View) : RecyclerView.ViewHolder(view) {
             }
 
             HomeActivity.cart_items[view.item_id.text.toString()] = count
-
             purchase_count.text = count.toString()
         }
 
         add_button.setOnClickListener{
+            var count = purchase_count.text.toString().toInt()
+
             if(count == 0){
                 purchase_count.visibility = View.VISIBLE
                 remove_button.visibility = View.VISIBLE
@@ -135,7 +141,7 @@ class ItemViewHolder (view: View) : RecyclerView.ViewHolder(view) {
         }
 
         remove_button.setOnClickListener{
-            Log.d(TAG, "remove button clicked")
+            var count = purchase_count.text.toString().toInt()
             count-=1
             add_button.visibility = View.VISIBLE
             HomeActivity.cart_items[view.item_id.text.toString()] = count

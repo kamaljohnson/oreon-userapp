@@ -481,6 +481,7 @@ class HomeActivity : AppCompatActivity() {
             }
             Log.d(TAG, temp_items.size.toString())
         }
+        Log.e(TAG, cart_items.toString())
         rv_items_list.removeAllViews()
         addItemsToRV(temp_items)
     }
