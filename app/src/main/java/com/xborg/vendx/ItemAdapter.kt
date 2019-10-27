@@ -43,7 +43,9 @@ class ItemAdapter(val items : ArrayList<Item>, val context: Context) : RecyclerV
 
         if(HomeActivity.cart_items[items[position].item_id] != null) {
             holder.purchase_count.text = HomeActivity.cart_items[items[position].item_id].toString()
-            holder.purchase_count.visibility = View.VISIBLE
+            if(holder.purchase_count.text.toString() != "0") {
+                holder.purchase_count.visibility = View.VISIBLE
+            }
         }
 
         Glide
@@ -149,7 +151,7 @@ class ItemViewHolder (view: View) : RecyclerView.ViewHolder(view) {
                 add_button.visibility = View.INVISIBLE
                 remove_button.visibility = View.INVISIBLE
                 purchase_count.visibility = View.INVISIBLE
-                HomeActivity.cart_items.remove(view.item_id.toString())
+                HomeActivity.cart_items.remove(view.item_id.text.toString())
             }
             purchase_count.text = count.toString()
         }
