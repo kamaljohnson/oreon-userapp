@@ -10,6 +10,8 @@ import android.location.LocationManager
 import android.os.Bundle
 import android.os.Looper
 import android.provider.Settings
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.TextView
@@ -17,6 +19,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.location.*
@@ -53,8 +56,9 @@ class HomeActivity : AppCompatActivity() {
     val db = FirebaseFirestore.getInstance()
     val uid =  FirebaseAuth.getInstance().uid.toString()
 
-
     private var TAG = "HomeActivity"
+
+    var temp_items: ArrayList<Item> = ArrayList()
 
     companion object{
         val items: ArrayList<Item> = ArrayList()               //all the items in the inventory list
@@ -168,6 +172,17 @@ class HomeActivity : AppCompatActivity() {
                 startActivity(intent)
             }
         }
+
+        search_text.addTextChangedListener{
+            Log.e(TAG, "the searching string is ${it.toString()}")
+            if(it.toString().isNotEmpty()) {
+                search(it.toString())
+            } else {
+                rv_items_list.removeAllViews()
+                addItemsToRV(items)
+            }
+        }
+
     }
 
     override fun onResume() {
@@ -280,7 +295,7 @@ class HomeActivity : AppCompatActivity() {
                     items.add(item)
 
                 }
-                addItemsToRV()
+                addItemsToRV(items)
 
             }
             .addOnFailureListener { exception ->
@@ -321,7 +336,7 @@ class HomeActivity : AppCompatActivity() {
      * adds all the items to the recycler view
      * as item cards
      */
-    private fun addItemsToRV(){
+    private fun addItemsToRV(items: ArrayList<Item>){
         rv_items_list.layoutManager = LinearLayoutManager(this)
         rv_items_list.layoutManager = GridLayoutManager(this, 2)
         rv_items_list.adapter = ItemAdapter(items, this)
@@ -446,5 +461,30 @@ class HomeActivity : AppCompatActivity() {
             Looper.myLooper()
         )
     }
+//    region item search
 
+    private fun search(search_name: String) {
+        temp_items = ArrayList()
+        for (item in items) {
+            Log.d(TAG, item.toString())
+            var i = 0
+            var j = 0
+            while(i < item.name.length) {
+                if(item.name[i].toUpperCase() == search_name[j].toUpperCase()) {
+                    j++
+                    if(j == search_name.length) {
+                        temp_items.add(item)
+                        break
+                    }
+                }
+                i++
+            }
+            Log.d(TAG, temp_items.size.toString())
+        }
+        rv_items_list.removeAllViews()
+        addItemsToRV(temp_items)
+    }
+
+
+//    endregion
 }

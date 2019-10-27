@@ -15,34 +15,33 @@
             android:paddingBottom="80dp" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/show_shelf"
+            android:id="@+id/get_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:fabSize="normal"
             app:layout_anchor="@+id/bottom_app_bar"
-            app:layout_anchorGravity="top|center"
-            android:src="@drawable/shelf_icon">
+            android:src="@drawable/right_arrow_icon">
 
     </com.google.android.material.floatingactionbutton.FloatingActionButton>
 
     <com.google.android.material.button.MaterialButton
-            android:id="@+id/get_button"
+            android:id="@+id/show_shelf"
             android:layout_width="130dp"
             android:layout_height="60dp"
             android:layout_marginBottom="@dimen/fui_body_padding_bottom"
-            android:text="Get"
+            android:text="Shelf"
             android:textStyle="bold"
             android:textSize="20dp"
             app:fabSize="normal"
-            app:layout_anchor="@id/rv_items_list"
-            app:layout_anchorGravity="center|bottom">
+            app:layout_anchor="@id/bottom_app_bar"
+            app:layout_anchorGravity="center|top">
 
     </com.google.android.material.button.MaterialButton>
 
     <com.google.android.material.bottomappbar.BottomAppBar
             android:id="@+id/bottom_app_bar"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="100dp"
             android:layout_gravity="bottom"
             app:fabAlignmentMode="end"
             app:backgroundTint="@color/colorPrimary">
@@ -57,7 +56,24 @@
         app:layout_anchor="@id/bottom_app_bar"
         app:layout_anchorGravity="bottom"
         android:paddingBottom="30dp"
+        android:visibility="invisible"
         android:paddingLeft="10dp">
     </TextView>
+
+    <EditText
+        android:id="@+id/search_text"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:hint="Search"
+        android:textSize="18dp"
+        android:layout_gravity="bottom"
+        android:paddingLeft="5dp"
+        android:background="@color/colorPrimaryDark"
+        android:textColor="@color/colorPrimary"
+        android:textColorHint="@color/colorPrimary"
+        android:singleLine="true"
+        android:inputType="textPersonName">
+
+    </EditText>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
