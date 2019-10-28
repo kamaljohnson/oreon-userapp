@@ -29,18 +29,14 @@
                 android:screenOrientation="portrait"/>
         <activity
                 android:name=".ShelfActivity"
-                android:screenOrientation="portrait" />
-        <activity
-                android:name=".VendShelfActivity"
-                android:screenOrientation="portrait" />
+                android:screenOrientation="portrait"/>
+
         <activity
                 android:name=".PaymentActivity"
                 android:screenOrientation="portrait" />
+
         <activity
-                android:name=".InventoryActivity"
-                android:screenOrientation="portrait" />
-        <activity
-                android:name=".HomeActivity"
+                android:name=".MainActivity"
                 android:label="@string/title_activity_home"
                 android:screenOrientation="portrait"
                 android:theme="@style/AppTheme.NoActionBar" />

@@ -1,4 +1,4 @@
-package com.xborg.vendx
+package com.xborg.vendx.SupportClasses
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -10,6 +10,9 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.xborg.vendx.ItemInfoActivity
+import com.xborg.vendx.MainActivity
+import com.xborg.vendx.R
 import kotlinx.android.synthetic.main.item.view.*
 
 private var TAG = "ItemAdapter"
@@ -25,7 +28,11 @@ class ItemAdapter(val items : ArrayList<Item>, val context: Context) : RecyclerV
 
     // Inflates the item views
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
-        return ItemViewHolder(LayoutInflater.from(context).inflate(R.layout.item, parent, false))
+        return ItemViewHolder(
+            LayoutInflater.from(
+                context
+            ).inflate(R.layout.item, parent, false)
+        )
     }
 
     // Binds each item in the ArrayList to a view
@@ -41,8 +48,8 @@ class ItemAdapter(val items : ArrayList<Item>, val context: Context) : RecyclerV
             holder.item_limit.text = items[position].item_limit + " left"
         }
 
-        if(HomeActivity.cart_items[items[position].item_id] != null) {
-            holder.purchase_count.text = HomeActivity.cart_items[items[position].item_id].toString()
+        if(MainActivity.cart_items[items[position].item_id] != null) {
+            holder.purchase_count.text = MainActivity.cart_items[items[position].item_id].toString()
             if(holder.purchase_count.text.toString() != "0") {
                 holder.purchase_count.visibility = View.VISIBLE
             }
@@ -79,7 +86,7 @@ class ItemViewHolder (view: View) : RecyclerView.ViewHolder(view) {
         remove_button.visibility = View.INVISIBLE
         info_button.visibility = View.INVISIBLE
 
-        if(HomeActivity.cart_items.count() > 0) {
+        if(MainActivity.cart_items.count() > 0) {
 
         }
 
@@ -118,7 +125,7 @@ class ItemViewHolder (view: View) : RecyclerView.ViewHolder(view) {
                 Toast.makeText(context, "You have reached the purchase limit for this item", Toast.LENGTH_SHORT).show()
             }
 
-            HomeActivity.cart_items[view.item_id.text.toString()] = count
+            MainActivity.cart_items[view.item_id.text.toString()] = count
             purchase_count.text = count.toString()
         }
 
@@ -137,7 +144,7 @@ class ItemViewHolder (view: View) : RecyclerView.ViewHolder(view) {
                 Toast.makeText(context, "You have reached the purchase limit for this item", Toast.LENGTH_SHORT).show()
             }
 
-            HomeActivity.cart_items[view.item_id.text.toString()] = count
+            MainActivity.cart_items[view.item_id.text.toString()] = count
 
             purchase_count.text = count.toString()
         }
@@ -146,12 +153,12 @@ class ItemViewHolder (view: View) : RecyclerView.ViewHolder(view) {
             var count = purchase_count.text.toString().toInt()
             count-=1
             add_button.visibility = View.VISIBLE
-            HomeActivity.cart_items[view.item_id.text.toString()] = count
+            MainActivity.cart_items[view.item_id.text.toString()] = count
             if(count == 0){
                 add_button.visibility = View.INVISIBLE
                 remove_button.visibility = View.INVISIBLE
                 purchase_count.visibility = View.INVISIBLE
-                HomeActivity.cart_items.remove(view.item_id.text.toString())
+                MainActivity.cart_items.remove(view.item_id.text.toString())
             }
             purchase_count.text = count.toString()
         }

@@ -1,4 +1,4 @@
-package com.xborg.vendx
+package com.xborg.vendx.SupportClasses
 
 class Item {
     lateinit var item_id:String

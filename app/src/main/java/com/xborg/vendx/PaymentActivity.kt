@@ -81,10 +81,10 @@ class PaymentActivity : AppCompatActivity() {
 
         table.addView(row)
 
-        for(cart_item in HomeActivity.cart_items) {
+        for(cart_item in MainActivity.cart_items) {
             val item_id = cart_item.key
             val item_count = cart_item.value
-            for (item in HomeActivity.items) {
+            for (item in MainActivity.items) {
                 if (item.item_id == item_id) {
                     // creating item row and adding to table
 
@@ -123,10 +123,10 @@ class PaymentActivity : AppCompatActivity() {
         row.addView(col_3_text)
         table.addView(row)
 
-        for(cart_item in HomeActivity.cart_items_from_shelf) {
+        for(cart_item in MainActivity.cart_items_from_shelf) {
             val item_id = cart_item.key
             val item_count = cart_item.value
-            for (item in HomeActivity.items) {
+            for (item in MainActivity.items) {
                 if (item.item_id == item_id) {
                     // creating item row and adding to table
 
@@ -165,10 +165,10 @@ class PaymentActivity : AppCompatActivity() {
         row.addView(col_3_text)
         table.addView(row)
 
-        for (cart_item in HomeActivity.billing_cart) {
+        for (cart_item in MainActivity.billing_cart) {
             val item_id = cart_item.key
             val item_count = cart_item.value
-            for (item in HomeActivity.items) {
+            for (item in MainActivity.items) {
                 if (item.item_id == item_id) {
                     // creating item row and adding to table
 

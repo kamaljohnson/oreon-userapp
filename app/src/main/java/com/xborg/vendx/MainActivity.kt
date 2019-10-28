@@ -10,25 +10,30 @@ import android.location.LocationManager
 import android.os.Bundle
 import android.os.Looper
 import android.provider.Settings
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.viewpager.widget.ViewPager
 import com.google.android.gms.location.*
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.FirebaseFirestore
 import io.chirp.connect.ChirpConnect
-import kotlinx.android.synthetic.main.activity_home.*
+import kotlinx.android.synthetic.main.activity_main.*
 import com.google.firebase.auth.FirebaseAuth
-
+import com.xborg.vendx.MainActivityFragments.HomeFragment
+import com.xborg.vendx.MainActivityFragments.ShelfFragment
+import com.xborg.vendx.SupportClasses.Item
+import com.xborg.vendx.SupportClasses.ItemAdapter
 
 /**
  *  Keys used for chrip lib. visit https://developers.chirp.io/ for details.
@@ -41,7 +46,13 @@ private const val REQUEST_RECORD_AUDIO = 1
 private const val MIN_CHIRP_VOLUME = 0.3
 private const val REQUEST_LOCATION = 42
 
-class HomeActivity : AppCompatActivity() {
+private const val NUM_PAGES = 2
+
+private var TAG = "MainActivity"
+
+private lateinit var mPager: ViewPager
+
+class MainActivity : FragmentActivity() {
     private lateinit var chirp:ChirpConnect
     private lateinit var parentLayout: View
 
@@ -56,8 +67,6 @@ class HomeActivity : AppCompatActivity() {
     val db = FirebaseFirestore.getInstance()
     val uid =  FirebaseAuth.getInstance().uid.toString()
 
-    private var TAG = "HomeActivity"
-
     var temp_items: ArrayList<Item> = ArrayList()
 
     companion object{
@@ -71,8 +80,17 @@ class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.activity_home)
+        setContentView(R.layout.activity_main)
+
         parentLayout =  findViewById<View>(android.R.id.content)
+
+        // Instantiate a ViewPager and a PagerAdapter.
+        mPager = findViewById(R.id.pager)
+
+        // The pager adapter, which provides the pages to the view pager widget.
+        val pagerAdapter = ScreenSlidePagerAdapter(supportFragmentManager)
+        mPager.adapter = pagerAdapter
+
 
         clearCarts()
         getItems()
@@ -164,14 +182,15 @@ class HomeActivity : AppCompatActivity() {
             }
         }
 
-        show_shelf.setOnClickListener{
+//        TODO: to be changed to sliding activity change
+        /*show_shelf.setOnClickListener{
             if(shelf_items.size == 0) {
                 Toast.makeText(this, "Your Shelf is Empty", Toast.LENGTH_SHORT).show()
             } else {
                 val intent = Intent(this, ShelfActivity::class.java)
                 startActivity(intent)
             }
-        }
+        }*/
 
         search_text.addTextChangedListener{
             Log.e(TAG, "the searching string is ${it.toString()}")
@@ -339,7 +358,8 @@ class HomeActivity : AppCompatActivity() {
     private fun addItemsToRV(items: ArrayList<Item>){
         rv_items_list.layoutManager = LinearLayoutManager(this)
         rv_items_list.layoutManager = GridLayoutManager(this, 2)
-        rv_items_list.adapter = ItemAdapter(items, this)
+        rv_items_list.adapter =
+            ItemAdapter(items, this)
     }
 
     /**
@@ -486,6 +506,23 @@ class HomeActivity : AppCompatActivity() {
         addItemsToRV(temp_items)
     }
 
-
 //    endregion
+
+    /**
+     * A simple pager adapter that represents 5 ScreenSlidePageFragment objects, in
+     * sequence.
+     */
+    private inner class ScreenSlidePagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
+
+        override fun getCount(): Int = NUM_PAGES
+
+        override fun getItem(position: Int): Fragment {
+
+            return if (position == 0){
+                HomeFragment()
+            } else {
+                ShelfFragment()
+            }
+        }
+    }
 }

@@ -5,7 +5,27 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".HomeActivity">
+        tools:context=".MainActivity">
+
+    <ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <TextView style="?android:textAppearanceMedium"
+            android:padding="16dp"
+            android:lineSpacingMultiplier="1.2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="hello" />
+    </ScrollView>
+
+    <androidx.viewpager.widget.ViewPager
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
     <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_items_list"
@@ -23,20 +43,6 @@
             android:src="@drawable/right_arrow_icon">
 
     </com.google.android.material.floatingactionbutton.FloatingActionButton>
-
-    <com.google.android.material.button.MaterialButton
-            android:id="@+id/show_shelf"
-            android:layout_width="130dp"
-            android:layout_height="60dp"
-            android:layout_marginBottom="@dimen/fui_body_padding_bottom"
-            android:text="Shelf"
-            android:textStyle="bold"
-            android:textSize="20dp"
-            app:fabSize="normal"
-            app:layout_anchor="@id/bottom_app_bar"
-            app:layout_anchorGravity="center|top">
-
-    </com.google.android.material.button.MaterialButton>
 
     <com.google.android.material.bottomappbar.BottomAppBar
             android:id="@+id/bottom_app_bar"

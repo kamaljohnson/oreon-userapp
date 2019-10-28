@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.xborg.vendx.SupportClasses.Item
+import com.xborg.vendx.SupportClasses.ItemAdapter
 import kotlinx.android.synthetic.main.activity_shelf.get_button
 import kotlinx.android.synthetic.main.activity_shelf.rv_items_list
 
@@ -27,12 +29,12 @@ class ShelfActivity : AppCompatActivity() {
 
         get_button.setOnClickListener{
 
-            if(HomeActivity.cart_items.size == 0) {
+            if(MainActivity.cart_items.size == 0) {
                 Toast.makeText(this, "Your Cart is Empty", Toast.LENGTH_SHORT).show()
             } else {
 
                 val intent = Intent(this, VendingActivity::class.java)
-                intent.putExtra("cart_items", HomeActivity.cart_items)
+                intent.putExtra("cart_items", MainActivity.cart_items)
                 startActivity(intent)
             }
         }
@@ -45,8 +47,8 @@ class ShelfActivity : AppCompatActivity() {
     }
 
     private fun getShelfItems(){
-        HomeActivity.items.clear()
-        HomeActivity.cart_items.clear()
+        MainActivity.items.clear()
+        MainActivity.cart_items.clear()
 
         db.document("Users/$uid")
             .get()
@@ -68,7 +70,8 @@ class ShelfActivity : AppCompatActivity() {
                             .addOnSuccessListener { document ->
                                 Log.d(TAG, "${document.id} => ${document.data}")
 
-                                val item = Item()
+                                val item =
+                                    Item()
 
                                 item.item_id = document.id
                                 item.name = document.data?.get("Name").toString()
@@ -77,8 +80,8 @@ class ShelfActivity : AppCompatActivity() {
                                 item.item_limit = quantity.toString()
                                 item.image_src = document.data?.get("Image").toString()
 
-                                HomeActivity.items.add(item)
-                                if(HomeActivity.items.size == shelfItems.size) {
+                                MainActivity.items.add(item)
+                                if(MainActivity.items.size == shelfItems.size) {
                                     addItemsToRV()
                                 }
                             }
@@ -96,15 +99,18 @@ class ShelfActivity : AppCompatActivity() {
     private fun addItemsToRV(){
         rv_items_list.layoutManager = LinearLayoutManager(this)
         rv_items_list.layoutManager = GridLayoutManager(this, 2)
-        rv_items_list.adapter = ItemAdapter(HomeActivity.items, this)
+        rv_items_list.adapter = ItemAdapter(
+            MainActivity.items,
+            this
+        )
     }
 
     private fun clearCarts() {
-        HomeActivity.items.clear()
-        HomeActivity.shelf_items.clear()
-        HomeActivity.cart_items.clear()
-        HomeActivity.cart_items_from_shelf.clear()
-        HomeActivity.billing_cart.clear()
+        MainActivity.items.clear()
+        MainActivity.shelf_items.clear()
+        MainActivity.cart_items.clear()
+        MainActivity.cart_items_from_shelf.clear()
+        MainActivity.billing_cart.clear()
         rv_items_list.removeAllViews()
 
     }

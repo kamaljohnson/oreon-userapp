@@ -21,7 +21,7 @@ class LoginActivity : AppCompatActivity() {
         if(user == null) {
             createSignInIntent()
         } else {
-            val intent = Intent(this, HomeActivity::class.java)
+            val intent = Intent(this, MainActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
         }
@@ -73,7 +73,7 @@ class LoginActivity : AppCompatActivity() {
                                 .addOnSuccessListener { userRef ->
                                     Log.d(TAG, "---> UserReference created with ID: $uid")
 
-                                    val intent = Intent(this, HomeActivity::class.java)
+                                    val intent = Intent(this, MainActivity::class.java)
                                     intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                                     startActivity(intent)
 
@@ -83,7 +83,7 @@ class LoginActivity : AppCompatActivity() {
                                 }
                         } else {
                             Log.e(TAG, "--> already present in database")
-                            val intent = Intent(this, HomeActivity::class.java)
+                            val intent = Intent(this, MainActivity::class.java)
                             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                             startActivity(intent)
                         }
