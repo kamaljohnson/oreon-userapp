@@ -22,6 +22,8 @@ class HomeFragment : Fragment() {
     val db = FirebaseFirestore.getInstance()
     val uid =  FirebaseAuth.getInstance().uid.toString()
 
+    val items: ArrayList<Item> = ArrayList()               //all the items in the inventory list
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -54,10 +56,10 @@ class HomeFragment : Fragment() {
                     item.item_limit = "0"
                     item.image_src = document.data["Image"].toString()
 
-                    MainActivity.items.add(item)
+                    items.add(item)
 
                 }
-                addItemsToRV(MainActivity.items)
+                addItemsToRV(items)
 
             }
             .addOnFailureListener { exception ->
