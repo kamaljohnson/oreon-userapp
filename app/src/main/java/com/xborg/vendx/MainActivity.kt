@@ -93,7 +93,7 @@ class MainActivity : FragmentActivity() {
 
 
         clearCarts()
-        getItems()
+//        getItems()
         getShelfItems()
 
 //        region location
@@ -197,7 +197,7 @@ class MainActivity : FragmentActivity() {
             if(it.toString().isNotEmpty()) {
                 search(it.toString())
             } else {
-                rv_items_list.removeAllViews()
+//                rv_items_list.removeAllViews()
                 addItemsToRV(items)
             }
         }
@@ -231,7 +231,7 @@ class MainActivity : FragmentActivity() {
     override fun onRestart() {
         super.onRestart()
         clearCarts()
-        getItems()
+//        getItems()
         getShelfItems()
 
 //        region location
@@ -293,36 +293,6 @@ class MainActivity : FragmentActivity() {
     }
 
     /**
-     * get all the items in the inventory
-     */
-    private fun getItems() {
-        db.collection("Inventory")
-            .get()
-            .addOnSuccessListener { result ->
-                for (document in result) {
-                    Log.d(TAG, "${document.id} => ${document.data}")
-
-                    val item = Item()
-
-                    item.item_id = document.id
-                    item.name = document.data["Name"].toString()
-                    item.cost = document.data["Cost"].toString()
-                    item.quantity = document.data["Quantity"].toString()
-                    item.item_limit = "0"
-                    item.image_src = document.data["Image"].toString()
-
-                    items.add(item)
-
-                }
-                addItemsToRV(items)
-
-            }
-            .addOnFailureListener { exception ->
-                Log.w(TAG, "Error getting documents.", exception)
-            }
-    }
-
-    /**
      * get all the items in the users' shelf
      */
     private fun getShelfItems() {
@@ -356,10 +326,9 @@ class MainActivity : FragmentActivity() {
      * as item cards
      */
     private fun addItemsToRV(items: ArrayList<Item>){
-        rv_items_list.layoutManager = LinearLayoutManager(this)
-        rv_items_list.layoutManager = GridLayoutManager(this, 2)
-        rv_items_list.adapter =
-            ItemAdapter(items, this)
+//        rv_items_list.layoutManager = LinearLayoutManager(this)
+//        rv_items_list.layoutManager = GridLayoutManager(this, 2)
+//        rv_items_list.adapter = ItemAdapter(items, this)
     }
 
     /**
@@ -409,7 +378,7 @@ class MainActivity : FragmentActivity() {
         cart_items.clear()
         cart_items_from_shelf.clear()
         billing_cart.clear()
-        rv_items_list.removeAllViews()
+//        rv_items_list.removeAllViews()
     }
 
     /**
@@ -502,7 +471,7 @@ class MainActivity : FragmentActivity() {
             Log.d(TAG, temp_items.size.toString())
         }
         Log.e(TAG, cart_items.toString())
-        rv_items_list.removeAllViews()
+//        rv_items_list.removeAllViews()
         addItemsToRV(temp_items)
     }
 
