@@ -1,11 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
+<RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".MainActivity">
+
+    <RelativeLayout
+        android:id="@+id/top_bar"
+        android:layout_width="match_parent"
+        android:layout_height="60dp">
+
+        <Button
+            android:id="@+id/home_button"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:layout_marginLeft="10dp"
+            android:layout_centerVertical="true"
+            android:text="Home"
+            android:background="@drawable/rounded_button_orange"
+            android:textColor="@color/white"
+            android:textStyle="bold">
+
+        </Button>
+
+        <Button
+            android:id="@+id/shelf_button"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/home_button"
+            android:background="@color/fui_transparent"
+            android:textColor="@color/orange"
+            android:text="Shelf"
+            android:textStyle="bold">
+
+        </Button>
+
+        <ImageView
+            android:id="@+id/settings_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:paddingRight="10dp"
+            android:src="@drawable/vert_dots_icon">
+
+        </ImageView>
+
+    </RelativeLayout>
 
     <!--region fragment view    -->
 
@@ -30,32 +74,12 @@
 
     <!--    end region-->
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/get_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:fabSize="normal"
-            app:layout_anchor="@+id/bottom_app_bar"
-            android:src="@drawable/right_arrow_icon">
-
-    </com.google.android.material.floatingactionbutton.FloatingActionButton>
-
-    <com.google.android.material.bottomappbar.BottomAppBar
-            android:id="@+id/bottom_app_bar"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_gravity="bottom"
-            app:fabAlignmentMode="end"
-            app:backgroundTint="@color/colorPrimary">
-
-    </com.google.android.material.bottomappbar.BottomAppBar>
-
     <TextView
         android:id="@+id/location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="location"
-        app:layout_anchor="@id/bottom_app_bar"
+        android:layout_alignParentBottom="true"
         app:layout_anchorGravity="bottom"
         android:paddingBottom="30dp"
         android:visibility="invisible"
@@ -64,6 +88,7 @@
 
     <EditText
         android:id="@+id/search_text"
+        android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:hint="Search"
@@ -71,11 +96,10 @@
         android:layout_gravity="bottom"
         android:paddingLeft="5dp"
         android:background="@color/colorPrimaryDark"
-        android:textColor="@color/colorPrimary"
-        android:textColorHint="@color/colorPrimary"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
         android:singleLine="true"
         android:inputType="textPersonName">
-
     </EditText>
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</RelativeLayout>

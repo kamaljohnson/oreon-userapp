@@ -5,19 +5,12 @@
     android:layout_height="match_parent"
     tools:context=".MainActivityFragments.HomeFragment">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Home">
-
-    </TextView>
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_items_list"
-        android:paddingTop="20dp"
+        android:paddingTop="70dp"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:paddingBottom="80dp" />
+        android:paddingBottom="70dp" />
 
 </FrameLayout>

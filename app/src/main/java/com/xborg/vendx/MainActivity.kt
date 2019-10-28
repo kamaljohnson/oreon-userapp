@@ -93,7 +93,7 @@ class MainActivity : FragmentActivity() {
 
 
         clearCarts()
-//        getItems()
+        getItems()
         getShelfItems()
 
 //        region location
@@ -136,6 +136,7 @@ class MainActivity : FragmentActivity() {
             Log.v("Chirp", "volume changed")
         }
 
+/*
         get_button.setOnClickListener{
             if(cart_items.size == 0) {
                 Toast.makeText(this, "Your Cart is Empty", Toast.LENGTH_SHORT).show()
@@ -181,6 +182,7 @@ class MainActivity : FragmentActivity() {
                 }
             }
         }
+*/
 
 //        TODO: to be changed to sliding activity change
         /*show_shelf.setOnClickListener{
@@ -231,7 +233,7 @@ class MainActivity : FragmentActivity() {
     override fun onRestart() {
         super.onRestart()
         clearCarts()
-//        getItems()
+        getItems()
         getShelfItems()
 
 //        region location
@@ -290,6 +292,33 @@ class MainActivity : FragmentActivity() {
         } else {
             Log.v("ChirpSDK: ", "Sent $message")
         }
+    }
+
+    private fun getItems() {
+        db.collection("Inventory")
+            .get()
+            .addOnSuccessListener { result ->
+                for (document in result) {
+                    Log.d(TAG, "${document.id} => ${document.data}")
+
+                    val item = Item()
+
+                    item.item_id = document.id
+                    item.name = document.data["Name"].toString()
+                    item.cost = document.data["Cost"].toString()
+                    item.quantity = document.data["Quantity"].toString()
+                    item.item_limit = "0"
+                    item.image_src = document.data["Image"].toString()
+
+                    items.add(item)
+
+                }
+                addItemsToRV(items)
+
+            }
+            .addOnFailureListener { exception ->
+                Log.w(TAG, "Error getting documents.", exception)
+            }
     }
 
     /**
