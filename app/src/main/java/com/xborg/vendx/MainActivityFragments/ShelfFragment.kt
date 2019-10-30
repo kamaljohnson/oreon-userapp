@@ -53,18 +53,13 @@ class ShelfFragment : Fragment() {
     ): View = inflater.inflate(com.xborg.vendx.R.layout.fragment_shelf, container, false)
 
     @SuppressLint("ResourceAsColor")
-    override fun setMenuVisibility(menuVisible: Boolean) {
-        super.setMenuVisibility(menuVisible)
-        if(menuVisible) {
+    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
+        super.setUserVisibleHint(isVisibleToUser)
+        if(isVisibleToUser) {
             Log.e(TAG, "fragment Shelf is visible")
             val activity = activity as MainActivity?
-
-            activity?.shelf_button?.setBackgroundResource(R.drawable.rounded_button_orange)
             activity?.home_button?.setBackgroundResource(R.color.fui_transparent)
-
-            activity?.shelf_button?.setTextColor(R.color.orange)
-            activity?.home_button?.setTextColor(R.color.orange)
-
+            activity?.shelf_button?.setBackgroundResource(R.drawable.rounded_button_orange)
         }
     }
 

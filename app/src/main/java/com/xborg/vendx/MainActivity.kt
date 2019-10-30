@@ -139,7 +139,6 @@ class MainActivity : FragmentActivity() {
             Log.v("Chirp", "volume changed")
         }
 
-/*
         get_button.setOnClickListener{
             if(cart_items.size == 0) {
                 Toast.makeText(this, "Your Cart is Empty", Toast.LENGTH_SHORT).show()
@@ -152,16 +151,35 @@ class MainActivity : FragmentActivity() {
                 }
 
                 if(billing_cart.size == 0) {
+                    val order = HashMap<String, Any>()
+                    order["UID"] = FirebaseAuth.getInstance().uid.toString()
+                    order["Billing_Cart"] = billing_cart
+                    order["Cart"] = cart_items
+                    order["Status"] = "Payment Pending"
 
-                    val intent = Intent(this, VendingActivity::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    intent.putExtra("cart_items", cart_items)
-                    startActivity(intent)
+                    db.collection("Orders")
+                        .add(order)
+                        .addOnSuccessListener { orderRef ->
+                            Log.d(TAG, "billReference created with ID: ${orderRef.id}")
+
+                            val order_id = orderRef.id
+
+                            val intent = Intent(this, PaymentActivity::class.java)
+                            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            intent.putExtra("order_id", order_id)
+                            intent.putExtra("cart_items", cart_items)
+                            startActivity(intent)
+
+                        }
+                        .addOnFailureListener{
+                            Log.d(TAG, "Failed to place order")
+                        }
 
                 } else {
                     val order = HashMap<String, Any>()
                     order["UID"] = FirebaseAuth.getInstance().uid.toString()
-                    order["Cart"] = billing_cart
+                    order["Billing_Cart"] = billing_cart
+                    order["Cart"] = cart_items
                     order["Status"] = "Payment Pending"
 
                     db.collection("Orders")
@@ -185,7 +203,6 @@ class MainActivity : FragmentActivity() {
                 }
             }
         }
-*/
 
 //        TODO: to be changed to sliding activity change
         /*show_shelf.setOnClickListener{
@@ -531,25 +548,5 @@ class MainActivity : FragmentActivity() {
                 ShelfFragment()
             }
         }
-    }
-
-    public fun navigate(from: Fragment? = null, to: Fragment, addToBackStack: Boolean = true) {
-        if(from != null) from.userVisibleHint = false
-
-        to.userVisibleHint = true
-
-        Log.e(TAG, "the fragment is changed")
-
-        if(from == HomeFragment()) {
-            home_button.setBackgroundResource(R.color.fui_transparent)
-            shelf_button.setBackgroundResource(R.color.orange)
-        } else {
-            home_button.setBackgroundResource(R.color.orange)
-            shelf_button.setBackgroundResource(R.color.fui_transparent)
-        }
-        val transaction = supportFragmentManager.beginTransaction()
-            .add(fragmentContainer.id, to)
-        if(addToBackStack) transaction.addToBackStack(null)
-        transaction.commit()
     }
 }

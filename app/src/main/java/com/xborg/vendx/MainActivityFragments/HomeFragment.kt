@@ -93,16 +93,13 @@ class HomeFragment : Fragment() {
     }
 
     @SuppressLint("ResourceAsColor")
-    override fun setMenuVisibility(menuVisible: Boolean) {
-        super.setMenuVisibility(menuVisible)
-        if(menuVisible) {
+    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
+        super.setUserVisibleHint(isVisibleToUser)
+        if(isVisibleToUser) {
             Log.e(TAG, "fragment Home is visible")
             val activity = activity as MainActivity?
-            activity?.shelf_button?.setBackgroundResource(R.color.fui_transparent)
             activity?.home_button?.setBackgroundResource(R.drawable.rounded_button_orange)
-
-            activity?.shelf_button?.setTextColor(R.color.orange)
-            activity?.home_button?.setTextColor(R.color.white)
+            activity?.shelf_button?.setBackgroundResource(R.color.fui_transparent)
         }
     }
 
@@ -132,8 +129,4 @@ class HomeFragment : Fragment() {
     }
 
 //    endregion
-
-    public fun navigateToSlave() {
-        (activity as MainActivity).navigate(from = this, to = ShelfFragment())
-    }
 }

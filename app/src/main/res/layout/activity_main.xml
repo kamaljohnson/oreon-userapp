@@ -20,7 +20,6 @@
             android:layout_centerVertical="true"
             android:text="Home"
             android:background="@drawable/rounded_button_orange"
-            android:textColor="@color/white"
             android:textStyle="bold">
 
         </Button>
@@ -32,7 +31,6 @@
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/home_button"
             android:background="@color/fui_transparent"
-            android:textColor="@color/orange"
             android:text="Shelf"
             android:textStyle="bold">
 
@@ -166,6 +164,7 @@
     </RelativeLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/get_button"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_alignParentBottom="true"
