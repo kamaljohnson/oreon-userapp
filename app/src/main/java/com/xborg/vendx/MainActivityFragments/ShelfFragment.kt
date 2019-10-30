@@ -1,4 +1,5 @@
 package com.xborg.vendx.MainActivityFragments
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,13 +11,13 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.xborg.vendx.MainActivity
-import com.xborg.vendx.R
 import com.xborg.vendx.SupportClasses.Item
 import com.xborg.vendx.SupportClasses.ItemAdapter
-import kotlinx.android.synthetic.main.activity_shelf.*
-import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_home.rv_items_list
+import com.xborg.vendx.MainActivity
+import com.xborg.vendx.R
+
 
 private var TAG = "ShelfFragment"
 
@@ -26,11 +27,22 @@ class ShelfFragment : Fragment() {
     val uid =  FirebaseAuth.getInstance().uid.toString()
 
     val items: ArrayList<Item> = ArrayList()               //all the items in the inventory list
+    var temp_items: ArrayList<Item> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         getShelfItems()
+
+        /*search_text.addTextChangedListener{
+            Log.e(TAG, "the searching string is ${it.toString()}")
+            if(it.toString().isNotEmpty()) {
+                search(it.toString())
+            } else {
+                rv_items_list.removeAllViews()
+                addItemsToRV(MainActivity.items)
+            }
+        }*/
     }
 
 
@@ -38,7 +50,23 @@ class ShelfFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View = inflater.inflate(R.layout.fragment_shelf, container, false)
+    ): View = inflater.inflate(com.xborg.vendx.R.layout.fragment_shelf, container, false)
+
+    @SuppressLint("ResourceAsColor")
+    override fun setMenuVisibility(menuVisible: Boolean) {
+        super.setMenuVisibility(menuVisible)
+        if(menuVisible) {
+            Log.e(TAG, "fragment Shelf is visible")
+            val activity = activity as MainActivity?
+
+            activity?.shelf_button?.setBackgroundResource(R.drawable.rounded_button_orange)
+            activity?.home_button?.setBackgroundResource(R.color.fui_transparent)
+
+            activity?.shelf_button?.setTextColor(R.color.orange)
+            activity?.home_button?.setTextColor(R.color.orange)
+
+        }
+    }
 
     private fun getShelfItems(){
         MainActivity.items.clear()
@@ -99,4 +127,32 @@ class ShelfFragment : Fragment() {
         rv_items_list.layoutManager = GridLayoutManager(context, 2)
         rv_items_list.adapter = context?.let { ItemAdapter(items, it) }
     }
+
+
+    //    region item search
+
+    private fun search(search_name: String) {
+        temp_items = ArrayList()
+        for (item in MainActivity.items) {
+            Log.d(TAG, item.toString())
+            var i = 0
+            var j = 0
+            while(i < item.name.length) {
+                if(item.name[i].toUpperCase() == search_name[j].toUpperCase()) {
+                    j++
+                    if(j == search_name.length) {
+                        temp_items.add(item)
+                        break
+                    }
+                }
+                i++
+            }
+            Log.d(TAG, temp_items.size.toString())
+        }
+        Log.e(TAG, MainActivity.cart_items.toString())
+        rv_items_list.removeAllViews()
+        addItemsToRV(temp_items)
+    }
+
+//    endregion
 }

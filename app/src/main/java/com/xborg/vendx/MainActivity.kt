@@ -12,6 +12,7 @@ import android.os.Looper
 import android.provider.Settings
 import android.util.Log
 import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
@@ -63,6 +64,8 @@ class MainActivity : FragmentActivity() {
             findViewById<TextView>(R.id.location).text = mLastLocation.longitude.toString()
         }
     }
+
+    private lateinit var fragmentContainer: ViewGroup
 
     val db = FirebaseFirestore.getInstance()
     val uid =  FirebaseAuth.getInstance().uid.toString()
@@ -194,7 +197,7 @@ class MainActivity : FragmentActivity() {
             }
         }*/
 
-        search_text.addTextChangedListener{
+        /*search_text.addTextChangedListener{
             Log.e(TAG, "the searching string is ${it.toString()}")
             if(it.toString().isNotEmpty()) {
                 search(it.toString())
@@ -202,6 +205,12 @@ class MainActivity : FragmentActivity() {
 //                rv_items_list.removeAllViews()
                 addItemsToRV(items)
             }
+        }*/
+
+        search_button.setOnClickListener{
+            search_text.visibility = View.VISIBLE
+            search_button.visibility = View.INVISIBLE
+            nearby_machine_count_text.visibility = View.INVISIBLE
         }
 
     }
@@ -481,7 +490,7 @@ class MainActivity : FragmentActivity() {
     }
 //    region item search
 
-    private fun search(search_name: String) {
+/*    private fun search(search_name: String) {
         temp_items = ArrayList()
         for (item in items) {
             Log.d(TAG, item.toString())
@@ -502,7 +511,7 @@ class MainActivity : FragmentActivity() {
         Log.e(TAG, cart_items.toString())
 //        rv_items_list.removeAllViews()
         addItemsToRV(temp_items)
-    }
+    }*/
 
 //    endregion
 
@@ -522,5 +531,25 @@ class MainActivity : FragmentActivity() {
                 ShelfFragment()
             }
         }
+    }
+
+    public fun navigate(from: Fragment? = null, to: Fragment, addToBackStack: Boolean = true) {
+        if(from != null) from.userVisibleHint = false
+
+        to.userVisibleHint = true
+
+        Log.e(TAG, "the fragment is changed")
+
+        if(from == HomeFragment()) {
+            home_button.setBackgroundResource(R.color.fui_transparent)
+            shelf_button.setBackgroundResource(R.color.orange)
+        } else {
+            home_button.setBackgroundResource(R.color.orange)
+            shelf_button.setBackgroundResource(R.color.fui_transparent)
+        }
+        val transaction = supportFragmentManager.beginTransaction()
+            .add(fragmentContainer.id, to)
+        if(addToBackStack) transaction.addToBackStack(null)
+        transaction.commit()
     }
 }

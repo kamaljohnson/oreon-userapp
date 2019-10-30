@@ -86,20 +86,94 @@
         android:paddingLeft="10dp">
     </TextView>
 
-    <EditText
-        android:id="@+id/search_text"
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="65dp"
+        android:layout_alignParentBottom="true">
+
+
+
+
+        <ActionMenuView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/rounded_action_bar">
+        </ActionMenuView>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/overlay_icon"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentTop="true">
+
+        </ImageView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:text="B-X160"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:paddingBottom="15dp"
+            android:textColor="@color/white">
+
+        </TextView>
+
+        <ImageView
+            android:id="@+id/search_button"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="15dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/search_icon">
+        </ImageView>
+
+        <Button
+            android:id="@+id/nearby_machine_count_text"
+            android:text="3"
+            android:textSize="17dp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/rounded_button_orange"
+            android:layout_marginRight="15dp">
+
+        </Button>
+
+        <EditText
+            android:id="@+id/search_text"
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:hint="Search"
+            android:textSize="18dp"
+            android:layout_gravity="bottom"
+            android:paddingLeft="5dp"
+            android:textColor="@color/cardview_dark_background"
+            android:background="@color/white"
+            android:visibility="invisible"
+            android:textColorHint="@color/white"
+            android:singleLine="true"
+            android:inputType="textPersonName">
+        </EditText>
+
+    </RelativeLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_alignParentBottom="true"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:hint="Search"
-        android:textSize="18dp"
-        android:layout_gravity="bottom"
-        android:paddingLeft="5dp"
-        android:background="@color/colorPrimaryDark"
-        android:textColor="@color/white"
-        android:textColorHint="@color/white"
-        android:singleLine="true"
-        android:inputType="textPersonName">
-    </EditText>
+        android:layout_marginBottom="80dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:src="@drawable/right_arrow_icon">
+
+    </com.google.android.material.floatingactionbutton.FloatingActionButton>
 
 </RelativeLayout>

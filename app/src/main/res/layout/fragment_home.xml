@@ -7,10 +7,10 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_items_list"
-        android:paddingTop="70dp"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:paddingBottom="70dp" />
+        android:layout_marginTop="65dp"
+        android:layout_marginBottom="70dp"/>
 
 </FrameLayout>
