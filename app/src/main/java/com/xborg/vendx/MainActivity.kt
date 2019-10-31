@@ -70,8 +70,6 @@ class MainActivity : FragmentActivity() {
     val db = FirebaseFirestore.getInstance()
     val uid =  FirebaseAuth.getInstance().uid.toString()
 
-    var temp_items: ArrayList<Item> = ArrayList()
-
     companion object{
         val items: ArrayList<Item> = ArrayList()               //all the items in the inventory list
         val shelf_items: HashMap<String, Int> = HashMap()               //list of item_ids with count of shelf items
@@ -93,7 +91,6 @@ class MainActivity : FragmentActivity() {
         // The pager adapter, which provides the pages to the view pager widget.
         val pagerAdapter = ScreenSlidePagerAdapter(supportFragmentManager)
         mPager.adapter = pagerAdapter
-
 
         clearCarts()
         getItems()
@@ -140,10 +137,36 @@ class MainActivity : FragmentActivity() {
         }
 
         get_button.setOnClickListener{
-            if(cart_items.size == 0) {
+            if(cart_items.size == 0 && cart_items_from_shelf.size == 0) {
                 Toast.makeText(this, "Your Cart is Empty", Toast.LENGTH_SHORT).show()
             } else {
+
+                Log.d(TAG, "_______ CART _______")
+                cart_items.forEach{
+                    Log.d(TAG, it.key + " => " + it.value)
+                }
+
+                Log.d(TAG, "_______ CART FROM SHELF_______")
+                cart_items_from_shelf.forEach{
+                    Log.d(TAG, it.key + " => " + it.value)
+                }
+
+                Log.d(TAG, "_______ BILLING CART _______")
+                billing_cart.forEach{
+                    Log.d(TAG, it.key + " => " + it.value)
+                }
+
                 createBillingCart()
+
+                Log.d(TAG, "_______ CART _______")
+                cart_items.forEach{
+                    Log.d(TAG, it.key + " => " + it.value)
+                }
+
+                Log.d(TAG, "_______ CART FROM SHELF_______")
+                cart_items_from_shelf.forEach{
+                    Log.d(TAG, it.key + " => " + it.value)
+                }
 
                 Log.d(TAG, "_______ BILLING CART _______")
                 billing_cart.forEach{
@@ -393,7 +416,21 @@ class MainActivity : FragmentActivity() {
      * the billing_cart is used in PaymentActivity
      */
     private fun createBillingCart() {
-        Log.d(TAG, "_______ CART ITEMS _______")
+        cart_items.forEach { item ->    //key: id, value: count
+            val id = item.key
+            val count = item.value
+            billing_cart[id] = count
+        }
+
+        cart_items_from_shelf.forEach { item ->    //key: id, value: count
+            val id = item.key
+            val count = item.value
+            if(cart_items.containsKey(id)) {
+                cart_items[id] = cart_items[id]?.plus(count) !!
+            }
+            cart_items[id] = count
+        }
+        /*Log.d(TAG, "_______ CART ITEMS _______")
         cart_items.forEach{item -> //key: id, value: count
 
             Log.d(TAG, item.key + " => " + item.value)
@@ -413,7 +450,7 @@ class MainActivity : FragmentActivity() {
             } else {
                 billing_cart[cart_id] = cart_item_count
             }
-        }
+        }*/
     }
 
     /**

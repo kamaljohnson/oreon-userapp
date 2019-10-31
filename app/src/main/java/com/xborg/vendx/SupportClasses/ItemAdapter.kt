@@ -42,10 +42,13 @@ class ItemAdapter(val items : ArrayList<Item>, val context: Context) : RecyclerV
         holder.name.text = items[position].name
         if(items[position].cost != "-1") {
             holder.cost.text = "₹ ${items[position].cost}"
-            holder.item_limit.text = "10 left"
+            holder.item_limit.text = "10"
+            holder.item_limit.visibility = View.INVISIBLE
         } else {
-            holder.cost.text = ""
-            holder.item_limit.text = items[position].item_limit + " left"
+            holder.cost.text = "-1"
+            holder.cost.visibility = View.INVISIBLE
+            holder.item_limit.text = items[position].item_limit
+            holder.item_limit.visibility = View.VISIBLE
         }
 
         if(MainActivity.cart_items[items[position].item_id] != null) {
@@ -92,8 +95,9 @@ class ItemViewHolder (view: View) : RecyclerView.ViewHolder(view) {
 
         Log.e(TAG, "item count : " + purchase_count.text.toString())
 
-        if(cost.text == "-1") { //prevents displaying the item cost in shelf activity
-            cost.text = ""
+        if(cost.text == "-1") {
+            Log.e(TAG, "cost not shown")
+            cost.visibility = View.INVISIBLE
         }
 
         image.setOnClickListener{
@@ -125,7 +129,11 @@ class ItemViewHolder (view: View) : RecyclerView.ViewHolder(view) {
                 Toast.makeText(context, "You have reached the purchase limit for this item", Toast.LENGTH_SHORT).show()
             }
 
-            MainActivity.cart_items[view.item_id.text.toString()] = count
+            if(cost.text == "-1") {
+                MainActivity.cart_items_from_shelf[view.item_id.text.toString()] = count
+            } else {
+                MainActivity.cart_items[view.item_id.text.toString()] = count
+            }
             purchase_count.text = count.toString()
         }
 
@@ -144,7 +152,11 @@ class ItemViewHolder (view: View) : RecyclerView.ViewHolder(view) {
                 Toast.makeText(context, "You have reached the purchase limit for this item", Toast.LENGTH_SHORT).show()
             }
 
-            MainActivity.cart_items[view.item_id.text.toString()] = count
+            if(cost.text == "-1") {
+                MainActivity.cart_items_from_shelf[view.item_id.text.toString()] = count
+            } else {
+                MainActivity.cart_items[view.item_id.text.toString()] = count
+            }
 
             purchase_count.text = count.toString()
         }
@@ -153,7 +165,12 @@ class ItemViewHolder (view: View) : RecyclerView.ViewHolder(view) {
             var count = purchase_count.text.toString().toInt()
             count-=1
             add_button.visibility = View.VISIBLE
-            MainActivity.cart_items[view.item_id.text.toString()] = count
+            if(cost.text == "-1") {
+                MainActivity.cart_items_from_shelf[view.item_id.text.toString()] = count
+            } else {
+                MainActivity.cart_items[view.item_id.text.toString()] = count
+            }
+
             if(count == 0){
                 add_button.visibility = View.INVISIBLE
                 remove_button.visibility = View.INVISIBLE
@@ -161,6 +178,7 @@ class ItemViewHolder (view: View) : RecyclerView.ViewHolder(view) {
                 MainActivity.cart_items.remove(view.item_id.text.toString())
             }
             purchase_count.text = count.toString()
+
         }
 
         info_button.setOnClickListener{

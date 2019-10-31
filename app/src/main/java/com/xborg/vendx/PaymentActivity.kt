@@ -1,8 +1,10 @@
 package com.xborg.vendx
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.graphics.Typeface
 import android.net.ConnectivityManager
 import android.net.Uri
@@ -13,6 +15,7 @@ import android.view.View
 import android.widget.TableRow
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_payment.*
 import kotlin.collections.ArrayList
@@ -62,6 +65,7 @@ class PaymentActivity : AppCompatActivity() {
         // [END listen_document]
     }
 
+    @SuppressLint("ResourceAsColor")
     private fun calculateBill() : Float {
         var bill = 0f
 
@@ -81,9 +85,9 @@ class PaymentActivity : AppCompatActivity() {
 
         table.addView(row)
 
-        for(cart_item in MainActivity.cart_items) {
-            val item_id = cart_item.key
-            val item_count = cart_item.value
+        for(item in MainActivity.cart_items) {
+            val item_id = item.key
+            val item_count = item.value
             for (item in MainActivity.items) {
                 if (item.item_id == item_id) {
                     // creating item row and adding to table
@@ -111,7 +115,6 @@ class PaymentActivity : AppCompatActivity() {
 
         row = TableRow(this)
         col_2_text = TextView(this)
-
 
         col_1_text = TextView(this)
         col_2_text.text = "From Shelf"
@@ -123,9 +126,9 @@ class PaymentActivity : AppCompatActivity() {
         row.addView(col_3_text)
         table.addView(row)
 
-        for(cart_item in MainActivity.cart_items_from_shelf) {
-            val item_id = cart_item.key
-            val item_count = cart_item.value
+        for(item in MainActivity.cart_items_from_shelf) {
+            val item_id = item.key
+            val item_count = item.value
             for (item in MainActivity.items) {
                 if (item.item_id == item_id) {
                     // creating item row and adding to table
@@ -136,10 +139,12 @@ class PaymentActivity : AppCompatActivity() {
                     col_3_text = TextView(this)
 
                     col_1_text.text = item.name
+                    col_1_text.setTextColor(ContextCompat.getColor(this, R.color.green))
                     col_1_text.setTypeface(null, Typeface.BOLD)
 
                     col_2_text.text = item_count.toString()
                     col_2_text.textDirection = View.TEXT_DIRECTION_RTL
+                    col_2_text.setTextColor(ContextCompat.getColor(this, R.color.green))
                     col_2_text.setTypeface(null, Typeface.BOLD)
 
                     row.addView(col_1_text)
@@ -154,7 +159,6 @@ class PaymentActivity : AppCompatActivity() {
         row = TableRow(this)
         col_2_text = TextView(this)
 
-
         col_1_text = TextView(this)
         col_2_text.text = "Bill"
         col_2_text.setTypeface(null, Typeface.BOLD)
@@ -165,9 +169,9 @@ class PaymentActivity : AppCompatActivity() {
         row.addView(col_3_text)
         table.addView(row)
 
-        for (cart_item in MainActivity.billing_cart) {
-            val item_id = cart_item.key
-            val item_count = cart_item.value
+        for (item in MainActivity.billing_cart) {
+            val item_id = item.key
+            val item_count = item.value
             for (item in MainActivity.items) {
                 if (item.item_id == item_id) {
                     // creating item row and adding to table
@@ -180,14 +184,17 @@ class PaymentActivity : AppCompatActivity() {
 
                     col_1_text.text = item.name
                     col_1_text.setTypeface(null, Typeface.BOLD)
+                    col_1_text.setTextColor(ContextCompat.getColor(this, R.color.colorAccent))
 
                     col_2_text.text = item_count.toString()
                     col_2_text.textDirection = View.TEXT_DIRECTION_RTL
                     col_2_text.setTypeface(null, Typeface.BOLD)
+                    col_2_text.setTextColor(ContextCompat.getColor(this, R.color.colorAccent))
 
                     col_3_text.text = (item.cost.toFloat() * item_count).toString()
                     col_3_text.textDirection = View.TEXT_DIRECTION_RTL
                     col_3_text.setTypeface(null, Typeface.BOLD)
+                    col_3_text.setTextColor(ContextCompat.getColor(this, R.color.colorAccent))
 
                     row.addView(col_1_text)
                     row.addView(col_2_text)
@@ -204,7 +211,6 @@ class PaymentActivity : AppCompatActivity() {
         col_1_text = TextView(this)
         col_2_text = TextView(this)
         col_3_text = TextView(this)
-
 
         col_1_text.text = "Total"
         col_1_text.setTypeface(null, Typeface.BOLD)
