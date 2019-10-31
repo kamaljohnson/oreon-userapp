@@ -401,7 +401,7 @@ class MainActivity : FragmentActivity() {
 
     /**
      * adds all the items to the recycler view
-     * as item cards
+     * as item_card cards
      */
     private fun addItemsToRV(items: ArrayList<Item>){
 //        rv_items_list.layoutManager = LinearLayoutManager(this)
@@ -431,11 +431,11 @@ class MainActivity : FragmentActivity() {
             cart_items[id] = count
         }
         /*Log.d(TAG, "_______ CART ITEMS _______")
-        cart_items.forEach{item -> //key: id, value: count
+        cart_items.forEach{item_card -> //key: id, value: count
 
-            Log.d(TAG, item.key + " => " + item.value)
-            val cart_id = item.key
-            val cart_item_count = item.value
+            Log.d(TAG, item_card.key + " => " + item_card.value)
+            val cart_id = item_card.key
+            val cart_item_count = item_card.value
 
             if(shelf_items[cart_id] != null) {
 
@@ -542,19 +542,19 @@ class MainActivity : FragmentActivity() {
             Looper.myLooper()
         )
     }
-//    region item search
+//    region item_card search
 
 /*    private fun search(search_name: String) {
         temp_items = ArrayList()
-        for (item in items) {
-            Log.d(TAG, item.toString())
+        for (item_card in items) {
+            Log.d(TAG, item_card.toString())
             var i = 0
             var j = 0
-            while(i < item.name.length) {
-                if(item.name[i].toUpperCase() == search_name[j].toUpperCase()) {
+            while(i < item_card.name.length) {
+                if(item_card.name[i].toUpperCase() == search_name[j].toUpperCase()) {
                     j++
                     if(j == search_name.length) {
-                        temp_items.add(item)
+                        temp_items.add(item_card)
                         break
                     }
                 }

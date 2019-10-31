@@ -18,26 +18,31 @@
             android:theme="@style/AppTheme">
         <activity
                 android:name=".ItemInfoActivity"
-                android:screenOrientation="portrait"/>
+                android:screenOrientation="portrait"
+                android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
                 android:name=".OfferActivity"
-                android:screenOrientation="portrait" />
+                android:screenOrientation="portrait"
+                android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
                 android:name=".VendingActivity"
-                android:screenOrientation="portrait"/>
+                android:screenOrientation="portrait"
+                android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
                 android:name=".ShelfActivity"
-                android:screenOrientation="portrait"/>
+                android:screenOrientation="portrait"
+                android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
                 android:name=".PaymentActivity"
-                android:screenOrientation="portrait" />
+                android:screenOrientation="portrait"
+                android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
                 android:name=".MainActivity"
-                android:label="@string/title_activity_home"
                 android:screenOrientation="portrait"
                 android:theme="@style/AppTheme.NoActionBar" />
         <activity

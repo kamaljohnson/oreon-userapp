@@ -90,7 +90,7 @@ class PaymentActivity : AppCompatActivity() {
             val item_count = item.value
             for (item in MainActivity.items) {
                 if (item.item_id == item_id) {
-                    // creating item row and adding to table
+                    // creating item_card row and adding to table
 
                     row = TableRow(this)
                     col_1_text = TextView(this)
@@ -131,7 +131,7 @@ class PaymentActivity : AppCompatActivity() {
             val item_count = item.value
             for (item in MainActivity.items) {
                 if (item.item_id == item_id) {
-                    // creating item row and adding to table
+                    // creating item_card row and adding to table
 
                     row = TableRow(this)
                     col_1_text = TextView(this)
@@ -174,7 +174,7 @@ class PaymentActivity : AppCompatActivity() {
             val item_count = item.value
             for (item in MainActivity.items) {
                 if (item.item_id == item_id) {
-                    // creating item row and adding to table
+                    // creating item_card row and adding to table
 
                     row = TableRow(this)
                     col_1_text = TextView(this)

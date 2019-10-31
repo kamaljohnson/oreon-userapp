@@ -4,10 +4,15 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.xborg.vendx.MainActivity.Companion.items
 import com.xborg.vendx.SupportClasses.Item
+import com.xborg.vendx.SupportClasses.ItemAdapter
+import com.xborg.vendx.SupportClasses.ItemSlipAdapter
+import kotlinx.android.synthetic.main.fragment_home.*
 
 private var TAG = "VendingActivity"
 
@@ -58,10 +63,10 @@ class VendingActivity : AppCompatActivity() {
 
                                 bag_items[item.item_id] = quantity.toInt()
                                 Log.e(TAG, item.item_id + " -> " + quantity)
-//                                items.add(item)
+                                items.add(item)
 
                                 if(items.size == shelfItems.size) {
-//                                    addItemsToRV(items)
+                                    addItemsToRV(items)
                                 }
                             }
                             .addOnFailureListener{exception ->
@@ -73,5 +78,15 @@ class VendingActivity : AppCompatActivity() {
             .addOnFailureListener {exception ->
                 Log.w(TAG, "Error getting documents.", exception)
             }
+    }
+
+    /**
+     * adds all the items to the recycler view
+     * as item_card cards
+     */
+    private fun addItemsToRV(items: ArrayList<Item>){
+        rv_items_list.layoutManager = LinearLayoutManager(this)
+        rv_items_list.layoutManager = GridLayoutManager(this, 1)
+        rv_items_list.adapter = ItemSlipAdapter(items, this)
     }
 }

@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,7 +19,6 @@ import kotlinx.android.synthetic.main.fragment_home.rv_items_list
 import com.xborg.vendx.MainActivity
 import com.xborg.vendx.R
 
-
 private var TAG = "ShelfFragment"
 
 class ShelfFragment : Fragment() {
@@ -29,12 +29,15 @@ class ShelfFragment : Fragment() {
     val items: ArrayList<Item> = ArrayList()               //all the items in the inventory list
     var temp_items: ArrayList<Item> = ArrayList()
 
+    var is_visible: Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         getShelfItems()
 
-        /*search_text.addTextChangedListener{
+        val activity = activity as MainActivity?
+        activity?.search_text?.addTextChangedListener{
             Log.e(TAG, "the searching string is ${it.toString()}")
             if(it.toString().isNotEmpty()) {
                 search(it.toString())
@@ -42,9 +45,8 @@ class ShelfFragment : Fragment() {
                 rv_items_list.removeAllViews()
                 addItemsToRV(MainActivity.items)
             }
-        }*/
+        }
     }
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -57,9 +59,12 @@ class ShelfFragment : Fragment() {
         super.setUserVisibleHint(isVisibleToUser)
         if(isVisibleToUser) {
             Log.e(TAG, "fragment Shelf is visible")
+            is_visible = true
             val activity = activity as MainActivity?
             activity?.home_button?.setBackgroundResource(R.color.fui_transparent)
             activity?.shelf_button?.setBackgroundResource(R.drawable.rounded_button_orange)
+        } else {
+            is_visible = false
         }
     }
 
@@ -115,7 +120,7 @@ class ShelfFragment : Fragment() {
 
     /**
      * adds all the items to the recycler view
-     * as item cards
+     * as item_card cards
      */
     private fun addItemsToRV(items: ArrayList<Item>){
         rv_items_list.layoutManager = LinearLayoutManager(context)
@@ -124,7 +129,7 @@ class ShelfFragment : Fragment() {
     }
 
 
-    //    region item search
+    //    region item_card search
 
     private fun search(search_name: String) {
         temp_items = ArrayList()

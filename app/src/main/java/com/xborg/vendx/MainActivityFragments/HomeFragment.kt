@@ -28,12 +28,13 @@ class HomeFragment : Fragment() {
     val items: ArrayList<Item> = ArrayList()               //all the items in the inventory list
     var temp_items: ArrayList<Item> = ArrayList()
 
+    var is_visible: Boolean = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         getItems()
-
-        /*search_text.addTextChangedListener{
+        val activity = activity as MainActivity?
+        activity?.search_text?.addTextChangedListener{
             Log.e(TAG, "the searching string is ${it.toString()}")
             if(it.toString().isNotEmpty()) {
                 search(it.toString())
@@ -41,7 +42,7 @@ class HomeFragment : Fragment() {
                 rv_items_list.removeAllViews()
                 addItemsToRV(MainActivity.items)
             }
-        }*/
+        }
     }
 
     override fun onCreateView(
@@ -49,7 +50,6 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View = inflater.inflate(R.layout.fragment_home, container, false)
-
 
     /**
      * get all the items in the inventory
@@ -84,7 +84,7 @@ class HomeFragment : Fragment() {
 
     /**
      * adds all the items to the recycler view
-     * as item cards
+     * as item_card cards
      */
     private fun addItemsToRV(items: ArrayList<Item>){
         rv_items_list.layoutManager = LinearLayoutManager(context)
@@ -96,14 +96,17 @@ class HomeFragment : Fragment() {
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         super.setUserVisibleHint(isVisibleToUser)
         if(isVisibleToUser) {
+            is_visible = true
             Log.e(TAG, "fragment Home is visible")
             val activity = activity as MainActivity?
             activity?.home_button?.setBackgroundResource(R.drawable.rounded_button_orange)
             activity?.shelf_button?.setBackgroundResource(R.color.fui_transparent)
+        } else {
+            is_visible = false
         }
     }
 
-//    region item search
+//    region item_card search
 
     private fun search(search_name: String) {
         temp_items = ArrayList()
