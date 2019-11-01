@@ -2,6 +2,7 @@ package com.xborg.vendx
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -13,17 +14,16 @@ import android.provider.Settings
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager.widget.ViewPager
 import com.google.android.gms.location.*
 import com.google.android.material.snackbar.Snackbar
@@ -34,7 +34,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.xborg.vendx.MainActivityFragments.HomeFragment
 import com.xborg.vendx.MainActivityFragments.ShelfFragment
 import com.xborg.vendx.SupportClasses.Item
-import com.xborg.vendx.SupportClasses.ItemAdapter
 
 /**
  *  Keys used for chrip lib. visit https://developers.chirp.io/ for details.
@@ -80,6 +79,7 @@ class MainActivity : FragmentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
 
         setContentView(R.layout.activity_main)
 
@@ -227,30 +227,19 @@ class MainActivity : FragmentActivity() {
             }
         }
 
-//        TODO: to be changed to sliding activity change
-        /*show_shelf.setOnClickListener{
-            if(shelf_items.size == 0) {
-                Toast.makeText(this, "Your Shelf is Empty", Toast.LENGTH_SHORT).show()
-            } else {
-                val intent = Intent(this, ShelfActivity::class.java)
-                startActivity(intent)
-            }
-        }*/
+        search_text.setImeOptions(EditorInfo.IME_ACTION_DONE)
 
-        /*search_text.addTextChangedListener{
-            Log.e(TAG, "the searching string is ${it.toString()}")
-            if(it.toString().isNotEmpty()) {
-                search(it.toString())
+        search_text.setOnEditorActionListener { v, actionId, event ->
+            if(actionId == EditorInfo.IME_ACTION_DONE){
+                hideSearchBar(search_text.rootView)
+                true
             } else {
-//                rv_items_list.removeAllViews()
-                addItemsToRV(items)
+                false
             }
-        }*/
+        }
 
         search_button.setOnClickListener{
-            search_text.visibility = View.VISIBLE
-            search_button.visibility = View.INVISIBLE
-            nearby_machine_count_text.visibility = View.INVISIBLE
+            showSearchBar()
         }
 
     }
@@ -542,32 +531,6 @@ class MainActivity : FragmentActivity() {
             Looper.myLooper()
         )
     }
-//    region item_card search
-
-/*    private fun search(search_name: String) {
-        temp_items = ArrayList()
-        for (item_card in items) {
-            Log.d(TAG, item_card.toString())
-            var i = 0
-            var j = 0
-            while(i < item_card.name.length) {
-                if(item_card.name[i].toUpperCase() == search_name[j].toUpperCase()) {
-                    j++
-                    if(j == search_name.length) {
-                        temp_items.add(item_card)
-                        break
-                    }
-                }
-                i++
-            }
-            Log.d(TAG, temp_items.size.toString())
-        }
-        Log.e(TAG, cart_items.toString())
-//        rv_items_list.removeAllViews()
-        addItemsToRV(temp_items)
-    }*/
-
-//    endregion
 
     /**
      * A simple pager adapter that represents 5 ScreenSlidePageFragment objects, in
@@ -585,5 +548,24 @@ class MainActivity : FragmentActivity() {
                 ShelfFragment()
             }
         }
+    }
+
+    private fun hideSearchBar(view: View) {
+        search_text.visibility = View.INVISIBLE
+        search_button.visibility = View.VISIBLE
+        nearby_machine_count_text.visibility = View.VISIBLE
+
+        hideKeyboard(view)
+    }
+
+    private fun showSearchBar() {
+        search_text.visibility = View.VISIBLE
+        search_button.visibility = View.INVISIBLE
+        nearby_machine_count_text.visibility = View.INVISIBLE
+    }
+
+    fun hideKeyboard(view: View) {
+        val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 }
