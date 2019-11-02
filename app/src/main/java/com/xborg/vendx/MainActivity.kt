@@ -140,6 +140,7 @@ class MainActivity : FragmentActivity() {
             if(cart_items.size == 0 && cart_items_from_shelf.size == 0) {
                 Toast.makeText(this, "Your Cart is Empty", Toast.LENGTH_SHORT).show()
             } else {
+                get_button.isEnabled = false
 
                 Log.d(TAG, "_______ CART _______")
                 cart_items.forEach{

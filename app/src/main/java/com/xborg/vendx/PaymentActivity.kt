@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.graphics.Typeface
 import android.net.ConnectivityManager
 import android.net.Uri
@@ -41,11 +40,18 @@ class PaymentActivity : AppCompatActivity() {
             payUsingUpi(amount = bill_amount, upiId = bank_upi_id, name = "kamal", note = "VendX Purchase")
         }
 
-        done_button.setOnClickListener{
+        get_now_button.setOnClickListener{
             val intent = Intent(this, VendingActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
         }
+
+        done_button.setOnClickListener{
+            val intent = Intent(this, MainActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+        }
+
         statusListener()
     }
 
@@ -231,6 +237,7 @@ class PaymentActivity : AppCompatActivity() {
     //TODO: call this when Order>Status -> Payment Checked
     private fun onPaymentSuccessful() {
         pay_button.visibility = View.INVISIBLE
+        get_now_button.visibility = View.VISIBLE
         done_button.visibility = View.VISIBLE
     }
 
