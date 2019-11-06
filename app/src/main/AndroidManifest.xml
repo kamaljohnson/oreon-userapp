@@ -30,12 +30,7 @@
                 android:name=".VendingActivity"
                 android:screenOrientation="portrait"
                 android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity
-                android:name=".ShelfActivity"
-                android:screenOrientation="portrait"
-                android:theme="@style/AppTheme.NoActionBar" />
-
+        
         <activity
                 android:name=".PaymentActivity"
                 android:screenOrientation="portrait"

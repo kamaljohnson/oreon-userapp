@@ -9,7 +9,7 @@ import com.bumptech.glide.Glide
 import com.xborg.vendx.R
 import kotlinx.android.synthetic.main.item_card.view.*
 
-private var TAG = "ItemAdapter"
+private var TAG = "ItemSlipAdapter"
 
 class ItemSlipAdapter(val items : ArrayList<Item>, val context: Context) : RecyclerView.Adapter<ItemSlipViewHolder>() {
 

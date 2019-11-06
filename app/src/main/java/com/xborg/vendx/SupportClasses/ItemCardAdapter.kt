@@ -15,7 +15,7 @@ import com.xborg.vendx.MainActivity
 import com.xborg.vendx.R
 import kotlinx.android.synthetic.main.item_card.view.*
 
-private var TAG = "ItemAdapter"
+private var TAG = "ItemCardAdapter"
 
 var previous_view: View? = null
 
@@ -182,7 +182,6 @@ class ItemViewHolder (view: View) : RecyclerView.ViewHolder(view) {
                 MainActivity.cart_items.remove(item_id.text)
             }
             purchase_count.text = count.toString()
-
         }
 
         info_button.setOnClickListener{
