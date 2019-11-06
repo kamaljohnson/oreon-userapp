@@ -164,28 +164,30 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="70dp"
+        android:layout_height="80dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_marginRight="10dp"
         android:layout_marginBottom="80dp">
 
-
-        <ImageView
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/get_button"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:background="@drawable/rounded_action_button"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
             android:src="@drawable/right_arrow_icon">
 
-        </ImageView>
+        </com.google.android.material.floatingactionbutton.FloatingActionButton>
+
 
         <Button
             android:layout_width="25dp"
             android:layout_height="25dp"
-            android:text="0"
+            android:text="10"
             android:textStyle="bold"
+            android:textAlignment="center"
             android:textColor="@color/white"
             android:layout_alignRight="@id/get_button"
             android:background="@drawable/cart_item_count">

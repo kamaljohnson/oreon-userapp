@@ -179,7 +179,7 @@ class ItemViewHolder (view: View) : RecyclerView.ViewHolder(view) {
                 add_button.visibility = View.INVISIBLE
                 remove_button.visibility = View.INVISIBLE
                 purchase_count.visibility = View.INVISIBLE
-                MainActivity.cart_items.remove(item_id.toString())
+                MainActivity.cart_items.remove(item_id.text)
             }
             purchase_count.text = count.toString()
 
