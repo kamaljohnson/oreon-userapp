@@ -36,16 +36,6 @@
 
         </Button>
 
-        <ImageView
-            android:id="@+id/settings_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:paddingRight="10dp"
-            android:src="@drawable/vert_dots_icon">
-
-        </ImageView>
 
     </RelativeLayout>
 
@@ -84,13 +74,11 @@
         android:paddingLeft="10dp">
     </TextView>
 
+<!-- Bottom-->
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="65dp"
         android:layout_alignParentBottom="true">
-
-
-
 
         <ActionMenuView
             android:layout_width="match_parent"
@@ -164,19 +152,18 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:layout_width="70dp"
-        android:layout_height="80dp"
+        android:layout_width="80dp"
+        android:layout_height="100dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="80dp">
+        android:layout_marginBottom="60dp">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/get_button"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
             android:src="@drawable/right_arrow_icon">
 
         </com.google.android.material.floatingactionbutton.FloatingActionButton>

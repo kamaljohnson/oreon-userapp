@@ -23,4 +23,24 @@
         android:layout_alignParentBottom="true">
     </TextView>
 
+<!--    TODO: below components are to be removed this is just for testing purpose-->
+
+    <Button
+        android:id="@+id/test_button"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:text="TEST BUTTON"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true">
+
+    </Button>
+
+    <EditText
+        android:id="@+id/device_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:hint="enter text from device here">
+    </EditText>
+
 </RelativeLayout >
