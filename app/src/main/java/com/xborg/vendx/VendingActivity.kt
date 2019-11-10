@@ -36,6 +36,7 @@ class VendingActivity : AppCompatActivity() {
                 device_text.text.toString() == "rqt" -> {
                     val vend = HashMap<String, Any>()
                     vend["UID"] = FirebaseAuth.getInstance().uid.toString()
+                    vend["MID"] = "yDWzDc79Uu1IO2lEeVyG"    //TODO: use the actual MID
                     vend["Status"] = "Request Created"
 
                     db.collection("Vends")
