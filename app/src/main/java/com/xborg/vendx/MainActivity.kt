@@ -1,24 +1,21 @@
 package com.xborg.vendx
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.app.Activity
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothDevice
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
-import android.location.Location
-import android.location.LocationManager
 import android.os.Bundle
-import android.os.Looper
-import android.provider.Settings
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -27,8 +24,6 @@ import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.viewpager.widget.ViewPager
-import com.google.android.gms.location.*
-import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.FirebaseFirestore
 import io.chirp.connect.ChirpConnect
 import kotlinx.android.synthetic.main.activity_main.*
@@ -37,16 +32,8 @@ import com.xborg.vendx.MainActivityFragments.HomeFragment
 import com.xborg.vendx.MainActivityFragments.ShelfFragment
 import com.xborg.vendx.SupportClasses.Item
 
-/**
- *  Keys used for chrip lib. visit https://developers.chirp.io/ for details.
-*/
-const val CHIRP_APP_KEY = "2cc0Afa8DBA2bf4298E7DbB0D";
-const val CHIRP_APP_SECRET = "fE11ffF32f195AC3B50c2dFB767A1e9583E5eCdDF68Bccf867";
-const val CHIRP_APP_CONFIG = "gHpaLZyR83XICW560DT8fx9VF0M6DP9VM++zm5/GFwA8hOqMVVlWBXdHCKIWW9bUjxOvKdt4gAo8HYy1Y4usnNzctJM7lEcLH5yXzm+F09NqeD2A9miQ2PdjQOzO7mu9RD2wBUSwp0vqVs81T39dHd8Rs4uOOL6kVqZ0WPrz9H8j0Sn5H7ph3qK7B/O2HsKofBw/ztILe2YAwll1sh7OMbPxsj9ClriOzQOrVCu6hShYKFdN6NvW3Bf9lUj14fq5n/nTM5I7rrtQguNz/UlAId4Zx0oaJ0TsK84lo7MY9FvFJHx5fFg2RpRvCJ/a5YPEpZ0OZyyErhVtXFqXlx/8LQhXVJd1OdGuBZtDYYS8wBXoIEObbcCrBw4h7V89n+KKb0Ez//iN9dYgW2N2EyWEgfJOE6WiYlnFA+n/aAwT/KNQXtTqbd289kPqo0lyoPSJtfoUfk4OBtftsczyqoBxiiikFfchYyWVB/Xqhuvn4SoFlfeFqan+/cZdX0AIYkCuLchk2mZgWcR9n3p6TpP9erLcFkNsZXiAB9B87rwDan9has6CckN5VkKCreN/MVRT1YjqLj0k22uhGe9Ive8O3xoLQO7wu7eh9hzk1b4qD6MvQw6J/mpEU27dEHz2oThOU4ZJWooraf6oEzlTjdKprfpZGIpVCYsNBIqqwxDNE4y19aUvde2Qkj5V1kb04RRpvDx/be+AgUR2b4dDZWbNTssd1sZkWQPVPt5erGobw2k=";
-
 private const val REQUEST_RECORD_AUDIO = 1
-private const val MIN_CHIRP_VOLUME = 0.3
-private const val REQUEST_LOCATION = 42
+private const val REQUEST_ENABLE_BT = 2
 
 private const val NUM_PAGES = 2
 
@@ -54,20 +41,10 @@ private var TAG = "MainActivity"
 
 private lateinit var mPager: ViewPager
 
-@Suppress("UNREACHABLE_CODE")
+@Suppress("UNREACHABLE_CODE", "NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class MainActivity : FragmentActivity() {
     private lateinit var chirp:ChirpConnect
     private lateinit var parentLayout: View
-
-    lateinit var mFusedLocationClient: FusedLocationProviderClient
-    private val mLocationCallback = object : LocationCallback() {
-        override fun onLocationResult(locationResult: LocationResult) {
-            var mLastLocation: Location = locationResult.lastLocation
-            findViewById<TextView>(R.id.location).text = mLastLocation.longitude.toString()
-        }
-    }
-
-    private lateinit var fragmentContainer: ViewGroup
 
     val db = FirebaseFirestore.getInstance()
     val uid =  FirebaseAuth.getInstance().uid.toString()
@@ -87,6 +64,46 @@ class MainActivity : FragmentActivity() {
 
         parentLayout =  findViewById<View>(android.R.id.content)
 
+// region BLUETOOTH SETUP
+        val bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
+        if (bluetoothAdapter == null) {
+            Toast.makeText(this, "your device does'nt support bluetooth", Toast.LENGTH_SHORT).show()
+        } else if (!bluetoothAdapter.isEnabled) {
+            Toast.makeText(this, "Switching on Bluetooth", Toast.LENGTH_SHORT).show()
+            bluetoothAdapter.enable()
+//            val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
+//            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
+
+        } else {
+            Toast.makeText(this, "Bluetooth is already ON", Toast.LENGTH_SHORT).show()
+        }
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH) != PackageManager.PERMISSION_GRANTED) {
+            // Permission is not granted
+            // Should we show an explanation?
+            Log.e(TAG, "bluetooth permission not granted")
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.BLUETOOTH)) {
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+            } else {
+                // No explanation needed, we can request the permission.
+                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.BLUETOOTH), REQUEST_ENABLE_BT)
+                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
+        } else {
+            // Permission has already been granted
+            Log.e(TAG, "bluetooth permission already granted")
+        }
+
+        // Register for broadcasts when a device is discovered.
+        val filter = IntentFilter(BluetoothDevice.ACTION_FOUND)
+        registerReceiver(receiver, filter)
+
+// endregion
+
         // Instantiate a ViewPager and a PagerAdapter.
         mPager = findViewById(R.id.pager)
 
@@ -95,55 +112,14 @@ class MainActivity : FragmentActivity() {
         mPager.adapter = pagerAdapter
 
         clearCarts()
-        getItems()
         getShelfItems()
-
-//        region location
-
-//        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-//        getLastLocation()
-
-//        endregion location
-
-        chirp = ChirpConnect(this, CHIRP_APP_KEY, CHIRP_APP_SECRET)
-        val error = chirp.setConfig(CHIRP_APP_CONFIG)
-        if (error.code == 0) {
-            Log.v("ChirpSDK: ", "Configured ChirpSDK")
-        } else {
-            Log.e("ChirpError: ", error.message)
-        }
-
-        chirp.onReceived { payload: ByteArray?, channel: Int ->
-            if (payload != null) {
-                val identifier = String(payload)
-                Toast.makeText(applicationContext, "data : $identifier",Toast.LENGTH_LONG).show()
-                Log.v("ChirpSDK: ", "Received :$identifier")
-            } else {
-                Log.e("ChirpError: ", "Decode failed")
-            }
-        }
-        chirp.onSystemVolumeChanged { oldVolume: Float, newVolume: Float ->
-            if (newVolume < MIN_CHIRP_VOLUME){
-                val snackbar = Snackbar.make(parentLayout, "low volume, transmission may fail", Snackbar.LENGTH_SHORT)
-                val snackView = snackbar.view
-                snackView.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.warning))
-                snackbar.show()
-            }
-//            else if(oldVolume-newVolume>0) {
-//                val snackBar = Snackbar.make(parentLayout, "volume changed to: $newVolume", Snackbar.LENGTH_SHORT)
-//                snackBar.setAction("CLOSE") { }
-//                    .setActionTextColor(ContextCompat.getColor(this, android.R.color.holo_red_light))
-//                    .show()
-//            }
-            Log.v("Chirp", "volume changed")
-        }
 
         get_button.setOnClickListener{
             if(cart_items.size == 0 && cart_items_from_shelf.size == 0) {
                 Toast.makeText(this, "Your Cart is Empty", Toast.LENGTH_SHORT).show()
             } else {
                 get_button.isEnabled = false
-
+// region LOGS
                 Log.d(TAG, "_______ CART _______")
                 cart_items.forEach{
                     Log.d(TAG, it.key + " => " + it.value)
@@ -175,7 +151,7 @@ class MainActivity : FragmentActivity() {
                 billing_cart.forEach{
                     Log.d(TAG, it.key + " => " + it.value)
                 }
-
+// endregion
                 if(billing_cart.size == 0) {
                     val order = HashMap<String, Any>()
                     order["UID"] = FirebaseAuth.getInstance().uid.toString()
@@ -247,56 +223,35 @@ class MainActivity : FragmentActivity() {
 
     }
 
-    override fun onResume() {
-        super.onResume()
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.RECORD_AUDIO), REQUEST_RECORD_AUDIO)
-        } else {
-            // Start ChirpSDK sender and receiver, if no arguments are passed both sender and receiver are started
-            val error = chirp.start(send = true, receive = true)
-            if (error.code > 0) {
-                Log.e("ChirpError: ", error.message)
-            } else {
-                Log.v("ChirpSDK: ", "Started ChirpSDK")
-            }
-        }
-
-//        region location
-
-//        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-//        getLastLocation()
-
-//        endregion location
-
-    }
-
     override fun onRestart() {
         super.onRestart()
         clearCarts()
-        getItems()
         getShelfItems()
-
-//        region location
-
-//        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-//        getLastLocation()
-
-//        endregion location
-    }
-
-    override fun onPause() {
-        super.onPause()
-        chirp.stop()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        chirp.stop()
-        try {
-            chirp.close()
-        } catch (e: Exception) {
-            e.printStackTrace()
+        // Don't forget to unregister the ACTION_FOUND receiver.
+        unregisterReceiver(receiver)
+    }
+
+    // Create a BroadcastReceiver for ACTION_FOUND.
+    private val receiver = object : BroadcastReceiver() {
+
+        override fun onReceive(context: Context, intent: Intent) {
+            val action: String? = intent.action
+            when(action) {
+                BluetoothDevice.ACTION_FOUND -> {
+                    // Discovery has found a device. Get the BluetoothDevice
+                    // object and its info from the Intent.
+                    val device: BluetoothDevice =
+                        intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
+                    val deviceName = device.name
+                    val deviceHardwareAddress = device.address // MAC address
+                    Log.d(TAG,"device connected \ndevice name: $deviceName\nMAC: $deviceHardwareAddress"
+                    )
+                }
+            }
         }
     }
 
@@ -314,68 +269,6 @@ class MainActivity : FragmentActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        when (requestCode) {
-            REQUEST_RECORD_AUDIO -> {
-                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    val error = chirp.start()
-                    if (error.code > 0) {
-                        Log.e("ChirpError: ", error.message)
-                    } else {
-                        Log.v("ChirpSDK: ", "Started ChirpSDK")
-                    }
-                }
-                return
-            }
-            REQUEST_LOCATION -> {
-                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    // Granted. Start getting the location information
-                }
-            }
-        }
-    }
-
-    /**
-     * sends the message string via audio
-     * @param message the message to be send via audio
-     */
-    private fun sendPayload(message: String) {
-        val payload: ByteArray = message.toByteArray()
-        val error = chirp.send(payload)
-        if (error.code > 0) {
-            Log.e("ChirpError: ", error.message)
-        } else {
-            Log.v("ChirpSDK: ", "Sent $message")
-        }
-    }
-
-    private fun getItems() {
-        db.collection("Inventory")
-            .get()
-            .addOnSuccessListener { result ->
-                for (document in result) {
-                    Log.d(TAG, "${document.id} => ${document.data}")
-
-                    val item = Item()
-
-                    item.item_id = document.id
-                    item.name = document.data["Name"].toString()
-                    item.cost = document.data["Cost"].toString()
-                    item.quantity = document.data["Quantity"].toString()
-                    item.item_limit = "0"
-                    item.image_src = document.data["Image"].toString()
-
-                    items.add(item)
-
-                }
-                addItemsToRV(items)
-
-            }
-            .addOnFailureListener { exception ->
-                Log.w(TAG, "Error getting documents.", exception)
-            }
     }
 
     /**
@@ -408,16 +301,6 @@ class MainActivity : FragmentActivity() {
     }
 
     /**
-     * adds all the items to the recycler view
-     * as item_card cards
-     */
-    private fun addItemsToRV(items: ArrayList<Item>){
-//        rv_items_list.layoutManager = LinearLayoutManager(this)
-//        rv_items_list.layoutManager = GridLayoutManager(this, 2)
-//        rv_items_list.adapter = ItemAdapter(items, this)
-    }
-
-    /**
      * calculates the billing_cart using
      *  - cart_items
      *  - shelf_items
@@ -438,27 +321,6 @@ class MainActivity : FragmentActivity() {
             }
             cart_items[id] = count
         }
-        /*Log.d(TAG, "_______ CART ITEMS _______")
-        cart_items.forEach{item_card -> //key: id, value: count
-
-            Log.d(TAG, item_card.key + " => " + item_card.value)
-            val cart_id = item_card.key
-            val cart_item_count = item_card.value
-
-            if(shelf_items[cart_id] != null) {
-
-                val shelf_item_count = shelf_items[cart_id]
-
-                if(cart_item_count > shelf_item_count!!) {
-                    billing_cart[cart_id] = shelf_items[cart_id]?.let { cart_items[cart_id]?.minus(it) } !!
-                    cart_items_from_shelf[cart_id] = shelf_item_count
-                } else {
-                    cart_items_from_shelf[cart_id] = cart_item_count
-                }
-            } else {
-                billing_cart[cart_id] = cart_item_count
-            }
-        }*/
     }
 
     /**
@@ -478,77 +340,6 @@ class MainActivity : FragmentActivity() {
         cart_items.clear()
         cart_items_from_shelf.clear()
         billing_cart.clear()
-//        rv_items_list.removeAllViews()
-    }
-
-    /**
-     * checks the permissions required for the activity
-     * permissions:
-     *  - ACCESS_COARSE_LOCATION
-     *  - ACCESS_FINE_LOCATION
-     * @return true if PERMISSION_GRANTED else false
-     */
-    private fun checkPermissions(): Boolean {
-        // Locations Permissions
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
-            ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-            return true
-        }
-        return false
-    }
-
-    private fun requestPermissions() {
-        ActivityCompat.requestPermissions(
-            this,
-            arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION),
-            REQUEST_LOCATION
-        )
-    }
-
-    private fun isLocationEnabled(): Boolean {
-        var locationManager: LocationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
-            LocationManager.NETWORK_PROVIDER
-        )
-    }
-
-    @SuppressLint("MissingPermission")
-    private fun getLastLocation() {
-        if (checkPermissions()) {
-            if (isLocationEnabled()) {
-
-                mFusedLocationClient.lastLocation.addOnCompleteListener(this) { task ->
-                    var location: Location? = task.result
-                    if (location == null) {
-                        requestNewLocationData()
-                    } else {
-                        Toast.makeText(this, "location found", Toast.LENGTH_SHORT).show()
-                        findViewById<TextView>(R.id.location).text = location.latitude.toString()
-                    }
-                }
-            } else {
-                Toast.makeText(this, "Turn on location", Toast.LENGTH_LONG).show()
-                val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
-                startActivity(intent)
-            }
-        } else {
-            requestPermissions()
-        }
-    }
-
-    @SuppressLint("MissingPermission")
-    private fun requestNewLocationData() {
-        var mLocationRequest = LocationRequest()
-        mLocationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-        mLocationRequest.interval = 0
-        mLocationRequest.fastestInterval = 0
-        mLocationRequest.numUpdates = 1
-
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-        mFusedLocationClient!!.requestLocationUpdates(
-            mLocationRequest, mLocationCallback,
-            Looper.myLooper()
-        )
     }
 
     /**
@@ -586,5 +377,27 @@ class MainActivity : FragmentActivity() {
     fun hideKeyboard(view: View) {
         val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        when (requestCode) {
+            REQUEST_ENABLE_BT -> {
+                // If request is cancelled, the result arrays are empty.
+                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+                } else {
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return
+            }
+
+            // Add other 'when' lines to check for other
+            // permissions this app might request.
+            else -> {
+                // Ignore all other requests.
+            }
+        }
     }
 }

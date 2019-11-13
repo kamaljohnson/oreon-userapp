@@ -52,7 +52,7 @@ class ShelfFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View = inflater.inflate(com.xborg.vendx.R.layout.fragment_shelf, container, false)
+    ): View = inflater.inflate(R.layout.fragment_shelf, container, false)
 
     @SuppressLint("ResourceAsColor")
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
