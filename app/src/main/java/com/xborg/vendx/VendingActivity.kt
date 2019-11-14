@@ -1,5 +1,8 @@
 package com.xborg.vendx
 
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothDevice
+import android.bluetooth.BluetoothSocket
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -8,11 +11,14 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.xborg.vendx.Bluetooth.BluetoothService
 import com.xborg.vendx.MainActivity.Companion.items
 import com.xborg.vendx.SupportClasses.Item
 import com.xborg.vendx.SupportClasses.ItemSlipAdapter
 import kotlinx.android.synthetic.main.activity_vending.*
 import kotlinx.android.synthetic.main.fragment_home.rv_items_list
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 private var TAG = "VendingActivity"
 
@@ -127,4 +133,5 @@ class VendingActivity : AppCompatActivity() {
         rv_items_list.layoutManager = GridLayoutManager(this, 1)
         rv_items_list.adapter = ItemSlipAdapter(items, this)
     }
+
 }

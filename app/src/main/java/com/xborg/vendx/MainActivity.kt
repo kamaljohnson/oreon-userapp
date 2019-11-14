@@ -32,7 +32,6 @@ import com.xborg.vendx.MainActivityFragments.HomeFragment
 import com.xborg.vendx.MainActivityFragments.ShelfFragment
 import com.xborg.vendx.SupportClasses.Item
 
-private const val REQUEST_RECORD_AUDIO = 1
 private const val REQUEST_ENABLE_BT = 2
 
 private const val NUM_PAGES = 2
@@ -69,13 +68,10 @@ class MainActivity : FragmentActivity() {
         if (bluetoothAdapter == null) {
             Toast.makeText(this, "your device does'nt support bluetooth", Toast.LENGTH_SHORT).show()
         } else if (!bluetoothAdapter.isEnabled) {
-            Toast.makeText(this, "Switching on Bluetooth", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "switched on bluetooth", Toast.LENGTH_SHORT).show()
             bluetoothAdapter.enable()
-//            val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-//            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
-
         } else {
-            Toast.makeText(this, "Bluetooth is already ON", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "bluetooth is already ON", Toast.LENGTH_SHORT).show()
         }
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH) != PackageManager.PERMISSION_GRANTED) {
@@ -231,8 +227,16 @@ class MainActivity : FragmentActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+
         // Don't forget to unregister the ACTION_FOUND receiver.
         unregisterReceiver(receiver)
+        val bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
+        if (bluetoothAdapter == null) {
+
+        } else if (bluetoothAdapter.isEnabled) {
+            Toast.makeText(this, "switched off bluetooth", Toast.LENGTH_SHORT).show()
+            bluetoothAdapter.disable()
+        }
     }
 
     // Create a BroadcastReceiver for ACTION_FOUND.
