@@ -11,12 +11,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:layout_marginBottom="50dp">
+        android:layout_marginBottom="100dp">
     </androidx.recyclerview.widget.RecyclerView>
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="100dp"
         android:text="Vending . . . "
         android:background="@color/colorPrimary"
         android:textAlignment="center"
@@ -25,22 +25,52 @@
 
 <!--    TODO: below components are to be removed this is just for testing purpose-->
 
-    <Button
-        android:id="@+id/test_button"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:text="TEST BUTTON"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true">
-
-    </Button>
-
-    <EditText
-        android:id="@+id/device_text"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:hint="enter text from device here">
-    </EditText>
+        android:layout_height="100dp"
+        android:layout_alignParentBottom="true">
+
+        <Button
+            android:id="@+id/send_to_server"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:text="to server"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true">
+
+        </Button>
+
+        <Button
+            android:id="@+id/send_to_device"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:text="to device"
+            android:layout_alignParentRight="true">
+
+        </Button>
+
+        <EditText
+            android:id="@+id/to_device_text"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:hint="text to device">
+        </EditText>
+
+        <EditText
+            android:id="@+id/to_server_text"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignRight="@+id/to_device_text"
+            android:hint="text to server">
+        </EditText>
+
+    </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/bluetooth_fragment"
+        android:layout_weight="2"
+        android:layout_width="0dp"
+        android:layout_height="0px" />
 
 </RelativeLayout >

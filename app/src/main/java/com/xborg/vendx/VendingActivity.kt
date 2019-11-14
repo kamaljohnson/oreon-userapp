@@ -1,8 +1,5 @@
 package com.xborg.vendx
 
-import android.bluetooth.BluetoothAdapter
-import android.bluetooth.BluetoothDevice
-import android.bluetooth.BluetoothSocket
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -11,10 +8,10 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.xborg.vendx.Bluetooth.BluetoothService
 import com.xborg.vendx.MainActivity.Companion.items
 import com.xborg.vendx.SupportClasses.Item
 import com.xborg.vendx.SupportClasses.ItemSlipAdapter
+import com.xborg.vendx.VendingActivityFragments.BluetoothFragment
 import kotlinx.android.synthetic.main.activity_vending.*
 import kotlinx.android.synthetic.main.fragment_home.rv_items_list
 import kotlin.collections.ArrayList
@@ -35,10 +32,10 @@ class VendingActivity : AppCompatActivity() {
         setContentView(R.layout.activity_vending)
         getBag()
 
-        test_button.setOnClickListener {
+        send_to_server.setOnClickListener {
             when {
-                device_text.text.toString() == "" -> Toast.makeText(this, "the test text is empty", Toast.LENGTH_SHORT).show()
-                device_text.text.toString() == "rqt" -> {
+                to_server_text.text.toString() == "" -> Toast.makeText(this, "the test text is empty", Toast.LENGTH_SHORT).show()
+                to_server_text.text.toString() == "rqt" -> {
                     val vend = HashMap<String, Any>()
                     vend["UID"] = FirebaseAuth.getInstance().uid.toString()
                     vend["MID"] = "yDWzDc79Uu1IO2lEeVyG"    //TODO: use the actual MID
@@ -58,7 +55,7 @@ class VendingActivity : AppCompatActivity() {
                 else -> {
                     val vend = HashMap<String, Any>()
                     vend["Status"] = "Message Received"
-                    vend["Msg"] = device_text.text.toString()
+                    vend["Msg"] = to_server_text.text.toString()
 
                     db.document("Vends/$vendID")
                         .update(vend)
@@ -70,6 +67,13 @@ class VendingActivity : AppCompatActivity() {
                         }
                 }
             }
+        }
+
+        if (savedInstanceState == null) {
+            val transaction = supportFragmentManager.beginTransaction()
+            val fragment = BluetoothFragment()
+            transaction.replace(R.id.bluetooth_fragment, fragment)
+            transaction.commit()
         }
     }
 
