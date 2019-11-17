@@ -42,7 +42,7 @@ private lateinit var mPager: ViewPager
 
 @Suppress("UNREACHABLE_CODE", "NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class MainActivity : FragmentActivity() {
-    private lateinit var chirp:ChirpConnect
+
     private lateinit var parentLayout: View
 
     val db = FirebaseFirestore.getInstance()
@@ -58,7 +58,6 @@ class MainActivity : FragmentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContentView(R.layout.activity_main)
 
         parentLayout =  findViewById<View>(android.R.id.content)

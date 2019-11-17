@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment
 import com.xborg.vendx.Bluetooth.BluetoothService
 import com.xborg.vendx.Bluetooth.Constants
 import com.xborg.vendx.R
+import kotlin.math.log
 
 class BluetoothFragment: Fragment() {
 
@@ -56,6 +57,9 @@ class BluetoothFragment: Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        Log.e(TAG, "Bluetooth fragment created")
+
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
 
         // If the adapter is null, then Bluetooth is not supported
@@ -75,6 +79,7 @@ class BluetoothFragment: Fragment() {
         // setupChat() will then be called during onActivityResult
         if (!mBluetoothAdapter!!.isEnabled()) {
             mBluetoothAdapter!!.enable()
+            setupChat()
             // Otherwise, setup the chat session
         } else if (mBluetoothService == null) {
             setupChat()
@@ -83,13 +88,16 @@ class BluetoothFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         mOutEditText = view.findViewById(R.id.to_server_text)
-        mSendButton = view.findViewById(R.id.to_device_text)
+        mSendButton = view.findViewById(R.id.send_to_device)
+        Log.e(TAG, "connected mSendButton to send_to_device")
     }
 
     /**
      * Set up the UI and background operations for chat.
      */
     private fun setupChat() {
+
+        Log.e(TAG, "calling setupChat")
 
         // Initialize the compose field with a listener for the return key
         mOutEditText?.setOnEditorActionListener(mWriteListener)
@@ -106,10 +114,13 @@ class BluetoothFragment: Fragment() {
         }
 
         // Initialize the BluetoothChatService to perform bluetooth connections
+
         mBluetoothService = BluetoothService(activity, mHandler)
 
         // Initialize the buffer for outgoing messages
         mOutStringBuffer = StringBuffer()
+
+        connectDevice(true)
     }
 
     /**
@@ -118,6 +129,7 @@ class BluetoothFragment: Fragment() {
      * @param message A string of text to send.
      */
     private fun sendMessage(message: String) {
+        Log.e(TAG, "sending message via bluetooth")
         // Check that we're actually connected before trying anything
         if (mBluetoothService?.getState() != BluetoothService.STATE_CONNECTED) {
             Toast.makeText(activity, R.string.not_connected, Toast.LENGTH_SHORT).show()
@@ -221,37 +233,37 @@ class BluetoothFragment: Fragment() {
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        when (requestCode) {
-            REQUEST_CONNECT_DEVICE_SECURE ->
-                // When DeviceListActivity returns with a device to connect
-                if (resultCode == Activity.RESULT_OK) {
-                    connectDevice(data!!, true)
-                }
-            REQUEST_CONNECT_DEVICE_INSECURE ->
-                // When DeviceListActivity returns with a device to connect
-                if (resultCode == Activity.RESULT_OK) {
-                    connectDevice(data!!, false)
-                }
-            REQUEST_ENABLE_BT ->
-                // When the request to enable Bluetooth returns
-                if (resultCode == Activity.RESULT_OK) {
-                    // Bluetooth is now enabled, so set up a chat session
-                    setupChat()
-                } else {
-                    // User did not enable Bluetooth or an error occurred
-                    Log.d(TAG, "BT not enabled")
-                    val activity = activity
-                    if (activity != null) {
-                        Toast.makeText(
-                            activity, R.string.bt_not_enabled_leaving,
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        activity.finish()
-                    }
-                }
-        }
-    }
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        when (requestCode) {
+//            REQUEST_CONNECT_DEVICE_SECURE ->
+//                // When DeviceListActivity returns with a device to connect
+//                if (resultCode == Activity.RESULT_OK) {
+//                    connectDevice(data!!, true)
+//                }
+//            REQUEST_CONNECT_DEVICE_INSECURE ->
+//                // When DeviceListActivity returns with a device to connect
+//                if (resultCode == Activity.RESULT_OK) {
+//                    connectDevice(data!!, false)
+//                }
+//            REQUEST_ENABLE_BT ->
+//                // When the request to enable Bluetooth returns
+//                if (resultCode == Activity.RESULT_OK) {
+//                    // Bluetooth is now enabled, so set up a chat session
+//                    setupChat()
+//                } else {
+//                    // User did not enable Bluetooth or an error occurred
+//                    Log.d(TAG, "BT not enabled")
+//                    val activity = activity
+//                    if (activity != null) {
+//                        Toast.makeText(
+//                            activity, R.string.bt_not_enabled_leaving,
+//                            Toast.LENGTH_SHORT
+//                        ).show()
+//                        activity.finish()
+//                    }
+//                }
+//        }
+//    }
 
     /**
      * Establish connection with other device
@@ -259,13 +271,15 @@ class BluetoothFragment: Fragment() {
      * @param data   An [Intent] with [DeviceListActivity.EXTRA_DEVICE_ADDRESS] extra.
      * @param secure Socket Security type - Secure (true) , Insecure (false)
      */
-    private fun connectDevice(data: Intent, secure: Boolean) {
+    private fun connectDevice(secure: Boolean) {
         // Get the device MAC address
-        val extras = data.extras ?: return
-        val address = "3c:71:f:79:86:20" //TODO
+        //val address = "3C:71:BF:79:86:22" //ESP
+        val address = "D8:5D:E2:C8:66:82" //DEXTER LAP
+        Log.e(TAG, "tryping to connect to device with address: " + address)
         // Get the BluetoothDevice object
         val device = mBluetoothAdapter?.getRemoteDevice(address)
         // Attempt to connect to the device
         mBluetoothService?.connect(device, secure)
+        Log.e(TAG, "paired with device : " + device.toString())
     }
 }

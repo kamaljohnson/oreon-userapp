@@ -29,6 +29,7 @@ import android.util.Log;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Arrays;
 import java.util.UUID;
 
 /**
@@ -78,6 +79,7 @@ public class BluetoothService {
         mState = STATE_NONE;
         mNewState = mState;
         mHandler = handler;
+        Log.e(TAG, "called the bluetoothService constructor");
     }
 
     /**
@@ -244,6 +246,7 @@ public class BluetoothService {
      * @see ConnectedThread#write(byte[])
      */
     public void write(byte[] out) {
+        Log.e(TAG, "writing message: " + Arrays.toString(out));
         // Create temporary object
         ConnectedThread r;
         // Synchronize a copy of the ConnectedThread
@@ -391,6 +394,7 @@ public class BluetoothService {
 
         public ConnectThread(BluetoothDevice device, boolean secure) {
             mmDevice = device;
+            secure = true;
             BluetoothSocket tmp = null;
             mSocketType = secure ? "Secure" : "Insecure";
 
@@ -408,6 +412,7 @@ public class BluetoothService {
                 Log.e(TAG, "Socket Type: " + mSocketType + "create() failed", e);
             }
             mmSocket = tmp;
+            Log.e(TAG, "mmSocket initialized inside ConnectThread");
             mState = STATE_CONNECTING;
         }
 
@@ -509,6 +514,7 @@ public class BluetoothService {
          * @param buffer The bytes to write
          */
         public void write(byte[] buffer) {
+            Log.e(TAG, "writing message at low level");
             try {
                 mmOutStream.write(buffer);
 

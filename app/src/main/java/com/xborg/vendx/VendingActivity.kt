@@ -3,6 +3,9 @@ package com.xborg.vendx
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -29,8 +32,23 @@ class VendingActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        Log.e(TAG, "inside vending activity -> 0")
         setContentView(R.layout.activity_vending)
+        Log.e(TAG, "inside  creating vending activity -> 1")
         getBag()
+
+        if (savedInstanceState == null) {
+            Log.e(TAG, "inside creating vending activity -> 2")
+
+            Toast.makeText(this, "creating bluetooth fragment", Toast.LENGTH_SHORT).show()
+            val transaction = supportFragmentManager.beginTransaction()
+            val fragment = BluetoothFragment()
+            transaction.replace(R.id.bluetooth_fragment, fragment)
+            transaction.commit()
+            Log.e(TAG, "inside creating vending activity -> 3")
+
+        }
 
         send_to_server.setOnClickListener {
             when {
@@ -67,13 +85,6 @@ class VendingActivity : AppCompatActivity() {
                         }
                 }
             }
-        }
-
-        if (savedInstanceState == null) {
-            val transaction = supportFragmentManager.beginTransaction()
-            val fragment = BluetoothFragment()
-            transaction.replace(R.id.bluetooth_fragment, fragment)
-            transaction.commit()
         }
     }
 
@@ -137,5 +148,4 @@ class VendingActivity : AppCompatActivity() {
         rv_items_list.layoutManager = GridLayoutManager(this, 1)
         rv_items_list.adapter = ItemSlipAdapter(items, this)
     }
-
 }
