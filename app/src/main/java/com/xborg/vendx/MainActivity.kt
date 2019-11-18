@@ -86,6 +86,9 @@ class MainActivity : FragmentActivity() {
                 ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.BLUETOOTH), REQUEST_ENABLE_BT)
                 // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
                 // app-defined int constant. The callback method gets the
+                // app-defined int constant. The callback method gets the
+                // app-defined int constant. The callback method gets the
+                // app-defined int constant. The callback method gets the
                 // result of the request.
             }
         } else {

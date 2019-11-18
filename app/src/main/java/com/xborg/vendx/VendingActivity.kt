@@ -3,9 +3,6 @@ package com.xborg.vendx
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,7 +11,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.xborg.vendx.MainActivity.Companion.items
 import com.xborg.vendx.SupportClasses.Item
 import com.xborg.vendx.SupportClasses.ItemSlipAdapter
-import com.xborg.vendx.VendingActivityFragments.BluetoothFragment
 import kotlinx.android.synthetic.main.activity_vending.*
 import kotlinx.android.synthetic.main.fragment_home.rv_items_list
 import kotlin.collections.ArrayList
@@ -41,12 +37,12 @@ class VendingActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             Log.e(TAG, "inside creating vending activity -> 2")
 
-            Toast.makeText(this, "creating bluetooth fragment", Toast.LENGTH_SHORT).show()
-            val transaction = supportFragmentManager.beginTransaction()
-            val fragment = BluetoothFragment()
-            transaction.replace(R.id.bluetooth_fragment, fragment)
-            transaction.commit()
-            Log.e(TAG, "inside creating vending activity -> 3")
+//            Toast.makeText(this, "creating bluetooth fragment", Toast.LENGTH_SHORT).show()
+//            val transaction = supportFragmentManager.beginTransaction()
+//            val fragment = BluetoothFragment()
+//            transaction.replace(R.id.bluetooth_fragment, fragment)
+//            transaction.commit()
+//            Log.e(TAG, "inside creating vending activity -> 3")
 
         }
 
