@@ -1,7 +1,6 @@
 package com.xborg.vendx.Bluetooth;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.ComponentName;
@@ -14,10 +13,8 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.method.ScrollingMovementMethod;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -29,7 +26,10 @@ import androidx.fragment.app.Fragment;
 
 import com.xborg.vendx.R;
 
-public class TerminalFragment extends Fragment implements ServiceConnection, SerialListener {
+
+public class BluetoothFragment extends Fragment implements ServiceConnection, SerialListener {
+
+    private String TAG = "BluetoothFragment";
 
     private enum Connected { False, Pending, True }
 
@@ -49,6 +49,7 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.e(TAG, "onCreate");
         setHasOptionsMenu(true);
         setRetainInstance(true);
         deviceAddress = getArguments().getString("device");
@@ -65,10 +66,13 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
     @Override
     public void onStart() {
         super.onStart();
+        Log.e(TAG, "onStart");
         if(service != null)
             service.attach(this);
-        else
+        else{
+            Log.e(TAG, "service is null");
             getActivity().startService(new Intent(getActivity(), SerialService.class)); // prevents service destroy on unbind from recreated activity caused by orientation change
+        }
     }
 
     @Override
@@ -82,6 +86,7 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        Log.e(TAG, "onAttach");
         getActivity().bindService(new Intent(getActivity(), SerialService.class), this, Context.BIND_AUTO_CREATE);
     }
 
@@ -102,6 +107,7 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
 
     @Override
     public void onServiceConnected(ComponentName name, IBinder binder) {
+        Log.e(TAG, "onServiceConnected");
         service = ((SerialService.SerialBinder) binder).getService();
         if(initialStart && isResumed()) {
             initialStart = false;
@@ -119,6 +125,7 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
      */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.e(TAG, "onCreateView");
         View view = inflater.inflate(R.layout.fragment_bluetooth, container, false);
         receiveText = view.findViewById(R.id.receive_text);                          // TextView performance decreases with number of spans
         receiveText.setTextColor(getResources().getColor(R.color.colorRecieveText)); // set as default color to reduce number of spans
@@ -142,8 +149,10 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
             socket = new SerialSocket();
             service.connect(this, "Connected to " + deviceName);
             socket.connect(getContext(), service, device);
+            Log.e(TAG, "connected to : " + deviceName);
         } catch (Exception e) {
-            onSerialConnectError(e);
+            Log.e(TAG, "error: " + e);
+//            onSerialConnectError(e);
         }
     }
 

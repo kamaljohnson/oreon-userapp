@@ -31,6 +31,7 @@ class HomeFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         getItems()
+        MainActivity.items = items
         val activity = activity as MainActivity?
         activity?.search_text?.addTextChangedListener{
             Log.e(TAG, "the searching string is ${it.toString()}")

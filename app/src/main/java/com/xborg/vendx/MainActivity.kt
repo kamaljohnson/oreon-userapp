@@ -49,7 +49,7 @@ class MainActivity : FragmentActivity() {
     val uid =  FirebaseAuth.getInstance().uid.toString()
 
     companion object{
-        val items: ArrayList<Item> = ArrayList()               //all the items in the inventory list
+        var items: ArrayList<Item> = ArrayList()               //all the items in the inventory list
         val shelf_items: HashMap<String, Int> = HashMap()               //list of item_ids with count of shelf items
         var cart_items_from_shelf: HashMap<String, Int> = HashMap()
         var cart_items : HashMap<String, Int> = HashMap()        //list of item_ids added to cart along with number of purchases
@@ -85,9 +85,6 @@ class MainActivity : FragmentActivity() {
                 // No explanation needed, we can request the permission.
                 ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.BLUETOOTH), REQUEST_ENABLE_BT)
                 // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                // app-defined int constant. The callback method gets the
-                // app-defined int constant. The callback method gets the
-                // app-defined int constant. The callback method gets the
                 // app-defined int constant. The callback method gets the
                 // result of the request.
             }
@@ -237,7 +234,6 @@ class MainActivity : FragmentActivity() {
 
         } else if (bluetoothAdapter.isEnabled) {
             Toast.makeText(this, "switched off bluetooth", Toast.LENGTH_SHORT).show()
-            bluetoothAdapter.disable()
         }
     }
 
@@ -321,9 +317,9 @@ class MainActivity : FragmentActivity() {
 
         cart_items_from_shelf.forEach { item ->    //key: id, value: count
             val id = item.key
-            val count = item.value
+            var count = item.value
             if(cart_items.containsKey(id)) {
-                cart_items[id] = cart_items[id]?.plus(count) !!
+                count += cart_items[id]!!
             }
             cart_items[id] = count
         }
@@ -346,6 +342,7 @@ class MainActivity : FragmentActivity() {
         cart_items.clear()
         cart_items_from_shelf.clear()
         billing_cart.clear()
+        Log.e(TAG, "called clear cart")
     }
 
     /**

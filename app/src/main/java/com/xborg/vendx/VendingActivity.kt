@@ -8,6 +8,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.xborg.vendx.Bluetooth.BluetoothFragment
+import com.xborg.vendx.Bluetooth.DevicesFragment
 import com.xborg.vendx.MainActivity.Companion.items
 import com.xborg.vendx.SupportClasses.Item
 import com.xborg.vendx.SupportClasses.ItemSlipAdapter
@@ -29,21 +31,20 @@ class VendingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        Log.e(TAG, "inside vending activity -> 0")
         setContentView(R.layout.activity_vending)
-        Log.e(TAG, "inside  creating vending activity -> 1")
         getBag()
 
         if (savedInstanceState == null) {
-            Log.e(TAG, "inside creating vending activity -> 2")
+            Toast.makeText(this, "creating device fragment", Toast.LENGTH_SHORT).show()
+            val bluetoothDeviceFragment = DevicesFragment()
 
-//            Toast.makeText(this, "creating bluetooth fragment", Toast.LENGTH_SHORT).show()
-//            val transaction = supportFragmentManager.beginTransaction()
-//            val fragment = BluetoothFragment()
-//            transaction.replace(R.id.bluetooth_fragment, fragment)
-//            transaction.commit()
-//            Log.e(TAG, "inside creating vending activity -> 3")
+            supportFragmentManager.beginTransaction().replace(R.id.bluetooth_device_fragment, bluetoothDeviceFragment, "bluetooth").commit()
 
+//            val args = Bundle()
+//            args.putString("device", "48:4B:AA:0F:E6:8C")
+//            val bluetoothFragment = BluetoothFragment()
+//            bluetoothFragment.setArguments(args)
+//            supportFragmentManager.beginTransaction().replace(R.id.bluetooth_fragment, bluetoothFragment, "bluetooth").commit()
         }
 
         send_to_server.setOnClickListener {

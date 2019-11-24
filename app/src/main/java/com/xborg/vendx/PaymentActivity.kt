@@ -17,6 +17,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_payment.*
+import kotlinx.android.synthetic.main.item_card.*
 import kotlin.collections.ArrayList
 
 class PaymentActivity : AppCompatActivity() {
@@ -35,6 +36,10 @@ class PaymentActivity : AppCompatActivity() {
 
         order_id_text.text = order_id
         val bill_amount = calculateBill().toString()
+
+        Log.e(TAG, "cart:\t\t\t" + MainActivity.cart_items)
+        Log.e(TAG, "billing cart:\t\t" + MainActivity.billing_cart)
+        Log.e(TAG, "cart from shelf :\t " + MainActivity.cart_items_from_shelf)
 
         pay_button.setOnClickListener{
             payUsingUpi(amount = bill_amount, upiId = bank_upi_id, name = "kamal", note = "VendX Purchase")
@@ -94,6 +99,7 @@ class PaymentActivity : AppCompatActivity() {
         for(item in MainActivity.cart_items) {
             val item_id = item.key
             val item_count = item.value
+            Log.e(TAG, MainActivity.items.toString())
             for (item in MainActivity.items) {
                 if (item.item_id == item_id) {
                     // creating item_card row and adding to table
