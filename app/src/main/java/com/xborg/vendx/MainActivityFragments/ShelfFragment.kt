@@ -1,5 +1,6 @@
 package com.xborg.vendx.MainActivityFragments
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -43,8 +44,9 @@ class ShelfFragment : Fragment() {
                 search(it.toString())
             } else {
                 rv_items_list.removeAllViews()
-                addItemsToRV(MainActivity.items)
+                addItemsToRV(items)
             }
+
         }
     }
 
@@ -69,9 +71,6 @@ class ShelfFragment : Fragment() {
     }
 
     private fun getShelfItems(){
-        MainActivity.items.clear()
-        MainActivity.cart_items.clear()
-
         db.document("Users/$uid")
             .get()
             .addOnSuccessListener { userSnap ->
@@ -125,7 +124,8 @@ class ShelfFragment : Fragment() {
     private fun addItemsToRV(items: ArrayList<Item>){
         rv_items_list.layoutManager = LinearLayoutManager(context)
         rv_items_list.layoutManager = GridLayoutManager(context, 2)
-        rv_items_list.adapter = context?.let { ItemAdapter(items, it) }
+        val block: (Context) -> ItemAdapter = { ItemAdapter(items, it) }
+        rv_items_list.adapter = context?.let(block)
     }
 
 
@@ -133,7 +133,7 @@ class ShelfFragment : Fragment() {
 
     private fun search(search_name: String) {
         temp_items = ArrayList()
-        for (item in MainActivity.items) {
+        for (item in items) {
             Log.d(TAG, item.toString())
             var i = 0
             var j = 0

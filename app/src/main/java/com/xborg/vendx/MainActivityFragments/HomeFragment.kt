@@ -33,13 +33,14 @@ class HomeFragment : Fragment() {
         getItems()
         MainActivity.items = items
         val activity = activity as MainActivity?
+
         activity?.search_text?.addTextChangedListener{
             Log.e(TAG, "the searching string is ${it.toString()}")
             if(it.toString().isNotEmpty()) {
                 search(it.toString())
             } else {
                 rv_items_list.removeAllViews()
-                addItemsToRV(MainActivity.items)
+                addItemsToRV(items)
             }
         }
     }
@@ -54,6 +55,9 @@ class HomeFragment : Fragment() {
      * get all the items in the inventory
      */
     private fun getItems() {
+        MainActivity.items.clear()
+        MainActivity.cart_items.clear()
+
         db.collection("Inventory")
             .get()
             .addOnSuccessListener { result ->
@@ -109,7 +113,7 @@ class HomeFragment : Fragment() {
 
     private fun search(search_name: String) {
         temp_items = ArrayList()
-        for (item in MainActivity.items) {
+        for (item in items) {
             Log.d(TAG, item.toString())
             var i = 0
             var j = 0

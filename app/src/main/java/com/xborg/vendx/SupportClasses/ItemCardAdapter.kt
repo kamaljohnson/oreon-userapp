@@ -40,21 +40,28 @@ class ItemAdapter(val items : ArrayList<Item>, val context: Context) : RecyclerV
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         holder.item_id.text = items[position].item_id
         holder.name.text = items[position].name
-        if(items[position].cost != "-1") {
+        if(items[position].cost != "-1") {                  //non-shelf item
             holder.cost.text = "₹ ${items[position].cost}"
             holder.item_limit.text = "10"
             holder.item_limit.visibility = View.INVISIBLE
-        } else {
+
+            if(MainActivity.cart_items[items[position].item_id] != null) {
+                holder.purchase_count.text = MainActivity.cart_items[items[position].item_id].toString()
+                if(holder.purchase_count.text.toString() != "0") {
+                    holder.purchase_count.visibility = View.VISIBLE
+                }
+            }
+        } else {                                            //shelf item
             holder.cost.text = "-1"
             holder.cost.visibility = View.INVISIBLE
             holder.item_limit.text = items[position].item_limit
             holder.item_limit.visibility = View.VISIBLE
-        }
 
-        if(MainActivity.cart_items[items[position].item_id] != null) {
-            holder.purchase_count.text = MainActivity.cart_items[items[position].item_id].toString()
-            if(holder.purchase_count.text.toString() != "0") {
-                holder.purchase_count.visibility = View.VISIBLE
+            if(MainActivity.cart_items_from_shelf[items[position].item_id] != null) {
+                holder.purchase_count.text = MainActivity.cart_items_from_shelf[items[position].item_id].toString()
+                if(holder.purchase_count.text.toString() != "0") {
+                    holder.purchase_count.visibility = View.VISIBLE
+                }
             }
         }
 

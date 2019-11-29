@@ -115,6 +115,8 @@ class MainActivity : FragmentActivity() {
             } else {
                 get_button.isEnabled = false
 // region LOGS
+                Log.d(TAG, "_______ BEFORE CREATING BILL_______")
+
                 Log.d(TAG, "_______ CART _______")
                 cart_items.forEach{
                     Log.d(TAG, it.key + " => " + it.value)
@@ -131,6 +133,8 @@ class MainActivity : FragmentActivity() {
                 }
 
                 createBillingCart()
+
+                Log.d(TAG, "_______ AFTER CREATING BILL_______")
 
                 Log.d(TAG, "_______ CART _______")
                 cart_items.forEach{
