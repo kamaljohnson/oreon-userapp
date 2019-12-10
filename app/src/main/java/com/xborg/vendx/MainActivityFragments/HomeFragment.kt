@@ -1,4 +1,5 @@
 package com.xborg.vendx.MainActivityFragments
+
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log

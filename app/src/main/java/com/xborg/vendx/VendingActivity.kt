@@ -2,6 +2,7 @@ package com.xborg.vendx
 
 import android.bluetooth.BluetoothAdapter
 import android.os.Bundle
+import android.text.Editable
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -20,9 +21,11 @@ import kotlin.collections.HashMap
 import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothService
 import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothStatus
 import kotlinx.android.synthetic.main.fragment_bluetooth.*
+import okio.Utf8
 
 private var TAG = "VendingActivity"
 
+@Suppress("CAST_NEVER_SUCCEEDS")
 class VendingActivity : AppCompatActivity(), BluetoothService.OnBluetoothEventCallback{
 
     val db = FirebaseFirestore.getInstance()
@@ -41,7 +44,7 @@ class VendingActivity : AppCompatActivity(), BluetoothService.OnBluetoothEventCa
         setupBluetooth()
         getBag()
         send_to_device.setOnClickListener {
-            onDataWrite(to_device_text.text.toString().toByteArray())
+            mService.write(to_device_text.text.toString().toByteArray())
         }
         send_to_server.setOnClickListener {
             when {
@@ -145,6 +148,7 @@ class VendingActivity : AppCompatActivity(), BluetoothService.OnBluetoothEventCa
     private fun setupBluetooth(){
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
 
+
         mService = BluetoothService.getDefaultInstance()
         mService.setOnEventCallback(this)
     }
@@ -155,7 +159,10 @@ class VendingActivity : AppCompatActivity(), BluetoothService.OnBluetoothEventCa
     }
 
     override fun onDataRead(buffer: ByteArray?, length: Int) {
-        Log.d(TAG, "onDataRead")
+        Log.d(TAG, "onDataRead : $buffer")
+        if (buffer != null) {
+            to_server_text.text = buffer.toString()
+        }
     }
 
     override fun onDataWrite(buffer: ByteArray?) {
