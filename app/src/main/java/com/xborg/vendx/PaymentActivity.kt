@@ -16,8 +16,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.google.firebase.firestore.FirebaseFirestore
+import com.xborg.vendx.Bluetooth.BluetoothConnectionActivity
 import kotlinx.android.synthetic.main.activity_payment.*
-import kotlinx.android.synthetic.main.item_card.*
 import kotlin.collections.ArrayList
 
 class PaymentActivity : AppCompatActivity() {
@@ -46,7 +46,7 @@ class PaymentActivity : AppCompatActivity() {
         }
 
         get_now_button.setOnClickListener{
-            val intent = Intent(this, VendingActivity::class.java)
+            val intent = Intent(this, BluetoothConnectionActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
         }

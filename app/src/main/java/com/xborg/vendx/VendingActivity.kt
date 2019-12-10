@@ -1,26 +1,29 @@
 package com.xborg.vendx
 
-import androidx.appcompat.app.AppCompatActivity
+import android.bluetooth.BluetoothAdapter
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.xborg.vendx.Bluetooth.BluetoothFragment
-import com.xborg.vendx.Bluetooth.DevicesFragment
 import com.xborg.vendx.MainActivity.Companion.items
 import com.xborg.vendx.SupportClasses.Item
 import com.xborg.vendx.SupportClasses.ItemSlipAdapter
 import kotlinx.android.synthetic.main.activity_vending.*
 import kotlinx.android.synthetic.main.fragment_home.rv_items_list
-import kotlin.collections.ArrayList
+import java.util.*
 import kotlin.collections.HashMap
+
+import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothService
+import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothStatus
+import kotlinx.android.synthetic.main.fragment_bluetooth.*
 
 private var TAG = "VendingActivity"
 
-class VendingActivity : AppCompatActivity() {
+class VendingActivity : AppCompatActivity(), BluetoothService.OnBluetoothEventCallback{
 
     val db = FirebaseFirestore.getInstance()
     val uid =  FirebaseAuth.getInstance().uid.toString()
@@ -28,25 +31,18 @@ class VendingActivity : AppCompatActivity() {
 
     var vendID = ""
 
+    private lateinit var mBluetoothAdapter: BluetoothAdapter
+    private lateinit var mService: BluetoothService
+    private var mScanning: Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContentView(R.layout.activity_vending)
+        setupBluetooth()
         getBag()
-
-        if (savedInstanceState == null) {
-            Toast.makeText(this, "creating device fragment", Toast.LENGTH_SHORT).show()
-            val bluetoothDeviceFragment = DevicesFragment()
-
-            supportFragmentManager.beginTransaction().replace(R.id.bluetooth_device_fragment, bluetoothDeviceFragment, "bluetooth").commit()
-
-//            val args = Bundle()
-//            args.putString("device", "48:4B:AA:0F:E6:8C")
-//            val bluetoothFragment = BluetoothFragment()
-//            bluetoothFragment.setArguments(args)
-//            supportFragmentManager.beginTransaction().replace(R.id.bluetooth_fragment, bluetoothFragment, "bluetooth").commit()
+        send_to_device.setOnClickListener {
+            onDataWrite(to_device_text.text.toString().toByteArray())
         }
-
         send_to_server.setOnClickListener {
             when {
                 to_server_text.text.toString() == "" -> Toast.makeText(this, "the test text is empty", Toast.LENGTH_SHORT).show()
@@ -118,7 +114,7 @@ class VendingActivity : AppCompatActivity() {
                                 item.image_src = document.data?.get("Image").toString()
 
                                 bag_items[item.item_id] = quantity.toInt()
-                                Log.e(TAG, item.item_id + " -> " + quantity)
+                                Log.d(TAG, item.item_id + " -> " + quantity)
                                 items.add(item)
 
                                 if(items.size == shelfItems.size) {
@@ -144,5 +140,42 @@ class VendingActivity : AppCompatActivity() {
         rv_items_list.layoutManager = LinearLayoutManager(this)
         rv_items_list.layoutManager = GridLayoutManager(this, 1)
         rv_items_list.adapter = ItemSlipAdapter(items, this)
+    }
+
+    private fun setupBluetooth(){
+        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+
+        mService = BluetoothService.getDefaultInstance()
+        mService.setOnEventCallback(this)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mService.setOnEventCallback(this)
+    }
+
+    override fun onDataRead(buffer: ByteArray?, length: Int) {
+        Log.d(TAG, "onDataRead")
+    }
+
+    override fun onDataWrite(buffer: ByteArray?) {
+        Log.d(TAG, "onDataWrite")
+    }
+
+    override fun onStatusChange(status: BluetoothStatus?) {
+        Log.d(TAG, "onStatusChange: $status")
+        Toast.makeText(this, status.toString(), Toast.LENGTH_SHORT).show()
+
+        if (status == BluetoothStatus.CONNECTED) {
+            Log.d(TAG, "device connected")
+        }
+    }
+
+    override fun onToast(message: String?) {
+        Log.d(TAG, "onToast")
+    }
+
+    override fun onDeviceName(deviceName: String?) {
+        Log.d(TAG, "onDeviceName: $deviceName")
     }
 }

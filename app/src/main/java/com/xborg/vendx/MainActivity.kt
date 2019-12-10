@@ -114,7 +114,7 @@ class MainActivity : FragmentActivity() {
                 Toast.makeText(this, "Your Cart is Empty", Toast.LENGTH_SHORT).show()
             } else {
                 get_button.isEnabled = false
-// region LOGS
+// region LOGS + createBillCart()
                 Log.d(TAG, "_______ BEFORE CREATING BILL_______")
 
                 Log.d(TAG, "_______ CART _______")
@@ -205,9 +205,9 @@ class MainActivity : FragmentActivity() {
             }
         }
 
-        search_text.setImeOptions(EditorInfo.IME_ACTION_DONE)
+        search_text.imeOptions = EditorInfo.IME_ACTION_DONE
 
-        search_text.setOnEditorActionListener { v, actionId, event ->
+        search_text.setOnEditorActionListener { _, actionId, _ ->
             if(actionId == EditorInfo.IME_ACTION_DONE){
                 hideSearchBar(search_text.rootView)
                 true
@@ -381,7 +381,7 @@ class MainActivity : FragmentActivity() {
         nearby_machine_count_text.visibility = View.INVISIBLE
     }
 
-    fun hideKeyboard(view: View) {
+    private fun hideKeyboard(view: View) {
         val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
