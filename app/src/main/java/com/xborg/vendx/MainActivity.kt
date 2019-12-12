@@ -33,6 +33,7 @@ import com.xborg.vendx.MainActivityFragments.ShelfFragment
 import com.xborg.vendx.SupportClasses.Item
 
 private const val REQUEST_ENABLE_BT = 2
+private const val REQUEST_ENABLE_LOC = 3
 
 private const val NUM_PAGES = 2
 
@@ -88,6 +89,16 @@ class MainActivity : FragmentActivity() {
                 // app-defined int constant. The callback method gets the
                 // result of the request.
             }
+        } else {
+            // Permission has already been granted
+            Log.e(TAG, "bluetooth permission already granted")
+        }
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // Permission is not granted
+            // Should we show an explanation?
+            Log.e(TAG, "location permission not granted")
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_ENABLE_LOC)
         } else {
             // Permission has already been granted
             Log.e(TAG, "bluetooth permission already granted")
@@ -399,7 +410,17 @@ class MainActivity : FragmentActivity() {
                 }
                 return
             }
-
+            REQUEST_ENABLE_LOC -> {
+                // If request is cancelled, the result arrays are empty.
+                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+                } else {
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return
+            }
             // Add other 'when' lines to check for other
             // permissions this app might request.
             else -> {
