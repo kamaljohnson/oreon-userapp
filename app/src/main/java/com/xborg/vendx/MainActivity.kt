@@ -90,30 +90,24 @@ class MainActivity : FragmentActivity() {
                 // result of the request.
             }
         } else {
-            // Permission has already been granted
             Log.e(TAG, "bluetooth permission already granted")
         }
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // Permission is not granted
-            // Should we show an explanation?
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED) {
             Log.e(TAG, "location permission not granted")
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_ENABLE_LOC)
-        } else {
-            // Permission has already been granted
-            Log.e(TAG, "bluetooth permission already granted")
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.ACCESS_COARSE_LOCATION)) {
+            } else {
+                ActivityCompat.requestPermissions(this,
+                    arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),
+                    REQUEST_ENABLE_LOC)
+            }
         }
-
-        // Register for broadcasts when a device is discovered.
-        val filter = IntentFilter(BluetoothDevice.ACTION_FOUND)
-        registerReceiver(receiver, filter)
-
 // endregion
 
-        // Instantiate a ViewPager and a PagerAdapter.
         mPager = findViewById(R.id.pager)
 
-        // The pager adapter, which provides the pages to the view pager widget.
         val pagerAdapter = ScreenSlidePagerAdapter(supportFragmentManager)
         mPager.adapter = pagerAdapter
 
@@ -237,39 +231,6 @@ class MainActivity : FragmentActivity() {
         super.onRestart()
         clearCarts()
         getShelfItems()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-        // Don't forget to unregister the ACTION_FOUND receiver.
-        unregisterReceiver(receiver)
-        val bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
-        if (bluetoothAdapter == null) {
-
-        } else if (bluetoothAdapter.isEnabled) {
-            Toast.makeText(this, "switched off bluetooth", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    // Create a BroadcastReceiver for ACTION_FOUND.
-    private val receiver = object : BroadcastReceiver() {
-
-        override fun onReceive(context: Context, intent: Intent) {
-            val action: String? = intent.action
-            when(action) {
-                BluetoothDevice.ACTION_FOUND -> {
-                    // Discovery has found a device. Get the BluetoothDevice
-                    // object and its info from the Intent.
-                    val device: BluetoothDevice =
-                        intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
-                    val deviceName = device.name
-                    val deviceHardwareAddress = device.address // MAC address
-                    Log.d(TAG,"device connected \ndevice name: $deviceName\nMAC: $deviceHardwareAddress"
-                    )
-                }
-            }
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -423,9 +384,6 @@ class MainActivity : FragmentActivity() {
             }
             // Add other 'when' lines to check for other
             // permissions this app might request.
-            else -> {
-                // Ignore all other requests.
-            }
         }
     }
 }

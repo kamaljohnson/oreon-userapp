@@ -28,22 +28,17 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun createSignInIntent() {
-        // [START auth_fui_create_intent]
-        // Choose authentication providers
         val providers = arrayListOf(
             AuthUI.IdpConfig.PhoneBuilder().build())
 
-        // Create and launch sign-in intent
         startActivityForResult(
             AuthUI.getInstance()
                 .createSignInIntentBuilder()
                 .setAvailableProviders(providers)
                 .build(),
             RC_SIGN_IN)
-        // [END auth_fui_create_intent]
     }
 
-    // [START auth_fui_result]
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -51,7 +46,6 @@ class LoginActivity : AppCompatActivity() {
             val response = IdpResponse.fromResultIntent(data)
 
             if (resultCode == Activity.RESULT_OK) {
-                // Successfully signed in
 
                 /*TODO: check
                  * if user already present in database
@@ -99,46 +93,35 @@ class LoginActivity : AppCompatActivity() {
             }
         }
     }
-    // [END auth_fui_result]
 
     private fun signOut() {
-        // [START auth_fui_signout]
         AuthUI.getInstance()
             .signOut(this)
             .addOnCompleteListener {
-                // ...
             }
-        // [END auth_fui_signout]
     }
 
     private fun delete() {
-        // [START auth_fui_delete]
         AuthUI.getInstance()
             .delete(this)
             .addOnCompleteListener {
-                // ...
             }
-        // [END auth_fui_delete]
     }
 
     private fun themeAndLogo() {
         val providers = emptyList<AuthUI.IdpConfig>()
-
-        // [START auth_fui_theme_logo]
         startActivityForResult(
             AuthUI.getInstance()
                 .createSignInIntentBuilder()
                 .setAvailableProviders(providers)
-               // .setLogo(R.drawable.my_great_logo) // Set logo drawable
-               // .setTheme(R.style.MySuperAppTheme) // Set theme
+                .setLogo(R.drawable.fui_idp_button_background_google) // Set logo drawable
+                .setTheme(R.style.AppTheme) // Set theme
                 .build(),
             RC_SIGN_IN)
-        // [END auth_fui_theme_logo]
     }
 
     private fun privacyAndTerms() {
         val providers = emptyList<AuthUI.IdpConfig>()
-        // [START auth_fui_pp_tos]
         startActivityForResult(
             AuthUI.getInstance()
                 .createSignInIntentBuilder()
@@ -148,7 +131,6 @@ class LoginActivity : AppCompatActivity() {
                     "https://example.com/privacy.html")
                 .build(),
             RC_SIGN_IN)
-        // [END auth_fui_pp_tos]
     }
 
     companion object {
