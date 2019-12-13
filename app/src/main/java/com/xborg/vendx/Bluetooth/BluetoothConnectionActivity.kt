@@ -1,21 +1,30 @@
 package com.xborg.vendx.Bluetooth
 
+import android.Manifest
+import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 
 import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothService
 import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothStatus
+import com.xborg.vendx.MainActivity
 import com.xborg.vendx.R
 import com.xborg.vendx.VendingActivity
+import kotlinx.android.synthetic.main.activity_bluetooth_connection.*
 
 import java.util.Arrays
 
 const val TAG = "BluetoothConnection"
+private const val REQUEST_ENABLE_LOC = 3
 
 class BluetoothConnectionActivity : AppCompatActivity(), BluetoothService.OnBluetoothScanCallback, BluetoothService.OnBluetoothEventCallback {
 
@@ -33,7 +42,23 @@ class BluetoothConnectionActivity : AppCompatActivity(), BluetoothService.OnBlue
 
         mService!!.setOnScanCallback(this)
         mService!!.setOnEventCallback(this)
-        mService!!.startScan()
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED) {
+            val builder = AlertDialog.Builder(this)
+            builder.setMessage("Location permission required for connecting to the machine")
+                .setPositiveButton(R.string.Ok) { _, _ ->
+                    ActivityCompat.requestPermissions(this,
+                        arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),
+                        REQUEST_ENABLE_LOC
+                    )
+                }
+            builder.create()
+            builder.show()
+        } else {
+            mService!!.startScan()
+        }
+
     }
 
     override fun onResume() {
@@ -64,8 +89,7 @@ class BluetoothConnectionActivity : AppCompatActivity(), BluetoothService.OnBlue
 
     override fun onStatusChange(status: BluetoothStatus) {
         Log.d(TAG, "onStatusChange: $status")
-        Toast.makeText(this, status.toString(), Toast.LENGTH_SHORT).show()
-
+        connection_status_text.text = "$status to device"
         if (status == BluetoothStatus.CONNECTED) {
             val intent = Intent(this, VendingActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -84,5 +108,40 @@ class BluetoothConnectionActivity : AppCompatActivity(), BluetoothService.OnBlue
 
     override fun onDataWrite(buffer: ByteArray) {
         Log.d(TAG, "onDataWrite")
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        when (requestCode) {
+            REQUEST_ENABLE_LOC -> {
+                // If request is cancelled, the result arrays are empty.
+                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+                    mService!!.startScan()
+                } else {
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                    val builder = AlertDialog.Builder(this)
+                    builder.setMessage("The transaction will be cancelled if the device is not able to connect to your phone, please allow access to location to connect to the nearby device")
+                        .setPositiveButton(R.string.Ok) { _, _ ->
+                            ActivityCompat.requestPermissions(this,
+                                arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),
+                                REQUEST_ENABLE_LOC
+                            )
+                        }
+                        .setNegativeButton(R.string.cancel) { dialog, id ->
+                            // User cancelled the dialog
+                            val intent = Intent(this, MainActivity::class.java)
+                            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            startActivity(intent)
+                        }
+                    builder.create()
+                    builder.show()
+                }
+                return
+            }
+            // Add other 'when' lines to check for other
+            // permissions this app might request.
+        }
     }
 }

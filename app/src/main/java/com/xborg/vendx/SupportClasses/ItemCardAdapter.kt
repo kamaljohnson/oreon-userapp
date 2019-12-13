@@ -108,68 +108,72 @@ class ItemViewHolder (view: View) : RecyclerView.ViewHolder(view) {
         }
 
         image.setOnClickListener{
-            var count = purchase_count.text.toString().toInt()
+            if(!MainActivity.get_button_lock) {
+                var count = purchase_count.text.toString().toInt()
 
-            if(count == item_limit.text.toString().split(' ')[0].toInt()) {
-                Toast.makeText(context, "You have reached the purchase limit for this item_card", Toast.LENGTH_SHORT).show()
-            }
+                if(count == item_limit.text.toString().split(' ')[0].toInt()) {
+                    Toast.makeText(context, "You have reached the purchase limit for this item_card", Toast.LENGTH_SHORT).show()
+                }
 
-            if(previous_view != view && previous_view != null) {
-                previous_view!!.add_button.visibility = View.INVISIBLE
-                previous_view!!.remove_button.visibility = View.INVISIBLE
-                previous_view!!.info_button.visibility = View.INVISIBLE
-            }
+                if(previous_view != view && previous_view != null) {
+                    previous_view!!.add_button.visibility = View.INVISIBLE
+                    previous_view!!.remove_button.visibility = View.INVISIBLE
+                    previous_view!!.info_button.visibility = View.INVISIBLE
+                }
 
-            previous_view = view
+                previous_view = view
 
-            if(add_button.visibility == View.INVISIBLE) {
-                add_button.visibility = View.VISIBLE
-                remove_button.visibility = View.VISIBLE
-                info_button.visibility = View.VISIBLE
-            }
+                if(add_button.visibility == View.INVISIBLE) {
+                    add_button.visibility = View.VISIBLE
+                    remove_button.visibility = View.VISIBLE
+                    info_button.visibility = View.VISIBLE
+                }
 
-            if(count == 0){
-                purchase_count.visibility = View.VISIBLE
-                remove_button.visibility = View.VISIBLE
-            }
-            if(count < item_limit.text.toString().split(' ')[0].toInt()) {
-                count+=1
-            }
+                if(count == 0){
+                    purchase_count.visibility = View.VISIBLE
+                    remove_button.visibility = View.VISIBLE
+                }
+                if(count < item_limit.text.toString().split(' ')[0].toInt()) {
+                    count+=1
+                }
 
-            if(cost.text == "-1") {
-                MainActivity.cart_items_from_shelf[view.item_id.text.toString()] = count
-            } else {
-                MainActivity.cart_items[view.item_id.text.toString()] = count
+                if(cost.text == "-1") {
+                    MainActivity.cart_items_from_shelf[view.item_id.text.toString()] = count
+                } else {
+                    MainActivity.cart_items[view.item_id.text.toString()] = count
+                }
+                purchase_count.text = count.toString()
             }
-            purchase_count.text = count.toString()
         }
 
         add_button.setOnClickListener{
-            var count = purchase_count.text.toString().toInt()
+            if(!MainActivity.get_button_lock){
+                var count = purchase_count.text.toString().toInt()
 
-            if(count == item_limit.text.toString().split(' ')[0].toInt()) {
-                Toast.makeText(context, "You have reached the purchase limit for this item_card", Toast.LENGTH_SHORT).show()
-            }
+                if(count == item_limit.text.toString().split(' ')[0].toInt()) {
+                    Toast.makeText(context, "You have reached the purchase limit for this item_card", Toast.LENGTH_SHORT).show()
+                }
 
-            if(count == 0){
-                purchase_count.visibility = View.VISIBLE
-                remove_button.visibility = View.VISIBLE
-            }
-            if(count < item_limit.text.toString().split(' ')[0].toInt()) {
-                count+=1
-            }
+                if(count == 0){
+                    purchase_count.visibility = View.VISIBLE
+                    remove_button.visibility = View.VISIBLE
+                }
+                if(count < item_limit.text.toString().split(' ')[0].toInt()) {
+                    count+=1
+                }
 
-            if(count == item_limit.text.toString().split(' ')[0].toInt()) {
-                Toast.makeText(context, "You have reached the purchase limit for this item_card", Toast.LENGTH_SHORT).show()
-            }
+                if(count == item_limit.text.toString().split(' ')[0].toInt()) {
+                    Toast.makeText(context, "You have reached the purchase limit for this item_card", Toast.LENGTH_SHORT).show()
+                }
 
-            if(cost.text == "-1") {
-                MainActivity.cart_items_from_shelf[view.item_id.text.toString()] = count
-            } else {
-                MainActivity.cart_items[view.item_id.text.toString()] = count
-            }
+                if(cost.text == "-1") {
+                    MainActivity.cart_items_from_shelf[view.item_id.text.toString()] = count
+                } else {
+                    MainActivity.cart_items[view.item_id.text.toString()] = count
+                }
 
-            purchase_count.text = count.toString()
+                purchase_count.text = count.toString()
+            }
         }
 
         remove_button.setOnClickListener{

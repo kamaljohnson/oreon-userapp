@@ -2,7 +2,6 @@ package com.xborg.vendx
 
 import android.bluetooth.BluetoothAdapter
 import android.os.Bundle
-import android.text.Editable
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -20,8 +19,6 @@ import kotlin.collections.HashMap
 
 import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothService
 import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothStatus
-import kotlinx.android.synthetic.main.fragment_bluetooth.*
-import okio.Utf8
 
 private var TAG = "VendingActivity"
 

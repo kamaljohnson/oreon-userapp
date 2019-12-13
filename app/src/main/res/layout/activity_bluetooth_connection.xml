@@ -12,12 +12,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView"
-        app:layout_constraintStart_toEndOf="@+id/textView"
-        app:layout_constraintTop_toTopOf="@+id/textView" />
+        app:layout_constraintBottom_toBottomOf="@+id/connection_status_text"
+        app:layout_constraintStart_toEndOf="@+id/connection_status_text"
+        app:layout_constraintTop_toTopOf="@+id/connection_status_text" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/connection_status_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="connection to device"

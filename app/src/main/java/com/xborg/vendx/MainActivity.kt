@@ -2,12 +2,10 @@ package com.xborg.vendx
 
 import android.Manifest
 import android.app.Activity
+import android.app.AlertDialog
 import android.bluetooth.BluetoothAdapter
-import android.bluetooth.BluetoothDevice
-import android.content.BroadcastReceiver
-import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
-import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
@@ -25,7 +23,6 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.google.firebase.firestore.FirebaseFirestore
-import io.chirp.connect.ChirpConnect
 import kotlinx.android.synthetic.main.activity_main.*
 import com.google.firebase.auth.FirebaseAuth
 import com.xborg.vendx.MainActivityFragments.HomeFragment
@@ -41,7 +38,9 @@ private var TAG = "MainActivity"
 
 private lateinit var mPager: ViewPager
 
-@Suppress("UNREACHABLE_CODE", "NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
+@Suppress("UNREACHABLE_CODE", "NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS",
+    "UNUSED_ANONYMOUS_PARAMETER"
+)
 class MainActivity : FragmentActivity() {
 
     private lateinit var parentLayout: View
@@ -55,6 +54,8 @@ class MainActivity : FragmentActivity() {
         var cart_items_from_shelf: HashMap<String, Int> = HashMap()
         var cart_items : HashMap<String, Int> = HashMap()        //list of item_ids added to cart along with number of purchases
         var billing_cart : HashMap<String, Int> = HashMap()        //list of item_ids added to cart along with number of purchases
+
+        var get_button_lock : Boolean = false
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -95,14 +96,15 @@ class MainActivity : FragmentActivity() {
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
             != PackageManager.PERMISSION_GRANTED) {
-            Log.e(TAG, "location permission not granted")
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.ACCESS_COARSE_LOCATION)) {
-            } else {
-                ActivityCompat.requestPermissions(this,
-                    arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),
-                    REQUEST_ENABLE_LOC)
-            }
+            val builder = AlertDialog.Builder(this)
+            builder.setMessage("We need to access location")
+                .setPositiveButton(R.string.Ok) { _, _ ->
+                    ActivityCompat.requestPermissions(this,
+                        arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),
+                        REQUEST_ENABLE_LOC)
+                }
+            builder.create()
+            builder.show()
         }
 // endregion
 
@@ -118,44 +120,11 @@ class MainActivity : FragmentActivity() {
             if(cart_items.size == 0 && cart_items_from_shelf.size == 0) {
                 Toast.makeText(this, "Your Cart is Empty", Toast.LENGTH_SHORT).show()
             } else {
+                get_button_lock = true
                 get_button.isEnabled = false
-// region LOGS + createBillCart()
-                Log.d(TAG, "_______ BEFORE CREATING BILL_______")
-
-                Log.d(TAG, "_______ CART _______")
-                cart_items.forEach{
-                    Log.d(TAG, it.key + " => " + it.value)
-                }
-
-                Log.d(TAG, "_______ CART FROM SHELF_______")
-                cart_items_from_shelf.forEach{
-                    Log.d(TAG, it.key + " => " + it.value)
-                }
-
-                Log.d(TAG, "_______ BILLING CART _______")
-                billing_cart.forEach{
-                    Log.d(TAG, it.key + " => " + it.value)
-                }
 
                 createBillingCart()
 
-                Log.d(TAG, "_______ AFTER CREATING BILL_______")
-
-                Log.d(TAG, "_______ CART _______")
-                cart_items.forEach{
-                    Log.d(TAG, it.key + " => " + it.value)
-                }
-
-                Log.d(TAG, "_______ CART FROM SHELF_______")
-                cart_items_from_shelf.forEach{
-                    Log.d(TAG, it.key + " => " + it.value)
-                }
-
-                Log.d(TAG, "_______ BILLING CART _______")
-                billing_cart.forEach{
-                    Log.d(TAG, it.key + " => " + it.value)
-                }
-// endregion
                 if(billing_cart.size == 0) {
                     val order = HashMap<String, Any>()
                     order["UID"] = FirebaseAuth.getInstance().uid.toString()

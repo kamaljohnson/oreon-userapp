@@ -1,4 +1,4 @@
-package com.xborg.bluetooth_connection
+package com.xborg.vendx.Bluetooth
 
 import android.app.Application
 import android.bluetooth.BluetoothDevice
