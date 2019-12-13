@@ -202,6 +202,11 @@ class MainActivity : FragmentActivity() {
         getShelfItems()
     }
 
+    override fun onResume() {
+        super.onResume()
+        get_button_lock = false
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater = menuInflater
         inflater.inflate(R.menu.main_activity_menu, menu)

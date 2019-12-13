@@ -19,6 +19,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_home.rv_items_list
 import com.xborg.vendx.MainActivity
 import com.xborg.vendx.R
+import kotlinx.android.synthetic.main.fragment_shelf.*
 
 private var TAG = "ShelfFragment"
 
@@ -75,10 +76,12 @@ class ShelfFragment : Fragment() {
             .get()
             .addOnSuccessListener { userSnap ->
                 if(userSnap.data?.get("Shelf")  == null) {
-                    Log.d(TAG, "shelf is empty")
-                    Toast.makeText(context, "Your Shelf is Empty", Toast.LENGTH_SHORT).show()
+
                 } else {
                     var shelfItems: Map<String, Number> = userSnap.data?.get("Shelf") as Map<String, Number>
+                    if(shelfItems.count() == 0) {
+                        shelf_empty_text.visibility = View.VISIBLE
+                    }
                     for (shelfItem in shelfItems){
                         Log.d(TAG, shelfItem.key)
                         Log.d(TAG, shelfItem.value.toString())
