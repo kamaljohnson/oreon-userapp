@@ -7,37 +7,50 @@
         android:layout_height="match_parent"
         tools:context=".PaymentActivity">
 
+        <TextView
+            android:id="@+id/status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="status"
+            app:layout_constraintBottom_toBottomOf="@+id/progressBar"
+            app:layout_constraintEnd_toStartOf="@+id/progressBar"
+            app:layout_constraintTop_toTopOf="@+id/progressBar">
+
+        </TextView>
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.97"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/pay_button"
+            android:visibility="invisible">
+
+        </ProgressBar>
 
         <TextView
-                android:id="@+id/order_id_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="order ID"
-                app:layout_constraintBottom_toBottomOf="@+id/invoice_text"
-                app:layout_constraintEnd_toEndOf="@+id/bill_table"
-                app:layout_constraintTop_toTopOf="@+id/invoice_text"
-                app:layout_constraintVertical_bias="0.0" />
-
-        <TextView
-                android:id="@+id/payment_status"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="STATUS"
-                app:layout_constraintBottom_toBottomOf="@+id/invoice_text"
-                app:layout_constraintEnd_toEndOf="@+id/order_id_text"
-                app:layout_constraintTop_toBottomOf="@+id/order_id_text" />
+            android:id="@+id/order_id_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="order ID"
+            app:layout_constraintBottom_toBottomOf="@+id/invoice_text"
+            app:layout_constraintEnd_toEndOf="@+id/bill_table"
+            app:layout_constraintTop_toTopOf="@+id/invoice_text" />
 
         <Button
-                android:id="@+id/pay_button"
-                android:layout_width="200dp"
-                android:layout_height="70dp"
-                android:layout_marginBottom="68dp"
-                android:text="Pay"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.497"
-                app:layout_constraintStart_toStartOf="parent">
-        </Button>
+            android:id="@+id/pay_button"
+            android:layout_width="150dp"
+            android:layout_height="70dp"
+            android:layout_marginBottom="68dp"
+            android:background="@drawable/rounded_button_orange"
+            android:text="Pay"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintStart_toStartOf="parent"></Button>
 
         <TextView
                 android:id="@+id/invoice_text"

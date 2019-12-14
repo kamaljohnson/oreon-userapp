@@ -43,6 +43,9 @@ class PaymentActivity : AppCompatActivity() {
 
         pay_button.setOnClickListener{
             payUsingUpi(amount = bill_amount, upiId = bank_upi_id, name = "kamal", note = "VendX Purchase")
+            pay_button.isEnabled = false
+            progressBar.visibility = View.VISIBLE
+            status.text = "processing payment"
         }
 
         get_now_button.setOnClickListener{
@@ -60,6 +63,7 @@ class PaymentActivity : AppCompatActivity() {
         statusListener()
     }
 
+    @SuppressLint("DefaultLocale")
     private fun statusListener() {
         // [START listen_document]
         val docRef = db.collection("Orders").document("${intent.getStringExtra("order_id")}")
@@ -70,7 +74,11 @@ class PaymentActivity : AppCompatActivity() {
             }
 
             if (snapshot != null && snapshot.exists()) {
-                payment_status.text = snapshot.data?.get("Status") as String
+
+                if((snapshot.data?.get("Status") as String).toLowerCase() == "payment complete") {
+                    status.text = "payment successful"
+                    onPaymentSuccessful()
+                }
             }
         }
         // [END listen_document]
@@ -242,9 +250,9 @@ class PaymentActivity : AppCompatActivity() {
 
     //TODO: call this when Order>Status -> Payment Checked
     private fun onPaymentSuccessful() {
-        pay_button.visibility = View.INVISIBLE
         get_now_button.visibility = View.VISIBLE
         done_button.visibility = View.VISIBLE
+        progressBar.visibility = View.INVISIBLE
     }
 
     private fun payUsingUpi(amount:String, upiId:String, name:String, note:String) {
@@ -263,6 +271,7 @@ class PaymentActivity : AppCompatActivity() {
 
         if(chooser.resolveActivity(packageManager) != null){
             startActivityForResult(chooser, UPI_PAYMENT)
+            pay_button.visibility = View.INVISIBLE
         } else {
             Toast.makeText(this, "No UPI app found, please install one to continue", Toast.LENGTH_LONG).show()
         }
@@ -312,6 +321,9 @@ class PaymentActivity : AppCompatActivity() {
                     }
                 } else {
                     paymentCancel = "Payment cancelled by user."
+//                    TODO: uncomment this when actually acepting payments
+//                    pay_button.text = "Retry"
+//                    pay_button.visibility = View.VISIBLE
                 }
             }
 
@@ -320,10 +332,9 @@ class PaymentActivity : AppCompatActivity() {
                 Toast.makeText(this@PaymentActivity, "Payment successful.", Toast.LENGTH_SHORT).show()
 
                 db.collection("Orders").document("${order_id_text.text}")
-                    .update("Status", "Payment Completed")
+                    .update("Status", "~Payment Completed")
                     .addOnSuccessListener {
                         Log.d(TAG, "Status : Payment Completed")
-                        onPaymentSuccessful()
                     }
                     .addOnFailureListener{
                         Log.d(TAG, "Failed to update Status")
@@ -333,11 +344,10 @@ class PaymentActivity : AppCompatActivity() {
 
                 db.collection("Orders").document("${order_id_text.text}")
                     //TODO: change to Payment Cancelled after phone UPI check working
-                    .update("Status", "Payment Complete")
+                    .update("Status", "~Payment Complete")
                     .addOnSuccessListener {
                         Log.d(TAG, "Status : Payment Cancelled")
                         //TODO: remove this after phone UPI check working
-                        onPaymentSuccessful()
                     }
                     .addOnFailureListener{
                         Log.d(TAG, "Failed to update Status")
