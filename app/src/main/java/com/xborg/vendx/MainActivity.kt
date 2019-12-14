@@ -1,12 +1,15 @@
 package com.xborg.vendx
 
 import android.Manifest
+import android.annotation.TargetApi
 import android.app.Activity
 import android.app.AlertDialog
 import android.bluetooth.BluetoothAdapter
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -15,6 +18,7 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -97,7 +101,7 @@ class MainActivity : FragmentActivity() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
             != PackageManager.PERMISSION_GRANTED) {
             val builder = AlertDialog.Builder(this)
-            builder.setMessage("We need to access location")
+            builder.setMessage("We need to access location to find vending machines near you")
                 .setPositiveButton(R.string.Ok) { _, _ ->
                     ActivityCompat.requestPermissions(this,
                         arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),
@@ -332,6 +336,8 @@ class MainActivity : FragmentActivity() {
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
+    @TargetApi(Build.VERSION_CODES.M)
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
             REQUEST_ENABLE_BT -> {
@@ -353,6 +359,15 @@ class MainActivity : FragmentActivity() {
                 } else {
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
+                    val builder = AlertDialog.Builder(this)
+                    builder.setMessage("You had denied access to location before, please proceed to settings " +
+                            "and grand permission to location")
+                        .setPositiveButton(R.string.Ok) { _, _ ->
+                            val intent = Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:" + BuildConfig.APPLICATION_ID))
+                            startActivity(intent)
+                        }
+                    builder.create()
+                    builder.show()
                 }
                 return
             }
