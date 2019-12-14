@@ -6,14 +6,17 @@ import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 
 import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothService
 import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothStatus
+import com.xborg.vendx.BuildConfig
 import com.xborg.vendx.MainActivity
 import com.xborg.vendx.R
 import com.xborg.vendx.VendingActivity
@@ -57,6 +60,10 @@ class BluetoothConnectionActivity : AppCompatActivity(), BluetoothService.OnBlue
             mService!!.startScan()
         }
 
+        try_again.setOnClickListener {
+            mService!!.startScan()
+        }
+
     }
 
     override fun onResume() {
@@ -78,6 +85,15 @@ class BluetoothConnectionActivity : AppCompatActivity(), BluetoothService.OnBlue
 
     override fun onStopScan() {
         Log.d(TAG, "onStopScan")
+        val builder = AlertDialog.Builder(this)
+        builder.setMessage("Could'nt find near-by vending machines, please stand near the machine and try again")
+            .setPositiveButton(R.string.Ok) { _, _ ->
+                try_again.visibility = View.VISIBLE
+                progressBar.visibility = View.INVISIBLE
+                connection_status_text.text = "device connection error"
+            }
+        builder.create()
+        builder.show()
         mScanning = false
     }
 
