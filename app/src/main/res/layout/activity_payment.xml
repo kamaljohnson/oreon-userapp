@@ -7,15 +7,27 @@
         android:layout_height="match_parent"
         tools:context=".PaymentActivity">
 
+        <pl.droidsonroids.gif.GifImageView
+            android:id="@+id/successAnimation"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/success"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.97"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/pay_button">
+        </pl.droidsonroids.gif.GifImageView>
+
         <TextView
             android:id="@+id/status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="status"
+            android:layout_marginEnd="16dp"
             app:layout_constraintBottom_toBottomOf="@+id/progressBar"
             app:layout_constraintEnd_toStartOf="@+id/progressBar"
             app:layout_constraintTop_toTopOf="@+id/progressBar">
-
         </TextView>
 
         <ProgressBar
@@ -28,8 +40,9 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/pay_button"
             android:visibility="invisible">
-
         </ProgressBar>
+
+
 
         <TextView
             android:id="@+id/order_id_text"
@@ -47,10 +60,14 @@
             android:layout_marginBottom="68dp"
             android:background="@drawable/rounded_button_orange"
             android:text="Pay"
+            android:textColor="@color/white"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.497"
-            app:layout_constraintStart_toStartOf="parent"></Button>
+            app:layout_constraintStart_toStartOf="parent">
+
+        </Button>
 
         <TextView
                 android:id="@+id/invoice_text"
@@ -104,27 +121,37 @@
 
         <Button
             android:id="@+id/get_now_button"
-            android:layout_width="200dp"
+            android:layout_width="150dp"
             android:layout_height="70dp"
             android:layout_marginBottom="68dp"
             android:text="Get Now"
             android:visibility="invisible"
+            android:textColor="@color/white"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toEndOf="@+id/pay_button"></Button>
+            app:layout_constraintHorizontal_bias="0.7"
+            app:layout_constraintStart_toStartOf="@+id/pay_button"
+            android:background="@drawable/rounded_button_orange">
+
+        </Button>
 
         <Button
             android:id="@+id/done_button"
-            android:layout_width="200dp"
+            android:layout_width="150dp"
             android:layout_height="70dp"
             android:layout_marginBottom="68dp"
             android:text="To Shelf"
+            android:textColor="@color/white"
+            android:textStyle="bold"
             android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/pay_button"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"></Button>
+            app:layout_constraintEnd_toEndOf="@+id/pay_button"
+            app:layout_constraintHorizontal_bias="0.3"
+            app:layout_constraintStart_toStartOf="parent"
+            android:background="@drawable/rounded_button_orange">
+
+        </Button>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

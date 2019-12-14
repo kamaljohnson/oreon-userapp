@@ -253,6 +253,7 @@ class PaymentActivity : AppCompatActivity() {
         get_now_button.visibility = View.VISIBLE
         done_button.visibility = View.VISIBLE
         progressBar.visibility = View.INVISIBLE
+        successAnimation.visibility = View.VISIBLE
     }
 
     private fun payUsingUpi(amount:String, upiId:String, name:String, note:String) {

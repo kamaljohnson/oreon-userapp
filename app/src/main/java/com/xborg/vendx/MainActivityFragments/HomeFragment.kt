@@ -1,6 +1,7 @@
 package com.xborg.vendx.MainActivityFragments
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -101,8 +102,11 @@ class HomeFragment : Fragment() {
         super.setUserVisibleHint(isVisibleToUser)
         if(isVisibleToUser) {
             is_visible = true
-            Log.e(TAG, "fragment Home is visible")
+
+
             val activity = activity as MainActivity?
+            activity?.home_button?.setTextColor(Color.WHITE)
+            activity?.shelf_button?.setTextColor(Color.parseColor("#FF9800"))
             activity?.home_button?.setBackgroundResource(R.drawable.rounded_button_orange)
             activity?.shelf_button?.setBackgroundResource(R.color.fui_transparent)
         } else {

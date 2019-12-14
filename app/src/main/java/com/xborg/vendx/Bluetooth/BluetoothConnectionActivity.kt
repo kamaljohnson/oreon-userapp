@@ -1,6 +1,7 @@
 package com.xborg.vendx.Bluetooth
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
@@ -33,6 +34,8 @@ class BluetoothConnectionActivity : AppCompatActivity(), BluetoothService.OnBlue
     private var mService: BluetoothService? = null
     private var mScanning: Boolean = false
 
+    private var deviceConnected: Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_bluetooth_connection)
@@ -43,6 +46,8 @@ class BluetoothConnectionActivity : AppCompatActivity(), BluetoothService.OnBlue
 
         mService!!.setOnScanCallback(this)
         mService!!.setOnEventCallback(this)
+
+        deviceConnected = false
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
             != PackageManager.PERMISSION_GRANTED) {
@@ -71,6 +76,11 @@ class BluetoothConnectionActivity : AppCompatActivity(), BluetoothService.OnBlue
         mService!!.setOnEventCallback(this)
     }
 
+    override fun onRestart() {
+        super.onRestart()
+        deviceConnected = false
+    }
+
     override fun onDeviceDiscovered(device: BluetoothDevice, rssi: Int) {
         Log.d(TAG, "onDeviceDiscovered: " + device.name + " - " + device.address + " - " + Arrays.toString(device.uuids))
         if(device.address == "3C:71:BF:79:86:22") {
@@ -85,15 +95,17 @@ class BluetoothConnectionActivity : AppCompatActivity(), BluetoothService.OnBlue
 
     override fun onStopScan() {
         Log.d(TAG, "onStopScan")
-        val builder = AlertDialog.Builder(this)
-        builder.setMessage("Could'nt find near-by vending machines, please stand near the machine and try again")
-            .setPositiveButton(R.string.Ok) { _, _ ->
-                try_again.visibility = View.VISIBLE
-                progressBar.visibility = View.INVISIBLE
-                connection_status_text.text = "device connection error"
-            }
-        builder.create()
-        builder.show()
+        if(!deviceConnected) {
+            val builder = AlertDialog.Builder(this)
+            builder.setMessage("Could'nt find near-by vending machines, please stand near the machine and try again")
+                .setPositiveButton(R.string.Ok) { _, _ ->
+                    try_again.visibility = View.VISIBLE
+                    progressBar.visibility = View.INVISIBLE
+                    connection_status_text.text = "device connection error"
+                }
+            builder.create()
+            builder.show()
+        }
         mScanning = false
     }
 
@@ -101,10 +113,12 @@ class BluetoothConnectionActivity : AppCompatActivity(), BluetoothService.OnBlue
         Log.d(TAG, "onDataRead")
     }
 
+    @SuppressLint("DefaultLocale")
     override fun onStatusChange(status: BluetoothStatus) {
         Log.d(TAG, "onStatusChange: $status")
-        connection_status_text.text = "$status to device"
+        connection_status_text.text = "${status.toString().toLowerCase()} to device"
         if (status == BluetoothStatus.CONNECTED) {
+            deviceConnected = true
             val intent = Intent(this, VendingActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)

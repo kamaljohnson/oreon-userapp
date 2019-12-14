@@ -1,6 +1,7 @@
 package com.xborg.vendx.MainActivityFragments
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -64,6 +65,8 @@ class ShelfFragment : Fragment() {
             Log.e(TAG, "fragment Shelf is visible")
             is_visible = true
             val activity = activity as MainActivity?
+            activity?.shelf_button?.setTextColor(Color.WHITE)
+            activity?.home_button?.setTextColor(Color.parseColor("#FF9800"))
             activity?.home_button?.setBackgroundResource(R.color.fui_transparent)
             activity?.shelf_button?.setBackgroundResource(R.drawable.rounded_button_orange)
         } else {

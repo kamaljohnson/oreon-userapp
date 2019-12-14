@@ -19,6 +19,7 @@
             android:layout_marginLeft="10dp"
             android:layout_centerVertical="true"
             android:text="Home"
+            android:textColor="@color/white"
             android:background="@drawable/rounded_button_orange"
             android:textStyle="bold">
 
@@ -32,6 +33,7 @@
             android:layout_toRightOf="@+id/home_button"
             android:background="@color/fui_transparent"
             android:text="Shelf"
+            android:textColor="@color/colorAccent"
             android:textStyle="bold">
 
         </Button>

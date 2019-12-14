@@ -1,6 +1,7 @@
 package com.xborg.vendx
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.app.Activity
 import android.app.AlertDialog
@@ -8,6 +9,7 @@ import android.bluetooth.BluetoothAdapter
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -307,6 +309,7 @@ class MainActivity : FragmentActivity() {
 
         override fun getCount(): Int = NUM_PAGES
 
+        @SuppressLint("ResourceAsColor")
         override fun getItem(position: Int): Fragment {
 
             return if (position == 0){
