@@ -253,6 +253,7 @@ class MainActivity : FragmentActivity() {
                 if(userSnap.data?.get("Shelf") == null) {
                     Log.d(TAG, "shelf is empty")
                 } else {
+                    Log.e(TAG, userSnap.data?.get("Shelf").toString())
                     shelfItems = userSnap.data?.get("Shelf") as Map<String, Number>
                     for (shelfItem in shelfItems){
                         Log.d(TAG, shelfItem.key)

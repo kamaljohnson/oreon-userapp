@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.graphics.Typeface
 import android.net.ConnectivityManager
 import android.net.Uri
@@ -30,6 +31,7 @@ class PaymentActivity : AppCompatActivity() {
     var bank_upi_id: String = "7012043162@ybl"
     val UPI_PAYMENT:Int = 0
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_payment)
@@ -99,61 +101,67 @@ class PaymentActivity : AppCompatActivity() {
 
         var table = bill_table
 
-        var row = TableRow(this)
-        var col_1_text = TextView(this)
-        var col_2_text = TextView(this)
-        var col_3_text = TextView(this)
+        var row: TableRow
+        var col_1_text: TextView
+        var col_2_text: TextView
+        var col_3_text: TextView
 
-        col_2_text.text = "Cart"
-        col_2_text.setTypeface(null, Typeface.BOLD)
+//        col_2_text.text = "Cart"
+//        col_2_text.setTypeface(null, Typeface.BOLD)
+//
+//        row.addView(col_1_text)
+//        row.addView(col_2_text)
+//        row.addView(col_3_text)
+//
+//        table.addView(row)
+//
+//        for(item in MainActivity.cart_items) {
+//            val item_id = item.key
+//            val item_count = item.value
+//            Log.e(TAG, MainActivity.items.toString())
+//            for (item in MainActivity.items) {
+//                if (item.item_id == item_id) {
+//                    // creating item_card row and adding to table
+//
+//                    row = TableRow(this)
+//                    col_1_text = TextView(this)
+//                    col_2_text = TextView(this)
+//                    col_3_text = TextView(this)
+//
+//                    col_1_text.text = item.name
+//                    col_1_text.setTypeface(null, Typeface.BOLD)
+//
+//                    col_2_text.text = item_count.toString()
+//                    col_2_text.textDirection = View.TEXT_DIRECTION_RTL
+//                    col_2_text.setTypeface(null, Typeface.BOLD)
+//
+//                    row.addView(col_1_text)
+//                    row.addView(col_2_text)
+//                    row.addView(col_3_text)
+//
+//                    table.addView(row)
+//                }
+//            }
+//        }
 
-        row.addView(col_1_text)
-        row.addView(col_2_text)
-        row.addView(col_3_text)
-
-        table.addView(row)
-
-        for(item in MainActivity.cart_items) {
-            val item_id = item.key
-            val item_count = item.value
-            Log.e(TAG, MainActivity.items.toString())
-            for (item in MainActivity.items) {
-                if (item.item_id == item_id) {
-                    // creating item_card row and adding to table
-
-                    row = TableRow(this)
-                    col_1_text = TextView(this)
-                    col_2_text = TextView(this)
-                    col_3_text = TextView(this)
-
-                    col_1_text.text = item.name
-                    col_1_text.setTypeface(null, Typeface.BOLD)
-
-                    col_2_text.text = item_count.toString()
-                    col_2_text.textDirection = View.TEXT_DIRECTION_RTL
-                    col_2_text.setTypeface(null, Typeface.BOLD)
-
-                    row.addView(col_1_text)
-                    row.addView(col_2_text)
-                    row.addView(col_3_text)
-
-                    table.addView(row)
-                }
-            }
-        }
-
-        row = TableRow(this)
-        col_2_text = TextView(this)
-
-        col_1_text = TextView(this)
-        col_2_text.text = "From Shelf"
-        col_2_text.setTypeface(null, Typeface.BOLD)
-        col_3_text = TextView(this)
-
-        row.addView(col_1_text)
-        row.addView(col_2_text)
-        row.addView(col_3_text)
-        table.addView(row)
+//        if(MainActivity.cart_items_from_shelf.size > 0) {
+//            row = TableRow(this)
+//            col_1_text = TextView(this)
+//
+//            col_1_text.text = "From Shelf"
+//            col_1_text.setTextColor(Color.WHITE)
+//            col_1_text.setTypeface(null, Typeface.BOLD)
+//            col_2_text = TextView(this)
+//            col_3_text = TextView(this)
+//            col_1_text.setBackgroundColor(Color.GRAY)
+//            col_2_text.setBackgroundColor(Color.GRAY)
+//            col_3_text.setBackgroundColor(Color.GRAY)
+//
+//            row.addView(col_1_text)
+//            row.addView(col_2_text)
+//            row.addView(col_3_text)
+//            table.addView(row)
+//        }
 
         for(item in MainActivity.cart_items_from_shelf) {
             val item_id = item.key
@@ -168,36 +176,39 @@ class PaymentActivity : AppCompatActivity() {
                     col_3_text = TextView(this)
 
                     col_1_text.text = item.name
-                    col_1_text.setTextColor(ContextCompat.getColor(this, R.color.green))
-                    col_1_text.setTypeface(null, Typeface.BOLD)
+//                    col_1_text.setTextColor(ContextCompat.getColor(this, R.color.green))
 
                     col_2_text.text = item_count.toString()
                     col_2_text.textDirection = View.TEXT_DIRECTION_RTL
-                    col_2_text.setTextColor(ContextCompat.getColor(this, R.color.green))
-                    col_2_text.setTypeface(null, Typeface.BOLD)
+//                    col_2_text.setTextColor(ContextCompat.getColor(this, R.color.green))
 
                     row.addView(col_1_text)
                     row.addView(col_2_text)
                     row.addView(col_3_text)
+                    row.minimumHeight = 80
 
                     table.addView(row)
                 }
             }
         }
-
-        row = TableRow(this)
-        col_2_text = TextView(this)
-
-        col_1_text = TextView(this)
-        col_2_text.text = "Bill"
-        col_2_text.setTypeface(null, Typeface.BOLD)
-        col_3_text = TextView(this)
-
-        row.addView(col_1_text)
-        row.addView(col_2_text)
-        row.addView(col_3_text)
-        table.addView(row)
-
+//        if(MainActivity.billing_cart.size > 0) {
+//            row = TableRow(this)
+//            col_1_text = TextView(this)
+//
+//            col_1_text.text = "To Buy"
+//            col_1_text.setTextColor(Color.WHITE)
+//            col_1_text.setTypeface(null, Typeface.BOLD)
+//            col_2_text = TextView(this)
+//            col_3_text = TextView(this)
+//            col_1_text.setBackgroundColor(Color.GRAY)
+//            col_2_text.setBackgroundColor(Color.GRAY)
+//            col_3_text.setBackgroundColor(Color.GRAY)
+//
+//            row.addView(col_1_text)
+//            row.addView(col_2_text)
+//            row.addView(col_3_text)
+//            table.addView(row)
+//        }
         for (item in MainActivity.billing_cart) {
             val item_id = item.key
             val item_count = item.value
@@ -212,22 +223,20 @@ class PaymentActivity : AppCompatActivity() {
 
 
                     col_1_text.text = item.name
-                    col_1_text.setTypeface(null, Typeface.BOLD)
-                    col_1_text.setTextColor(ContextCompat.getColor(this, R.color.colorAccent))
+//                    col_1_text.setTextColor(ContextCompat.getColor(this, R.color.colorAccent))
 
                     col_2_text.text = item_count.toString()
                     col_2_text.textDirection = View.TEXT_DIRECTION_RTL
-                    col_2_text.setTypeface(null, Typeface.BOLD)
-                    col_2_text.setTextColor(ContextCompat.getColor(this, R.color.colorAccent))
+//                    col_2_text.setTextColor(ContextCompat.getColor(this, R.color.colorAccent))
 
                     col_3_text.text = (item.cost.toFloat() * item_count).toString()
                     col_3_text.textDirection = View.TEXT_DIRECTION_RTL
-                    col_3_text.setTypeface(null, Typeface.BOLD)
-                    col_3_text.setTextColor(ContextCompat.getColor(this, R.color.colorAccent))
+//                    col_3_text.setTextColor(ContextCompat.getColor(this, R.color.colorAccent))
 
                     row.addView(col_1_text)
                     row.addView(col_2_text)
                     row.addView(col_3_text)
+                    row.minimumHeight = 80
 
                     table.addView(row)
                     bill += item.cost.toFloat() * item_count
@@ -242,15 +251,14 @@ class PaymentActivity : AppCompatActivity() {
         col_3_text = TextView(this)
 
         col_1_text.text = "Total"
-        col_1_text.setTypeface(null, Typeface.BOLD)
 
         col_3_text.text = bill.toString()
         col_3_text.textDirection = View.TEXT_DIRECTION_RTL
-        col_3_text.setTypeface(null, Typeface.BOLD)
 
         row.addView(col_1_text)
         row.addView(col_2_text)
         row.addView(col_3_text)
+        row.minimumHeight = 100
 
         table.addView(row)
 
@@ -337,33 +345,37 @@ class PaymentActivity : AppCompatActivity() {
                 }
             }
 
-            if (status == "success") {
-                //Code to handle successful transaction here.
-                Toast.makeText(this@PaymentActivity, "Payment successful.", Toast.LENGTH_SHORT).show()
+            when {
+                status == "success" -> {
+                    //Code to handle successful transaction here.
+                    Toast.makeText(this@PaymentActivity, "Payment successful.", Toast.LENGTH_SHORT).show()
 
-                db.collection("Orders").document("${order_id_text.text}")
-                    .update("Status", "~Payment Completed")
-                    .addOnSuccessListener {
-                        Log.d(TAG, "Status : Payment Completed")
-                    }
-                    .addOnFailureListener{
-                        Log.d(TAG, "Failed to update Status")
-                    }
-            } else if ("Payment cancelled by user." == paymentCancel) {
-                Toast.makeText(this@PaymentActivity, "Payment cancelled by user.", Toast.LENGTH_SHORT).show()
+                    db.collection("Orders").document("${order_id_text.text}")
+                        .update("Status", "~Payment Completed")
+                        .addOnSuccessListener {
+                            Log.d(TAG, "Status : Payment Completed")
+                        }
+                        .addOnFailureListener{
+                            Log.d(TAG, "Failed to update Status")
+                        }
+                }
+                "Payment cancelled by user." == paymentCancel -> {
+                    Toast.makeText(this@PaymentActivity, "Payment cancelled by user.", Toast.LENGTH_SHORT).show()
 
-                db.collection("Orders").document("${order_id_text.text}")
-                    //TODO: change to Payment Cancelled after phone UPI check working
-                    .update("Status", "~Payment Complete")
-                    .addOnSuccessListener {
-                        Log.d(TAG, "Status : Payment Cancelled")
-                        //TODO: remove this after phone UPI check working
-                    }
-                    .addOnFailureListener{
-                        Log.d(TAG, "Failed to update Status")
-                    }
-            } else {
+                    db.collection("Orders").document("${order_id_text.text}")
+                        //TODO: change to Payment Cancelled after phone UPI check working
+                        .update("Status", "~Payment Complete")
+                        .addOnSuccessListener {
+                            Log.d(TAG, "Status : Payment Cancelled")
+                            //TODO: remove this after phone UPI check working
+                        }
+                        .addOnFailureListener{
+                            Log.d(TAG, "Failed to update Status")
+                        }
+                }
+                else -> {
 
+                }
             }
         } else {
             Toast.makeText(

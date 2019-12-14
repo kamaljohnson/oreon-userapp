@@ -8,13 +8,14 @@ import kotlinx.android.synthetic.main.activity_item_info.*
 
 private var TAG = "ItemInfoActivity"
 
+@Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class ItemInfoActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_item_info)
-        val item_id: String = intent.getStringExtra("item_id")
-        loadItemInfo(item_id)
+        val itemId: String = intent.getStringExtra("item_id")
+        loadItemInfo(itemId)
     }
 
     private fun loadItemInfo(item_id: String) {
@@ -25,11 +26,11 @@ class ItemInfoActivity : AppCompatActivity() {
                 name.text = document.data!!["Name"].toString()
                 cost.text = document.data!!["Cost"].toString()
 
-                var image_src = document.data!!["Image"].toString()
+                val imageSrc = document.data!!["Image"].toString()
 
                 Glide
                     .with(this)
-                    .load(image_src)
+                    .load(imageSrc)
                     .into(image)
 
             }

@@ -46,17 +46,20 @@
 
         <TextView
             android:id="@+id/order_id_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="180dp"
+            android:layout_height="22dp"
             android:text="order ID"
+            android:textAlignment="center"
+            android:background="@color/gray"
             app:layout_constraintBottom_toBottomOf="@+id/invoice_text"
             app:layout_constraintEnd_toEndOf="@+id/bill_table"
-            app:layout_constraintTop_toTopOf="@+id/invoice_text" />
+            app:layout_constraintTop_toTopOf="@+id/invoice_text"
+            android:textStyle="italic"/>
 
         <Button
             android:id="@+id/pay_button"
             android:layout_width="150dp"
-            android:layout_height="70dp"
+            android:layout_height="50dp"
             android:layout_marginBottom="68dp"
             android:background="@drawable/rounded_button_orange"
             android:text="Pay"
@@ -78,7 +81,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/bill_table"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.117" />
+                app:layout_constraintVertical_bias="0.117"
+                android:textColor="@color/colorAccent"/>
 
         <TableLayout
                 android:id="@+id/bill_table"
@@ -94,27 +98,38 @@
                 app:layout_constraintTop_toBottomOf="@+id/invoice_text"
                 tools:visibility="visible">
 
-                <TableRow android:id="@+id/trStart">
+                <TableRow
+                    android:id="@+id/trStart"
+                    android:layout_height="100dp">
 
                         <TextView
                                 android:layout_width="159dp"
                                 android:paddingVertical="5dp"
-                                android:text="Name"
-                                android:textSize="15dp"></TextView>
+                                android:text="Item"
+                                android:textSize="15dp">
+                        </TextView>
 
                         <TextView
                                 android:layout_width="69dp"
                                 android:paddingVertical="5dp"
-                                android:text="Quantity"
                                 android:textDirection="rtl"
-                                android:textSize="15dp"></TextView>
+                                android:textSize="15dp"
+                                android:textStyle="bold">
+
+                        </TextView>
 
                         <TextView
                                 android:layout_width="83dp"
                                 android:paddingVertical="5dp"
-                                android:text="Cost"
                                 android:textDirection="rtl"
-                                android:textSize="15dp"></TextView>
+                                android:textSize="15dp"
+                                android:textStyle="bold">
+
+                        </TextView>
+                </TableRow>
+                <TableRow
+                    android:paddingVertical="10dp">
+
                 </TableRow>
 
         </TableLayout>
@@ -122,7 +137,7 @@
         <Button
             android:id="@+id/get_now_button"
             android:layout_width="150dp"
-            android:layout_height="70dp"
+            android:layout_height="50dp"
             android:layout_marginBottom="68dp"
             android:text="Get Now"
             android:visibility="invisible"
@@ -139,7 +154,7 @@
         <Button
             android:id="@+id/done_button"
             android:layout_width="150dp"
-            android:layout_height="70dp"
+            android:layout_height="50dp"
             android:layout_marginBottom="68dp"
             android:text="To Shelf"
             android:textColor="@color/white"
