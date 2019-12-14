@@ -7,7 +7,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
@@ -62,7 +61,6 @@ class ShelfFragment : Fragment() {
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         super.setUserVisibleHint(isVisibleToUser)
         if(isVisibleToUser) {
-            Log.e(TAG, "fragment Shelf is visible")
             is_visible = true
             val activity = activity as MainActivity?
             activity?.shelf_button?.setTextColor(Color.WHITE)
@@ -130,10 +128,8 @@ class ShelfFragment : Fragment() {
     private fun addItemsToRV(items: ArrayList<Item>){
         rv_items_list.layoutManager = LinearLayoutManager(context)
         rv_items_list.layoutManager = GridLayoutManager(context, 2)
-        val block: (Context) -> ItemAdapter = { ItemAdapter(items, it) }
-        rv_items_list.adapter = context?.let(block)
+        rv_items_list.adapter = context?.let { ItemAdapter(items, activity?.cart_item_count, activity?.get_button, it) }
     }
-
 
     //    region item_card search
 

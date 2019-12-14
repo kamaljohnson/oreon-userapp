@@ -19,6 +19,8 @@ import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
@@ -62,6 +64,9 @@ class MainActivity : FragmentActivity() {
         var billing_cart : HashMap<String, Int> = HashMap()        //list of item_ids added to cart along with number of purchases
 
         var get_button_lock : Boolean = false
+
+        lateinit var cart_item_count: TextView
+        lateinit var get_button: Button
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -73,12 +78,19 @@ class MainActivity : FragmentActivity() {
 // region BLUETOOTH SETUP
         val bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
         if (bluetoothAdapter == null) {
-            Toast.makeText(this, "your device does'nt support bluetooth", Toast.LENGTH_SHORT).show()
+            val builder = AlertDialog.Builder(this)
+            builder.setMessage("Your device does not support bluetooth," +
+                                "please check with your local dealer and " +
+                                "try again")
+                .setPositiveButton(R.string.Ok) { _, _ ->
+
+                }
+            builder.create()
+            builder.show()
         } else if (!bluetoothAdapter.isEnabled) {
-            Toast.makeText(this, "switched on bluetooth", Toast.LENGTH_SHORT).show()
             bluetoothAdapter.enable()
         } else {
-            Toast.makeText(this, "bluetooth is already ON", Toast.LENGTH_SHORT).show()
+            //bluetooth is already switched on
         }
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH) != PackageManager.PERMISSION_GRANTED) {
@@ -121,6 +133,17 @@ class MainActivity : FragmentActivity() {
 
         clearCarts()
         getShelfItems()
+
+        search_text.imeOptions = EditorInfo.IME_ACTION_DONE
+
+        search_text.setOnEditorActionListener { _, actionId, _ ->
+            if(actionId == EditorInfo.IME_ACTION_DONE){
+                hideSearchBar(search_text.rootView)
+                true
+            } else {
+                false
+            }
+        }
 
         get_button.setOnClickListener{
             if(cart_items.size == 0 && cart_items_from_shelf.size == 0) {
@@ -182,17 +205,6 @@ class MainActivity : FragmentActivity() {
                             Log.d(TAG, "Failed to place order")
                         }
                 }
-            }
-        }
-
-        search_text.imeOptions = EditorInfo.IME_ACTION_DONE
-
-        search_text.setOnEditorActionListener { _, actionId, _ ->
-            if(actionId == EditorInfo.IME_ACTION_DONE){
-                hideSearchBar(search_text.rootView)
-                true
-            } else {
-                false
             }
         }
 

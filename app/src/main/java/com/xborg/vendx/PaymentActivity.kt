@@ -15,6 +15,7 @@ import android.widget.TableRow
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.xborg.vendx.Bluetooth.BluetoothConnectionActivity
 import kotlinx.android.synthetic.main.activity_payment.*
@@ -24,6 +25,7 @@ class PaymentActivity : AppCompatActivity() {
 
     private var TAG = "PaymentActivity"
     val db = FirebaseFirestore.getInstance()
+    val uid =  FirebaseAuth.getInstance().uid.toString()
 
     var bank_upi_id: String = "7012043162@ybl"
     val UPI_PAYMENT:Int = 0
@@ -55,9 +57,16 @@ class PaymentActivity : AppCompatActivity() {
         }
 
         done_button.setOnClickListener{
-            val intent = Intent(this, MainActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivity(intent)
+            db.collection("Users").document(uid)
+                .update("Bag", null)
+                .addOnSuccessListener {
+                    val intent = Intent(this, MainActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    startActivity(intent)
+                }
+                .addOnFailureListener{
+                    Log.d(TAG, "Failed to update Status")
+                }
         }
 
         statusListener()

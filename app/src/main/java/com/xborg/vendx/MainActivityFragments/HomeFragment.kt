@@ -94,7 +94,7 @@ class HomeFragment : Fragment() {
     private fun addItemsToRV(items: ArrayList<Item>){
         rv_items_list.layoutManager = LinearLayoutManager(context)
         rv_items_list.layoutManager = GridLayoutManager(context, 2)
-        rv_items_list.adapter = context?.let { ItemAdapter(items, it) }
+        rv_items_list.adapter = context?.let { ItemAdapter(items, activity?.cart_item_count, activity?.get_button, it) }
     }
 
     @SuppressLint("ResourceAsColor")
