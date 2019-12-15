@@ -97,6 +97,7 @@
         </ImageView>
 
         <TextView
+            android:id="@+id/closest_machine_name_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -120,7 +121,7 @@
 
         <Button
             android:id="@+id/nearby_machine_count_text"
-            android:text="1"
+            android:text="0"
             android:textSize="17dp"
             android:textStyle="bold"
             android:textColor="@color/white"
@@ -128,6 +129,7 @@
             android:layout_height="30dp"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
+            android:visibility="invisible"
             android:background="@drawable/rounded_button_accent"
             android:layout_marginRight="15dp">
 

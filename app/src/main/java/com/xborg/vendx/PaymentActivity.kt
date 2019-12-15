@@ -106,63 +106,6 @@ class PaymentActivity : AppCompatActivity() {
         var col_2_text: TextView
         var col_3_text: TextView
 
-//        col_2_text.text = "Cart"
-//        col_2_text.setTypeface(null, Typeface.BOLD)
-//
-//        row.addView(col_1_text)
-//        row.addView(col_2_text)
-//        row.addView(col_3_text)
-//
-//        table.addView(row)
-//
-//        for(item in MainActivity.cart_items) {
-//            val item_id = item.key
-//            val item_count = item.value
-//            Log.e(TAG, MainActivity.items.toString())
-//            for (item in MainActivity.items) {
-//                if (item.item_id == item_id) {
-//                    // creating item_card row and adding to table
-//
-//                    row = TableRow(this)
-//                    col_1_text = TextView(this)
-//                    col_2_text = TextView(this)
-//                    col_3_text = TextView(this)
-//
-//                    col_1_text.text = item.name
-//                    col_1_text.setTypeface(null, Typeface.BOLD)
-//
-//                    col_2_text.text = item_count.toString()
-//                    col_2_text.textDirection = View.TEXT_DIRECTION_RTL
-//                    col_2_text.setTypeface(null, Typeface.BOLD)
-//
-//                    row.addView(col_1_text)
-//                    row.addView(col_2_text)
-//                    row.addView(col_3_text)
-//
-//                    table.addView(row)
-//                }
-//            }
-//        }
-
-//        if(MainActivity.cart_items_from_shelf.size > 0) {
-//            row = TableRow(this)
-//            col_1_text = TextView(this)
-//
-//            col_1_text.text = "From Shelf"
-//            col_1_text.setTextColor(Color.WHITE)
-//            col_1_text.setTypeface(null, Typeface.BOLD)
-//            col_2_text = TextView(this)
-//            col_3_text = TextView(this)
-//            col_1_text.setBackgroundColor(Color.GRAY)
-//            col_2_text.setBackgroundColor(Color.GRAY)
-//            col_3_text.setBackgroundColor(Color.GRAY)
-//
-//            row.addView(col_1_text)
-//            row.addView(col_2_text)
-//            row.addView(col_3_text)
-//            table.addView(row)
-//        }
-
         for(item in MainActivity.cart_items_from_shelf) {
             val item_id = item.key
             val item_count = item.value
@@ -176,11 +119,9 @@ class PaymentActivity : AppCompatActivity() {
                     col_3_text = TextView(this)
 
                     col_1_text.text = item.name
-//                    col_1_text.setTextColor(ContextCompat.getColor(this, R.color.green))
 
                     col_2_text.text = item_count.toString()
                     col_2_text.textDirection = View.TEXT_DIRECTION_RTL
-//                    col_2_text.setTextColor(ContextCompat.getColor(this, R.color.green))
 
                     row.addView(col_1_text)
                     row.addView(col_2_text)
@@ -191,24 +132,7 @@ class PaymentActivity : AppCompatActivity() {
                 }
             }
         }
-//        if(MainActivity.billing_cart.size > 0) {
-//            row = TableRow(this)
-//            col_1_text = TextView(this)
-//
-//            col_1_text.text = "To Buy"
-//            col_1_text.setTextColor(Color.WHITE)
-//            col_1_text.setTypeface(null, Typeface.BOLD)
-//            col_2_text = TextView(this)
-//            col_3_text = TextView(this)
-//            col_1_text.setBackgroundColor(Color.GRAY)
-//            col_2_text.setBackgroundColor(Color.GRAY)
-//            col_3_text.setBackgroundColor(Color.GRAY)
-//
-//            row.addView(col_1_text)
-//            row.addView(col_2_text)
-//            row.addView(col_3_text)
-//            table.addView(row)
-//        }
+
         for (item in MainActivity.billing_cart) {
             val item_id = item.key
             val item_count = item.value
@@ -223,15 +147,12 @@ class PaymentActivity : AppCompatActivity() {
 
 
                     col_1_text.text = item.name
-//                    col_1_text.setTextColor(ContextCompat.getColor(this, R.color.colorAccent))
 
                     col_2_text.text = item_count.toString()
                     col_2_text.textDirection = View.TEXT_DIRECTION_RTL
-//                    col_2_text.setTextColor(ContextCompat.getColor(this, R.color.colorAccent))
 
                     col_3_text.text = (item.cost.toFloat() * item_count).toString()
                     col_3_text.textDirection = View.TEXT_DIRECTION_RTL
-//                    col_3_text.setTextColor(ContextCompat.getColor(this, R.color.colorAccent))
 
                     row.addView(col_1_text)
                     row.addView(col_2_text)

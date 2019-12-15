@@ -1,7 +1,12 @@
 package com.xborg.vendx.MainActivityFragments
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
+import android.content.Context
+import android.content.Intent
 import android.graphics.Color
+import android.location.Location
+import android.location.LocationManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -13,8 +18,11 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.functions.FirebaseFunctions
 import com.xborg.vendx.MainActivity
+import com.xborg.vendx.PaymentActivity
 import com.xborg.vendx.R
 import com.xborg.vendx.SupportClasses.Item
 import com.xborg.vendx.SupportClasses.ItemAdapter
@@ -34,7 +42,9 @@ class HomeFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         getItems()
+
         MainActivity.items = items
         val activity = activity as MainActivity?
 
@@ -87,7 +97,6 @@ class HomeFragment : Fragment() {
                 Log.w(TAG, "Error getting documents.", exception)
             }
     }
-
 
     /**
      * adds all the items to the recycler view

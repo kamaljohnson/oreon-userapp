@@ -6,10 +6,11 @@ import android.annotation.TargetApi
 import android.app.Activity
 import android.app.AlertDialog
 import android.bluetooth.BluetoothAdapter
-import android.content.DialogInterface
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Color
+import android.location.Location
+import android.location.LocationManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -29,17 +30,17 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
-import androidx.lifecycle.LifecycleOwner
 import androidx.viewpager.widget.ViewPager
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_main.*
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.functions.FirebaseFunctions
 import com.xborg.vendx.MainActivityFragments.HomeFragment
 import com.xborg.vendx.MainActivityFragments.ShelfFragment
 import com.xborg.vendx.SupportClasses.Item
-import kotlinx.android.synthetic.main.activity_payment.*
 
 private const val REQUEST_ENABLE_BT = 2
 private const val REQUEST_ENABLE_LOC = 3
@@ -58,6 +59,8 @@ class MainActivity : FragmentActivity() {
     private lateinit var parentLayout: View
 
     val db = FirebaseFirestore.getInstance()
+    lateinit var functions: FirebaseFunctions
+
     val uid =  FirebaseAuth.getInstance().uid.toString()
 
     companion object{
@@ -71,20 +74,18 @@ class MainActivity : FragmentActivity() {
 
         lateinit var cart_item_count: TextView
         lateinit var get_button: Button
+
+        lateinit var fusedLocationClient: FusedLocationProviderClient
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        db.collection("Users").document(uid)
-            .update("Status", "Online")
-            .addOnSuccessListener {
-            }
-            .addOnFailureListener{
-            }
-
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         parentLayout =  findViewById<View>(android.R.id.content)
+        functions = FirebaseFunctions.getInstance()
 
 // region BLUETOOTH SETUP
         val bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
@@ -136,6 +137,32 @@ class MainActivity : FragmentActivity() {
             builder.show()
         }
 // endregion
+//        region NEARBY MACHINES
+        var lm: LocationManager = this.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        var locEnabled = false
+
+        try {
+            locEnabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER) || lm.isProviderEnabled(
+                LocationManager.NETWORK_PROVIDER)
+        } catch (ex: Exception) {
+        }
+        if(locEnabled) {
+            fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+                getClosestMachines(location)
+            }
+        } else {
+            Log.e(TAG, "location disabled")
+            val builder = AlertDialog.Builder(this)
+            builder.setMessage("Please switch on location to access nearby vending machines")
+                .setPositiveButton(R.string.Ok) { _, _ ->
+                    val intent = Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+                    startActivity(intent)
+                }
+            builder.create()
+            builder.show()
+        }
+        closestMachineUpdateListener()
+//      endregion
 
         mPager = findViewById(R.id.pager)
 
@@ -401,5 +428,48 @@ class MainActivity : FragmentActivity() {
             // Add other 'when' lines to check for other
             // permissions this app might request.
         }
+    }
+
+    private fun getClosestMachines(location: Location): Task<String> {
+        // Create the arguments to the callable function.
+        val data = hashMapOf(
+            "longitude" to location.longitude,
+            "latitude" to location.latitude,
+            "push" to true
+        )
+
+        return functions
+            .getHttpsCallable("getClosestMachines")
+            .call(data)
+            .continueWith { task ->
+                // This continuation runs on either success or failure, but if the task
+                // has failed then result will throw an Exception which will be
+                // propagated down.
+                val result = task.result?.data as String
+                result
+            }
+    }
+
+    @SuppressLint("DefaultLocale")
+    private fun closestMachineUpdateListener() {
+        // [START listen_document]
+        val docRef = db.collection("Users").document(uid)
+        docRef.addSnapshotListener { snapshot, e ->
+            if (e != null) {
+                Log.w(TAG, "Listen failed.", e)
+                return@addSnapshotListener
+            }
+
+            if (snapshot != null && snapshot.exists()) {
+                val closestMachines = snapshot.data?.get("ClosestMachines") as ArrayList<*>
+                val machineCount = closestMachines.size
+                if(machineCount > 0) {
+                    nearby_machine_count_text.text = machineCount.toString()
+                    closest_machine_name_text.text = closestMachines[0].toString()
+                    nearby_machine_count_text.visibility = View.VISIBLE
+                }
+            }
+        }
+        // [END listen_document]
     }
 }
