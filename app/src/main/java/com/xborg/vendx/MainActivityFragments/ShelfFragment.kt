@@ -1,12 +1,13 @@
 package com.xborg.vendx.MainActivityFragments
 import android.annotation.SuppressLint
-import android.content.Context
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
@@ -57,6 +58,7 @@ class ShelfFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View = inflater.inflate(R.layout.fragment_shelf, container, false)
 
+    @RequiresApi(Build.VERSION_CODES.M)
     @SuppressLint("ResourceAsColor")
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         super.setUserVisibleHint(isVisibleToUser)
@@ -64,9 +66,9 @@ class ShelfFragment : Fragment() {
             is_visible = true
             val activity = activity as MainActivity?
             activity?.shelf_button?.setTextColor(Color.WHITE)
-            activity?.home_button?.setTextColor(Color.parseColor("#FF9800"))
+            activity?.home_button?.setTextColor(resources.getColor(R.color.colorAccent, null))
             activity?.home_button?.setBackgroundResource(R.color.fui_transparent)
-            activity?.shelf_button?.setBackgroundResource(R.drawable.rounded_button_orange)
+            activity?.shelf_button?.setBackgroundResource(R.drawable.rounded_button_accent)
         } else {
             is_visible = false
         }

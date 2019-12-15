@@ -29,6 +29,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.viewpager.widget.ViewPager
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_main.*
@@ -36,6 +39,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.xborg.vendx.MainActivityFragments.HomeFragment
 import com.xborg.vendx.MainActivityFragments.ShelfFragment
 import com.xborg.vendx.SupportClasses.Item
+import kotlinx.android.synthetic.main.activity_payment.*
 
 private const val REQUEST_ENABLE_BT = 2
 private const val REQUEST_ENABLE_LOC = 3
@@ -72,6 +76,13 @@ class MainActivity : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        db.collection("Users").document(uid)
+            .update("Status", "Online")
+            .addOnSuccessListener {
+            }
+            .addOnFailureListener{
+            }
 
         parentLayout =  findViewById<View>(android.R.id.content)
 

@@ -20,7 +20,7 @@
             android:layout_centerVertical="true"
             android:text="Home"
             android:textColor="@color/white"
-            android:background="@drawable/rounded_button_orange"
+            android:background="@drawable/rounded_button_accent"
             android:textStyle="bold">
 
         </Button>
@@ -128,7 +128,7 @@
             android:layout_height="30dp"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
-            android:background="@drawable/rounded_button_orange"
+            android:background="@drawable/rounded_button_accent"
             android:layout_marginRight="15dp">
 
         </Button>
@@ -168,7 +168,6 @@
             android:src="@drawable/right_arrow_icon">
 
         </com.google.android.material.floatingactionbutton.FloatingActionButton>
-
 
         <Button
             android:id="@+id/cart_item_count"

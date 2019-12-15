@@ -36,6 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:text="to server"
+            android:background="@drawable/rounded_button_accent"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true">
 
@@ -46,6 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:text="to device"
+            android:background="@drawable/rounded_button_accent"
             android:layout_alignParentRight="true">
         </Button>
 
