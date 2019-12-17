@@ -2,10 +2,9 @@ package com.xborg.vendx
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
-import android.graphics.Typeface
 import android.net.ConnectivityManager
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
@@ -15,7 +14,6 @@ import android.view.View
 import android.widget.TableRow
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.xborg.vendx.Bluetooth.BluetoothConnectionActivity
@@ -54,7 +52,6 @@ class PaymentActivity : AppCompatActivity() {
 
         get_now_button.setOnClickListener{
             val intent = Intent(this, BluetoothConnectionActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
         }
 
@@ -198,6 +195,7 @@ class PaymentActivity : AppCompatActivity() {
         done_button.visibility = View.VISIBLE
         progressBar.visibility = View.INVISIBLE
         successAnimation.visibility = View.VISIBLE
+        MainActivity.user_state = States.PAY_SUCCESS
     }
 
     private fun payUsingUpi(amount:String, upiId:String, name:String, note:String) {

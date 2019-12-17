@@ -19,6 +19,7 @@ import com.xborg.vendx.SupportClasses.ItemAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 import com.xborg.vendx.MainActivity
 import com.xborg.vendx.R
+import com.xborg.vendx.States
 import kotlinx.android.synthetic.main.fragment_shelf.*
 
 private var TAG = "ShelfFragment"
@@ -70,6 +71,18 @@ class ShelfFragment : Fragment() {
             activity?.shelf_button?.setBackgroundResource(R.drawable.rounded_button_accent)
         } else {
             is_visible = false
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.e(TAG, "user_state: ${MainActivity.user_state}")
+        when(MainActivity.user_state) {
+            States.PAY_SUCCESS -> {
+                rv_inventory_list.removeAllViews()
+                getShelfItems()
+                MainActivity.user_state = States.NEW_SELECT
+            }
         }
     }
 

@@ -20,8 +20,8 @@
 
         <TextView
             android:id="@+id/item_limit"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:text="0"
             android:textSize="18dp"
             android:textStyle="bold"
@@ -35,13 +35,13 @@
 
         <TextView
             android:id="@+id/info_button"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:layout_alignParentRight="true"
             android:gravity="center"
             android:textStyle="bold"
             android:text="i"
-            android:textSize="20dp"
+            android:textSize="15dp"
             android:textColor="@color/white"
             android:background="@drawable/info_button_background">
 
@@ -55,15 +55,13 @@
             android:paddingLeft="5dp"
             android:layout_width="170dp"
             android:layout_height="30dp"
-            android:textSize="20dp"
-            android:textStyle="bold">
+            android:textSize="20dp">
 
     </TextView>
 
     <TextView
             android:id="@+id/name"
             android:text="Item Name"
-
             android:paddingLeft="5dp"
             android:layout_width="170dp"
             android:layout_height="25dp"
@@ -89,8 +87,8 @@
 
             <TextView
                 android:id="@+id/purchase_count"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:text="0"
                 android:textSize="18dp"
                 android:textColor="@color/white"
@@ -103,8 +101,9 @@
                 android:layout_alignParentRight="true"
                 android:id="@+id/remove_button"
                 android:background="@drawable/remove_button_background"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                style="?android:attr/borderlessButtonStyle"
                 android:src="@drawable/remove_icon">
 
             </ImageView>
@@ -116,8 +115,9 @@
                 android:src="@drawable/add_icon"
                 android:background="@drawable/add_button_background"
                 android:layout_alignParentRight="true"
-                android:layout_width="30dp"
-                android:layout_height="30dp">
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="25dp"
+                android:layout_height="25dp">
 
         </ImageView>
 

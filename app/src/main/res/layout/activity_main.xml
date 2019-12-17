@@ -148,10 +148,9 @@
             android:layout_gravity="bottom"
             android:paddingLeft="5dp"
             android:textColor="@color/cardview_dark_background"
-            android:background="@color/white"
-            android:visibility="invisible"
-            android:textColorHint="@color/white"
+            android:background="@drawable/small_border"
             android:singleLine="true"
+            android:visibility="invisible"
             android:inputType="textPersonName">
         </EditText>
 
@@ -186,7 +185,7 @@
             android:layout_alignRight="@id/get_button"
             android:background="@drawable/cart_item_count"
             style="?android:attr/borderlessButtonStyle"
-            android:visibility="visible">
+            android:visibility="invisible">
         </Button>
 
     </RelativeLayout>

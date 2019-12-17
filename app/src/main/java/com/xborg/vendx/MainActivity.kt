@@ -55,7 +55,8 @@ enum class States {
     NEW_SELECT,
     CONTINUE_SELECT,
     CHECKOUT,
-    PAY,
+    PAY_INIT,
+    PAY_SUCCESS,
     VEND
 }
 
@@ -265,9 +266,6 @@ class MainActivity : FragmentActivity() {
         when(user_state) {
             States.CHECKOUT -> {
                 user_state = States.CONTINUE_SELECT
-            }
-            else -> {
-                user_state = States.NEW_SELECT
             }
         }
     }
