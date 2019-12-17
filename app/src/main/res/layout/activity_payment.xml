@@ -5,6 +5,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/white"
         tools:context=".PaymentActivity">
 
         <pl.droidsonroids.gif.GifImageView
@@ -50,7 +51,7 @@
             android:layout_height="22dp"
             android:text="order ID"
             android:textAlignment="center"
-            android:background="@color/gray"
+            android:background="@drawable/small_border"
             app:layout_constraintBottom_toBottomOf="@+id/invoice_text"
             app:layout_constraintEnd_toEndOf="@+id/bill_table"
             app:layout_constraintTop_toTopOf="@+id/invoice_text"
@@ -58,6 +59,7 @@
 
         <Button
             android:id="@+id/pay_button"
+            style="?android:attr/borderlessButtonStyle"
             android:layout_width="150dp"
             android:layout_height="50dp"
             android:layout_marginBottom="68dp"
@@ -68,7 +70,9 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.497"
-            app:layout_constraintStart_toStartOf="parent">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.89">
 
         </Button>
 
@@ -103,11 +107,10 @@
                     android:layout_height="100dp">
 
                         <TextView
-                                android:layout_width="159dp"
-                                android:paddingVertical="5dp"
-                                android:text="Item"
-                                android:textSize="15dp">
-                        </TextView>
+                            android:layout_width="159dp"
+                            android:paddingVertical="5dp"
+                            android:text="Items"
+                            android:textSize="15dp"></TextView>
 
                         <TextView
                                 android:layout_width="69dp"
@@ -136,35 +139,37 @@
 
         <Button
             android:id="@+id/get_now_button"
+            style="?android:attr/borderlessButtonStyle"
             android:layout_width="150dp"
             android:layout_height="50dp"
-            android:layout_marginBottom="68dp"
+            android:layout_marginStart="32dp"
+            android:background="@drawable/rounded_button_accent"
             android:text="Get Now"
-            android:visibility="invisible"
             android:textColor="@color/white"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@+id/pay_button"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.7"
             app:layout_constraintStart_toStartOf="@+id/pay_button"
-            android:background="@drawable/rounded_button_accent">
+            app:layout_constraintTop_toTopOf="@+id/pay_button">
 
         </Button>
 
         <Button
             android:id="@+id/done_button"
+            style="?android:attr/borderlessButtonStyle"
             android:layout_width="150dp"
             android:layout_height="50dp"
-            android:layout_marginBottom="68dp"
+            android:layout_marginEnd="32dp"
+            android:background="@color/white"
             android:text="To Shelf"
-            android:textColor="@color/white"
+            android:textColor="@color/colorAccent"
             android:textStyle="bold"
             android:visibility="invisible"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/pay_button"
             app:layout_constraintEnd_toEndOf="@+id/pay_button"
-            app:layout_constraintHorizontal_bias="0.3"
             app:layout_constraintStart_toStartOf="parent"
-            android:background="@drawable/rounded_button_accent">
+            app:layout_constraintTop_toTopOf="@+id/pay_button">
 
         </Button>
 

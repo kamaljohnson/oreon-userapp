@@ -51,6 +51,14 @@ private var TAG = "MainActivity"
 
 private lateinit var mPager: ViewPager
 
+enum class States {
+    NEW_SELECT,
+    CONTINUE_SELECT,
+    CHECKOUT,
+    PAY,
+    VEND
+}
+
 @Suppress("UNREACHABLE_CODE", "NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS",
     "UNUSED_ANONYMOUS_PARAMETER"
 )
@@ -76,7 +84,7 @@ class MainActivity : FragmentActivity() {
         lateinit var get_button: Button
 
         lateinit var fusedLocationClient: FusedLocationProviderClient
-
+        var user_state: States = States.NEW_SELECT
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -199,7 +207,7 @@ class MainActivity : FragmentActivity() {
                     order["UID"] = FirebaseAuth.getInstance().uid.toString()
                     order["Billing_Cart"] = billing_cart
                     order["Cart"] = cart_items
-                    order["Status"] = "Payment Pending"
+                    order["Status"] = "From Shelf"
 
                     db.collection("Orders")
                         .add(order)
@@ -209,11 +217,9 @@ class MainActivity : FragmentActivity() {
                             val order_id = orderRef.id
 
                             val intent = Intent(this, PaymentActivity::class.java)
-                            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                             intent.putExtra("order_id", order_id)
                             intent.putExtra("cart_items", cart_items)
                             startActivity(intent)
-
                         }
                         .addOnFailureListener{
                             Log.d(TAG, "Failed to place order")
@@ -234,7 +240,6 @@ class MainActivity : FragmentActivity() {
                             val order_id = orderRef.id
 
                             val intent = Intent(this, PaymentActivity::class.java)
-                            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                             intent.putExtra("order_id", order_id)
                             intent.putExtra("cart_items", cart_items)
                             intent.putExtra("billing_cart", billing_cart)
@@ -254,15 +259,17 @@ class MainActivity : FragmentActivity() {
 
     }
 
-    override fun onRestart() {
-        super.onRestart()
-//        clearCarts()
-//        getShelfItems()
-    }
-
     override fun onResume() {
         super.onResume()
         get_button_lock = false
+        when(user_state) {
+            States.CHECKOUT -> {
+                user_state = States.CONTINUE_SELECT
+            }
+            else -> {
+                user_state = States.NEW_SELECT
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

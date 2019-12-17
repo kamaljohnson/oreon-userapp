@@ -66,7 +66,7 @@ class ShelfFragment : Fragment() {
             val activity = activity as MainActivity?
             activity?.shelf_button?.setTextColor(Color.WHITE)
             activity?.home_button?.setTextColor(resources.getColor(R.color.colorAccent, null))
-            activity?.home_button?.setBackgroundResource(R.color.fui_transparent)
+            activity?.home_button?.setBackgroundResource(R.color.white)
             activity?.shelf_button?.setBackgroundResource(R.drawable.rounded_button_accent)
         } else {
             is_visible = false

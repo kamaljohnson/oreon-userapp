@@ -74,6 +74,12 @@ class PaymentActivity : AppCompatActivity() {
         statusListener()
     }
 
+    override fun onResume() {
+        super.onResume()
+        MainActivity.user_state = States.CHECKOUT
+        Log.e(TAG, "user_state: " + MainActivity.user_state)
+    }
+
     @SuppressLint("DefaultLocale")
     private fun statusListener() {
         // [START listen_document]

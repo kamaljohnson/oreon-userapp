@@ -3,12 +3,14 @@ package com.xborg.vendx.SupportClasses
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.Drawable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -74,6 +76,7 @@ class ItemAdapter(val items: ArrayList<Item>, val cart_count_text_view: TextView
     }
 }
 
+@Suppress("DEPRECATION")
 class ItemViewHolder(view: View, cart_count_text_view: TextView?, get_button: FloatingActionButton?) : RecyclerView.ViewHolder(view) {
     var item_id = view.item_id
     var name = view.name
@@ -156,6 +159,7 @@ class ItemViewHolder(view: View, cart_count_text_view: TextView?, get_button: Fl
                     purchase_count.text = count.toString()
                 }
             }
+
         }
 
         add_button.setOnClickListener{
@@ -190,6 +194,7 @@ class ItemViewHolder(view: View, cart_count_text_view: TextView?, get_button: Fl
                 }
 
                 purchase_count.text = count.toString()
+
             }
         }
 
@@ -220,6 +225,7 @@ class ItemViewHolder(view: View, cart_count_text_view: TextView?, get_button: Fl
             if(cart_count_text_view!!.text.toString().toInt() == 0) {
 //                TODO: set visibility of action button to invisible
             }
+
         }
 
         info_button.setOnClickListener{
@@ -228,4 +234,8 @@ class ItemViewHolder(view: View, cart_count_text_view: TextView?, get_button: Fl
             context.startActivity(intent)
         }
     }
+}
+
+private fun changeGetButtonIcon() {
+
 }

@@ -112,7 +112,7 @@ class HomeFragment : Fragment() {
             activity?.home_button?.setTextColor(Color.WHITE)
             activity?.shelf_button?.setTextColor(resources.getColor(R.color.colorAccent, null))
             activity?.home_button?.setBackgroundResource(R.drawable.rounded_button_accent)
-            activity?.shelf_button?.setBackgroundResource(R.color.fui_transparent)
+            activity?.shelf_button?.setBackgroundResource(R.color.white)
         } else {
             is_visible = false
         }
