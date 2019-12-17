@@ -271,9 +271,10 @@ class MainActivity : FragmentActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        super.onCreateOptionsMenu(menu)
         val inflater = menuInflater
         inflater.inflate(R.menu.main_activity_menu, menu)
-        return super.onCreateOptionsMenu(menu)
+        return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
