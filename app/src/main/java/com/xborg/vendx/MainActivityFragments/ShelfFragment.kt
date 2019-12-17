@@ -17,7 +17,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.xborg.vendx.SupportClasses.Item
 import com.xborg.vendx.SupportClasses.ItemAdapter
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_home.rv_items_list
 import com.xborg.vendx.MainActivity
 import com.xborg.vendx.R
 import kotlinx.android.synthetic.main.fragment_shelf.*
@@ -45,7 +44,7 @@ class ShelfFragment : Fragment() {
             if(it.toString().isNotEmpty()) {
                 search(it.toString())
             } else {
-                rv_items_list.removeAllViews()
+                rv_inventory_list.removeAllViews()
                 addItemsToRV(items)
             }
 
@@ -128,9 +127,9 @@ class ShelfFragment : Fragment() {
      * as item_card cards
      */
     private fun addItemsToRV(items: ArrayList<Item>){
-        rv_items_list.layoutManager = LinearLayoutManager(context)
-        rv_items_list.layoutManager = GridLayoutManager(context, 2)
-        rv_items_list.adapter = context?.let { ItemAdapter(items, activity?.cart_item_count, activity?.get_button, it) }
+        rv_inventory_list.layoutManager = LinearLayoutManager(context)
+        rv_inventory_list.layoutManager = GridLayoutManager(context, 2)
+        rv_inventory_list.adapter = context?.let { ItemAdapter(items, activity?.cart_item_count, activity?.get_button, it) }
     }
 
     //    region item_card search
@@ -154,7 +153,7 @@ class ShelfFragment : Fragment() {
             Log.d(TAG, temp_items.size.toString())
         }
         Log.e(TAG, MainActivity.cart_items.toString())
-        rv_items_list.removeAllViews()
+        rv_inventory_list.removeAllViews()
         addItemsToRV(temp_items)
     }
 

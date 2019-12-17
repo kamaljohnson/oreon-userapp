@@ -210,6 +210,7 @@ class ItemViewHolder(view: View, cart_count_text_view: TextView?, get_button: Fl
                 add_button.visibility = View.INVISIBLE
                 remove_button.visibility = View.INVISIBLE
                 purchase_count.visibility = View.INVISIBLE
+                info_button.visibility = View.INVISIBLE
                 MainActivity.cart_items.remove(item_id.text)
                 if(cart_count_text_view!!.text == "0") {
                     cart_count_text_view.visibility = View.INVISIBLE

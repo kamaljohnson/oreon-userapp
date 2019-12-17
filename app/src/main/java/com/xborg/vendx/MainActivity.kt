@@ -124,13 +124,13 @@ class MainActivity : FragmentActivity() {
             Log.e(TAG, "bluetooth permission already granted")
         }
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
             != PackageManager.PERMISSION_GRANTED) {
             val builder = AlertDialog.Builder(this)
             builder.setMessage("We need to access location to find vending machines near you")
                 .setPositiveButton(R.string.Ok) { _, _ ->
                     ActivityCompat.requestPermissions(this,
-                        arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),
+                        arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
                         REQUEST_ENABLE_LOC)
                 }
             builder.create()
@@ -138,30 +138,32 @@ class MainActivity : FragmentActivity() {
         }
 // endregion
 //        region NEARBY MACHINES
-        var lm: LocationManager = this.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        var locEnabled = false
-
-        try {
-            locEnabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER) || lm.isProviderEnabled(
-                LocationManager.NETWORK_PROVIDER)
-        } catch (ex: Exception) {
-        }
-        if(locEnabled) {
-            fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-                getClosestMachines(location)
-            }
-        } else {
-            Log.e(TAG, "location disabled")
-            val builder = AlertDialog.Builder(this)
-            builder.setMessage("Please switch on location to access nearby vending machines")
-                .setPositiveButton(R.string.Ok) { _, _ ->
-                    val intent = Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS)
-                    startActivity(intent)
-                }
-            builder.create()
-            builder.show()
-        }
-        closestMachineUpdateListener()
+//        var lm: LocationManager = this.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+//        var locEnabled = false
+//
+//        try {
+//            locEnabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER) || lm.isProviderEnabled(
+//                LocationManager.NETWORK_PROVIDER)
+//        } catch (ex: Exception) {
+//        }
+//        if(locEnabled) {
+//            fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+//                if(location != null) {
+//                    getNearbyMachines(location)
+//                }
+//            }
+//        } else {
+//            Log.e(TAG, "location disabled")
+//            val builder = AlertDialog.Builder(this)
+//            builder.setMessage("Please switch on location to access nearby vending machines")
+//                .setPositiveButton(R.string.Ok) { _, _ ->
+//                    val intent = Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+//                    startActivity(intent)
+//                }
+//            builder.create()
+//            builder.show()
+//        }
+//        closestMachineUpdateListener()
 //      endregion
 
         mPager = findViewById(R.id.pager)
@@ -254,8 +256,8 @@ class MainActivity : FragmentActivity() {
 
     override fun onRestart() {
         super.onRestart()
-        clearCarts()
-        getShelfItems()
+//        clearCarts()
+//        getShelfItems()
     }
 
     override fun onResume() {
@@ -430,7 +432,7 @@ class MainActivity : FragmentActivity() {
         }
     }
 
-    private fun getClosestMachines(location: Location): Task<String> {
+    private fun getNearbyMachines(location: Location): Task<String> {
         // Create the arguments to the callable function.
         val data = hashMapOf(
             "longitude" to location.longitude,
@@ -467,6 +469,7 @@ class MainActivity : FragmentActivity() {
                     nearby_machine_count_text.text = machineCount.toString()
                     closest_machine_name_text.text = closestMachines[0].toString()
                     nearby_machine_count_text.visibility = View.VISIBLE
+                    scroll_icon.visibility = View.VISIBLE
                 }
             }
         }

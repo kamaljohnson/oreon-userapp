@@ -88,11 +88,13 @@
         </ActionMenuView>
 
         <ImageView
+            android:id="@+id/scroll_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/overlay_icon"
             android:layout_centerHorizontal="true"
-            android:layout_alignParentTop="true">
+            android:layout_alignParentTop="true"
+            android:visibility="invisible">
 
         </ImageView>
 
@@ -102,7 +104,6 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"
-            android:text="B-X160"
             android:textSize="20dp"
             android:textStyle="bold"
             android:paddingBottom="15dp"

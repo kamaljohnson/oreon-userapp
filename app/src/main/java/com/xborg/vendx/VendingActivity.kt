@@ -13,7 +13,6 @@ import com.xborg.vendx.MainActivity.Companion.items
 import com.xborg.vendx.SupportClasses.Item
 import com.xborg.vendx.SupportClasses.ItemSlipAdapter
 import kotlinx.android.synthetic.main.activity_vending.*
-import kotlinx.android.synthetic.main.fragment_home.rv_items_list
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -137,9 +136,9 @@ class VendingActivity : AppCompatActivity(), BluetoothService.OnBluetoothEventCa
      * as item_card cards
      */
     private fun addItemsToRV(items: ArrayList<Item>){
-        rv_items_list.layoutManager = LinearLayoutManager(this)
-        rv_items_list.layoutManager = GridLayoutManager(this, 1)
-        rv_items_list.adapter = ItemSlipAdapter(items, this)
+        rv_inventory_list.layoutManager = LinearLayoutManager(this)
+        rv_inventory_list.layoutManager = GridLayoutManager(this, 1)
+        rv_inventory_list.adapter = ItemSlipAdapter(items, this)
     }
 
     private fun setupBluetooth(){

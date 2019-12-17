@@ -1,12 +1,7 @@
 package com.xborg.vendx.MainActivityFragments
 
 import android.annotation.SuppressLint
-import android.app.AlertDialog
-import android.content.Context
-import android.content.Intent
 import android.graphics.Color
-import android.location.Location
-import android.location.LocationManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -18,11 +13,8 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.functions.FirebaseFunctions
 import com.xborg.vendx.MainActivity
-import com.xborg.vendx.PaymentActivity
 import com.xborg.vendx.R
 import com.xborg.vendx.SupportClasses.Item
 import com.xborg.vendx.SupportClasses.ItemAdapter
@@ -53,7 +45,7 @@ class HomeFragment : Fragment() {
             if(it.toString().isNotEmpty()) {
                 search(it.toString())
             } else {
-                rv_items_list.removeAllViews()
+                rv_inventory_list.removeAllViews()
                 addItemsToRV(items)
             }
         }
@@ -103,9 +95,9 @@ class HomeFragment : Fragment() {
      * as item_card cards
      */
     private fun addItemsToRV(items: ArrayList<Item>){
-        rv_items_list.layoutManager = LinearLayoutManager(context)
-        rv_items_list.layoutManager = GridLayoutManager(context, 2)
-        rv_items_list.adapter = context?.let { ItemAdapter(items, activity?.cart_item_count, activity?.get_button, it) }
+        rv_inventory_list.layoutManager = LinearLayoutManager(context)
+        rv_inventory_list.layoutManager = GridLayoutManager(context, 2)
+        rv_inventory_list.adapter = context?.let { ItemAdapter(items, activity?.cart_item_count, activity?.get_button, it) }
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -147,7 +139,7 @@ class HomeFragment : Fragment() {
             Log.d(TAG, temp_items.size.toString())
         }
         Log.e(TAG, MainActivity.cart_items.toString())
-        rv_items_list.removeAllViews()
+        rv_inventory_list.removeAllViews()
         addItemsToRV(temp_items)
     }
 
