@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingBottom="60dp"
     tools:context=".MainActivityFragments.ShelfFragment">
 
     <RelativeLayout
@@ -26,8 +27,6 @@
         android:id="@+id/rv_inventory_list"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:layout_marginTop="60dp"
-        android:layout_marginBottom="70dp"/>
+        android:layout_gravity="center"/>
 
 </FrameLayout>

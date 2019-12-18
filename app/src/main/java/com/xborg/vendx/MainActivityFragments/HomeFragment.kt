@@ -95,8 +95,7 @@ class HomeFragment : Fragment() {
      * as item_card cards
      */
     private fun addItemsToRV(items: ArrayList<Item>){
-        rv_inventory_list.layoutManager = LinearLayoutManager(context)
-        rv_inventory_list.layoutManager = GridLayoutManager(context, 2)
+        rv_inventory_list.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         rv_inventory_list.adapter = context?.let { ItemAdapter(items, activity?.cart_item_count, activity?.get_button, it) }
     }
 
@@ -106,13 +105,11 @@ class HomeFragment : Fragment() {
         super.setUserVisibleHint(isVisibleToUser)
         if(isVisibleToUser) {
             is_visible = true
-
-
             val activity = activity as MainActivity?
-            activity?.home_button?.setTextColor(Color.WHITE)
-            activity?.shelf_button?.setTextColor(resources.getColor(R.color.colorAccent, null))
-            activity?.home_button?.setBackgroundResource(R.drawable.rounded_button_accent)
-            activity?.shelf_button?.setBackgroundResource(R.color.white)
+//            activity?.home_button?.setTextColor(Color.WHITE)
+//            activity?.shelf_button?.setTextColor(resources.getColor(R.color.colorAccent, null))
+//            activity?.home_button?.setBackgroundResource(R.drawable.rounded_button_accent)
+//            activity?.shelf_button?.setBackgroundResource(R.color.white)
         } else {
             is_visible = false
         }

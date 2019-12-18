@@ -8,186 +8,142 @@
         android:background="@color/white"
         tools:context=".MainActivity">
 
-    <RelativeLayout
-        android:id="@+id/top_bar"
-        android:layout_width="match_parent"
-        android:layout_height="60dp">
-
-        <Button
-            android:id="@+id/home_button"
-            android:layout_width="wrap_content"
-            android:layout_height="35dp"
-            android:layout_marginLeft="10dp"
-            android:layout_centerVertical="true"
-            android:text="Home"
-            android:textColor="@color/white"
-            android:background="@drawable/rounded_button_accent"
-            style="?android:attr/borderlessButtonStyle"
-            android:textStyle="bold">
-
-        </Button>
-
-        <Button
-            android:id="@+id/shelf_button"
-            android:layout_width="wrap_content"
-            android:layout_height="35dp"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/home_button"
-            android:text="Shelf"
-            style="?android:attr/borderlessButtonStyle"
-            android:textColor="@color/colorAccent"
-            android:textStyle="bold">
-
-        </Button>
-
-    </RelativeLayout>
-
-    <!--region fragment view    -->
-
-    <ScrollView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/content"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-
-        <TextView style="?android:textAppearanceMedium"
-            android:padding="20dp"
-            android:lineSpacingMultiplier="1.2"
+<!--region Main Fragment -->
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-    </ScrollView>
+            android:layout_height="match_parent">
 
-    <androidx.viewpager.widget.ViewPager
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/pager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+            <ScrollView
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
 
-    <!--    end region-->
+            </ScrollView>
 
-    <TextView
-        android:id="@+id/location"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="location"
-        android:layout_alignParentBottom="true"
-        app:layout_anchorGravity="bottom"
-        android:paddingBottom="30dp"
-        android:visibility="invisible"
-        android:paddingLeft="10dp">
-    </TextView>
+            <androidx.viewpager.widget.ViewPager
+                android:id="@+id/pager"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
-<!-- Bottom-->
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="65dp"
-        android:layout_alignParentBottom="true">
+        </RelativeLayout>
 
-        <ActionMenuView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/rounded_action_bar">
-        </ActionMenuView>
-
-        <ImageView
-            android:id="@+id/scroll_icon"
+    <!--    endregion-->
+<!-- region Bottom -->
+        <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/overlay_icon"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentTop="true"
-            android:visibility="invisible">
-
-        </ImageView>
-
-        <TextView
-            android:id="@+id/closest_machine_name_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentBottom="true"
-            android:textSize="20dp"
-            android:textStyle="bold"
-            android:paddingBottom="15dp"
-            android:textColor="@color/white">
-
-        </TextView>
-
-        <ImageView
-            android:id="@+id/search_button"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginLeft="15dp"
-            android:layout_centerVertical="true"
-            android:src="@drawable/search_icon">
-        </ImageView>
-
-        <Button
-            android:id="@+id/nearby_machine_count_text"
-            android:text="0"
-            android:textSize="17dp"
-            android:textStyle="bold"
-            android:textColor="@color/white"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:visibility="invisible"
-            android:background="@drawable/rounded_button_accent"
-            android:layout_marginRight="15dp">
-
-        </Button>
-
-        <EditText
-            android:id="@+id/search_text"
-            android:layout_alignParentBottom="true"
-            android:layout_width="match_parent"
-            android:layout_height="65dp"
-            android:hint="Search"
-            android:textSize="18dp"
-            android:layout_gravity="bottom"
-            android:paddingLeft="5dp"
-            android:textColor="@color/cardview_dark_background"
-            android:background="@drawable/small_border"
-            android:singleLine="true"
-            android:visibility="invisible"
-            android:inputType="textPersonName">
-        </EditText>
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="80dp"
-        android:layout_height="100dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="60dp">
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/get_button"
-            android:layout_width="60dp"
             android:layout_height="60dp"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"
-            style="?android:attr/borderlessButtonStyle"
-            android:src="@drawable/both_basket_icon">
+            android:layout_alignParentBottom="true">
 
-        </com.google.android.material.floatingactionbutton.FloatingActionButton>
+            <ActionMenuView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/rounded_action_bar">
+            </ActionMenuView>
 
-        <Button
-            android:id="@+id/cart_item_count"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:text="0"
-            android:textStyle="bold"
-            android:textAlignment="center"
-            android:textColor="@color/white"
-            android:layout_alignRight="@id/get_button"
-            android:background="@drawable/cart_item_count"
-            style="?android:attr/borderlessButtonStyle"
-            android:visibility="invisible">
-        </Button>
+            <ImageView
+                android:id="@+id/scroll_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/overlay_icon"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentTop="true"
+                android:visibility="invisible">
 
-    </RelativeLayout>
+            </ImageView>
+
+            <TextView
+                android:id="@+id/closest_machine_name_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentBottom="true"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:paddingBottom="15dp"
+                android:textColor="@color/white">
+
+            </TextView>
+
+            <ImageView
+                android:id="@+id/search_button"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginLeft="15dp"
+                android:layout_centerVertical="true"
+                android:src="@drawable/search_icon">
+            </ImageView>
+
+            <EditText
+                android:drawablePadding="8dp"
+                android:id="@+id/search_text"
+                android:layout_alignParentBottom="true"
+                android:layout_width="match_parent"
+                android:layout_height="65dp"
+                android:hint="search"
+                android:textSize="18dp"
+                android:layout_gravity="bottom"
+                android:paddingLeft="5dp"
+                android:textColor="@color/SearchTextColor"
+                android:background="@drawable/search_input_style"
+                android:singleLine="true"
+                android:visibility="invisible"
+                android:inputType="textPersonName">
+            </EditText>
+
+            <Button
+                android:id="@+id/nearby_machine_count_text"
+                android:text="0"
+                android:textSize="17dp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:visibility="invisible"
+                android:background="@drawable/rounded_button_accent"
+                android:layout_marginRight="15dp">
+
+            </Button>
+
+        </RelativeLayout>
+
+<!--    region Aciton Button-->
+        <RelativeLayout
+            android:layout_width="80dp"
+            android:layout_height="100dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="55dp">
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/get_button"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                style="?android:attr/borderlessButtonStyle"
+                android:src="@drawable/both_basket_icon">
+
+            </com.google.android.material.floatingactionbutton.FloatingActionButton>
+
+            <Button
+                android:id="@+id/cart_item_count"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:text="0"
+                android:textStyle="bold"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:layout_alignRight="@id/get_button"
+                android:background="@drawable/cart_item_count"
+                style="?android:attr/borderlessButtonStyle"
+                android:visibility="invisible">
+            </Button>
+
+        </RelativeLayout>
+<!--    endregion-->
+<!--    endregion-->
 
 </RelativeLayout>

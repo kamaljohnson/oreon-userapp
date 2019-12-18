@@ -4,17 +4,21 @@
         android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        style="?android:attr/ambientShadowAlpha"
+        android:layout_marginHorizontal="5dp"
+        android:layout_marginVertical="5dp"
         android:padding="10dp">
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="150dp">
+        android:layout_width="150dp"
+        android:layout_height="130dp">
 
         <ImageView
-                android:id="@+id/image"
-                android:layout_width="170dp"
-                android:layout_height="150dp"
-                android:src="@drawable/common_google_signin_btn_icon_dark">
+            android:id="@+id/image"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/common_google_signin_btn_icon_dark">
 
         </ImageView>
 
@@ -47,27 +51,78 @@
 
         </TextView>
 
+        <TextView
+            android:id="@+id/purchase_count"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:text="0"
+            android:textSize="18dp"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:background="@drawable/item_count_background"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true">
+        </TextView>
+
     </RelativeLayout>
 
-    <TextView
-            android:id="@+id/cost"
-            android:text="10Rs"
-            android:paddingLeft="5dp"
-            android:layout_width="170dp"
-            android:layout_height="30dp"
-            android:textSize="20dp">
+    <RelativeLayout
+        android:layout_width="150dp"
+        android:layout_height="55dp">
+        <TextView
+                android:id="@+id/cost"
+                android:text="₹10"
+                android:paddingLeft="5dp"
+                android:layout_width="120dp"
+                android:layout_height="25dp"
+                android:textSize="20dp">
 
-    </TextView>
+        </TextView>
 
-    <TextView
-            android:id="@+id/name"
-            android:text="Item Name"
-            android:paddingLeft="5dp"
-            android:layout_width="170dp"
-            android:layout_height="25dp"
-            android:textSize="15dp">
+        <TextView
+                android:id="@+id/name"
+                android:text="Item Name"
+                android:paddingLeft="5dp"
+                android:layout_width="120dp"
+                android:layout_height="25dp"
+                android:layout_alignParentBottom="true"
+                android:textSize="15dp">
 
-    </TextView>
+        </TextView>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true">
+
+            <ImageView
+                android:id="@+id/add_button"
+                android:background="@drawable/add_button_background"
+                android:layout_width="35dp"
+                android:layout_height="26dp"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_alignParentTop="true"
+                android:src="@drawable/add_icon"
+                android:layout_marginTop="5dp">
+
+            </ImageView>
+
+            <ImageView
+                android:id="@+id/remove_button"
+                android:src="@drawable/remove_icon"
+                android:background="@drawable/remove_button_background"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="35dp"
+                android:layout_height="26dp"
+                android:layout_alignParentBottom="true">
+
+            </ImageView>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
 
     <TextView
             android:id="@+id/item_id"
@@ -75,52 +130,5 @@
             android:layout_height="0dp">
 
     </TextView>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <RelativeLayout
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
-            android:paddingRight="10dp">
-
-            <TextView
-                android:id="@+id/purchase_count"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:text="0"
-                android:textSize="18dp"
-                android:textColor="@color/white"
-                android:gravity="center"
-                android:textStyle="bold"
-                android:background="@drawable/item_count_background">
-            </TextView>
-
-            <ImageView
-                android:layout_alignParentRight="true"
-                android:id="@+id/remove_button"
-                android:background="@drawable/remove_button_background"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                style="?android:attr/borderlessButtonStyle"
-                android:src="@drawable/remove_icon">
-
-            </ImageView>
-
-        </RelativeLayout>
-
-        <ImageView
-                android:id="@+id/add_button"
-                android:src="@drawable/add_icon"
-                android:background="@drawable/add_button_background"
-                android:layout_alignParentRight="true"
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_width="25dp"
-                android:layout_height="25dp">
-
-        </ImageView>
-
-    </RelativeLayout>
 
 </LinearLayout>

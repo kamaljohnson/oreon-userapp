@@ -115,8 +115,6 @@ class ItemViewHolder(view: View, cart_count_text_view: TextView?, get_button: Fl
         image.setOnClickListener{
             if(!MainActivity.get_button_lock) {
                 var count = purchase_count.text.toString().toInt()
-                var firstClickFlag = false
-
 
                 if(previous_view != view && previous_view != null) {
                     previous_view!!.info_button.visibility = View.INVISIBLE
@@ -130,34 +128,31 @@ class ItemViewHolder(view: View, cart_count_text_view: TextView?, get_button: Fl
                     add_button.visibility = View.VISIBLE
                     remove_button.visibility = View.VISIBLE
                     info_button.visibility = View.VISIBLE
-                    firstClickFlag = true
                 }
 
-                if(!firstClickFlag) {
-                    if(count == item_limit.text.toString().split(' ')[0].toInt()) {
-                        Toast.makeText(context, "Item purchase limit reached", Toast.LENGTH_SHORT).show()
-                    }
-
-                    if(count == 0){
-                        purchase_count.visibility = View.VISIBLE
-                        remove_button.visibility = View.VISIBLE
-                    }
-                    if(cart_count_text_view!!.text == "0") {
-                        cart_count_text_view.visibility = View.VISIBLE
-                    }
-
-                    if(count < item_limit.text.toString().split(' ')[0].toInt()) {
-                        count+=1
-                        cart_count_text_view!!.text = (cart_count_text_view.text.toString().toInt() + 1).toString()
-                    }
-
-                    if(cost.text == "-1") {
-                        MainActivity.cart_items_from_shelf[view.item_id.text.toString()] = count
-                    } else {
-                        MainActivity.cart_items[view.item_id.text.toString()] = count
-                    }
-                    purchase_count.text = count.toString()
+                if(count == item_limit.text.toString().split(' ')[0].toInt()) {
+                    Toast.makeText(context, "Item purchase limit reached", Toast.LENGTH_SHORT).show()
                 }
+
+                if(count == 0){
+                    purchase_count.visibility = View.VISIBLE
+                    remove_button.visibility = View.VISIBLE
+                }
+                if(cart_count_text_view!!.text == "0") {
+                    cart_count_text_view.visibility = View.VISIBLE
+                }
+
+                if(count < item_limit.text.toString().split(' ')[0].toInt()) {
+                    count+=1
+                    cart_count_text_view!!.text = (cart_count_text_view.text.toString().toInt() + 1).toString()
+                }
+
+                if(cost.text == "-1") {
+                    MainActivity.cart_items_from_shelf[view.item_id.text.toString()] = count
+                } else {
+                    MainActivity.cart_items[view.item_id.text.toString()] = count
+                }
+                purchase_count.text = count.toString()
             }
 
         }
