@@ -19,4 +19,8 @@
     <string name="yes">YES</string>
     <string name="no">NO</string>
 
+    <string name="title_home">Home</string>
+    <string name="title_shop">Shop</string>
+    <string name="title_shelf">Shelf</string>
+
 </resources>

@@ -1,4 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <item
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/ic_home"
+        android:title="@string/title_home" />
+
+    <item
+        android:id="@+id/navigation_shop"
+        android:icon="@drawable/ic_shop_cart"
+        android:title="@string/title_shop" />
+
+    <item
+        android:id="@+id/navigation_shelf"
+        android:icon="@drawable/ic_shop_basket"
+        android:title="@string/title_shelf" />
 </menu>

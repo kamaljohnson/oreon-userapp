@@ -38,9 +38,11 @@ import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_main.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.functions.FirebaseFunctions
+import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx
 import com.xborg.vendx.MainActivityFragments.HomeFragment
 import com.xborg.vendx.MainActivityFragments.ShelfFragment
 import com.xborg.vendx.SupportClasses.Item
+import kotlinx.android.synthetic.main.activity_vending.*
 
 private const val REQUEST_ENABLE_BT = 2
 private const val REQUEST_ENABLE_LOC = 3
@@ -91,6 +93,8 @@ class MainActivity : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        initBottomNavigationView()
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         parentLayout =  findViewById<View>(android.R.id.content)
@@ -183,16 +187,16 @@ class MainActivity : FragmentActivity() {
         clearCarts()
         getShelfItems()
 
-        search_text.imeOptions = EditorInfo.IME_ACTION_DONE
-
-        search_text.setOnEditorActionListener { _, actionId, _ ->
-            if(actionId == EditorInfo.IME_ACTION_DONE){
-                hideSearchBar(search_text.rootView)
-                true
-            } else {
-                false
-            }
-        }
+//        search_text.imeOptions = EditorInfo.IME_ACTION_DONE
+//
+//        search_text.setOnEditorActionListener { _, actionId, _ ->
+//            if(actionId == EditorInfo.IME_ACTION_DONE){
+//                hideSearchBar(search_text.rootView)
+//                true
+//            } else {
+//                false
+//            }
+//        }
 
         get_button.setOnClickListener{
             if(cart_items.size == 0 && cart_items_from_shelf.size == 0) {
@@ -254,9 +258,9 @@ class MainActivity : FragmentActivity() {
             }
         }
 
-        search_button.setOnClickListener{
-            showSearchBar()
-        }
+//        search_button.setOnClickListener{
+//            showSearchBar()
+//        }
 
     }
 
@@ -380,17 +384,17 @@ class MainActivity : FragmentActivity() {
     }
 
     private fun hideSearchBar(view: View) {
-        search_text.visibility = View.INVISIBLE
-        search_button.visibility = View.VISIBLE
-        nearby_machine_count_text.visibility = View.VISIBLE
+//        search_text.visibility = View.INVISIBLE
+//        search_button.visibility = View.VISIBLE
+//        nearby_machine_count_text.visibility = View.VISIBLE
 
         hideKeyboard(view)
     }
 
     private fun showSearchBar() {
-        search_text.visibility = View.VISIBLE
-        search_button.visibility = View.INVISIBLE
-        nearby_machine_count_text.visibility = View.INVISIBLE
+//        search_text.visibility = View.VISIBLE
+//        search_button.visibility = View.INVISIBLE
+//        nearby_machine_count_text.visibility = View.INVISIBLE
     }
 
     private fun hideKeyboard(view: View) {
@@ -472,13 +476,20 @@ class MainActivity : FragmentActivity() {
                 val closestMachines = snapshot.data?.get("ClosestMachines") as ArrayList<*>
                 val machineCount = closestMachines.size
                 if(machineCount > 0) {
-                    nearby_machine_count_text.text = machineCount.toString()
-                    closest_machine_name_text.text = closestMachines[0].toString()
-                    nearby_machine_count_text.visibility = View.VISIBLE
-                    scroll_icon.visibility = View.VISIBLE
+//                    nearby_machine_count_text.text = machineCount.toString()
+//                    closest_machine_name_text.text = closestMachines[0].toString()
+//                    nearby_machine_count_text.visibility = View.VISIBLE
+//                    scroll_icon.visibility = View.VISIBLE
                 }
             }
         }
         // [END listen_document]
+    }
+
+    private fun initBottomNavigationView() {
+        val bottomNavigation = findViewById<BottomNavigationViewEx>(R.id.bottom_navigation)
+        bottomNavigation.enableAnimation(false)
+        bottomNavigation.enableItemShiftingMode(false)
+        bottomNavigation.enableShiftingMode(false)
     }
 }

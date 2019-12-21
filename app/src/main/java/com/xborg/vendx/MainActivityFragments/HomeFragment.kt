@@ -41,15 +41,15 @@ class HomeFragment : Fragment() {
         MainActivity.items = items
         val activity = activity as MainActivity?
 
-        activity?.search_text?.addTextChangedListener{
-            Log.e(TAG, "the searching string is ${it.toString()}")
-            if(it.toString().isNotEmpty()) {
-                search(it.toString())
-            } else {
-                rv_machine_inventory.removeAllViews()
-                addItemsToRV(items)
-            }
-        }
+//        activity?.search_text?.addTextChangedListener{
+//            Log.e(TAG, "the searching string is ${it.toString()}")
+//            if(it.toString().isNotEmpty()) {
+//                search(it.toString())
+//            } else {
+//                rv_machine_inventory.removeAllViews()
+//                addItemsToRV(items)
+//            }
+//        }
     }
 
     override fun onCreateView(

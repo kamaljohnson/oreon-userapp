@@ -68,4 +68,7 @@ dependencies {
     implementation 'com.github.douglasjunior.AndroidBluetoothLibrary:BluetoothClassicLibrary:0.3.5'
 
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.0'
+
+    implementation 'com.github.ittianyu:BottomNavigationViewEx:2.0.4'
+    implementation "com.android.support:design:28.0.0"
 }

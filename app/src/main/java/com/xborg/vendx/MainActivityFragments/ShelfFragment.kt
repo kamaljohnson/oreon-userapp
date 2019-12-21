@@ -39,16 +39,16 @@ class ShelfFragment : Fragment() {
         getShelfItems()
 
         val activity = activity as MainActivity?
-        activity?.search_text?.addTextChangedListener{
-            Log.e(TAG, "the searching string is ${it.toString()}")
-            if(it.toString().isNotEmpty()) {
-                search(it.toString())
-            } else {
-                rv_inventory_snacks.removeAllViews()
-                addItemsToRV(items)
-            }
-
-        }
+//        activity?.search_text?.addTextChangedListener{
+//            Log.e(TAG, "the searching string is ${it.toString()}")
+//            if(it.toString().isNotEmpty()) {
+//                search(it.toString())
+//            } else {
+//                rv_inventory_snacks.removeAllViews()
+//                addItemsToRV(items)
+//            }
+//
+//        }
     }
 
     override fun onCreateView(
