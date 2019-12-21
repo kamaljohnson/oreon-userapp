@@ -36,6 +36,9 @@ class ShelfFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         getShelfItems()
 
         val activity = activity as MainActivity?
@@ -49,13 +52,8 @@ class ShelfFragment : Fragment() {
 //            }
 //
 //        }
+        return inflater.inflate(R.layout.fragment_shelf,container,false)
     }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View = inflater.inflate(R.layout.fragment_shelf, container, false)
 
     @RequiresApi(Build.VERSION_CODES.M)
     @SuppressLint("ResourceAsColor")

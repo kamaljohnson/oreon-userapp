@@ -15,15 +15,7 @@ import com.xborg.vendx.R
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Activities that contain this fragment must implement the
- * [StoreFragment.OnFragmentInteractionListener] interface
- * to handle interaction events.
- * Use the [StoreFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class StoreFragment : Fragment() {
+class ShopFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -92,7 +84,7 @@ class StoreFragment : Fragment() {
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
-            StoreFragment().apply {
+            ShopFragment().apply {
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1, param1)
                     putString(ARG_PARAM2, param2)

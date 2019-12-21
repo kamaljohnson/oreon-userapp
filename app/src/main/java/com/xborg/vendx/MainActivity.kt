@@ -6,11 +6,9 @@ import android.annotation.TargetApi
 import android.app.Activity
 import android.app.AlertDialog
 import android.bluetooth.BluetoothAdapter
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
-import android.location.LocationManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -18,24 +16,18 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
-import androidx.annotation.NonNull
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentStatePagerAdapter
+import androidx.fragment.app.*
 import androidx.viewpager.widget.ViewPager
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.tasks.Task
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_main.*
 import com.google.firebase.auth.FirebaseAuth
@@ -43,9 +35,8 @@ import com.google.firebase.functions.FirebaseFunctions
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx
 import com.xborg.vendx.MainActivityFragments.HomeFragment
 import com.xborg.vendx.MainActivityFragments.ShelfFragment
-import com.xborg.vendx.MainActivityFragments.StoreFragment
+import com.xborg.vendx.MainActivityFragments.ShopFragment
 import com.xborg.vendx.SupportClasses.Item
-import kotlinx.android.synthetic.main.activity_vending.*
 
 private const val REQUEST_ENABLE_BT = 2
 private const val REQUEST_ENABLE_LOC = 3
@@ -96,6 +87,28 @@ class MainActivity : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        changeFragment(HomeFragment(), "HomeFragment")
+
+        bottom_navigation.setOnNavigationItemSelectedListener {
+            when(it.itemId){
+                R.id.navigation_home-> {
+                    changeFragment(HomeFragment(), "HomeFragment")
+                    return@setOnNavigationItemSelectedListener true
+                }
+
+                R.id.navigation_shelf-> {
+                    changeFragment(ShelfFragment(), "ShelfFragment")
+                    return@setOnNavigationItemSelectedListener true
+                }
+
+                R.id.navigation_shop-> {
+                    changeFragment(ShopFragment(), "ShopFragment")
+                    return@setOnNavigationItemSelectedListener true
+                }
+            }
+            false
+        }
 
         initBottomNavigationView()
 
@@ -182,7 +195,7 @@ class MainActivity : FragmentActivity() {
 //        closestMachineUpdateListener()
 //      endregion
 
-//        mPager = findViewById(R.id.pager)
+//        mPager = findViewById(R.id.fragment_container)
 //
 //        val pagerAdapter = ScreenSlidePagerAdapter(supportFragmentManager)
 //        mPager.adapter = pagerAdapter
@@ -494,32 +507,36 @@ class MainActivity : FragmentActivity() {
         bottomNavigation.enableAnimation(false)
         bottomNavigation.enableItemShiftingMode(false)
         bottomNavigation.enableShiftingMode(false)
-
-        bottomNavigation.onNavigationItemSelectedListener = mOnNavigationItemSelectedListener
     }
 
-    private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { menuItem ->
-        when (menuItem.itemId) {
-            R.id.navigation_home -> {
-                val fragment = HomeFragment()
-                supportFragmentManager.beginTransaction().replace(R.id.container, fragment, fragment.javaClass.simpleName)
-                    .commit()
-                return@OnNavigationItemSelectedListener true
-            }
-            R.id.navigation_shelf-> {
-                val fragment = ShelfFragment()
-                supportFragmentManager.beginTransaction().replace(R.id.container, fragment, fragment.javaClass.simpleName)
-                    .commit()
-                return@OnNavigationItemSelectedListener true
-            }
-            R.id.navigation_shop -> {
-                val fragment = StoreFragment()
-                supportFragmentManager.beginTransaction().replace(R.id.container, fragment, fragment.javaClass.simpleName)
-                    .commit()
-                return@OnNavigationItemSelectedListener true
-            }
+    private fun loadFragment(fragment: Fragment) {
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.fragment_container, fragment)
+        transaction.addToBackStack(null)
+        transaction.commit()
+    }
+
+    private fun changeFragment(fragment: Fragment, tagFragmentName: String) {
+        val fragmentManager: FragmentManager = supportFragmentManager
+        val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
+
+        val currentFragment: Fragment? = fragmentManager.primaryNavigationFragment
+        if (currentFragment != null) {
+            fragmentTransaction.hide(currentFragment)
         }
-        false
+
+        var tempFragment: Fragment? = fragmentManager.findFragmentByTag(tagFragmentName)
+        if(tempFragment == null) {
+            tempFragment = fragment
+            fragmentTransaction.add(R.id.fragment_container, tempFragment, tagFragmentName)
+        } else {
+            fragmentTransaction.show(tempFragment)
+        }
+
+        fragmentTransaction.setPrimaryNavigationFragment(tempFragment)
+        fragmentTransaction.setReorderingAllowed(true)
+        fragmentTransaction.commitNowAllowingStateLoss()
+
     }
 
 }

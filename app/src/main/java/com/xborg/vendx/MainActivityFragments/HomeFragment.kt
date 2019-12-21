@@ -36,12 +36,6 @@ class HomeFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        Log.e(TAG, "Home Fragment")
-
-        getItems()
-
-        MainActivity.items = items
-        val activity = activity as MainActivity?
 
 //        activity?.search_text?.addTextChangedListener{
 //            Log.e(TAG, "the searching string is ${it.toString()}")
@@ -54,11 +48,14 @@ class HomeFragment : Fragment() {
 //        }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View = inflater.inflate(R.layout.fragment_home, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        getItems()
+
+        MainActivity.items = items
+        val activity = activity as MainActivity?
+
+        return inflater.inflate(R.layout.fragment_home,container,false)
+    }
 
     /**
      * get all the items in the inventory

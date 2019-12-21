@@ -26,7 +26,7 @@
 <!--    TODO: below components are to be removed this is just for testing purpose-->
 
     <RelativeLayout
-        android:id="@+id/container"
+        android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:layout_alignParentBottom="true">
