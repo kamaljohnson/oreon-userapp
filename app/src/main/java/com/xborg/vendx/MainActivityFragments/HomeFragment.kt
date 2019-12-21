@@ -1,7 +1,6 @@
 package com.xborg.vendx.MainActivityFragments
 
 import android.annotation.SuppressLint
-import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -18,7 +17,9 @@ import com.xborg.vendx.MainActivity
 import com.xborg.vendx.R
 import com.xborg.vendx.SupportClasses.Item
 import com.xborg.vendx.SupportClasses.ItemAdapter
+import com.xborg.vendx.SupportClasses.ItemCategory
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main.view.*
 import kotlinx.android.synthetic.main.fragment_home.*
 
 private var TAG = "HomeFragment"
@@ -45,7 +46,7 @@ class HomeFragment : Fragment() {
             if(it.toString().isNotEmpty()) {
                 search(it.toString())
             } else {
-                rv_inventory_list.removeAllViews()
+                rv_machine_inventory.removeAllViews()
                 addItemsToRV(items)
             }
         }
@@ -78,6 +79,23 @@ class HomeFragment : Fragment() {
                     item.quantity = document.data["Quantity"].toString()
                     item.item_limit = "0"
                     item.image_src = document.data["Image"].toString()
+                    when(document.data["Category"].toString()) {
+                        "Snack" -> {
+                            item.category = ItemCategory.SNACK
+                        }
+                        "Beverage" -> {
+                            item.category = ItemCategory.BEVERAGE
+                        }
+                        "Fast Food" -> {
+                            item.category = ItemCategory.FAST_FOOD
+                        }
+                        "Stationary" -> {
+                            item.category = ItemCategory.STATIONARY
+                        }
+                        else -> {
+                            item.category = ItemCategory.OTHER
+                        }
+                    }
 
                     items.add(item)
 
@@ -94,9 +112,9 @@ class HomeFragment : Fragment() {
      * adds all the items to the recycler view
      * as item_card cards
      */
-    private fun addItemsToRV(items: ArrayList<Item>){
-        rv_inventory_list.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        rv_inventory_list.adapter = context?.let { ItemAdapter(items, activity?.cart_item_count, activity?.get_button, it) }
+    private fun addItemsToRV(items: ArrayList<Item>) {
+        rv_machine_inventory.layoutManager = GridLayoutManager(context, 3)
+        rv_machine_inventory.adapter = context?.let { ItemAdapter(items, activity?.cart_item_count, activity?.get_button, it) }
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -136,7 +154,7 @@ class HomeFragment : Fragment() {
             Log.d(TAG, temp_items.size.toString())
         }
         Log.e(TAG, MainActivity.cart_items.toString())
-        rv_inventory_list.removeAllViews()
+        rv_machine_inventory.removeAllViews()
         addItemsToRV(temp_items)
     }
 

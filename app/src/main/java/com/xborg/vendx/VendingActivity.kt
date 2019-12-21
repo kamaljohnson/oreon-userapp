@@ -136,9 +136,9 @@ class VendingActivity : AppCompatActivity(), BluetoothService.OnBluetoothEventCa
      * as item_card cards
      */
     private fun addItemsToRV(items: ArrayList<Item>){
-        rv_inventory_list.layoutManager = LinearLayoutManager(this)
-        rv_inventory_list.layoutManager = GridLayoutManager(this, 1)
-        rv_inventory_list.adapter = ItemSlipAdapter(items, this)
+        rv_inventory_snacks.layoutManager = LinearLayoutManager(this)
+        rv_inventory_snacks.layoutManager = GridLayoutManager(this, 1)
+        rv_inventory_snacks.adapter = ItemSlipAdapter(items, this)
     }
 
     private fun setupBluetooth(){

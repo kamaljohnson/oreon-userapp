@@ -15,4 +15,5 @@
     <color name="colorSendText">#82CAFF</color>
     <color name="colorStatusText">#FFDB58</color>
     <color name="SearchTextColor">#353535</color>
+    <color name="ItemCardBg">#FFFFFF</color>
 </resources>

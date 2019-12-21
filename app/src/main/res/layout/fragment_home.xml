@@ -1,123 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="60dp"
-    tools:context=".MainActivityFragments.HomeFragment">
+    tools:context=".MainActivityFragments.HomeFragment"
+    android:overScrollMode="always"
+    android:isScrollContainer="true"
+    android:orientation="vertical">
 
-    <RelativeLayout
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_machine_inventory"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-<!--    region Offers-->
-        <RelativeLayout
-            android:id="@+id/offers"
-            android:layout_width="match_parent"
-            android:layout_height="230dp"
-            android:layout_marginTop="0dp">
+    </androidx.recyclerview.widget.RecyclerView>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_offers"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="offers"
-                android:textStyle="bold" />
-
-        </RelativeLayout>
-<!--    endregion-->
-<!--    region Favourite-->
-        <TextView
-            android:id="@+id/your_favorite_text"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:paddingLeft="10dp"
-            android:paddingTop="15dp"
-            android:textSize="17dp"
-            android:textStyle="bold"
-            android:text="Your Favorite"
-            android:layout_below="@id/offers"/>
-
-        <RelativeLayout
-            android:id="@+id/favorite"
-            android:layout_width="match_parent"
-            android:layout_height="120dp"
-            android:layout_below="@+id/your_favorite_text"
-            android:layout_marginTop="0dp">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_favorite"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:textStyle="bold"
-                android:gravity="center"
-                android:text="favorite"/>
-
-        </RelativeLayout>
-<!--        endregion-->
-<!--    region Snacks-->
-        <RelativeLayout
-            android:id="@+id/snacks"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/favorite">
-
-            <TextView
-                android:id="@+id/snacks_text"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:text="Snacks"
-                android:textStyle="bold"
-                android:textSize="17dp"
-                android:paddingTop="15dp"
-                android:paddingLeft="10dp"/>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_inventory_list"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/snacks_text"
-                android:orientation="horizontal"/>
-
-        </RelativeLayout>
-<!--        endregion-->
-<!--    region Beverages-->
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/snacks">
-
-            <TextView
-                android:id="@+id/beverages_text"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:text="Beverages"
-                android:textStyle="bold"
-                android:textSize="17dp"
-                android:paddingTop="15dp"
-                android:paddingLeft="10dp"/>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/beverages_text"/>
-
-        </RelativeLayout>
-<!--    endregion-->
-
-    </RelativeLayout>
-
-
-</FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

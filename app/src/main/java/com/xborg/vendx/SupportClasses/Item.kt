@@ -1,6 +1,15 @@
 package com.xborg.vendx.SupportClasses
 
+enum class ItemCategory {
+    SNACK,
+    BEVERAGE,
+    FAST_FOOD,
+    STATIONARY,
+    OTHER
+}
+
 class Item {
+    lateinit var category: ItemCategory
     lateinit var item_id:String
     lateinit var name:String
     lateinit var cost:String

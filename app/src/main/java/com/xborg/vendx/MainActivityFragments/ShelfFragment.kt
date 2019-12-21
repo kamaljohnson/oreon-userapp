@@ -1,6 +1,5 @@
 package com.xborg.vendx.MainActivityFragments
 import android.annotation.SuppressLint
-import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -45,7 +44,7 @@ class ShelfFragment : Fragment() {
             if(it.toString().isNotEmpty()) {
                 search(it.toString())
             } else {
-                rv_inventory_list.removeAllViews()
+                rv_inventory_snacks.removeAllViews()
                 addItemsToRV(items)
             }
 
@@ -79,7 +78,7 @@ class ShelfFragment : Fragment() {
         Log.e(TAG, "user_state: ${MainActivity.user_state}")
         when(MainActivity.user_state) {
             States.PAY_SUCCESS -> {
-                rv_inventory_list.removeAllViews()
+                rv_inventory_snacks.removeAllViews()
                 getShelfItems()
                 MainActivity.user_state = States.NEW_SELECT
             }
@@ -140,9 +139,8 @@ class ShelfFragment : Fragment() {
      * as item_card cards
      */
     private fun addItemsToRV(items: ArrayList<Item>){
-        rv_inventory_list.layoutManager = LinearLayoutManager(context)
-        rv_inventory_list.layoutManager = GridLayoutManager(context, 2)
-        rv_inventory_list.adapter = context?.let { ItemAdapter(items, activity?.cart_item_count, activity?.get_button, it) }
+        rv_inventory_snacks.layoutManager = GridLayoutManager(context, 3)
+        rv_inventory_snacks.adapter = context?.let { ItemAdapter(items, activity?.cart_item_count, activity?.get_button, it) }
     }
 
     //    region item_card search
@@ -166,7 +164,7 @@ class ShelfFragment : Fragment() {
             Log.d(TAG, temp_items.size.toString())
         }
         Log.e(TAG, MainActivity.cart_items.toString())
-        rv_inventory_list.removeAllViews()
+        rv_inventory_snacks.removeAllViews()
         addItemsToRV(temp_items)
     }
 
