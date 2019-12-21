@@ -36,6 +36,8 @@ class HomeFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        Log.e(TAG, "Home Fragment")
+
         getItems()
 
         MainActivity.items = items

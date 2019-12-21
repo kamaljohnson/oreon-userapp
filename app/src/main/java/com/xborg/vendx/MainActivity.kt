@@ -23,6 +23,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.NonNull
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -34,6 +35,7 @@ import androidx.viewpager.widget.ViewPager
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.tasks.Task
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_main.*
 import com.google.firebase.auth.FirebaseAuth
@@ -41,6 +43,7 @@ import com.google.firebase.functions.FirebaseFunctions
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx
 import com.xborg.vendx.MainActivityFragments.HomeFragment
 import com.xborg.vendx.MainActivityFragments.ShelfFragment
+import com.xborg.vendx.MainActivityFragments.StoreFragment
 import com.xborg.vendx.SupportClasses.Item
 import kotlinx.android.synthetic.main.activity_vending.*
 
@@ -179,10 +182,10 @@ class MainActivity : FragmentActivity() {
 //        closestMachineUpdateListener()
 //      endregion
 
-        mPager = findViewById(R.id.pager)
-
-        val pagerAdapter = ScreenSlidePagerAdapter(supportFragmentManager)
-        mPager.adapter = pagerAdapter
+//        mPager = findViewById(R.id.pager)
+//
+//        val pagerAdapter = ScreenSlidePagerAdapter(supportFragmentManager)
+//        mPager.adapter = pagerAdapter
 
         clearCarts()
         getShelfItems()
@@ -491,5 +494,32 @@ class MainActivity : FragmentActivity() {
         bottomNavigation.enableAnimation(false)
         bottomNavigation.enableItemShiftingMode(false)
         bottomNavigation.enableShiftingMode(false)
+
+        bottomNavigation.onNavigationItemSelectedListener = mOnNavigationItemSelectedListener
     }
+
+    private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { menuItem ->
+        when (menuItem.itemId) {
+            R.id.navigation_home -> {
+                val fragment = HomeFragment()
+                supportFragmentManager.beginTransaction().replace(R.id.container, fragment, fragment.javaClass.simpleName)
+                    .commit()
+                return@OnNavigationItemSelectedListener true
+            }
+            R.id.navigation_shelf-> {
+                val fragment = ShelfFragment()
+                supportFragmentManager.beginTransaction().replace(R.id.container, fragment, fragment.javaClass.simpleName)
+                    .commit()
+                return@OnNavigationItemSelectedListener true
+            }
+            R.id.navigation_shop -> {
+                val fragment = StoreFragment()
+                supportFragmentManager.beginTransaction().replace(R.id.container, fragment, fragment.javaClass.simpleName)
+                    .commit()
+                return@OnNavigationItemSelectedListener true
+            }
+        }
+        false
+    }
+
 }
