@@ -70,6 +70,8 @@ class ItemAdapter(val items: ArrayList<Item>, val cart_count_text_view: TextView
             }
         }
 
+        holder.image.isClickable = items[position].selectable
+
         Glide
             .with(context)
             .load(items[position].image_src)

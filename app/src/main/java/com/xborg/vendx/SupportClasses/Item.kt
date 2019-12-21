@@ -16,4 +16,5 @@ class Item {
     lateinit var quantity:String
     lateinit var item_limit:String
     lateinit var image_src: String
+    var selectable: Boolean = true
 }

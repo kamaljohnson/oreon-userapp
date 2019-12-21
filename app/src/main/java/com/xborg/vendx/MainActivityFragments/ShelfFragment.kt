@@ -114,6 +114,7 @@ class ShelfFragment : Fragment() {
                                 item.cost = "-1"    // shelf items are already bought, no need to show the cost
                                 item.item_limit = quantity.toString()
                                 item.image_src = document.data?.get("Image").toString()
+                                item.selectable = false
 
                                 items.add(item)
 
