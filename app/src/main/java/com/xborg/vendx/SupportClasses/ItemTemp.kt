@@ -1,12 +1,6 @@
 package com.xborg.vendx.SupportClasses
 
-enum class ItemCategory {
-    SNACK,
-    BEVERAGE,
-    FAST_FOOD,
-    STATIONARY,
-    OTHER
-}
+import com.xborg.vendx.Models.ItemCategory
 
 class Item {
     lateinit var category: ItemCategory

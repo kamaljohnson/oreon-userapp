@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.xborg.vendx.ItemInfoActivity
 import com.xborg.vendx.MainActivity
+import com.xborg.vendx.Models.ItemModel
 import com.xborg.vendx.R
 import kotlinx.android.synthetic.main.item_card.view.*
 
@@ -24,7 +25,7 @@ private var TAG = "ItemCardAdapter"
 
 var previous_view: View? = null
 
-class ItemAdapter(val items: ArrayList<Item>, val cart_count_text_view: TextView?, val get_button: FloatingActionButton?, val context: Context) : RecyclerView.Adapter<ItemViewHolder>() {
+class ItemAdapter(val items: ArrayList<ItemModel>) : RecyclerView.Adapter<ItemAdapter.ItemViewHolder>() {
 
     // Gets the number of animals in the list
     override fun getItemCount(): Int {
@@ -33,15 +34,10 @@ class ItemAdapter(val items: ArrayList<Item>, val cart_count_text_view: TextView
 
     // Inflates the item_card views
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
-        return ItemViewHolder(
-            LayoutInflater.from(
-                context
-            ).inflate(R.layout.item_card, parent, false)
-        , cart_count_text_view, get_button)
+        return ItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_card, parent, false))
     }
 
     // Binds each item_card in the ArrayList to a view
-    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         holder.item_id.text = items[position].item_id
         holder.name.text = items[position].name
@@ -73,119 +69,115 @@ class ItemAdapter(val items: ArrayList<Item>, val cart_count_text_view: TextView
         holder.image.isClickable = items[position].selectable
 
         Glide
-            .with(context)
+            .with(holder.context)
             .load(items[position].image_src)
             .into(holder.image)
     }
-}
 
-@Suppress("DEPRECATION")
-class ItemViewHolder(view: View, cart_count_text_view: TextView?, get_button: FloatingActionButton?) : RecyclerView.ViewHolder(view) {
-    var item_id = view.item_id
-    var name = view.name
-    var cost = view.cost
-    var image = view.image
+    inner class ItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        var item_id = view.item_id
+        var name = view.name
+        var cost = view.cost
+        var image = view.image
 
-    var item_limit = view.item_limit
+        var item_limit = view.item_limit
 
-    var purchase_count = view.purchase_count
-    var remove_button = view.remove_button
-    var info_button= view.info_button
+        var purchase_count = view.purchase_count
+        var remove_button = view.remove_button
+        var info_button= view.info_button
 
-    var context = itemView.getContext()
+        var context = itemView.getContext()
 
-    init {
-            if(purchase_count.text == "0") {
-            purchase_count.visibility = View.INVISIBLE
-        }
+        init {
+                if(purchase_count.text == "0") {
+                purchase_count.visibility = View.INVISIBLE
+            }
 
-        remove_button.visibility = View.INVISIBLE
-        info_button.visibility = View.VISIBLE
+            remove_button.visibility = View.INVISIBLE
+            info_button.visibility = View.VISIBLE
 
-        if(MainActivity.cart_items.count() > 0) {
+            if(MainActivity.cart_items.count() > 0) {
 
-        }
+            }
 
-        Log.e(TAG, "item_card count : " + purchase_count.text.toString())
+            Log.e(TAG, "item_card count : " + purchase_count.text.toString())
 
-        if(cost.text == "-1") {
-            Log.e(TAG, "cost not shown")
-            cost.visibility = View.INVISIBLE
-        }
+            if(cost.text == "-1") {
+                Log.e(TAG, "cost not shown")
+                cost.visibility = View.INVISIBLE
+            }
 
-        image.setOnClickListener{
-            if(!MainActivity.get_button_lock) {
+            image.setOnClickListener{
+                if(!MainActivity.get_button_lock) {
+                    var count = purchase_count.text.toString().toInt()
+
+    //                if(previous_view != view && previous_view != null) {
+    //                    previous_view!!.info_button.visibility = View.INVISIBLE
+    //                    previous_view!!.remove_button.visibility = View.INVISIBLE
+    //                }
+
+                    previous_view = view
+
+                    if(count == item_limit.text.toString().split(' ')[0].toInt()) {
+                        Toast.makeText(context, "Item purchase limit reached", Toast.LENGTH_SHORT).show()
+                    }
+
+                    purchase_count.visibility = View.VISIBLE
+                    remove_button.visibility = View.VISIBLE
+
+//                    if(cart_count_text_view!!.text == "0") {
+//                        cart_count_text_view.visibility = View.VISIBLE
+//                    }
+
+                    if(count < item_limit.text.toString().split(' ')[0].toInt()) {
+                        count+=1
+//                        cart_count_text_view!!.text = (cart_count_text_view.text.toString().toInt() + 1).toString()
+                    }
+
+                    if(cost.text == "-1") {
+                        MainActivity.cart_items_from_shelf[view.item_id.text.toString()] = count
+                    } else {
+                        MainActivity.cart_items[view.item_id.text.toString()] = count
+                    }
+                    purchase_count.text = count.toString()
+                }
+
+            }
+
+            remove_button.setOnClickListener{
                 var count = purchase_count.text.toString().toInt()
-
-//                if(previous_view != view && previous_view != null) {
-//                    previous_view!!.info_button.visibility = View.INVISIBLE
-//                    previous_view!!.remove_button.visibility = View.INVISIBLE
-//                }
-
-                previous_view = view
-
-                if(count == item_limit.text.toString().split(' ')[0].toInt()) {
-                    Toast.makeText(context, "Item purchase limit reached", Toast.LENGTH_SHORT).show()
+                if(count > 0) {
+                    count-=1
+//                    cart_count_text_view!!.text = (cart_count_text_view.text.toString().toInt() - 1).toString()
                 }
-
-                purchase_count.visibility = View.VISIBLE
-                remove_button.visibility = View.VISIBLE
-
-                if(cart_count_text_view!!.text == "0") {
-                    cart_count_text_view.visibility = View.VISIBLE
-                }
-
-                if(count < item_limit.text.toString().split(' ')[0].toInt()) {
-                    count+=1
-                    cart_count_text_view!!.text = (cart_count_text_view.text.toString().toInt() + 1).toString()
-                }
-
                 if(cost.text == "-1") {
                     MainActivity.cart_items_from_shelf[view.item_id.text.toString()] = count
                 } else {
                     MainActivity.cart_items[view.item_id.text.toString()] = count
                 }
-                purchase_count.text = count.toString()
-            }
 
-        }
-
-        remove_button.setOnClickListener{
-            var count = purchase_count.text.toString().toInt()
-            if(count > 0) {
-                count-=1
-                cart_count_text_view!!.text = (cart_count_text_view.text.toString().toInt() - 1).toString()
-            }
-            if(cost.text == "-1") {
-                MainActivity.cart_items_from_shelf[view.item_id.text.toString()] = count
-            } else {
-                MainActivity.cart_items[view.item_id.text.toString()] = count
-            }
-
-            if(count == 0){
-                remove_button.visibility = View.INVISIBLE
-                purchase_count.visibility = View.INVISIBLE
-//                info_button.visibility = View.INVISIBLE
-                MainActivity.cart_items.remove(item_id.text)
-                if(cart_count_text_view!!.text == "0") {
-                    cart_count_text_view.visibility = View.INVISIBLE
+                if(count == 0){
+                    remove_button.visibility = View.INVISIBLE
+                    purchase_count.visibility = View.INVISIBLE
+    //                info_button.visibility = View.INVISIBLE
+                    MainActivity.cart_items.remove(item_id.text)
+//                    if(cart_count_text_view!!.text == "0") {
+//                        cart_count_text_view.visibility = View.INVISIBLE
+//                    }
                 }
-            }
-            purchase_count.text = count.toString()
-            if(cart_count_text_view!!.text.toString().toInt() == 0) {
-//                TODO: set visibility of action button to invisible
+                purchase_count.text = count.toString()
+//                if(cart_count_text_view!!.text.toString().toInt() == 0) {
+//    //                TODO: set visibility of action button to invisible
+//                }
+
             }
 
-        }
-
-        info_button.setOnClickListener{
-            val intent = Intent(context, ItemInfoActivity::class.java)
-            intent.putExtra("item_id", item_id.text.toString())
-            context.startActivity(intent)
+            info_button.setOnClickListener{
+                val intent = Intent(context, ItemInfoActivity::class.java)
+                intent.putExtra("item_id", item_id.text.toString())
+                context.startActivity(intent)
+            }
         }
     }
 }
 
-private fun changeGetButtonIcon() {
-
-}

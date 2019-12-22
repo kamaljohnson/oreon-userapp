@@ -24,7 +24,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:paddingTop="15dp"
-        android:id="@+id/rv_inventory_snacks"
+        android:id="@+id/rv_shelf_items"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="center"/>

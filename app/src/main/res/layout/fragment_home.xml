@@ -10,7 +10,7 @@
     android:isScrollContainer="true"
     android:orientation="vertical">
 
-<!--    region  -->
+<!--    region  Info Bar-->
     <RelativeLayout
         android:layout_width="250dp"
         android:layout_height="300dp"
@@ -19,6 +19,7 @@
         app:layout_constraintStart_toStartOf="parent"
         android:background="@drawable/home_fragment_info_board"
         android:translationZ="6dp"
+        android:visibility="invisible"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
@@ -64,17 +65,21 @@
 
     </RelativeLayout>
 <!--    endregion-->
+
 <!--    region Items RV-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center">
+
     <androidx.recyclerview.widget.RecyclerView
-        android:paddingTop="15dp"
-        android:id="@+id/rv_machine_inventory"
+        android:id="@+id/rv_machine_items"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:visibility="invisible">
+        android:layout_marginTop="10dp"
+        android:layout_centerHorizontal="true"
+        android:overScrollMode="never"/>
 
-    </androidx.recyclerview.widget.RecyclerView>
+    </RelativeLayout>
 <!--    endregion-->
 </androidx.constraintlayout.widget.ConstraintLayout>

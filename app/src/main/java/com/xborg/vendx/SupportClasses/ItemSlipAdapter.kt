@@ -6,12 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.xborg.vendx.Models.ItemModel
 import com.xborg.vendx.R
 import kotlinx.android.synthetic.main.item_card.view.*
 
 private var TAG = "ItemSlipAdapter"
 
-class ItemSlipAdapter(val items : ArrayList<Item>, val context: Context) : RecyclerView.Adapter<ItemSlipViewHolder>() {
+class ItemSlipAdapter(val items : ArrayList<ItemModel>, val context: Context) : RecyclerView.Adapter<ItemSlipViewHolder>() {
 
     // Gets the number of animals in the list
     override fun getItemCount(): Int {

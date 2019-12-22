@@ -1,4 +1,5 @@
 package com.xborg.vendx.MainActivityFragments
+
 import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
@@ -7,16 +8,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.xborg.vendx.SupportClasses.Item
 import com.xborg.vendx.SupportClasses.ItemAdapter
-import kotlinx.android.synthetic.main.activity_main.*
 import com.xborg.vendx.MainActivity
+import com.xborg.vendx.Models.ItemModel
 import com.xborg.vendx.R
 import com.xborg.vendx.States
 import kotlinx.android.synthetic.main.fragment_shelf.*
@@ -28,18 +26,13 @@ class ShelfFragment : Fragment() {
     val db = FirebaseFirestore.getInstance()
     val uid =  FirebaseAuth.getInstance().uid.toString()
 
-    val items: ArrayList<Item> = ArrayList()               //all the items in the inventory list
-    var temp_items: ArrayList<Item> = ArrayList()
+    val items: ArrayList<ItemModel> = ArrayList()               //all the items in the inventory list
+    var temp_items: ArrayList<ItemModel> = ArrayList()
 
     var is_visible: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        getShelfItems()
 
         val activity = activity as MainActivity?
 //        activity?.search_text?.addTextChangedListener{
@@ -52,7 +45,15 @@ class ShelfFragment : Fragment() {
 //            }
 //
 //        }
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_shelf,container,false)
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        getShelfItems()
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -62,10 +63,6 @@ class ShelfFragment : Fragment() {
         if(isVisibleToUser) {
             is_visible = true
             val activity = activity as MainActivity?
-//            activity?.shelf_button?.setTextColor(Color.WHITE)
-//            activity?.home_button?.setTextColor(resources.getColor(R.color.colorAccent, null))
-//            activity?.home_button?.setBackgroundResource(R.color.white)
-//            activity?.shelf_button?.setBackgroundResource(R.drawable.rounded_button_accent)
         } else {
             is_visible = false
         }
@@ -76,70 +73,30 @@ class ShelfFragment : Fragment() {
         Log.e(TAG, "user_state: ${MainActivity.user_state}")
         when(MainActivity.user_state) {
             States.PAY_SUCCESS -> {
-                rv_inventory_snacks.removeAllViews()
+                rv_shelf_items.removeAllViews()
                 getShelfItems()
                 MainActivity.user_state = States.NEW_SELECT
             }
         }
     }
 
-    private fun getShelfItems(){
-        db.document("Users/$uid")
-            .get()
-            .addOnSuccessListener { userSnap ->
-                if(userSnap.data?.get("Shelf")  == null) {
-
-                } else {
-                    var shelfItems: Map<String, Number> = userSnap.data?.get("Shelf") as Map<String, Number>
-                    if(shelfItems.count() == 0) {
-                        shelf_empty_text.visibility = View.VISIBLE
-                    }
-                    for (shelfItem in shelfItems){
-                        Log.d(TAG, shelfItem.key)
-                        Log.d(TAG, shelfItem.value.toString())
-
-                        var itemId = shelfItem.key
-                        var quantity = shelfItem.value
-
-                        db.document("Inventory/${itemId}")
-                            .get()
-                            .addOnSuccessListener { document ->
-                                Log.d(TAG, "${document.id} => ${document.data}")
-
-                                val item = Item()
-
-                                item.item_id = document.id
-                                item.name = document.data?.get("Name").toString()
-                                item.quantity = document.data?.get("Quantity").toString()
-                                item.cost = "-1"    // shelf items are already bought, no need to show the cost
-                                item.item_limit = quantity.toString()
-                                item.image_src = document.data?.get("Image").toString()
-                                item.selectable = false
-
-                                items.add(item)
-
-                                if(items.size == shelfItems.size) {
-                                    addItemsToRV(items)
-                                }
-                            }
-                            .addOnFailureListener{exception ->
-                                Log.w(TAG, "Error getting documents.", exception)
-                            }
-                    }
-                }
-            }
-            .addOnFailureListener {exception ->
-                Log.w(TAG, "Error getting documents.", exception)
-            }
+    private fun getShelfItems() {
+        if(HomeFragment.shelf_items.count() == 0) {
+            shelf_empty_text.visibility = View.VISIBLE
+        } else {
+            addItemsToRV(HomeFragment.shelf_items)
+        }
     }
 
     /**
      * adds all the items to the recycler view
      * as item_card cards
      */
-    private fun addItemsToRV(items: ArrayList<Item>){
-        rv_inventory_snacks.layoutManager = GridLayoutManager(context, 3)
-        rv_inventory_snacks.adapter = context?.let { ItemAdapter(items, activity?.cart_item_count, activity?.get_button, it) }
+    private fun addItemsToRV(items: ArrayList<ItemModel>){
+        Log.e(TAG, "items: $items")
+        Log.e(TAG, "rv: $rv_shelf_items")
+        rv_shelf_items.layoutManager = GridLayoutManager(context, 3)
+        rv_shelf_items.adapter = context?.let { ItemAdapter(items) }
     }
 
     //    region item_card search
@@ -163,7 +120,7 @@ class ShelfFragment : Fragment() {
             Log.d(TAG, temp_items.size.toString())
         }
         Log.e(TAG, MainActivity.cart_items.toString())
-        rv_inventory_snacks.removeAllViews()
+        rv_shelf_items.removeAllViews()
         addItemsToRV(temp_items)
     }
 

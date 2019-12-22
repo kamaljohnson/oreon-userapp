@@ -36,6 +36,7 @@ import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx
 import com.xborg.vendx.MainActivityFragments.HomeFragment
 import com.xborg.vendx.MainActivityFragments.ShelfFragment
 import com.xborg.vendx.MainActivityFragments.ShopFragment
+import com.xborg.vendx.Models.ItemModel
 import com.xborg.vendx.SupportClasses.Item
 
 private const val REQUEST_ENABLE_BT = 2
@@ -57,7 +58,7 @@ enum class States {
 }
 
 @Suppress("UNREACHABLE_CODE", "NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS",
-    "UNUSED_ANONYMOUS_PARAMETER"
+    "UNUSED_ANONYMOUS_PARAMETER", "UNCHECKED_CAST"
 )
 class MainActivity : FragmentActivity() {
 
@@ -69,8 +70,7 @@ class MainActivity : FragmentActivity() {
     val uid =  FirebaseAuth.getInstance().uid.toString()
 
     companion object{
-        var items: ArrayList<Item> = ArrayList()               //all the items in the inventory list
-        val shelf_items: HashMap<String, Int> = HashMap()               //list of item_ids with count of shelf items
+        var items: ArrayList<ItemModel> = ArrayList()               //all the items in the inventory list
         var cart_items_from_shelf: HashMap<String, Int> = HashMap()
         var cart_items : HashMap<String, Int> = HashMap()        //list of item_ids added to cart along with number of purchases
         var billing_cart : HashMap<String, Int> = HashMap()        //list of item_ids added to cart along with number of purchases
@@ -87,28 +87,6 @@ class MainActivity : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        changeFragment(HomeFragment(), "HomeFragment")
-
-        bottom_navigation.setOnNavigationItemSelectedListener {
-            when(it.itemId){
-                R.id.navigation_home-> {
-                    changeFragment(HomeFragment(), "HomeFragment")
-                    return@setOnNavigationItemSelectedListener true
-                }
-
-                R.id.navigation_shelf-> {
-                    changeFragment(ShelfFragment(), "ShelfFragment")
-                    return@setOnNavigationItemSelectedListener true
-                }
-
-                R.id.navigation_shop-> {
-                    changeFragment(ShopFragment(), "ShopFragment")
-                    return@setOnNavigationItemSelectedListener true
-                }
-            }
-            false
-        }
 
         initBottomNavigationView()
 
@@ -195,13 +173,7 @@ class MainActivity : FragmentActivity() {
 //        closestMachineUpdateListener()
 //      endregion
 
-//        mPager = findViewById(R.id.fragment_container)
-//
-//        val pagerAdapter = ScreenSlidePagerAdapter(supportFragmentManager)
-//        mPager.adapter = pagerAdapter
-
         clearCarts()
-        getShelfItems()
 
 //        search_text.imeOptions = EditorInfo.IME_ACTION_DONE
 //
@@ -287,54 +259,10 @@ class MainActivity : FragmentActivity() {
             States.CHECKOUT -> {
                 user_state = States.CONTINUE_SELECT
             }
-        }
-    }
+            else -> {
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        super.onCreateOptionsMenu(menu)
-        val inflater = menuInflater
-        inflater.inflate(R.menu.main_activity_menu, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle presses on the action bar menu items
-        when (item.itemId) {
-            R.id.history -> {
-                return true
             }
         }
-        return super.onOptionsItemSelected(item)
-    }
-
-    /**
-     * get all the items in the users' shelf
-     */
-    private fun getShelfItems() {
-        var shelfItems: Map<String, Number>
-
-        db.document("Users/$uid")
-            .get()
-            .addOnSuccessListener { userSnap ->
-                if(userSnap.data?.get("Shelf") == null) {
-                    Log.d(TAG, "shelf is empty")
-                } else {
-                    Log.e(TAG, userSnap.data?.get("Shelf").toString())
-                    shelfItems = userSnap.data?.get("Shelf") as Map<String, Number>
-                    for (shelfItem in shelfItems){
-                        Log.d(TAG, shelfItem.key)
-                        Log.d(TAG, shelfItem.value.toString())
-
-                        val itemId = shelfItem.key
-                        val quantity = shelfItem.value
-
-                        shelf_items[itemId] = quantity.toString().toInt()
-                    }
-                }
-            }
-            .addOnFailureListener {exception ->
-                Log.w(TAG, "Error getting documents.", exception)
-            }
     }
 
     /**
@@ -373,30 +301,10 @@ class MainActivity : FragmentActivity() {
      */
     private fun clearCarts() {
         items.clear()
-        shelf_items.clear()
         cart_items.clear()
         cart_items_from_shelf.clear()
         billing_cart.clear()
         Log.e(TAG, "called clear cart")
-    }
-
-    /**
-     * A simple pager adapter that represents 5 ScreenSlidePageFragment objects, in
-     * sequence.
-     */
-    private inner class ScreenSlidePagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
-
-        override fun getCount(): Int = NUM_PAGES
-
-        @SuppressLint("ResourceAsColor")
-        override fun getItem(position: Int): Fragment {
-
-            return if (position == 0){
-                HomeFragment()
-            } else {
-                ShelfFragment()
-            }
-        }
     }
 
     private fun hideSearchBar(view: View) {
@@ -503,6 +411,29 @@ class MainActivity : FragmentActivity() {
     }
 
     private fun initBottomNavigationView() {
+
+        changeFragment(HomeFragment(), "HomeFragment")
+
+        bottom_navigation.setOnNavigationItemSelectedListener {
+            when(it.itemId){
+                R.id.navigation_home-> {
+                    changeFragment(HomeFragment(), "HomeFragment")
+                    return@setOnNavigationItemSelectedListener true
+                }
+
+                R.id.navigation_shelf-> {
+                    changeFragment(ShelfFragment(), "ShelfFragment")
+                    return@setOnNavigationItemSelectedListener true
+                }
+
+                R.id.navigation_shop-> {
+                    changeFragment(ShopFragment(), "ShopFragment")
+                    return@setOnNavigationItemSelectedListener true
+                }
+            }
+            false
+        }
+
         val bottomNavigation = findViewById<BottomNavigationViewEx>(R.id.bottom_navigation)
         bottomNavigation.enableAnimation(false)
         bottomNavigation.enableItemShiftingMode(false)

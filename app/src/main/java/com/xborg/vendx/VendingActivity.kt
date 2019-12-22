@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.xborg.vendx.MainActivity.Companion.items
-import com.xborg.vendx.SupportClasses.Item
 import com.xborg.vendx.SupportClasses.ItemSlipAdapter
 import kotlinx.android.synthetic.main.activity_vending.*
 import java.util.*
@@ -18,6 +17,7 @@ import kotlin.collections.HashMap
 
 import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothService
 import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothStatus
+import com.xborg.vendx.Models.ItemModel
 
 private var TAG = "VendingActivity"
 
@@ -103,7 +103,7 @@ class VendingActivity : AppCompatActivity(), BluetoothService.OnBluetoothEventCa
                             .addOnSuccessListener { document ->
                                 Log.d(TAG, "${document.id} => ${document.data}")
 
-                                val item = Item()
+                                val item = ItemModel()
 
                                 item.item_id = document.id
                                 item.name = document.data?.get("Name").toString()
@@ -135,10 +135,10 @@ class VendingActivity : AppCompatActivity(), BluetoothService.OnBluetoothEventCa
      * adds all the items to the recycler view
      * as item_card cards
      */
-    private fun addItemsToRV(items: ArrayList<Item>){
-        rv_inventory_snacks.layoutManager = LinearLayoutManager(this)
-        rv_inventory_snacks.layoutManager = GridLayoutManager(this, 1)
-        rv_inventory_snacks.adapter = ItemSlipAdapter(items, this)
+    private fun addItemsToRV(items: ArrayList<ItemModel>){
+        rv_shelf_items.layoutManager = LinearLayoutManager(this)
+        rv_shelf_items.layoutManager = GridLayoutManager(this, 1)
+        rv_shelf_items.adapter = ItemSlipAdapter(items, this)
     }
 
     private fun setupBluetooth(){

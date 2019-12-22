@@ -8,18 +8,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.xborg.vendx.MainActivity
+import com.xborg.vendx.Models.ItemCategory
+import com.xborg.vendx.Models.ItemGroupModel
+import com.xborg.vendx.Models.ItemModel
 import com.xborg.vendx.R
-import com.xborg.vendx.SupportClasses.Item
-import com.xborg.vendx.SupportClasses.ItemAdapter
-import com.xborg.vendx.SupportClasses.ItemCategory
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_main.view.*
+import com.xborg.vendx.SupportClasses.ItemGroupAdapter
 import kotlinx.android.synthetic.main.fragment_home.*
 
 private var TAG = "HomeFragment"
@@ -27,15 +25,25 @@ private var TAG = "HomeFragment"
 class HomeFragment : Fragment() {
 
     val db = FirebaseFirestore.getInstance()
+    val uid =  FirebaseAuth.getInstance().uid.toString()
 
-    val items: ArrayList<Item> = ArrayList()               //all the items in the inventory list
-    var temp_items: ArrayList<Item> = ArrayList()
+    val allMachineItems: ArrayList<ItemModel> = ArrayList()               //all the items in the inventory list
+    var tempItems: ArrayList<ItemModel> = ArrayList()
 
     var is_visible: Boolean = true
 
+    companion object {
+        lateinit var shelf_items: ArrayList<ItemModel>
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.e(TAG, "onCreate")
 
+        shelf_items = ArrayList()
+
+        MainActivity.items = allMachineItems
+        val activity = activity as MainActivity?
 
 //        activity?.search_text?.addTextChangedListener{
 //            Log.e(TAG, "the searching string is ${it.toString()}")
@@ -49,12 +57,12 @@ class HomeFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        getItems()
-
-        MainActivity.items = items
-        val activity = activity as MainActivity?
-
         return inflater.inflate(R.layout.fragment_home,container,false)
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        getItems()
     }
 
     /**
@@ -64,20 +72,23 @@ class HomeFragment : Fragment() {
         MainActivity.items.clear()
         MainActivity.cart_items.clear()
 
+        val itemGroups: ArrayList<ItemGroupModel> = ArrayList()
+
         db.collection("Inventory")
             .get()
             .addOnSuccessListener { result ->
                 for (document in result) {
                     Log.d(TAG, "${document.id} => ${document.data}")
 
-                    val item = Item()
+                    val item = ItemModel(
+                        item_id = document.id,
+                        name = document.data["Name"].toString(),
+                        cost = document.data["Cost"].toString(),
+                        quantity = document.data["Quantity"].toString(),
+                        item_limit = "0",
+                        image_src = document.data["Image"].toString()
+                    )
 
-                    item.item_id = document.id
-                    item.name = document.data["Name"].toString()
-                    item.cost = document.data["Cost"].toString()
-                    item.quantity = document.data["Quantity"].toString()
-                    item.item_limit = "0"
-                    item.image_src = document.data["Image"].toString()
                     when(document.data["Category"].toString()) {
                         "Snack" -> {
                             item.category = ItemCategory.SNACK
@@ -95,11 +106,73 @@ class HomeFragment : Fragment() {
                             item.category = ItemCategory.OTHER
                         }
                     }
-
-                    items.add(item)
-
+                    allMachineItems.add(item)
                 }
-                addItemsToRV(items)
+
+                val machineInventoryItems = ItemGroupModel(title = "", items = allMachineItems, draw_line_breaker = false)
+
+                addItemsToRV(itemGroups)
+                db.document("Users/$uid")
+                    .get()
+                    .addOnSuccessListener { userSnap ->
+                        if(userSnap.data?.get("Shelf")  == null) {
+
+                        } else {
+                            var shelfItems: Map<String, Number> = userSnap.data?.get("Shelf") as Map<String, Number>
+
+                            for (shelfItem in shelfItems){
+                                Log.d(TAG, shelfItem.key)
+                                Log.d(TAG, shelfItem.value.toString())
+
+                                var itemId = shelfItem.key
+                                var quantity = shelfItem.value
+
+                                var machineItemsFromShelf: ArrayList<ItemModel> = ArrayList()
+
+                                db.document("Inventory/${itemId}")
+                                    .get()
+                                    .addOnSuccessListener { document ->
+                                        Log.d(TAG, "${document.id} => ${document.data}")
+
+                                        val item = ItemModel()
+
+                                        item.item_id = document.id
+                                        item.name = document.data?.get("Name").toString()
+                                        item.quantity = document.data?.get("Quantity").toString()
+                                        item.cost = "-1"    // shelf items are already bought, no need to show the cost
+                                        item.item_limit = quantity.toString()
+                                        item.image_src = document.data?.get("Image").toString()
+
+                                        shelf_items.add(item)
+
+                                        if(shelfItems.size == shelf_items.size) {
+
+                                            shelf_items.forEach { sItem ->
+                                                allMachineItems.forEach { mItem ->
+                                                    if (sItem.item_id == mItem.item_id) {
+                                                        machineItemsFromShelf.add(sItem)
+                                                    }
+                                                }
+                                            }
+
+                                            if(machineItemsFromShelf.size != 0) {
+                                                val itemsFromShelf = ItemGroupModel(title = "From Shelf", items = machineItemsFromShelf, draw_line_breaker = true)
+                                                itemGroups.add(itemsFromShelf)
+                                            }
+
+                                            itemGroups.add(machineInventoryItems)
+                                            addItemsToRV(itemGroups)
+                                        }
+                                    }
+                                    .addOnFailureListener{exception ->
+                                        Log.w(TAG, "Error getting documents.", exception)
+                                    }
+                            }
+                        }
+                    }
+                    .addOnFailureListener {exception ->
+                        Log.w(TAG, "Error getting documents.", exception)
+                    }
 
             }
             .addOnFailureListener { exception ->
@@ -107,13 +180,61 @@ class HomeFragment : Fragment() {
             }
     }
 
+    private fun getShelfItems() {
+        db.document("Users/$uid")
+            .get()
+            .addOnSuccessListener { userSnap ->
+                if(userSnap.data?.get("Shelf")  == null) {
+
+                } else {
+                    var shelfItems: Map<String, Number> = userSnap.data?.get("Shelf") as Map<String, Number>
+
+                    for (shelfItem in shelfItems){
+                        Log.d(TAG, shelfItem.key)
+                        Log.d(TAG, shelfItem.value.toString())
+
+                        var itemId = shelfItem.key
+                        var quantity = shelfItem.value
+
+                        db.document("Inventory/${itemId}")
+                            .get()
+                            .addOnSuccessListener { document ->
+                                Log.d(TAG, "${document.id} => ${document.data}")
+
+                                val item = ItemModel()
+
+                                item.item_id = document.id
+                                item.name = document.data?.get("Name").toString()
+                                item.quantity = document.data?.get("Quantity").toString()
+                                item.cost = "-1"    // shelf items are already bought, no need to show the cost
+                                item.item_limit = quantity.toString()
+                                item.image_src = document.data?.get("Image").toString()
+                                item.selectable = false
+
+                                allMachineItems.add(item)
+
+                                shelf_items = allMachineItems
+
+                            }
+                            .addOnFailureListener{exception ->
+                                Log.w(TAG, "Error getting documents.", exception)
+                            }
+                    }
+                }
+            }
+            .addOnFailureListener {exception ->
+                Log.w(TAG, "Error getting documents.", exception)
+            }
+    }
+
+
     /**
      * adds all the items to the recycler view
      * as item_card cards
      */
-    private fun addItemsToRV(items: ArrayList<Item>) {
-        rv_machine_inventory.layoutManager = GridLayoutManager(context, 3)
-        rv_machine_inventory.adapter = context?.let { ItemAdapter(items, activity?.cart_item_count, activity?.get_button, it) }
+    private fun addItemsToRV(itemGroups: ArrayList<ItemGroupModel>) {
+        rv_machine_items.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        rv_machine_items.adapter = context?.let { ItemGroupAdapter(itemGroups) }
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -123,10 +244,6 @@ class HomeFragment : Fragment() {
         if(isVisibleToUser) {
             is_visible = true
             val activity = activity as MainActivity?
-//            activity?.home_button?.setTextColor(Color.WHITE)
-//            activity?.shelf_button?.setTextColor(resources.getColor(R.color.colorAccent, null))
-//            activity?.home_button?.setBackgroundResource(R.drawable.rounded_button_accent)
-//            activity?.shelf_button?.setBackgroundResource(R.color.white)
         } else {
             is_visible = false
         }
@@ -135,8 +252,8 @@ class HomeFragment : Fragment() {
 //    region item_card search
 
     private fun search(search_name: String) {
-        temp_items = ArrayList()
-        for (item in items) {
+        tempItems = ArrayList()
+        for (item in allMachineItems) {
             Log.d(TAG, item.toString())
             var i = 0
             var j = 0
@@ -144,17 +261,17 @@ class HomeFragment : Fragment() {
                 if(item.name[i].toUpperCase() == search_name[j].toUpperCase()) {
                     j++
                     if(j == search_name.length) {
-                        temp_items.add(item)
+                        tempItems.add(item)
                         break
                     }
                 }
                 i++
             }
-            Log.d(TAG, temp_items.size.toString())
+            Log.d(TAG, tempItems.size.toString())
         }
         Log.e(TAG, MainActivity.cart_items.toString())
-        rv_machine_inventory.removeAllViews()
-        addItemsToRV(temp_items)
+        rv_machine_items.removeAllViews()
+//        addItemsToRV(temp_items)
     }
 
 //    endregion
