@@ -42,22 +42,22 @@
         <!--    region swipe-up-->
             <RelativeLayout
                 android:id="@+id/bottom_swipe_layer"
-                android:background="#00BCD4"
+                android:background="@color/white"
                 android:layout_width="match_parent"
+                android:src="@drawable/swip_up_layout"
                 android:layout_height="match_parent">
 
                 <ImageView
                     android:id="@+id/image_1"
                     android:layout_width="match_parent"
-                    android:background="#5CBDE9"
                     android:layout_height="25pt">
                 </ImageView>
 
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_below="@+id/image_1"
-                    android:background="#1F475E"
-                    android:layout_height="50pt">
+                    android:background="@color/white"
+                    android:layout_height="75pt">
                 </ImageView>
 
             </RelativeLayout>
@@ -88,6 +88,7 @@
                 android:layout_marginBottom="-3dp"
                 android:background="@drawable/cart_item_count"
                 android:text="0"
+                android:visibility="invisible"
                 android:textColor="@color/white"
                 android:textStyle="bold"/>
 
@@ -109,6 +110,8 @@
             android:layout_width="wrap_content"
             android:layout_gravity="bottom"
             android:layout_alignParentBottom="true"
+            style="?android:attr/ambientShadowAlpha"
+            android:translationZ="4dp"
             android:layout_height="20pt">
 
             <com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx

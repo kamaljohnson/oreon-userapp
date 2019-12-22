@@ -58,6 +58,12 @@ enum class States {
     VEND
 }
 
+enum class Fragments {
+    HOME,
+    SHOP,
+    SHELF
+}
+
 @Suppress("UNREACHABLE_CODE", "NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS",
     "UNUSED_ANONYMOUS_PARAMETER", "UNCHECKED_CAST"
 )
@@ -83,6 +89,7 @@ class MainActivity : FragmentActivity() {
 
         lateinit var fusedLocationClient: FusedLocationProviderClient
         var user_state: States = States.NEW_SELECT
+        var current_fragment: Fragments = Fragments.HOME
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -427,18 +434,24 @@ class MainActivity : FragmentActivity() {
                 R.id.navigation_home-> {
                     changeFragment(HomeFragment(), "HomeFragment")
                     showActionButton()
+                    current_fragment = Fragments.HOME
+                    showSwipeUpContainer()
                     return@setOnNavigationItemSelectedListener true
                 }
 
                 R.id.navigation_shop-> {
                     changeFragment(ShopFragment(), "ShopFragment")
                     hideActionButton()
+                    current_fragment = Fragments.SHOP
+                    hideSwipeUpContainer()
                     return@setOnNavigationItemSelectedListener true
                 }
 
                 R.id.navigation_shelf-> {
                     changeFragment(ShelfFragment(), "ShelfFragment")
                     showActionButton()
+                    current_fragment = Fragments.SHELF
+                    showSwipeUpContainer()
                     return@setOnNavigationItemSelectedListener true
                 }
             }
@@ -477,7 +490,7 @@ class MainActivity : FragmentActivity() {
             override fun onPanelSlide(panel: View, slideOffset: Float) {
                 if(slideOffset > 0.05f) {
                     hideActionButton()
-                } else {
+                } else if(current_fragment != Fragments.SHOP){
                     showActionButton()
                 }
             }
@@ -494,6 +507,16 @@ class MainActivity : FragmentActivity() {
     private fun showActionButton() {
         get_button.show()
         cart_item_count.visibility = View.VISIBLE
+    }
+
+    private fun hideSwipeUpContainer() {
+        bottom_slide_up_container.panelState = PanelState.COLLAPSED
+        bottom_slide_up_container.isClipPanel = true
+        bottom_slide_up_container.isTouchEnabled = false
+    }
+
+    private fun showSwipeUpContainer() {
+        bottom_slide_up_container.isTouchEnabled = true
     }
 
 }
