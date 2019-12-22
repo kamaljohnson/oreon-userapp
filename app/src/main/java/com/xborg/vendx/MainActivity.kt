@@ -13,8 +13,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
@@ -23,24 +21,24 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.*
-import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager.widget.ViewPager
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.tasks.Task
-import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.android.synthetic.main.activity_main.*
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.functions.FirebaseFunctions
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx
+import com.sothree.slidinguppanel.SlidingUpPanelLayout
+import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState
 import com.xborg.vendx.MainActivityFragments.HomeFragment
 import com.xborg.vendx.MainActivityFragments.ShelfFragment
 import com.xborg.vendx.MainActivityFragments.ShopFragment
 import com.xborg.vendx.Models.ItemModel
-import com.xborg.vendx.SupportClasses.Item
-import kotlinx.android.synthetic.main.fragment_home.*
-import kotlinx.android.synthetic.main.item_group_holder.*
+import kotlinx.android.synthetic.main.activity_main.*
 
 private const val REQUEST_ENABLE_BT = 2
 private const val REQUEST_ENABLE_LOC = 3
@@ -49,7 +47,7 @@ private const val NUM_PAGES = 2
 
 private var TAG = "MainActivity"
 
-private lateinit var mPager: ViewPager
+private var mLayout: SlidingUpPanelLayout? = null
 
 enum class States {
     NEW_SELECT,
@@ -92,6 +90,7 @@ class MainActivity : FragmentActivity() {
         setContentView(R.layout.activity_main)
 
         initBottomNavigationView()
+        initBottomSwipeUpView()
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         parentLayout =  findViewById<View>(android.R.id.content)
@@ -467,6 +466,19 @@ class MainActivity : FragmentActivity() {
         fragmentTransaction.setReorderingAllowed(true)
         fragmentTransaction.commitNowAllowingStateLoss()
 
+    }
+
+    private fun initBottomSwipeUpView() {
+        mLayout = findViewById(R.id.bottom_slide_up_container)
+        mLayout!!.anchorPoint = 0.3f
+
+        mLayout!!.addPanelSlideListener(object : SlidingUpPanelLayout.PanelSlideListener {
+            override fun onPanelSlide(panel: View, slideOffset: Float) {
+            }
+            override fun onPanelStateChanged(
+                panel: View, previousState: PanelState, newState: PanelState ) {
+            }
+        })
     }
 
     private fun hideActionButton() {
