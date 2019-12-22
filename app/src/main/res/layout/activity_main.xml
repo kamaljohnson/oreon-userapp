@@ -29,6 +29,7 @@
 
 <!--    region Action Button-->
         <RelativeLayout
+            android:id="@+id/get_button_group"
             android:layout_width="80dp"
             android:layout_height="100dp"
             android:layout_alignParentEnd="true"
@@ -73,9 +74,9 @@
                 android:id="@+id/bottom_navigation"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/colorPrimary"
-                app:itemIconTint="@color/white"
-                app:itemTextColor="@color/white"
+                android:background="@drawable/bottom_navigation"
+                app:itemIconTint="@color/black"
+                app:itemTextColor="@color/black"
                 app:menu="@menu/navigation" />
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>

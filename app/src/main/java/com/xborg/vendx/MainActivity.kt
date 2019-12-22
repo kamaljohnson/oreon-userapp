@@ -24,6 +24,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.*
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -38,6 +39,8 @@ import com.xborg.vendx.MainActivityFragments.ShelfFragment
 import com.xborg.vendx.MainActivityFragments.ShopFragment
 import com.xborg.vendx.Models.ItemModel
 import com.xborg.vendx.SupportClasses.Item
+import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.android.synthetic.main.item_group_holder.*
 
 private const val REQUEST_ENABLE_BT = 2
 private const val REQUEST_ENABLE_LOC = 3
@@ -412,39 +415,35 @@ class MainActivity : FragmentActivity() {
 
     private fun initBottomNavigationView() {
 
+        val bottomNavigation = findViewById<BottomNavigationViewEx>(R.id.bottom_navigation)
+        bottomNavigation.enableAnimation(false)
+        bottomNavigation.enableItemShiftingMode(false)
+        bottomNavigation.enableShiftingMode(false)
+
         changeFragment(HomeFragment(), "HomeFragment")
 
         bottom_navigation.setOnNavigationItemSelectedListener {
             when(it.itemId){
                 R.id.navigation_home-> {
                     changeFragment(HomeFragment(), "HomeFragment")
-                    return@setOnNavigationItemSelectedListener true
-                }
-
-                R.id.navigation_shelf-> {
-                    changeFragment(ShelfFragment(), "ShelfFragment")
+                    showActionButton()
                     return@setOnNavigationItemSelectedListener true
                 }
 
                 R.id.navigation_shop-> {
                     changeFragment(ShopFragment(), "ShopFragment")
+                    hideActionButton()
+                    return@setOnNavigationItemSelectedListener true
+                }
+
+                R.id.navigation_shelf-> {
+                    changeFragment(ShelfFragment(), "ShelfFragment")
+                    showActionButton()
                     return@setOnNavigationItemSelectedListener true
                 }
             }
             false
         }
-
-        val bottomNavigation = findViewById<BottomNavigationViewEx>(R.id.bottom_navigation)
-        bottomNavigation.enableAnimation(false)
-        bottomNavigation.enableItemShiftingMode(false)
-        bottomNavigation.enableShiftingMode(false)
-    }
-
-    private fun loadFragment(fragment: Fragment) {
-        val transaction = supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.fragment_container, fragment)
-        transaction.addToBackStack(null)
-        transaction.commit()
     }
 
     private fun changeFragment(fragment: Fragment, tagFragmentName: String) {
@@ -468,6 +467,15 @@ class MainActivity : FragmentActivity() {
         fragmentTransaction.setReorderingAllowed(true)
         fragmentTransaction.commitNowAllowingStateLoss()
 
+    }
+
+    private fun hideActionButton() {
+        get_button.hide()
+        cart_item_count.visibility = View.INVISIBLE
+    }
+    private fun showActionButton() {
+        get_button.show()
+        cart_item_count.visibility = View.VISIBLE
     }
 
 }

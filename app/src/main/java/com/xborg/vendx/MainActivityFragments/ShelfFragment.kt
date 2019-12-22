@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.xborg.vendx.SupportClasses.ItemAdapter
@@ -17,6 +18,7 @@ import com.xborg.vendx.MainActivity
 import com.xborg.vendx.Models.ItemModel
 import com.xborg.vendx.R
 import com.xborg.vendx.States
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_shelf.*
 
 private var TAG = "ShelfFragment"
