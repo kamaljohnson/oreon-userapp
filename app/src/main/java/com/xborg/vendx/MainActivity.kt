@@ -418,6 +418,7 @@ class MainActivity : FragmentActivity() {
         bottomNavigation.enableAnimation(false)
         bottomNavigation.enableItemShiftingMode(false)
         bottomNavigation.enableShiftingMode(false)
+        bottomNavigation.setTextVisibility(false)
 
         changeFragment(HomeFragment(), "HomeFragment")
 
@@ -470,10 +471,15 @@ class MainActivity : FragmentActivity() {
 
     private fun initBottomSwipeUpView() {
         mLayout = findViewById(R.id.bottom_slide_up_container)
-        mLayout!!.anchorPoint = 0.3f
+        mLayout!!.anchorPoint = 0.2f
 
         mLayout!!.addPanelSlideListener(object : SlidingUpPanelLayout.PanelSlideListener {
             override fun onPanelSlide(panel: View, slideOffset: Float) {
+                if(slideOffset > 0.05f) {
+                    hideActionButton()
+                } else {
+                    showActionButton()
+                }
             }
             override fun onPanelStateChanged(
                 panel: View, previousState: PanelState, newState: PanelState ) {
