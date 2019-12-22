@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<androidx.coordinatorlayout.widget.CoordinatorLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
@@ -7,6 +7,10 @@
         android:layout_height="match_parent"
         android:background="@color/white"
         tools:context=".MainActivity">
+
+<!--    region Top AppBar-->
+
+<!--    endregion-->
 
 <!-- region Main Fragments -->
         <RelativeLayout
@@ -16,61 +20,65 @@
             <FrameLayout
                 android:id="@+id/fragment_container"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="match_parent"
+                android:layout_marginBottom="55dp"/>
 
         </RelativeLayout>
 
 <!--    endregion-->
-<!-- region Bottom Navigation View -->
+
+<!--    region Action Button-->
         <RelativeLayout
+            android:layout_width="80dp"
+            android:layout_height="100dp"
+            android:layout_alignParentEnd="true"
+            android:layout_gravity="bottom|right"
+            android:layout_marginEnd="3dp"
+            android:layout_marginBottom="55dp">
+
+            <Button
+                android:id="@+id/cart_item_count"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_above="@+id/get_button"
+                android:layout_alignEnd="@id/get_button"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="-3dp"
+                android:background="@drawable/cart_item_count"
+                android:text="0"
+                android:textColor="@color/white"
+                android:textStyle="bold"/>
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/get_button"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/right_arrow_icon"/>
+
+        </RelativeLayout>
+<!--    endregion-->
+
+<!-- region Bottom Navigation View -->
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="wrap_content"
-            android:layout_height="60dp"
-            android:layout_alignParentBottom="true">
+            android:layout_gravity="bottom"
+            android:layout_height="55dp">
 
             <com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx
                 android:id="@+id/bottom_navigation"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
                 android:background="@color/colorPrimary"
                 app:itemIconTint="@color/white"
                 app:itemTextColor="@color/white"
                 app:menu="@menu/navigation" />
 
-        </RelativeLayout>
-<!--    endregion-->
-<!--    region Action Button-->
-        <RelativeLayout
-            android:layout_width="80dp"
-            android:layout_height="100dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginBottom="55dp">
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/get_button"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true"
-                style="?android:attr/borderlessButtonStyle"
-                android:src="@drawable/right_arrow_icon">
-
-            </com.google.android.material.floatingactionbutton.FloatingActionButton>
-
-            <Button
-                android:id="@+id/cart_item_count"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:text="0"
-                android:textStyle="bold"
-                android:textColor="@color/white"
-                android:layout_alignEnd="@id/get_button"
-                android:background="@drawable/cart_item_count"
-                style="?android:attr/borderlessButtonStyle">
-            </Button>
-
-        </RelativeLayout>
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
 <!--    endregion-->
 
-</RelativeLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

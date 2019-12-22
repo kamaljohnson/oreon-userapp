@@ -5,20 +5,76 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="60dp"
     tools:context=".MainActivityFragments.HomeFragment"
     android:overScrollMode="always"
     android:isScrollContainer="true"
     android:orientation="vertical">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_machine_inventory"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+<!--    region  -->
+    <RelativeLayout
+        android:layout_width="250dp"
+        android:layout_height="300dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        android:background="@drawable/home_fragment_info_board"
+        android:translationZ="6dp"
         app:layout_constraintTop_toTopOf="parent">
 
-    </androidx.recyclerview.widget.RecyclerView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="Could'nt find any \noutlets near you"
+            android:textAlignment="center"
+            android:textSize="20dp"
+            android:textStyle="bold">
 
+        </TextView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/go_to_shop_button"
+            android:layout_alignBottom="@+id/go_to_shop_button"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="0dp"
+            android:layout_toStartOf="@+id/go_to_shop_button"
+            android:gravity="center"
+            android:text="RETRY"
+            android:textAlignment="center"
+            android:textColor="@color/colorAccent"
+            android:textSize="@dimen/button_text_size"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/go_to_shop_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:padding="5dp"
+            android:text="Go to Shop"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textSize="@dimen/button_text_size"
+            android:background="@drawable/rounded_button_accent"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"/>
+
+    </RelativeLayout>
+<!--    endregion-->
+<!--    region Items RV-->
+    <androidx.recyclerview.widget.RecyclerView
+        android:paddingTop="15dp"
+        android:id="@+id/rv_machine_inventory"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="invisible">
+
+    </androidx.recyclerview.widget.RecyclerView>
+<!--    endregion-->
 </androidx.constraintlayout.widget.ConstraintLayout>
