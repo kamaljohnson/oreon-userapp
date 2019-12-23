@@ -1,4 +1,4 @@
-package com.xborg.vendx.MainActivityFragments
+package com.xborg.vendx.activities.mainActivity.fragments.home
 
 import android.os.Bundle
 import android.util.Log
@@ -6,10 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.xborg.vendx.MainActivity
+import com.xborg.vendx.activities.mainActivity.MainActivity
 import com.xborg.vendx.models.item.ItemCategory
 import com.xborg.vendx.models.ItemGroupModel
 import com.xborg.vendx.models.ItemModel
@@ -20,6 +22,8 @@ import kotlinx.android.synthetic.main.fragment_home.*
 private var TAG = "HomeFragment"
 
 class HomeFragment : Fragment() {
+
+    private lateinit var vieeModel: HomeViewModel
 
     private val db = FirebaseFirestore.getInstance()
     private val uid =  FirebaseAuth.getInstance().uid.toString()
@@ -40,6 +44,9 @@ class HomeFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+
+        Log.i(TAG, "Called HomeViewModel")
+        vieeModel = ViewModelProviders.of(this).get(HomeViewModel::class.java)
         return inflater.inflate(R.layout.fragment_home,container,false)
     }
 

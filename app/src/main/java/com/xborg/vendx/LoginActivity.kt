@@ -9,6 +9,7 @@ import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.xborg.vendx.activities.mainActivity.MainActivity
 
 val db = FirebaseFirestore.getInstance()
 private var TAG = "LoginActivity"

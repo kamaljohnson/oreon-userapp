@@ -1,4 +1,4 @@
-package com.xborg.vendx
+package com.xborg.vendx.activities.mainActivity
 
 import android.Manifest
 import android.app.AlertDialog
@@ -22,9 +22,12 @@ import com.google.firebase.functions.FirebaseFunctions
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState
-import com.xborg.vendx.MainActivityFragments.HomeFragment
-import com.xborg.vendx.MainActivityFragments.ShelfFragment
-import com.xborg.vendx.MainActivityFragments.ShopFragment
+import com.xborg.vendx.BuildConfig
+import com.xborg.vendx.activities.mainActivity.fragments.home.HomeFragment
+import com.xborg.vendx.activities.mainActivity.fragments.shelf.ShelfFragment
+import com.xborg.vendx.activities.mainActivity.fragments.shop.ShopFragment
+import com.xborg.vendx.PaymentActivity
+import com.xborg.vendx.R
 import com.xborg.vendx.models.ItemModel
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -66,8 +69,10 @@ class MainActivity : FragmentActivity() {
 
         var get_button_lock : Boolean = false
 
-        var user_state: States = States.NEW_SELECT
-        var current_fragment: Fragments = Fragments.HOME
+        var user_state: States =
+            States.NEW_SELECT
+        var current_fragment: Fragments =
+            Fragments.HOME
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -107,7 +112,9 @@ class MainActivity : FragmentActivity() {
                 // sees the explanation, try again to request the permission.
             } else {
                 // No explanation needed, we can request the permission.
-                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.BLUETOOTH), REQUEST_ENABLE_BT)
+                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.BLUETOOTH),
+                    REQUEST_ENABLE_BT
+                )
                 // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
                 // app-defined int constant. The callback method gets the
                 // result of the request.
@@ -131,8 +138,10 @@ class MainActivity : FragmentActivity() {
                 if(billing_cart.size == 0) {
                     val order = HashMap<String, Any>()
                     order["UID"] = FirebaseAuth.getInstance().uid.toString()
-                    order["Billing_Cart"] = billing_cart
-                    order["Cart"] = cart_items
+                    order["Billing_Cart"] =
+                        billing_cart
+                    order["Cart"] =
+                        cart_items
                     order["Status"] = "From Shelf"
 
                     db.collection("Orders")
@@ -144,7 +153,9 @@ class MainActivity : FragmentActivity() {
 
                             val intent = Intent(this, PaymentActivity::class.java)
                             intent.putExtra("order_id", order_id)
-                            intent.putExtra("cart_items", cart_items)
+                            intent.putExtra("cart_items",
+                                cart_items
+                            )
                             startActivity(intent)
                         }
                         .addOnFailureListener{
@@ -154,8 +165,10 @@ class MainActivity : FragmentActivity() {
                 } else {
                     val order = HashMap<String, Any>()
                     order["UID"] = FirebaseAuth.getInstance().uid.toString()
-                    order["Billing_Cart"] = billing_cart
-                    order["Cart"] = cart_items
+                    order["Billing_Cart"] =
+                        billing_cart
+                    order["Cart"] =
+                        cart_items
                     order["Status"] = "Payment Pending"
 
                     db.collection("Orders")
@@ -167,8 +180,12 @@ class MainActivity : FragmentActivity() {
 
                             val intent = Intent(this, PaymentActivity::class.java)
                             intent.putExtra("order_id", order_id)
-                            intent.putExtra("cart_items", cart_items)
-                            intent.putExtra("billing_cart", billing_cart)
+                            intent.putExtra("cart_items",
+                                cart_items
+                            )
+                            intent.putExtra("billing_cart",
+                                billing_cart
+                            )
                             startActivity(intent)
 
                         }
@@ -186,7 +203,8 @@ class MainActivity : FragmentActivity() {
         get_button_lock = false
         when(user_state) {
             States.CHECKOUT -> {
-                user_state = States.CONTINUE_SELECT
+                user_state =
+                    States.CONTINUE_SELECT
             }
             else -> {
 
@@ -287,24 +305,27 @@ class MainActivity : FragmentActivity() {
 
         bottom_navigation.setOnNavigationItemSelectedListener {
             when(it.itemId){
-                R.id.navigation_home-> {
-                    current_fragment = Fragments.HOME
+                R.id.navigation_home -> {
+                    current_fragment =
+                        Fragments.HOME
                     changeFragment(HomeFragment(), "HomeFragment")
                     showActionButton()
                     showSwipeUpContainer()
                     return@setOnNavigationItemSelectedListener true
                 }
 
-                R.id.navigation_shop-> {
-                    current_fragment = Fragments.SHOP
+                R.id.navigation_shop -> {
+                    current_fragment =
+                        Fragments.SHOP
                     changeFragment(ShopFragment(), "ShopFragment")
                     hideActionButton()
                     hideSwipeUpContainer()
                     return@setOnNavigationItemSelectedListener true
                 }
 
-                R.id.navigation_shelf-> {
-                    current_fragment = Fragments.SHELF
+                R.id.navigation_shelf -> {
+                    current_fragment =
+                        Fragments.SHELF
                     changeFragment(ShelfFragment(), "ShelfFragment")
                     showActionButton()
                     showSwipeUpContainer()

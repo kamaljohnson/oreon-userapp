@@ -28,7 +28,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.mainActivity.MainActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".PaymentActivity"

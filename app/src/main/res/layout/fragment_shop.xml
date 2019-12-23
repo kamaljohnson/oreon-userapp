@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivityFragments.ShopFragment">
+    tools:context=".activities.mainActivity.fragments.shop.ShopFragment">
 
     <RelativeLayout
         android:layout_width="match_parent"

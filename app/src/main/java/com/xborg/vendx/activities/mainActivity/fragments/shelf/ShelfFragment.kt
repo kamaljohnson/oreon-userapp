@@ -1,4 +1,4 @@
-package com.xborg.vendx.MainActivityFragments
+package com.xborg.vendx.activities.mainActivity.fragments.shelf
 
 import android.annotation.SuppressLint
 import android.os.Build
@@ -13,10 +13,11 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.xborg.vendx.SupportClasses.ItemAdapter
-import com.xborg.vendx.MainActivity
+import com.xborg.vendx.activities.mainActivity.MainActivity
 import com.xborg.vendx.models.ItemModel
 import com.xborg.vendx.R
-import com.xborg.vendx.States
+import com.xborg.vendx.activities.mainActivity.States
+import com.xborg.vendx.activities.mainActivity.fragments.home.HomeFragment
 import kotlinx.android.synthetic.main.fragment_shelf.*
 
 private var TAG = "ShelfFragment"
@@ -27,24 +28,12 @@ class ShelfFragment : Fragment() {
     val uid =  FirebaseAuth.getInstance().uid.toString()
 
     val items: ArrayList<ItemModel> = ArrayList()               //all the items in the inventory list
-    var temp_items: ArrayList<ItemModel> = ArrayList()
 
     var is_visible: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val activity = activity as MainActivity?
-//        activity?.search_text?.addTextChangedListener{
-//            Log.e(TAG, "the searching string is ${it.toString()}")
-//            if(it.toString().isNotEmpty()) {
-//                search(it.toString())
-//            } else {
-//                rv_inventory_snacks.removeAllViews()
-//                addItemsToRV(items)
-//            }
-//
-//        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -60,12 +49,7 @@ class ShelfFragment : Fragment() {
     @SuppressLint("ResourceAsColor")
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         super.setUserVisibleHint(isVisibleToUser)
-        if(isVisibleToUser) {
-            is_visible = true
-            val activity = activity as MainActivity?
-        } else {
-            is_visible = false
-        }
+        is_visible = isVisibleToUser
     }
 
     override fun onResume() {
@@ -99,30 +83,4 @@ class ShelfFragment : Fragment() {
         rv_shelf_items.adapter = context?.let { ItemAdapter(items) }
     }
 
-    //    region item_card search
-
-    private fun search(search_name: String) {
-        temp_items = ArrayList()
-        for (item in items) {
-            Log.d(TAG, item.toString())
-            var i = 0
-            var j = 0
-            while(i < item.name.length) {
-                if(item.name[i].toUpperCase() == search_name[j].toUpperCase()) {
-                    j++
-                    if(j == search_name.length) {
-                        temp_items.add(item)
-                        break
-                    }
-                }
-                i++
-            }
-            Log.d(TAG, temp_items.size.toString())
-        }
-        Log.e(TAG, MainActivity.cart_items.toString())
-        rv_shelf_items.removeAllViews()
-        addItemsToRV(temp_items)
-    }
-
-//    endregion
 }

@@ -7,11 +7,11 @@ import com.xborg.vendx.models.item.Item
 import com.xborg.vendx.models.item.ItemDao
 import com.xborg.vendx.models.item.ItemDatabase
 
-public class ItemRepository {
-    private lateinit var itemDao: ItemDao
-    private lateinit var allItems: LiveData<List<Item>>
+public class ItemRepository(application: Application) {
+    private var itemDao: ItemDao
+    private var allItems: LiveData<List<Item>>
 
-    public fun ItemRepository(application: Application) {
+    init {
         var database: ItemDatabase = ItemDatabase.getInstance(application)
         itemDao = database.itemDao
         allItems = itemDao.getAllItems()

@@ -2,7 +2,6 @@ package com.xborg.vendx
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
@@ -10,8 +9,6 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import android.widget.TableRow
 import android.widget.TextView
@@ -19,6 +16,8 @@ import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.xborg.vendx.Bluetooth.BluetoothConnectionActivity
+import com.xborg.vendx.activities.mainActivity.MainActivity
+import com.xborg.vendx.activities.mainActivity.States
 import kotlinx.android.synthetic.main.activity_payment.*
 import kotlin.collections.ArrayList
 

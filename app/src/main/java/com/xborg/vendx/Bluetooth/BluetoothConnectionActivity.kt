@@ -7,7 +7,6 @@ import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -17,8 +16,7 @@ import androidx.core.content.ContextCompat
 
 import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothService
 import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothStatus
-import com.xborg.vendx.BuildConfig
-import com.xborg.vendx.MainActivity
+import com.xborg.vendx.activities.mainActivity.MainActivity
 import com.xborg.vendx.R
 import com.xborg.vendx.VendingActivity
 import kotlinx.android.synthetic.main.activity_bluetooth_connection.*

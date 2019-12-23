@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.xborg.vendx.MainActivity.Companion.items
+import com.xborg.vendx.activities.mainActivity.MainActivity.Companion.items
 import com.xborg.vendx.SupportClasses.ItemSlipAdapter
 import kotlinx.android.synthetic.main.activity_vending.*
 import java.util.*

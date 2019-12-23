@@ -1,4 +1,4 @@
-package com.xborg.vendx.MainActivityFragments
+package com.xborg.vendx.activities.mainActivity.fragments.shop
 
 import android.content.Context
 import android.os.Bundle
