@@ -111,11 +111,6 @@ class ItemAdapter(val items: ArrayList<ItemModel>) : RecyclerView.Adapter<ItemAd
                 if(!MainActivity.get_button_lock) {
                     var count = purchase_count.text.toString().toInt()
 
-    //                if(previous_view != view && previous_view != null) {
-    //                    previous_view!!.info_button.visibility = View.INVISIBLE
-    //                    previous_view!!.remove_button.visibility = View.INVISIBLE
-    //                }
-
                     previous_view = view
 
                     if(count == item_limit.text.toString().split(' ')[0].toInt()) {
