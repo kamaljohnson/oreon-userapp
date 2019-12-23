@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.xborg.vendx.Models.ItemModel
+import com.xborg.vendx.models.ItemModel
 import com.xborg.vendx.R
 import kotlinx.android.synthetic.main.item_card.view.*
 

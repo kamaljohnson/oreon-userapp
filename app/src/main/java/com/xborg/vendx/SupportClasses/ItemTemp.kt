@@ -1,6 +1,6 @@
 package com.xborg.vendx.SupportClasses
 
-import com.xborg.vendx.Models.ItemCategory
+import com.xborg.vendx.models.item.ItemCategory
 
 class Item {
     lateinit var category: ItemCategory

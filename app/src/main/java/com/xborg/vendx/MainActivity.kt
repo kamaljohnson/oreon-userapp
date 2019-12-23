@@ -9,8 +9,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -27,7 +25,7 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState
 import com.xborg.vendx.MainActivityFragments.HomeFragment
 import com.xborg.vendx.MainActivityFragments.ShelfFragment
 import com.xborg.vendx.MainActivityFragments.ShopFragment
-import com.xborg.vendx.Models.ItemModel
+import com.xborg.vendx.models.ItemModel
 import kotlinx.android.synthetic.main.activity_main.*
 
 private const val REQUEST_ENABLE_BT = 2

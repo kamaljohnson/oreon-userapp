@@ -1,23 +1,14 @@
 package com.xborg.vendx.SupportClasses
 
-import android.annotation.SuppressLint
-import android.content.Context
-import android.content.Intent
-import android.graphics.drawable.Drawable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewManager
-import android.widget.TextView
 import android.widget.Toast
-import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.xborg.vendx.ItemInfoActivity
 import com.xborg.vendx.MainActivity
-import com.xborg.vendx.Models.ItemModel
+import com.xborg.vendx.models.ItemModel
 import com.xborg.vendx.R
 import kotlinx.android.synthetic.main.item_card.view.*
 

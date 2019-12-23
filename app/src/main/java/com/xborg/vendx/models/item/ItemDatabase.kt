@@ -1,4 +1,4 @@
-package com.xborg.vendx.Models
+package com.xborg.vendx.models.item
 
 import android.content.Context
 import androidx.room.Database
@@ -21,7 +21,5 @@ abstract class ItemDatabase: RoomDatabase(){
             return instance
         }
     }
-
     public abstract var itemDao: ItemDao
-
 }

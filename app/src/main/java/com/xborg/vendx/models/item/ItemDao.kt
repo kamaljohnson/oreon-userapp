@@ -1,7 +1,8 @@
-package com.xborg.vendx.Models
+package com.xborg.vendx.models.item
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.xborg.vendx.models.item.Item
 
 @Dao
 interface ItemDao {

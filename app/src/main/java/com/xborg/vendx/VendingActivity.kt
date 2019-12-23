@@ -17,7 +17,7 @@ import kotlin.collections.HashMap
 
 import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothService
 import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothStatus
-import com.xborg.vendx.Models.ItemModel
+import com.xborg.vendx.models.ItemModel
 
 private var TAG = "VendingActivity"
 

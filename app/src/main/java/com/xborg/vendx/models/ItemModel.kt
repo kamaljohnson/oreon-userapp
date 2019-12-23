@@ -1,4 +1,6 @@
-package com.xborg.vendx.Models
+package com.xborg.vendx.models
+
+import com.xborg.vendx.models.item.ItemCategory
 
 data class ItemModel (
     var item_id:String = "",

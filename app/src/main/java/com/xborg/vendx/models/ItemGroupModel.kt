@@ -1,4 +1,4 @@
-package com.xborg.vendx.Models
+package com.xborg.vendx.models
 
 data class ItemGroupModel (
     val items : ArrayList<ItemModel>,

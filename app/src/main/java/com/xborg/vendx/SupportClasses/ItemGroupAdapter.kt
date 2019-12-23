@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.xborg.vendx.Models.ItemGroupModel
+import com.xborg.vendx.models.ItemGroupModel
 import com.xborg.vendx.R
 import kotlinx.android.synthetic.main.item_group_holder.view.*
 

@@ -50,10 +50,10 @@
             android:name=".Bluetooth.BluetoothConnectionActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Models.ItemModel"
+            android:name=".models.ItemModel"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Models.ItemGroupModel"
+            android:name=".models.ItemGroupModel"
             android:screenOrientation="portrait" />
     </application>
 

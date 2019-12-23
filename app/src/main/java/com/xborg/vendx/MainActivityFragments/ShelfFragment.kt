@@ -14,7 +14,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.xborg.vendx.SupportClasses.ItemAdapter
 import com.xborg.vendx.MainActivity
-import com.xborg.vendx.Models.ItemModel
+import com.xborg.vendx.models.ItemModel
 import com.xborg.vendx.R
 import com.xborg.vendx.States
 import kotlinx.android.synthetic.main.fragment_shelf.*
