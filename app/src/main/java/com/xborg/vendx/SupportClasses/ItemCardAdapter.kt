@@ -84,7 +84,7 @@ class ItemAdapter(val items: ArrayList<ItemModel>) : RecyclerView.Adapter<ItemAd
 
         var purchase_count = view.purchase_count
         var remove_button = view.remove_button
-        var info_button= view.info_button
+//        var info_button= view.info_button
 
         var context = itemView.getContext()
 
@@ -94,7 +94,7 @@ class ItemAdapter(val items: ArrayList<ItemModel>) : RecyclerView.Adapter<ItemAd
             }
 
             remove_button.visibility = View.INVISIBLE
-            info_button.visibility = View.VISIBLE
+//            info_button.visibility = View.VISIBLE
 
             if(MainActivity.cart_items.count() > 0) {
 
@@ -107,7 +107,7 @@ class ItemAdapter(val items: ArrayList<ItemModel>) : RecyclerView.Adapter<ItemAd
                 cost.visibility = View.INVISIBLE
             }
 
-            image.setOnClickListener{
+            view.rootView.setOnClickListener {
                 if(!MainActivity.get_button_lock) {
                     var count = purchase_count.text.toString().toInt()
 
@@ -136,7 +136,6 @@ class ItemAdapter(val items: ArrayList<ItemModel>) : RecyclerView.Adapter<ItemAd
                     }
                     purchase_count.text = count.toString()
                 }
-
             }
 
             remove_button.setOnClickListener{
@@ -167,11 +166,11 @@ class ItemAdapter(val items: ArrayList<ItemModel>) : RecyclerView.Adapter<ItemAd
 
             }
 
-            info_button.setOnClickListener{
-                val intent = Intent(context, ItemInfoActivity::class.java)
-                intent.putExtra("item_id", item_id.text.toString())
-                context.startActivity(intent)
-            }
+//            info_button.setOnClickListener{
+//                val intent = Intent(context, ItemInfoActivity::class.java)
+//                intent.putExtra("item_id", item_id.text.toString())
+//                context.startActivity(intent)
+//            }
         }
     }
 }

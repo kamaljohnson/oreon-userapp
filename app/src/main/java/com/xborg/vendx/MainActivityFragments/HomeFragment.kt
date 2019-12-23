@@ -92,7 +92,7 @@ class HomeFragment : Fragment() {
                     allMachineItems.add(item)
                 }
 
-                val machineInventoryItems = ItemGroupModel(title = "", items = allMachineItems, draw_line_breaker = false)
+                val machineInventoryItems = ItemGroupModel(items = allMachineItems, draw_line_breaker = false)
 
                 addItemsToRV(itemGroups)
                 db.document("Users/$uid")
@@ -144,7 +144,7 @@ class HomeFragment : Fragment() {
                                             }
 
                                             if(machineItemsFromShelf.size != 0) {
-                                                val itemsFromShelf = ItemGroupModel(title = "From Shelf", items = machineItemsFromShelf, draw_line_breaker = true)
+                                                val itemsFromShelf = ItemGroupModel(items = machineItemsFromShelf, draw_line_breaker = true)
                                                 itemGroups.add(itemsFromShelf)
                                             }
 

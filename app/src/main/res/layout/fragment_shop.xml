@@ -21,7 +21,6 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
             android:layout_below="@id/person_codding_gif"
             android:layout_centerHorizontal="true"
             android:text="Under Development">
