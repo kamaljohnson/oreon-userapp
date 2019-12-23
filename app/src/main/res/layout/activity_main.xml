@@ -12,59 +12,6 @@
 
 <!--    endregion-->
 
-<!--    region SwipeUpLayout + Main Fragment-->
-    <com.sothree.slidinguppanel.SlidingUpPanelLayout
-        xmlns:sothree="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/bottom_slide_up_container"
-        android:gravity="bottom"
-        sothree:umanoPanelHeight="25pt"
-        sothree:umanoParallaxOffset="100dp"
-        android:layout_width="match_parent"
-        sothree:umanoOverlay="true"
-        android:layout_height="match_parent"
-        android:layout_above="@id/bottom_navigation_container"
-        sothree:umanoScrollableView="@+id/bottom_swipe_layer">
-
-        <!-- region Main Fragments -->
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <FrameLayout
-                    android:id="@+id/fragment_container"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="25pt"/>
-
-            </RelativeLayout>
-        <!--    endregion-->
-
-        <!--    region swipe-up-->
-            <RelativeLayout
-                android:id="@+id/bottom_swipe_layer"
-                android:background="@color/white"
-                android:layout_width="match_parent"
-                android:src="@drawable/swip_up_layout"
-                android:layout_height="match_parent">
-
-                <ImageView
-                    android:id="@+id/image_1"
-                    android:layout_width="match_parent"
-                    android:layout_height="25pt">
-                </ImageView>
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_below="@+id/image_1"
-                    android:background="@color/white"
-                    android:layout_height="75pt">
-                </ImageView>
-
-            </RelativeLayout>
-        <!--    endregion-->
-    </com.sothree.slidinguppanel.SlidingUpPanelLayout>
-<!--    endregion-->
-
 <!--    region Action Button-->
         <RelativeLayout
             android:id="@+id/get_button_group"
@@ -102,6 +49,78 @@
                 android:src="@drawable/right_arrow_icon"/>
 
         </RelativeLayout>
+<!--    endregion-->
+
+<!--    region SwipeUpLayout + Main Fragment-->
+    <com.sothree.slidinguppanel.SlidingUpPanelLayout
+        android:id="@+id/bottom_slide_up_container"
+        android:gravity="bottom"
+        app:umanoPanelHeight="25pt"
+        app:umanoParallaxOffset="100dp"
+        android:layout_width="match_parent"
+        app:umanoOverlay="true"
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottom_navigation_container"
+        app:umanoScrollableView="@+id/bottom_sliding_layer">
+
+        <!-- region Main Fragments -->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <FrameLayout
+                    android:id="@+id/fragment_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="25pt"/>
+
+            </RelativeLayout>
+        <!--    endregion-->
+
+        <!--    region swipe-up-->
+            <RelativeLayout
+                android:id="@+id/bottom_sliding_layer"
+                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:src="@drawable/swip_up_layout"
+                android:layout_height="match_parent">
+
+                <RelativeLayout
+                    android:id="@+id/sliding_layer_top"
+                    android:layout_width="match_parent"
+                    android:layout_height="25pt">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:textAlignment="center"
+                        android:textSize="20dp"
+                        android:text="Explore?"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/image_1"
+                    android:layout_below="@+id/sliding_layer_top"
+                    android:layout_width="match_parent"
+                    android:layout_height="75pt">
+
+                    <Switch
+                        android:id="@+id/scan_mode_switch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:text="Scan Mode"
+                        android:textOff="OFF"
+                        android:textOn="ON"
+                        android:layout_centerInParent="true"/>
+
+                </RelativeLayout>
+
+            </RelativeLayout>
+        <!--    endregion-->
+    </com.sothree.slidinguppanel.SlidingUpPanelLayout>
 <!--    endregion-->
 
 <!-- region Bottom Navigation View -->

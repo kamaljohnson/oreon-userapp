@@ -122,7 +122,12 @@ class HomeFragment : Fragment() {
                         } else {
                             var shelfItems: Map<String, Number> = userSnap.data?.get("Shelf") as Map<String, Number>
 
-                            for (shelfItem in shelfItems){
+                            if(shelfItems.isEmpty()) {
+                                itemGroups.add(machineInventoryItems)
+                                addItemsToRV(itemGroups)
+                            }
+
+                            for (shelfItem in shelfItems) {
                                 Log.d(TAG, shelfItem.key)
                                 Log.d(TAG, shelfItem.value.toString())
 
