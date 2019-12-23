@@ -290,25 +290,25 @@ class MainActivity : FragmentActivity() {
         bottom_navigation.setOnNavigationItemSelectedListener {
             when(it.itemId){
                 R.id.navigation_home-> {
+                    current_fragment = Fragments.HOME
                     changeFragment(HomeFragment(), "HomeFragment")
                     showActionButton()
-                    current_fragment = Fragments.HOME
                     showSwipeUpContainer()
                     return@setOnNavigationItemSelectedListener true
                 }
 
                 R.id.navigation_shop-> {
+                    current_fragment = Fragments.SHOP
                     changeFragment(ShopFragment(), "ShopFragment")
                     hideActionButton()
-                    current_fragment = Fragments.SHOP
                     hideSwipeUpContainer()
                     return@setOnNavigationItemSelectedListener true
                 }
 
                 R.id.navigation_shelf-> {
+                    current_fragment = Fragments.SHELF
                     changeFragment(ShelfFragment(), "ShelfFragment")
                     showActionButton()
-                    current_fragment = Fragments.SHELF
                     showSwipeUpContainer()
                     return@setOnNavigationItemSelectedListener true
                 }

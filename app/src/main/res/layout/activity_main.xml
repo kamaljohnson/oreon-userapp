@@ -60,6 +60,7 @@
         android:layout_width="match_parent"
         app:umanoOverlay="true"
         android:layout_height="match_parent"
+        app:umanoShadowHeight="0dp"
         android:layout_above="@id/bottom_navigation_container"
         app:umanoScrollableView="@+id/bottom_sliding_layer">
 
@@ -80,9 +81,8 @@
         <!--    region swipe-up-->
             <RelativeLayout
                 android:id="@+id/bottom_sliding_layer"
-                android:background="@color/white"
                 android:layout_width="match_parent"
-                android:src="@drawable/swip_up_layout"
+                android:background="@drawable/sliding_layout"
                 android:layout_height="match_parent">
 
                 <RelativeLayout
