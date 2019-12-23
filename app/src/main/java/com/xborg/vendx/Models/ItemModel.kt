@@ -1,13 +1,5 @@
 package com.xborg.vendx.Models
 
-enum class ItemCategory {
-    SNACK,
-    BEVERAGE,
-    FAST_FOOD,
-    STATIONARY,
-    OTHER
-}
-
 data class ItemModel (
     var item_id:String = "",
     var name:String = "",
