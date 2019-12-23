@@ -9,12 +9,12 @@ enum class ItemCategory {
 }
 
 data class ItemModel (
-    var category: ItemCategory = ItemCategory.OTHER,
     var item_id:String = "",
     var name:String = "",
+    var image_src: String = "",
+    var category: ItemCategory = ItemCategory.OTHER,
     var cost:String = "",
     var quantity:String = "",
     var item_limit:String = "",
-    var image_src: String = "",
     var selectable: Boolean = true
 )
