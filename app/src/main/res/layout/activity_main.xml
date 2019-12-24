@@ -1,149 +1,150 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
         tools:context=".activities.mainActivity.MainActivity">
+    <!--    region Top AppBar-->
 
-<!--    region Top AppBar-->
+    <!--    endregion-->
 
-<!--    endregion-->
+    <!--    region SwipeUpLayout + Main Fragment-->
+        <com.sothree.slidinguppanel.SlidingUpPanelLayout
+            android:id="@+id/bottom_slide_up_container"
+            android:gravity="bottom"
+            app:umanoPanelHeight="25pt"
+            app:umanoParallaxOffset="100dp"
+            android:layout_width="match_parent"
+            app:umanoOverlay="true"
+            android:layout_height="match_parent"
+            app:umanoShadowHeight="0dp"
+            android:layout_above="@id/bottom_navigation_container"
+            app:umanoScrollableView="@+id/bottom_sliding_layer">
 
-<!--    region SwipeUpLayout + Main Fragment-->
-    <com.sothree.slidinguppanel.SlidingUpPanelLayout
-        android:id="@+id/bottom_slide_up_container"
-        android:gravity="bottom"
-        app:umanoPanelHeight="25pt"
-        app:umanoParallaxOffset="100dp"
-        android:layout_width="match_parent"
-        app:umanoOverlay="true"
-        android:layout_height="match_parent"
-        app:umanoShadowHeight="0dp"
-        android:layout_above="@id/bottom_navigation_container"
-        app:umanoScrollableView="@+id/bottom_sliding_layer">
-
-        <!-- region Main Fragments -->
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <FrameLayout
-                    android:id="@+id/fragment_container"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="25pt"/>
-
-            </RelativeLayout>
-        <!--    endregion-->
-
-        <!--    region swipe-up-->
-            <RelativeLayout
-                android:id="@+id/bottom_sliding_layer"
-                android:layout_width="match_parent"
-                android:background="@drawable/sliding_layout"
-                android:layout_height="match_parent">
-
+            <!-- region Main Fragments -->
                 <RelativeLayout
-                    android:id="@+id/sliding_layer_top"
                     android:layout_width="match_parent"
-                    android:layout_height="25pt">
+                    android:layout_height="match_parent">
 
-                    <TextView
+                    <FrameLayout
+                        android:id="@+id/fragment_container"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:textAlignment="center"
-                        android:textSize="20dp"
-                        android:text="Explore?"/>
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="25pt" />
 
                 </RelativeLayout>
+            <!--    endregion-->
 
+            <!--    region swipe-up-->
                 <RelativeLayout
-                    android:id="@+id/image_1"
-                    android:layout_below="@+id/sliding_layer_top"
+                    android:id="@+id/bottom_sliding_layer"
                     android:layout_width="match_parent"
-                    android:layout_height="75pt">
+                    android:background="@drawable/sliding_layout"
+                    android:layout_height="match_parent">
 
-                    <Switch
-                        android:id="@+id/scan_mode_switch"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:text="Scan Mode"
-                        android:textOff="OFF"
-                        android:textOn="ON"
-                        android:layout_centerInParent="true"/>
+                    <RelativeLayout
+                        android:id="@+id/sliding_layer_top"
+                        android:layout_width="match_parent"
+                        android:layout_height="25pt">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:textAlignment="center"
+                            android:textSize="20dp"
+                            android:text="Explore?"/>
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/image_1"
+                        android:layout_below="@+id/sliding_layer_top"
+                        android:layout_width="match_parent"
+                        android:layout_height="75pt">
+
+                        <Switch
+                            android:id="@+id/scan_mode_switch"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:text="Scan Mode"
+                            android:textOff="OFF"
+                            android:textOn="ON"
+                            android:layout_centerInParent="true"/>
+
+                    </RelativeLayout>
 
                 </RelativeLayout>
+            <!--    endregion-->
+        </com.sothree.slidinguppanel.SlidingUpPanelLayout>
+    <!--    endregion-->
+
+    <!--    region Action Button-->
+            <RelativeLayout
+                android:id="@+id/get_button_group"
+                android:layout_width="80dp"
+                android:layout_height="100dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_gravity="bottom|right"
+                android:layout_marginEnd="3dp"
+                android:layout_marginBottom="37pt">
+
+                <Button
+                    android:id="@+id/cart_item_count"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_above="@+id/get_button"
+                    android:layout_alignEnd="@id/get_button"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginBottom="-3dp"
+                    android:background="@drawable/cart_item_count"
+                    android:text="0"
+                    android:visibility="invisible"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"/>
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/get_button"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/right_arrow_icon"/>
 
             </RelativeLayout>
-        <!--    endregion-->
-    </com.sothree.slidinguppanel.SlidingUpPanelLayout>
-<!--    endregion-->
 
-<!--    region Action Button-->
-        <RelativeLayout
-            android:id="@+id/get_button_group"
-            android:layout_width="80dp"
-            android:layout_height="100dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_gravity="bottom|right"
-            android:layout_marginEnd="3dp"
-            android:layout_marginBottom="37pt">
+    <!--    endregion-->
 
-            <Button
-                android:id="@+id/cart_item_count"
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_above="@+id/get_button"
-                android:layout_alignEnd="@id/get_button"
-                android:layout_alignParentTop="true"
-                android:layout_marginTop="0dp"
-                android:layout_marginBottom="-3dp"
-                android:background="@drawable/cart_item_count"
-                android:text="0"
-                android:visibility="invisible"
-                android:textColor="@color/white"
-                android:textStyle="bold"/>
+    <!-- region Bottom Navigation View -->
+            <androidx.coordinatorlayout.widget.CoordinatorLayout
+                android:id="@+id/bottom_navigation_container"
+                android:layout_width="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_alignParentBottom="true"
+                style="?android:attr/ambientShadowAlpha"
+                android:translationZ="4dp"
+                android:layout_height="20pt">
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/get_button"
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:src="@drawable/right_arrow_icon"/>
+                <com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx
+                    android:id="@+id/bottom_navigation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bottom_navigation"
+                    app:itemIconTint="@color/black"
+                    app:itemTextColor="@color/black"
+                    app:menu="@menu/navigation" />
 
-        </RelativeLayout>
+            </androidx.coordinatorlayout.widget.CoordinatorLayout>
+    <!--    endregion-->
 
-<!--    endregion-->
-
-<!-- region Bottom Navigation View -->
-        <androidx.coordinatorlayout.widget.CoordinatorLayout
-            android:id="@+id/bottom_navigation_container"
-            android:layout_width="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_alignParentBottom="true"
-            style="?android:attr/ambientShadowAlpha"
-            android:translationZ="4dp"
-            android:layout_height="20pt">
-
-            <com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx
-                android:id="@+id/bottom_navigation"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bottom_navigation"
-                app:itemIconTint="@color/black"
-                app:itemTextColor="@color/black"
-                app:menu="@menu/navigation" />
-
-        </androidx.coordinatorlayout.widget.CoordinatorLayout>
-<!--    endregion-->
-
-</RelativeLayout>
+    </RelativeLayout>
+</layout>

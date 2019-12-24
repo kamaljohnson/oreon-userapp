@@ -14,7 +14,6 @@ import com.xborg.vendx.activities.mainActivity.MainActivity
 import com.xborg.vendx.R
 import com.xborg.vendx.SupportClasses.ItemGroupAdapter
 import com.xborg.vendx.databinding.FragmentHomeBinding
-import com.xborg.vendx.models.ItemGroupModel
 
 private var TAG = "HomeFragment"
 
@@ -35,20 +34,21 @@ class HomeFragment : Fragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
         viewModel = ViewModelProviders.of(this).get(HomeViewModel::class.java)
 
-        MainActivity.items = viewModel.allMachineItems      //TODO: this code needed to be changed in the future
-        viewModel.allGroupItems.observe(this, Observer { newAllGroupItems ->
+        MainActivity.items = viewModel.machineItems      //TODO: this code needed to be changed in the future
 
+        viewModel.allGroupItems.observe(this, Observer {
             Log.i(TAG, "allGroupItems updated")
-            updateItemGroupToRV(newAllGroupItems)
+
+            updateItemGroupToRV()
         })
 
-        return inflater.inflate(R.layout.fragment_home,container,false)
+        return binding.root
     }
 
-    private fun updateItemGroupToRV(allGroupItems: ArrayList<ItemGroupModel>) {
+    private fun updateItemGroupToRV() {
+        Log.i(TAG, "allGroupItems : ${viewModel.allGroupItems.value?.size} " + binding.rvMachineItems)
 
-        Log.i(TAG, "allGroupItems : $allGroupItems")
         binding.rvMachineItems.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        binding.rvMachineItems.adapter = context?.let { ItemGroupAdapter(allGroupItems) }
+        binding.rvMachineItems.adapter = ItemGroupAdapter(viewModel.allGroupItems.value ?: ArrayList())
     }
 }

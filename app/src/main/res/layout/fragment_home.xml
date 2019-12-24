@@ -77,8 +77,9 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_centerHorizontal="true"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:orientation="vertical"
             android:overScrollMode="never"/>
-
         </RelativeLayout>
     <!--    endregion-->
     </androidx.constraintlayout.widget.ConstraintLayout>

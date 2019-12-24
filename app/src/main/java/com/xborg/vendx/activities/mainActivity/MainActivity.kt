@@ -12,6 +12,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
@@ -28,6 +29,7 @@ import com.xborg.vendx.activities.mainActivity.fragments.shelf.ShelfFragment
 import com.xborg.vendx.activities.mainActivity.fragments.shop.ShopFragment
 import com.xborg.vendx.PaymentActivity
 import com.xborg.vendx.R
+import com.xborg.vendx.databinding.ActivityMainBinding
 import com.xborg.vendx.models.ItemModel
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -61,6 +63,8 @@ class MainActivity : FragmentActivity() {
     val db = FirebaseFirestore.getInstance()
     lateinit var functions: FirebaseFunctions
 
+    lateinit var binding: ActivityMainBinding
+
     companion object{
         var items: ArrayList<ItemModel> = ArrayList()               //all the items in the inventory list
         var cart_items_from_shelf: HashMap<String, Int> = HashMap()
@@ -78,6 +82,8 @@ class MainActivity : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
         initBottomNavigationView()
         initBottomSwipeUpView()
@@ -295,7 +301,7 @@ class MainActivity : FragmentActivity() {
 //    region Activity Support functions
     private fun initBottomNavigationView() {
 
-        val bottomNavigation = findViewById<BottomNavigationViewEx>(R.id.bottom_navigation)
+        val bottomNavigation = findViewById<BottomNavigationViewEx>(binding.bottomNavigation.id)
         bottomNavigation.enableAnimation(false)
         bottomNavigation.enableItemShiftingMode(false)
         bottomNavigation.enableShiftingMode(false)
@@ -348,7 +354,7 @@ class MainActivity : FragmentActivity() {
         var tempFragment: Fragment? = fragmentManager.findFragmentByTag(tagFragmentName)
         if(tempFragment == null) {
             tempFragment = fragment
-            fragmentTransaction.add(R.id.fragment_container, tempFragment, tagFragmentName)
+            fragmentTransaction.add(binding.fragmentContainer.id, tempFragment, tagFragmentName)
         } else {
             fragmentTransaction.show(tempFragment)
         }
@@ -360,7 +366,7 @@ class MainActivity : FragmentActivity() {
     }
 
     private fun initBottomSwipeUpView() {
-        mLayout = findViewById(R.id.bottom_slide_up_container)
+        mLayout = findViewById(binding.bottomSlideUpContainer.id)
         mLayout!!.anchorPoint = 0.2f
 
         mLayout!!.addPanelSlideListener(object : SlidingUpPanelLayout.PanelSlideListener {
