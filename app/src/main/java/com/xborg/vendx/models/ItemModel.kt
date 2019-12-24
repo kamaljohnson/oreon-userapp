@@ -1,6 +1,11 @@
 package com.xborg.vendx.models
 
-import com.xborg.vendx.models.item.ItemCategory
+enum class ItemCategory {
+    SNACK,
+    BEVERAGE,
+    FAST_FOOD,
+    OTHER
+}
 
 data class ItemModel (
     var item_id:String = "",

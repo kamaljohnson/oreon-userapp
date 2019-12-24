@@ -5,9 +5,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.FirebaseFirestore
+import com.xborg.vendx.models.ItemCategory
 import com.xborg.vendx.models.ItemGroupModel
 import com.xborg.vendx.models.ItemModel
-import com.xborg.vendx.models.item.ItemCategory
 
 private const val TAG = "HomeViewModel"
 
@@ -64,9 +64,6 @@ class HomeViewModel: ViewModel() {
                         }
                         "Fast Food" -> {
                             item.category = ItemCategory.FAST_FOOD
-                        }
-                        "Stationary" -> {
-                            item.category = ItemCategory.STATIONARY
                         }
                         else -> {
                             item.category = ItemCategory.OTHER
