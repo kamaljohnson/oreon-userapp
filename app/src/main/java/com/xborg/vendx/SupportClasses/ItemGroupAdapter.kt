@@ -10,7 +10,7 @@ import com.xborg.vendx.models.ItemGroupModel
 import com.xborg.vendx.R
 import kotlinx.android.synthetic.main.item_group_holder.view.*
 
-class ItemGroupAdapter(private val parents : List<ItemGroupModel>) : RecyclerView.Adapter<ItemGroupAdapter.ViewHolder>(){
+class ItemGroupAdapter(private val parents : ArrayList<ItemGroupModel>) : RecyclerView.Adapter<ItemGroupAdapter.ViewHolder>(){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val v = LayoutInflater.from(parent.context).inflate(R.layout.item_group_holder, parent,false)

@@ -65,11 +65,11 @@ class ShelfFragment : Fragment() {
     }
 
     private fun getShelfItems() {
-        if(HomeFragment.shelf_items.count() == 0) {
-            shelf_empty_container.visibility = View.VISIBLE
-        } else {
-            addItemsToRV(HomeFragment.shelf_items)
-        }
+//        if(HomeFragment.shelf_items.count() == 0) {
+//            shelf_empty_container.visibility = View.VISIBLE
+//        } else {
+//            addItemsToRV(HomeFragment.shelf_items)
+//        }
     }
 
     /**

@@ -154,7 +154,6 @@ class ItemAdapter(val items: ArrayList<ItemModel>) : RecyclerView.Adapter<ItemAd
 //                if(cart_count_text_view!!.text.toString().toInt() == 0) {
 //    //                TODO: set visibility of action button to invisible
 //                }
-
             }
 
 //            info_button.setOnClickListener{

@@ -1,84 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".activities.mainActivity.fragments.home.HomeFragment"
-    android:overScrollMode="always"
-    android:isScrollContainer="true"
-    android:orientation="vertical">
-
-<!--    region  Info Bar-->
-    <RelativeLayout
-        android:layout_width="250dp"
-        android:layout_height="300dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:background="@drawable/home_fragment_info_board"
-        android:translationZ="6dp"
-        android:visibility="invisible"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="Could'nt find any \noutlets near you"
-            android:textAlignment="center"
-            android:textSize="20dp"
-            android:textStyle="bold">
-
-        </TextView>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/go_to_shop_button"
-            android:layout_alignBottom="@+id/go_to_shop_button"
-            android:layout_marginTop="0dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="0dp"
-            android:layout_toStartOf="@+id/go_to_shop_button"
-            android:gravity="center"
-            android:text="RETRY"
-            android:textAlignment="center"
-            android:textColor="@color/colorAccent"
-            android:textSize="@dimen/button_text_size"
-            android:textStyle="bold" />
-
-        <Button
-            android:id="@+id/go_to_shop_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:padding="5dp"
-            android:text="Go to Shop"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            android:textSize="@dimen/button_text_size"
-            android:background="@drawable/rounded_button_accent"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"/>
-
-    </RelativeLayout>
-<!--    endregion-->
-
-<!--    region Items RV-->
-    <RelativeLayout
+    xmlns:tools="http://schemas.android.com/tools">
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center">
+        tools:context=".activities.mainActivity.fragments.home.HomeFragment"
+        android:overScrollMode="always"
+        android:isScrollContainer="true"
+        android:orientation="vertical">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_machine_items"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_centerHorizontal="true"
-        android:overScrollMode="never"/>
+    <!--    region  Info Bar-->
+        <RelativeLayout
+            android:layout_width="250dp"
+            android:layout_height="300dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:background="@drawable/home_fragment_info_board"
+            android:translationZ="6dp"
+            android:visibility="invisible"
+            app:layout_constraintTop_toTopOf="parent">
 
-    </RelativeLayout>
-<!--    endregion-->
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="Could'nt find any \noutlets near you"
+                android:textAlignment="center"
+                android:textSize="20dp"
+                android:textStyle="bold">
+
+            </TextView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/go_to_shop_button"
+                android:layout_alignBottom="@+id/go_to_shop_button"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="0dp"
+                android:layout_toStartOf="@+id/go_to_shop_button"
+                android:gravity="center"
+                android:text="RETRY"
+                android:textAlignment="center"
+                android:textColor="@color/colorAccent"
+                android:textSize="@dimen/button_text_size"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/go_to_shop_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:padding="5dp"
+                android:text="Go to Shop"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textSize="@dimen/button_text_size"
+                android:background="@drawable/rounded_button_accent"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"/>
+
+        </RelativeLayout>
+    <!--    endregion-->
+
+    <!--    region Items RV-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_machine_items"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:overScrollMode="never"/>
+
+        </RelativeLayout>
+    <!--    endregion-->
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
