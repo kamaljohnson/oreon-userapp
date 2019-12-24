@@ -1,4 +1,4 @@
-package com.xborg.vendx.database.items
+package com.xborg.vendx.database
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
