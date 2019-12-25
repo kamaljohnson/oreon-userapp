@@ -66,7 +66,7 @@ class MainActivity : FragmentActivity() {
     lateinit var binding: ActivityMainBinding
 
     companion object{
-        var items: ArrayList<ItemModel> = ArrayList()               //all the items in the inventory list
+        var items: List<ItemModel> = ArrayList()               //all the items in the inventory list
         var cart_items_from_shelf: HashMap<String, Int> = HashMap()
         var cart_items : HashMap<String, Int> = HashMap()          //list of item_ids added to cart along with number of purchases
         var billing_cart : HashMap<String, Int> = HashMap()        //list of item_ids added to cart along with number of purchases
@@ -253,7 +253,6 @@ class MainActivity : FragmentActivity() {
      *  - restarted
      */
     private fun clearCarts() {
-        items.clear()
         cart_items.clear()
         cart_items_from_shelf.clear()
         billing_cart.clear()

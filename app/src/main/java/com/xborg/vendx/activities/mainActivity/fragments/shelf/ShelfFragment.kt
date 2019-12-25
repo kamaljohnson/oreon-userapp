@@ -18,6 +18,7 @@ import com.xborg.vendx.models.ItemModel
 import com.xborg.vendx.R
 import com.xborg.vendx.activities.mainActivity.States
 import com.xborg.vendx.activities.mainActivity.fragments.home.HomeFragment
+import com.xborg.vendx.database.Item
 import kotlinx.android.synthetic.main.fragment_shelf.*
 
 private var TAG = "ShelfFragment"
@@ -76,7 +77,7 @@ class ShelfFragment : Fragment() {
      * adds all the items to the recycler view
      * as item_card cards
      */
-    private fun addItemsToRV(items: ArrayList<ItemModel>){
+    private fun addItemsToRV(items: ArrayList<Item>){
         Log.e(TAG, "items: $items")
         Log.e(TAG, "rv: $rv_shelf_items")
         rv_shelf_items.layoutManager = GridLayoutManager(context, 3)

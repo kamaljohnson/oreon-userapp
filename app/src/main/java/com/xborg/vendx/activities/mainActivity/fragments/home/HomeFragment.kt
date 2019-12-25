@@ -34,7 +34,7 @@ class HomeFragment : Fragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
         viewModel = ViewModelProviders.of(this).get(HomeViewModel::class.java)
 
-        MainActivity.items = viewModel.machineItems      //TODO: this code needed to be changed in the future
+//        MainActivity.items = viewModel.machineItems      //TODO: this code needed to be changed in the future
 
         viewModel.allGroupItems.observe(this, Observer {
             Log.i(TAG, "allGroupItems updated")

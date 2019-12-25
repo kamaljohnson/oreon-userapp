@@ -10,13 +10,14 @@ import com.bumptech.glide.Glide
 import com.xborg.vendx.activities.mainActivity.MainActivity
 import com.xborg.vendx.models.ItemModel
 import com.xborg.vendx.R
+import com.xborg.vendx.database.Item
 import kotlinx.android.synthetic.main.item_card.view.*
 
 private var TAG = "ItemCardAdapter"
 
 var previous_view: View? = null
 
-class ItemAdapter(val items: ArrayList<ItemModel>) : RecyclerView.Adapter<ItemAdapter.ItemViewHolder>() {
+class ItemAdapter(val items: List<Item>) : RecyclerView.Adapter<ItemAdapter.ItemViewHolder>() {
 
     // Gets the number of animals in the list
     override fun getItemCount(): Int {
@@ -30,15 +31,15 @@ class ItemAdapter(val items: ArrayList<ItemModel>) : RecyclerView.Adapter<ItemAd
 
     // Binds each item_card in the ArrayList to a view
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
-        holder.item_id.text = items[position].item_id
+        holder.item_id.text = items[position].id
         holder.name.text = items[position].name
-        if(items[position].cost != "-1") {                  //non-shelf item
+        if(!items[position].inShelf ) {                  //non-shelf item
             holder.cost.text = "₹ ${items[position].cost}"
             holder.item_limit.text = "10"
             holder.item_limit.visibility = View.INVISIBLE
 
-            if(MainActivity.cart_items[items[position].item_id] != null) {
-                holder.purchase_count.text = MainActivity.cart_items[items[position].item_id].toString()
+            if(MainActivity.cart_items[items[position].id] != null) {
+                holder.purchase_count.text = MainActivity.cart_items[items[position].id].toString()
                 if(holder.purchase_count.text.toString() != "0") {
                     holder.purchase_count.visibility = View.VISIBLE
                 }
@@ -46,22 +47,22 @@ class ItemAdapter(val items: ArrayList<ItemModel>) : RecyclerView.Adapter<ItemAd
         } else {                                            //shelf item
             holder.cost.text = "-1"
             holder.cost.visibility = View.INVISIBLE
-            holder.item_limit.text = items[position].item_limit
+            holder.item_limit.text = items[position].remainingInShelf.toString()
             holder.item_limit.visibility = View.VISIBLE
 
-            if(MainActivity.cart_items_from_shelf[items[position].item_id] != null) {
-                holder.purchase_count.text = MainActivity.cart_items_from_shelf[items[position].item_id].toString()
+            if(MainActivity.cart_items_from_shelf[items[position].id] != null) {
+                holder.purchase_count.text = MainActivity.cart_items_from_shelf[items[position].id].toString()
                 if(holder.purchase_count.text.toString() != "0") {
                     holder.purchase_count.visibility = View.VISIBLE
                 }
             }
         }
 
-        holder.image.isClickable = items[position].selectable
+        holder.image.isClickable = items[position].inMachine
 
         Glide
             .with(holder.context)
-            .load(items[position].image_src)
+            .load(items[position].imgScrUrl)
             .into(holder.image)
     }
 

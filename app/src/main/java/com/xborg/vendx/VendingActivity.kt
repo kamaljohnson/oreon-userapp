@@ -81,7 +81,6 @@ class VendingActivity : AppCompatActivity(), BluetoothService.OnBluetoothEventCa
     }
 
     private fun getBag() {
-        items.clear()
 
         db.document("Users/$uid")
             .get()
@@ -114,10 +113,10 @@ class VendingActivity : AppCompatActivity(), BluetoothService.OnBluetoothEventCa
 
                                 bag_items[item.item_id] = quantity.toInt()
                                 Log.d(TAG, item.item_id + " -> " + quantity)
-                                items.add(item)
+//                                items.add(item)
 
                                 if(items.size == shelfItems.size) {
-                                    addItemsToRV(items)
+//                                    addItemsToRV(items)
                                 }
                             }
                             .addOnFailureListener{exception ->
