@@ -1,6 +1,5 @@
 package com.xborg.vendx.activities.mainActivity.fragments
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.xborg.vendx.database.Item

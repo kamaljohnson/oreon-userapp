@@ -13,14 +13,14 @@
 
     <RelativeLayout
         android:id="@+id/card_top"
-        android:layout_height="30pt"
+        android:layout_height="40pt"
         android:layout_centerHorizontal="true"
         android:layout_width="60pt">
 
         <ImageView
             android:id="@+id/image"
             android:layout_width="70dp"
-            android:layout_height="50dp"
+            android:layout_height="70dp"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
             android:src="@drawable/common_google_signin_btn_icon_dark">
@@ -61,11 +61,11 @@
 
     <RelativeLayout
         android:layout_width="60pt"
-        android:layout_height="30pt"
+        android:layout_height="20pt"
         android:layout_below="@id/card_top">
 
         <TextView
-            android:paddingTop="5pt"
+            android:paddingTop="2pt"
             android:id="@+id/cost"
             android:layout_width="40pt"
             android:layout_height="wrap_content"
@@ -94,12 +94,10 @@
 
             <ImageView
                 android:id="@+id/remove_button"
-                style="?android:attr/borderlessButtonStyle"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_alignParentBottom="true"
-                android:layout_margin="0pt"
-                android:padding="5dp"
+                android:padding="4dp"
                 android:src="@drawable/remove_icon">
 
             </ImageView>

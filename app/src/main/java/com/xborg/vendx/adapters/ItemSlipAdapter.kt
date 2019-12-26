@@ -1,4 +1,4 @@
-package com.xborg.vendx.SupportClasses
+package com.xborg.vendx.adapters
 
 import android.content.Context
 import android.view.LayoutInflater

@@ -94,6 +94,7 @@ class HomeViewModel: ViewModel() {
             for(j in shelfItems.value!!.indices) {
                 if(machineItems.value!![i].id == shelfItems.value!![j].id) {
                     shelfItems.value!![j].inMachine = true
+                    shelfItems.value!![j].remainingInMachine = machineItems.value!![i].remainingInMachine
                     shelfItemsInMachine.add(shelfItems.value!![j])
                 }
             }

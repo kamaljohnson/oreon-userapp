@@ -11,7 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.xborg.vendx.R
-import com.xborg.vendx.SupportClasses.ItemGroupAdapter
+import com.xborg.vendx.adapters.ItemGroupAdapter
 import com.xborg.vendx.activities.mainActivity.fragments.SharedViewModel
 import com.xborg.vendx.databinding.FragmentHomeBinding
 
