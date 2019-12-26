@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.xborg.vendx.activities.mainActivity.MainActivity
 import com.xborg.vendx.R
 import com.xborg.vendx.SupportClasses.ItemGroupAdapter
 import com.xborg.vendx.databinding.FragmentHomeBinding
@@ -24,7 +23,7 @@ class HomeFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.i(TAG, "onCreate called!")
+        Log.i(TAG, "Home onCreate called!")
 
     }
 
