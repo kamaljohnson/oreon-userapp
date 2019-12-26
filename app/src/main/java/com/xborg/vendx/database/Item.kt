@@ -16,8 +16,8 @@ data class Item (
     @Json(name = "Image")                       var imgScrUrl: String,
     @Json(name = "Category")                    var category: ItemCategory,
 
-                                                var inShelf: Boolean = false,
-                                                var inMachine: Boolean = false,
+    @Json(name = "InShelf")                     var inShelf: Boolean = false,
+    @Json(name = "InMachine")                   var inMachine: Boolean = false,
     @Json(name = "RemainingInMachine")          var remainingInMachine: Long = 0,
     @Json(name = "RemainingInShelf")            var remainingInShelf: Long = 0
 )

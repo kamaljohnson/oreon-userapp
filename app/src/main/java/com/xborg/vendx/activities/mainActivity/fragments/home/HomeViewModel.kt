@@ -22,8 +22,8 @@ class HomeViewModel: ViewModel() {
 
     private var uid = FirebaseAuth.getInstance().uid.toString()
 
-    lateinit var machineItems: List<Item>
-    lateinit var shelfItems: List<Item>
+    private var machineItems: List<Item>
+    private var shelfItems: List<Item>
 
     private val _allGroupItems: MutableLiveData<ArrayList<ItemGroupModel>>
     val allGroupItems: LiveData<ArrayList<ItemGroupModel>>
@@ -36,6 +36,8 @@ class HomeViewModel: ViewModel() {
         Log.i(TAG, "HomeViewModel created!")
 
         _allGroupItems = MutableLiveData()
+        machineItems = ArrayList()
+        shelfItems = ArrayList()
 
         val machineId = "yDWzDc79Uu1IO2lEeVyG"  //TODO: machineId must be passed to the function
         getItemsFromMachine(machineId)
@@ -56,14 +58,7 @@ class HomeViewModel: ViewModel() {
 
                 machineItems = moshi.adapter(ItemList::class.java).fromJson(listResult)!!.items
 
-                val itemGroupModel = ItemGroupModel(
-                    items = machineItems,
-                    draw_line_breaker = false
-                )
-
-                val temp = ArrayList<ItemGroupModel>()
-                temp.add(itemGroupModel)
-                _allGroupItems.value = temp
+                updateItemGroupModel()
             } catch (t: Throwable) {
                 Log.e(TAG, "Failed to get response: ${t.message}")
             }
@@ -83,18 +78,29 @@ class HomeViewModel: ViewModel() {
 
                 shelfItems = moshi.adapter(ItemList::class.java).fromJson(listResult)!!.items
 
-//                val itemGroupModel = ItemGroupModel(
-//                    items = shelfItems,
-//                    draw_line_breaker = false
-//                )
-//
-//                val temp = ArrayList<ItemGroupModel>()
-//                temp.add(itemGroupModel)
-//                _allGroupItems.value = temp
+                updateItemGroupModel()
             } catch (t: Throwable) {
                 Log.e(TAG, "Failed to get response: ${t.message}")
             }
         }
+    }
+
+    private fun updateItemGroupModel(){
+        val shelfItemsGroupModel = ItemGroupModel(
+            items = shelfItems,
+            draw_line_breaker = true
+        )
+
+        val machineItemsGroupModel = ItemGroupModel(
+            items = machineItems,
+            draw_line_breaker = false
+        )
+
+        val temp = ArrayList<ItemGroupModel>()
+        temp.add(shelfItemsGroupModel)
+        temp.add(machineItemsGroupModel)
+
+        _allGroupItems.value = temp
     }
 
     override fun onCleared() {
