@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.xborg.vendx.activities.mainActivity.MainActivity
 import com.xborg.vendx.models.ItemModel
 import com.xborg.vendx.R
@@ -63,6 +64,9 @@ class ItemAdapter(val items: List<Item>) : RecyclerView.Adapter<ItemAdapter.Item
         Glide
             .with(holder.context)
             .load(items[position].imgScrUrl)
+            .apply(RequestOptions()
+                .placeholder(R.drawable.blank_image)
+                .error(R.drawable.broken_image))
             .into(holder.image)
     }
 
