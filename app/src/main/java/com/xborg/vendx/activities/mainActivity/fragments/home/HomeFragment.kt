@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.xborg.vendx.R
 import com.xborg.vendx.SupportClasses.ItemGroupAdapter
+import com.xborg.vendx.activities.mainActivity.fragments.SharedViewModel
 import com.xborg.vendx.databinding.FragmentHomeBinding
 
 private var TAG = "HomeFragment"
@@ -19,6 +20,8 @@ private var TAG = "HomeFragment"
 class HomeFragment : Fragment() {
 
     private lateinit var viewModel: HomeViewModel
+    private lateinit var sharedViewModel: SharedViewModel
+
     private lateinit var binding: FragmentHomeBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,11 +40,27 @@ class HomeFragment : Fragment() {
 
         viewModel.allGroupItems.observe(this, Observer {
             Log.i(TAG, "allGroupItems updated")
-
             updateItemGroupToRV()
         })
 
         return binding.root
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        sharedViewModel = ViewModelProviders.of(activity!!).get(SharedViewModel::class.java)
+
+        viewModel.machineItems.observe(viewLifecycleOwner, Observer {
+            Log.i(TAG, "machineItemList Updated")
+
+            sharedViewModel.setMachineItems(viewModel.machineItems.value!!)
+        })
+
+        viewModel.shelfItems.observe(viewLifecycleOwner, Observer {
+            Log.i(TAG, "shelfItemList Updated")
+
+            sharedViewModel.setShelfItems(viewModel.shelfItems.value!!)
+        })
     }
 
     private fun updateItemGroupToRV() {

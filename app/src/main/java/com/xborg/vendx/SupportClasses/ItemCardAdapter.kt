@@ -1,10 +1,12 @@
 package com.xborg.vendx.SupportClasses
 
+import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -34,18 +36,13 @@ class ItemAdapter(val items: List<Item>) : RecyclerView.Adapter<ItemAdapter.Item
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         holder.item_id.text = items[position].id
         holder.name.text = items[position].name
-        if(!items[position].inShelf ) {                  //non-shelf item
-            holder.cost.text = "₹ ${items[position].cost}"
-            holder.item_limit.text = "10"
-            holder.item_limit.visibility = View.INVISIBLE
 
-            if(MainActivity.cart_items[items[position].id] != null) {
-                holder.purchase_count.text = MainActivity.cart_items[items[position].id].toString()
-                if(holder.purchase_count.text.toString() != "0") {
-                    holder.purchase_count.visibility = View.VISIBLE
-                }
-            }
-        } else {                                            //shelf item
+        if(!items[position].inMachine){
+            holder.card.setBackgroundDrawable(ContextCompat.getDrawable(holder.context, R.drawable.shop_basket_icon))
+            holder.card.isClickable = false
+        }
+
+        if(items[position].inShelf ) {                  //non-shelf item
             holder.cost.text = "-1"
             holder.cost.visibility = View.INVISIBLE
             holder.item_limit.text = items[position].remainingInShelf.toString()
@@ -53,6 +50,18 @@ class ItemAdapter(val items: List<Item>) : RecyclerView.Adapter<ItemAdapter.Item
 
             if(MainActivity.cart_items_from_shelf[items[position].id] != null) {
                 holder.purchase_count.text = MainActivity.cart_items_from_shelf[items[position].id].toString()
+                if(holder.purchase_count.text.toString() != "0") {
+                    holder.purchase_count.visibility = View.VISIBLE
+                }
+            }
+
+        } else {                                            //shelf item
+            holder.cost.text = "₹ ${items[position].cost}"
+            holder.item_limit.text = "10"
+            holder.item_limit.visibility = View.INVISIBLE
+
+            if(MainActivity.cart_items[items[position].id] != null) {
+                holder.purchase_count.text = MainActivity.cart_items[items[position].id].toString()
                 if(holder.purchase_count.text.toString() != "0") {
                     holder.purchase_count.visibility = View.VISIBLE
                 }
@@ -71,6 +80,7 @@ class ItemAdapter(val items: List<Item>) : RecyclerView.Adapter<ItemAdapter.Item
     }
 
     inner class ItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        var card = view.rootView
         var item_id = view.item_id
         var name = view.name
         var cost = view.cost

@@ -20,57 +20,28 @@ private const val TAG = "ShelfViewModel"
 
 class ShelfViewModel: ViewModel() {
 
-    private var uid = FirebaseAuth.getInstance().uid.toString()
+    var shelfItems: List<Item> = ArrayList()
+    var machineItems: List<Item> = ArrayList()
 
-    private var shelfItems: List<Item>
     private val _allGroupItems: MutableLiveData<ArrayList<ItemGroupModel>>
     val allGroupItems: LiveData<ArrayList<ItemGroupModel>>
         get() = _allGroupItems
-
-
-    private var viewModelJob = Job()
-    private var coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
     init {
         Log.i(TAG, "ShelfViewModel created!")
 
         _allGroupItems = MutableLiveData()
-        shelfItems = ArrayList()
-
-        getItemsInShelf(uid)
     }
 
-    private fun getItemsInShelf(userId: String) {
-        coroutineScope.launch {
-            val getMachineItemsDeferred = VendxApi.retrofitServices.getShelfItemsAsync(userId)
-            try {
-                val listResult = getMachineItemsDeferred.await()
-                Log.i(TAG, "Successful to get response: $listResult ")
+    fun updateItemGroupModel() {
 
-                val moshi: Moshi = Moshi.Builder()
-                    .add(KotlinJsonAdapterFactory())
-                    .build()
-
-                shelfItems = moshi.adapter(ItemList::class.java).fromJson(listResult)!!.items
-
-                updateItemGroupModel()
-            } catch (t: Throwable) {
-                Log.e(TAG, "Failed to get response: ${t.message}")
+        for(i in machineItems.indices ) {
+            for(j in shelfItems.indices) {
+                if(machineItems[i].id == shelfItems[j].id) {
+                    shelfItems[j].inMachine = true
+                }
             }
         }
-    }
-
-    private fun updateItemGroupModel(){
-
-//        val shelfItemsInMachine: ArrayList<Item> = ArrayList()
-//
-//        machineItems.forEach{machineItem->
-//            shelfItems.forEach { shelfItem->
-//                if(machineItem.id == shelfItem.id) {
-//                    shelfItemsInMachine.add(shelfItem)
-//                }
-//            }
-//        }
 
         val shelfItemsGroupModel = ItemGroupModel(
             items = shelfItems,
@@ -81,11 +52,5 @@ class ShelfViewModel: ViewModel() {
         temp.add(shelfItemsGroupModel)
 
         _allGroupItems.value = temp
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        Log.i(TAG, "HomeViewModel destroyed!")
-        viewModelJob.cancel()
     }
 }

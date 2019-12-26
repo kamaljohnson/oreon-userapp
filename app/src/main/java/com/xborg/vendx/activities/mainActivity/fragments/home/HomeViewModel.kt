@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import com.xborg.vendx.activities.mainActivity.fragments.shelf.ShelfViewModel
 import com.xborg.vendx.database.Item
 import com.xborg.vendx.database.ItemList
 import com.xborg.vendx.models.ItemGroupModel
@@ -21,7 +20,10 @@ private const val TAG = "HomeViewModel"
 
 class HomeViewModel: ViewModel() {
 
-    private var machineItems: List<Item>
+    val uid = FirebaseAuth.getInstance().uid.toString()
+
+    var machineItems: MutableLiveData<List<Item>>
+    var shelfItems: MutableLiveData<List<Item>>
 
     private val _allGroupItems: MutableLiveData<ArrayList<ItemGroupModel>>
     val allGroupItems: LiveData<ArrayList<ItemGroupModel>>
@@ -34,10 +36,13 @@ class HomeViewModel: ViewModel() {
         Log.i(TAG, "HomeViewModel created!")
 
         _allGroupItems = MutableLiveData()
-        machineItems = ArrayList()
+        machineItems = MutableLiveData()
+        shelfItems = MutableLiveData()
 
         val machineId = "yDWzDc79Uu1IO2lEeVyG"  //TODO: machineId must be passed to the function
         getItemsFromMachine(machineId)
+        getItemsInShelf(uid)
+
     }
 
     private fun getItemsFromMachine(machineId: String) {
@@ -52,7 +57,7 @@ class HomeViewModel: ViewModel() {
                     .add(KotlinJsonAdapterFactory())
                     .build()
 
-                machineItems = moshi.adapter(ItemList::class.java).fromJson(listResult)!!.items
+                machineItems.value = moshi.adapter(ItemList::class.java).fromJson(listResult)!!.items
 
                 updateItemGroupModel()
             } catch (t: Throwable) {
@@ -61,30 +66,51 @@ class HomeViewModel: ViewModel() {
         }
     }
 
-    private fun updateItemGroupModel(){
+    private fun getItemsInShelf(userId: String) {
+        coroutineScope.launch {
+            val getMachineItemsDeferred = VendxApi.retrofitServices.getShelfItemsAsync(userId)
+            try {
+                val listResult = getMachineItemsDeferred.await()
+                Log.i(TAG, "Successful to get response: $listResult ")
 
-//        val shelfItemsInMachine: ArrayList<Item> = ArrayList()
-//
-//        machineItems.forEach{machineItem->
-//            shelfItems.forEach { shelfItem->
-//                if(machineItem.id == shelfItem.id) {
-//                    shelfItemsInMachine.add(shelfItem)
-//                }
-//            }
-//        }
-//
-//        val shelfItemsGroupModel = ItemGroupModel(
-//            items = shelfItemsInMachine,
-//            draw_line_breaker = true
-//        )
+                val moshi: Moshi = Moshi.Builder()
+                    .add(KotlinJsonAdapterFactory())
+                    .build()
+
+                shelfItems.value = moshi.adapter(ItemList::class.java).fromJson(listResult)!!.items
+
+                updateItemGroupModel()
+            } catch (t: Throwable) {
+                Log.e(TAG, "Failed to get response: ${t.message}")
+            }
+        }
+    }
+
+    fun updateItemGroupModel(){
+
+        val shelfItemsInMachine: ArrayList<Item> = ArrayList()
+
+        for(i in machineItems.value!!.indices ) {
+            for(j in shelfItems.value!!.indices) {
+                if(machineItems.value!![i].id == shelfItems.value!![j].id) {
+                    shelfItems.value!![j].inMachine = true
+                    shelfItemsInMachine.add(shelfItems.value!![j])
+                }
+            }
+        }
+
+        val shelfItemsGroupModel = ItemGroupModel(
+            items = shelfItemsInMachine,
+            draw_line_breaker = true
+        )
 
         val machineItemsGroupModel = ItemGroupModel(
-            items = machineItems,
+            items = machineItems.value!!,
             draw_line_breaker = false
         )
 
         val temp = ArrayList<ItemGroupModel>()
-//        temp.add(shelfItemsGroupModel)
+        temp.add(shelfItemsGroupModel)
         temp.add(machineItemsGroupModel)
 
         _allGroupItems.value = temp
