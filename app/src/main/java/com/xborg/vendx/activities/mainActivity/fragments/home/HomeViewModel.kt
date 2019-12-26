@@ -86,8 +86,19 @@ class HomeViewModel: ViewModel() {
     }
 
     private fun updateItemGroupModel(){
+
+        val shelfItemsInMachine: ArrayList<Item> = ArrayList()
+
+        machineItems.forEach{machineItem->
+            shelfItems.forEach { shelfItem->
+                if(machineItem.id == shelfItem.id) {
+                    shelfItemsInMachine.add(shelfItem)
+                }
+            }
+        }
+
         val shelfItemsGroupModel = ItemGroupModel(
-            items = shelfItems,
+            items = shelfItemsInMachine,
             draw_line_breaker = true
         )
 
