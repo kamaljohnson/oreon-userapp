@@ -66,7 +66,10 @@ class HomeFragment : Fragment() {
     private fun updateItemGroupToRV() {
         Log.i(TAG, "allGroupItems : ${viewModel.allGroupItems.value?.size} " + binding.rvMachineItems)
 
-        binding.rvMachineItems.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        binding.rvMachineItems.adapter = ItemGroupAdapter(viewModel.allGroupItems.value ?: ArrayList())
+        binding.rvMachineItems.apply {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+            adapter = ItemGroupAdapter()
+            (adapter as ItemGroupAdapter).submitList(viewModel.allGroupItems.value)
+        }
     }
 }

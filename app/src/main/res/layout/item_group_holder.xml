@@ -1,37 +1,45 @@
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/card_view"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    card_view:cardElevation="0dp"
-    card_view:cardBackgroundColor="#fff">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <RelativeLayout
+    <data>
+        <variable
+            name="group_holder"
+            type="com.xborg.vendx.models.ItemGroupModel" />
+    </data>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:orientation="vertical">
+        android:layout_gravity="center"
+        card_view:cardElevation="0dp"
+        card_view:cardBackgroundColor="#fff">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:layout_marginTop="8pt"
-            android:id="@+id/rv_item_group"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:orientation="vertical"/>
-
-        <ImageView
-            android:id="@+id/line_breaker"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="2pt"
-            android:layout_marginTop="7pt"
-            android:layout_centerHorizontal="true"
-            android:background="@drawable/dotted"
-            android:layout_below="@id/rv_item_group"/>
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="vertical">
 
-    </RelativeLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_marginTop="8pt"
+                android:id="@+id/rv_item_group"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:orientation="vertical" />
 
-</androidx.cardview.widget.CardView>
+            <ImageView
+                android:id="@+id/line_breaker"
+                android:layout_width="match_parent"
+                android:layout_height="2pt"
+                android:layout_marginTop="7pt"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/dotted"
+                android:layout_below="@id/rv_item_group" />
+
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
+</layout>

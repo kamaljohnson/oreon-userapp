@@ -61,9 +61,12 @@ class ShelfFragment : Fragment() {
 
     private fun updateItemGroupToRV() {
         Log.i(TAG, "allGroupItems : ${viewModel.allGroupItems.value?.size} " + rv_shelf_items)
+        rv_shelf_items.apply {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+            adapter = ItemGroupAdapter()
+            (adapter as ItemGroupAdapter).submitList(viewModel.allGroupItems.value)
+        }
 
-        rv_shelf_items.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        rv_shelf_items.adapter = ItemGroupAdapter(viewModel.allGroupItems.value ?: ArrayList())
         shelf_empty_container.visibility = View.GONE
     }
 
