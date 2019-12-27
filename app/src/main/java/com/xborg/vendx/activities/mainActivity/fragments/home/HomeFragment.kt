@@ -73,7 +73,11 @@ class HomeFragment : Fragment(), ItemCardAdapter.OnItemListener {
         }
     }
 
-    override fun onItemClick(itemId: String, itemLoc: String) {
-        Log.i(TAG, "item : $itemId from $itemLoc clicked")
+    override fun onItemAddedToCart(itemId: String, itemLoc: String) {
+        Log.i(TAG, "item : $itemId from $itemLoc added to cart")
+    }
+
+    override fun onItemRemovedFromCart(itemId: String, itemLoc: String) {
+        Log.i(TAG, "item : $itemId from $itemLoc removed from cart")
     }
 }

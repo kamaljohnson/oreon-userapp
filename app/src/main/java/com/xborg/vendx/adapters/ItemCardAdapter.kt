@@ -1,22 +1,17 @@
 package com.xborg.vendx.adapters
 
 import android.content.Context
-import android.util.Log
+import android.media.Image
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
-import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import com.xborg.vendx.R
 import com.xborg.vendx.database.Item
-import com.xborg.vendx.databinding.ItemCardBinding
 import kotlinx.android.synthetic.main.item_card.view.*
 
 private var TAG = "ItemCardAdapter"
@@ -59,20 +54,24 @@ class ItemCardAdapter(val items : List<Item>, val context: Context, val onitemLi
         val purchaseCount: TextView = view.purchase_count
         val itemLoc: TextView = view.item_loc
 
-        val onItemListener: OnItemListener = onItemListener
+        val itemRemoveButton: ImageView = view.remove_button
 
+        val onItemListener: OnItemListener = onItemListener
         init {
             itemView.setOnClickListener(this)
+            itemRemoveButton.setOnClickListener {
+                onItemListener.onItemRemovedFromCart(itemId.text.toString(), itemLoc.text.toString())
+            }
         }
 
         override fun onClick(v: View?) {
-            onItemListener.onItemClick(itemId.text.toString(), itemLoc.text.toString())
+            onItemListener.onItemAddedToCart(itemId.text.toString(), itemLoc.text.toString())
         }
-
     }
 
     interface OnItemListener {
-        fun onItemClick(itemId: String, itemLoc: String)
+        fun onItemAddedToCart(itemId: String, itemLoc: String)
+        fun onItemRemovedFromCart(itemId: String, itemLoc: String)
     }
 
 }

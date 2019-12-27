@@ -9,6 +9,8 @@ class SharedViewModel : ViewModel(){
     var machineItems = MutableLiveData<List<Item>>()
     var shelfItems = MutableLiveData<List<Item>>()
 
+    var cartItems = MutableLiveData<List<Map<Item, Int>>>()
+
     fun setMachineItems(machineItems:List<Item>){
         this.machineItems.value = machineItems
     }
