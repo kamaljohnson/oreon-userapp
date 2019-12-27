@@ -73,7 +73,7 @@ class HomeFragment : Fragment(), ItemCardAdapter.OnItemListener {
         }
     }
 
-    override fun onItemClick(position: Int) {
-        Log.i(TAG, "item at : $position clicked")
+    override fun onItemClick(itemId: String, itemLoc: String) {
+        Log.i(TAG, "item : $itemId from $itemLoc clicked")
     }
 }

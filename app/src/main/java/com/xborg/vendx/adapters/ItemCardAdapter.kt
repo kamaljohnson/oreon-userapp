@@ -45,8 +45,9 @@ class ItemCardAdapter(val items : List<Item>, val context: Context, val onitemLi
             .with(context)
             .load(item.imgScrUrl)
             .into(holder.image)
-    }
 
+        holder.itemLoc.text = if(item.inShelf) { "Shelf" } else { "Machine" }
+    }
 
     class ItemViewHolder (view: View, onItemListener: OnItemListener)
         : RecyclerView.ViewHolder(view), View.OnClickListener {
@@ -56,6 +57,7 @@ class ItemCardAdapter(val items : List<Item>, val context: Context, val onitemLi
         val image: ImageView = view.image
         val itemLimit: TextView = view.item_limit
         val purchaseCount: TextView = view.purchase_count
+        val itemLoc: TextView = view.item_loc
 
         val onItemListener: OnItemListener = onItemListener
 
@@ -64,13 +66,13 @@ class ItemCardAdapter(val items : List<Item>, val context: Context, val onitemLi
         }
 
         override fun onClick(v: View?) {
-            onItemListener.onItemClick(adapterPosition)
+            onItemListener.onItemClick(itemId.text.toString(), itemLoc.text.toString())
         }
 
     }
 
     interface OnItemListener {
-        fun onItemClick(position: Int)
+        fun onItemClick(itemId: String, itemLoc: String)
     }
 
 }
