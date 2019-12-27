@@ -17,9 +17,9 @@
         card_view:cardBackgroundColor="#fff">
 
         <RelativeLayout
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
             android:orientation="vertical">
 
             <androidx.recyclerview.widget.RecyclerView

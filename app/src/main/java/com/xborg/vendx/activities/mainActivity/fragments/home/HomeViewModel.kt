@@ -100,20 +100,30 @@ class HomeViewModel: ViewModel() {
             }
         }
 
-        val shelfItemsGroupModel = ItemGroupModel(
-            items = shelfItemsInMachine,
-            draw_line_breaker = true
-        )
-
-        val machineItemsGroupModel = ItemGroupModel(
-            items = machineItems.value!!,
-            draw_line_breaker = false
-        )
-
         val temp = ArrayList<ItemGroupModel>()
-        temp.add(shelfItemsGroupModel)
-        temp.add(machineItemsGroupModel)
 
+        if(shelfItemsInMachine.isNotEmpty()) {
+            val shelfItemsInMachineGroupModel = ItemGroupModel(
+                items = shelfItemsInMachine,
+                draw_line_breaker = machineItems.value!!.isNotEmpty()
+            )
+            temp.add(shelfItemsInMachineGroupModel)
+        }
+        if(machineItems.value!!.isNotEmpty()) {
+            val machineItemsGroupModel = ItemGroupModel(
+                items = machineItems.value!!,
+                draw_line_breaker = shelfItems.value!!.isNotEmpty()
+            )
+            temp.add(machineItemsGroupModel)
+        }
+        if(shelfItems.value!!.isNotEmpty()) {
+            val shelfItemsGroupModel = ItemGroupModel(
+                items = shelfItems.value!!,
+                draw_line_breaker = false
+            )
+            temp.add(shelfItemsGroupModel)
+        }
+        
         _allGroupItems.value = temp
     }
 

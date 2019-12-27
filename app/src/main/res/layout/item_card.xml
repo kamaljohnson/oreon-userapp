@@ -15,7 +15,7 @@
         android:layout_weight="0.33"
         style="?android:attr/ambientShadowAlpha"
         android:layout_marginHorizontal="5dp"
-        android:layout_marginVertical="5dp"
+        android:layout_marginVertical="10dp"
         android:translationZ="4dp"
         android:background="@drawable/rounded_card">
 
@@ -88,7 +88,6 @@
                 android:paddingLeft="8dp"
                 android:text="Item Name"
                 android:textSize="5pt">
-
             </TextView>
 
             <RelativeLayout
