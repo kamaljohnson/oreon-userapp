@@ -16,6 +16,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState
@@ -52,10 +55,10 @@ enum class Fragments {
 class MainActivity : FragmentActivity() {
 
     lateinit var binding: ActivityMainBinding
+    private lateinit var sharedViewModel: SharedViewModel
+    private lateinit var viewModel: MainActivityViewModel
 
     companion object{
-        var user_state: States =
-            States.NEW_SELECT
         var current_fragment: Fragments =
             Fragments.HOME
     }
@@ -65,6 +68,18 @@ class MainActivity : FragmentActivity() {
         setContentView(R.layout.activity_main)
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        viewModel = ViewModelProviders.of(this).get(MainActivityViewModel::class.java)
+        sharedViewModel = ViewModelProviders.of(this).get(SharedViewModel::class.java)
+
+        sharedViewModel.machineItems.observe(this, Observer {
+            Log.i(TAG, "machineItem has begin changed")
+            viewModel.updateCart()
+        })
+
+        sharedViewModel.shelfItems.observe(this, Observer {
+            Log.i(TAG, "shelfItems has begin changed")
+            viewModel.updateCart()
+        })
 
         initBottomNavigationView()
         initBottomSwipeUpView()
@@ -150,6 +165,7 @@ class MainActivity : FragmentActivity() {
     }
 
 //    region Activity Support functions
+
     private fun initBottomNavigationView() {
 
         val bottomNavigation = findViewById<BottomNavigationViewEx>(binding.bottomNavigation.id)

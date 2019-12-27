@@ -1,59 +1,48 @@
 package com.xborg.vendx.adapters
 
-import android.util.Log
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
+import android.widget.ImageView
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.xborg.vendx.R
 import com.xborg.vendx.models.ItemGroupModel
-import com.xborg.vendx.databinding.ItemGroupHolderBinding
+import kotlinx.android.synthetic.main.item_group_holder.view.*
 
-class ItemGroupAdapter: ListAdapter<ItemGroupModel, ItemGroupAdapter.GroupViewHolder>(GroupDiffCallback()){
+class ItemGroupAdapter(val items : ArrayList<ItemGroupModel>,
+                       val context: Context,
+                       val onItemListener: ItemCardAdapter.OnItemListener)
+    : RecyclerView.Adapter<ItemGroupAdapter.GroupViewHolder>() {
+
+    override fun getItemCount(): Int {
+        return items.size
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GroupViewHolder {
-        return GroupViewHolder.from(parent)
+        val view = LayoutInflater.from(context).inflate(R.layout.item_group_holder, parent, false)
+        return GroupViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: GroupViewHolder, position: Int) {
-        val parent = getItem(position)
-        holder.bind(parent)
-    }
+        val parent = items[position]
+        holder.groupItemsRV.apply {
+            layoutManager = GridLayoutManager(context, 3)
+            adapter = ItemCardAdapter(parent.items, context, onItemListener)
 
-    class GroupViewHolder(val binding: ItemGroupHolderBinding) : RecyclerView.ViewHolder(binding.root){
-
-        fun bind(parent: ItemGroupModel) {
-            binding.rvItemGroup.apply {
-                layoutManager = GridLayoutManager(context, 3)
-                adapter = ItemAdapter()
-                (adapter as ItemAdapter).submitList(parent.items)
-
-                Log.i("TAG", "onBindViewHolder")
-
-                if(!parent.draw_line_breaker) {
-                    binding.lineBreaker.visibility = View.INVISIBLE
-                }
+            if(!parent.draw_line_breaker) {
+                holder.itemView.line_breaker.visibility = View.INVISIBLE
             }
         }
-
-        companion object {
-            fun from(parent: ViewGroup): GroupViewHolder {
-                val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = ItemGroupHolderBinding.inflate(layoutInflater, parent, false)
-                return GroupViewHolder(binding)
-            }
-        }
-    }
-}
-
-class GroupDiffCallback: DiffUtil.ItemCallback<ItemGroupModel>() {
-    override fun areItemsTheSame(oldItem: ItemGroupModel, newItem: ItemGroupModel): Boolean {
-        return oldItem.items == newItem.items
+        holder.lineBreaker.visibility = if (parent.draw_line_breaker) { View.VISIBLE } else { View.INVISIBLE }
     }
 
-    override fun areContentsTheSame(oldItem: ItemGroupModel, newItem: ItemGroupModel): Boolean {
-        return oldItem == newItem
+    class GroupViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val groupItemsRV: RecyclerView = view.rv_item_group
+        val lineBreaker: ImageView = view.line_breaker
+
+        val context: Context = itemView.context
     }
+
 }

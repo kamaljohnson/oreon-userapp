@@ -1,4 +1,4 @@
-package com.xborg.vendx.activities.mainActivity.fragments
+package com.xborg.vendx.activities.mainActivity
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

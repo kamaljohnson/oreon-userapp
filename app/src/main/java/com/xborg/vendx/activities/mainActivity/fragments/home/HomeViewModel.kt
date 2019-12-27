@@ -25,9 +25,7 @@ class HomeViewModel: ViewModel() {
     var machineItems: MutableLiveData<List<Item>>
     var shelfItems: MutableLiveData<List<Item>>
 
-    private val _allGroupItems: MutableLiveData<ArrayList<ItemGroupModel>>
-    val allGroupItems: LiveData<ArrayList<ItemGroupModel>>
-        get() = _allGroupItems
+    public val allGroupItems: MutableLiveData<ArrayList<ItemGroupModel>>
 
     private var viewModelJob = Job()
     private var coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
@@ -35,7 +33,7 @@ class HomeViewModel: ViewModel() {
     init {
         Log.i(TAG, "HomeViewModel created!")
 
-        _allGroupItems = MutableLiveData()
+        allGroupItems = MutableLiveData()
         machineItems = MutableLiveData()
         shelfItems = MutableLiveData()
 
@@ -124,7 +122,7 @@ class HomeViewModel: ViewModel() {
             temp.add(shelfItemsGroupModel)
         }
         
-        _allGroupItems.value = temp
+        allGroupItems.value = temp
     }
 
     override fun onCleared() {

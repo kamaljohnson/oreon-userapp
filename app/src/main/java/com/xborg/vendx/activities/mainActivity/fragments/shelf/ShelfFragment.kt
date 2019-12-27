@@ -11,7 +11,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.xborg.vendx.R
 import com.xborg.vendx.adapters.ItemGroupAdapter
-import com.xborg.vendx.activities.mainActivity.fragments.SharedViewModel
+import com.xborg.vendx.activities.mainActivity.SharedViewModel
 import kotlinx.android.synthetic.main.fragment_shelf.*
 
 private var TAG = "ShelfFragment"
@@ -34,7 +34,7 @@ class ShelfFragment : Fragment() {
         viewModel.allGroupItems.observe(this, Observer {
             Log.i(TAG, "Shelf allGroupItems updated")
 
-            updateItemGroupToRV()
+//            updateItemGroupToRV()
         })
 
         return inflater.inflate(R.layout.fragment_shelf,container,false)
@@ -59,15 +59,14 @@ class ShelfFragment : Fragment() {
         })
     }
 
-    private fun updateItemGroupToRV() {
-        Log.i(TAG, "allGroupItems : ${viewModel.allGroupItems.value?.size} " + rv_shelf_items)
-        rv_shelf_items.apply {
-            layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-            adapter = ItemGroupAdapter()
-            (adapter as ItemGroupAdapter).submitList(viewModel.allGroupItems.value)
-        }
-
-        shelf_empty_container.visibility = View.GONE
-    }
+//    private fun updateItemGroupToRV() {
+//        Log.i(TAG, "allGroupItems : ${viewModel.allGroupItems.value?.size} " + rv_shelf_items)
+//        rv_shelf_items.apply {
+//            layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+//            adapter = ItemGroupAdapter()
+//        }
+//
+//        shelf_empty_container.visibility = View.GONE
+//    }
 
 }

@@ -12,12 +12,13 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.xborg.vendx.R
 import com.xborg.vendx.adapters.ItemGroupAdapter
-import com.xborg.vendx.activities.mainActivity.fragments.SharedViewModel
+import com.xborg.vendx.activities.mainActivity.SharedViewModel
+import com.xborg.vendx.adapters.ItemCardAdapter
 import com.xborg.vendx.databinding.FragmentHomeBinding
 
 private var TAG = "HomeFragment"
 
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(), ItemCardAdapter.OnItemListener {
 
     private lateinit var viewModel: HomeViewModel
     private lateinit var sharedViewModel: SharedViewModel
@@ -68,8 +69,11 @@ class HomeFragment : Fragment() {
 
         binding.rvMachineItems.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-            adapter = ItemGroupAdapter()
-            (adapter as ItemGroupAdapter).submitList(viewModel.allGroupItems.value)
+            adapter = ItemGroupAdapter(viewModel.allGroupItems.value!!, context, this@HomeFragment)
         }
+    }
+
+    override fun onItemClick(position: Int) {
+        Log.i(TAG, "item at : $position clicked")
     }
 }
