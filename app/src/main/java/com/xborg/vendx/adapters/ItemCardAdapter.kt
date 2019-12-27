@@ -57,25 +57,11 @@ class ItemAdapter: ListAdapter<Item, ItemAdapter.ItemViewHolder>(ItemDiffCallbac
                 binding.itemLimit.text =item.remainingInShelf.toString()
                 binding.itemLimit.visibility = View.VISIBLE
 
-                if (MainActivity.cart_items_from_shelf[item.id] != null) {
-                    binding.purchaseCount.text =
-                        MainActivity.cart_items_from_shelf[item.id].toString()
-                    if (binding.purchaseCount.text.toString() != "0") {
-                        binding.purchaseCount.visibility = View.VISIBLE
-                    }
-                }
 
             } else {
                 binding.cost.text = "₹ ${item.cost}"
                 binding.itemLimit.text = "10"
                 binding.itemLimit.visibility = View.INVISIBLE
-
-                if (MainActivity.cart_items[item.id] != null) {
-                    binding.purchaseCount.text = MainActivity.cart_items[item.id].toString()
-                    if (binding.purchaseCount.text.toString() != "0") {
-                        binding.purchaseCount.visibility = View.VISIBLE
-                    }
-                }
             }
 
             binding.image.isClickable = item.inMachine

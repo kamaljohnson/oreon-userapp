@@ -9,7 +9,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -17,9 +16,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.functions.FirebaseFunctions
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState
@@ -27,10 +23,8 @@ import com.xborg.vendx.BuildConfig
 import com.xborg.vendx.activities.mainActivity.fragments.home.HomeFragment
 import com.xborg.vendx.activities.mainActivity.fragments.shelf.ShelfFragment
 import com.xborg.vendx.activities.mainActivity.fragments.shop.ShopFragment
-import com.xborg.vendx.PaymentActivity
 import com.xborg.vendx.R
 import com.xborg.vendx.databinding.ActivityMainBinding
-import com.xborg.vendx.models.ItemModel
 import kotlinx.android.synthetic.main.activity_main.*
 
 private const val REQUEST_ENABLE_BT = 2
@@ -55,24 +49,11 @@ enum class Fragments {
     SHELF
 }
 
-@Suppress("UNREACHABLE_CODE", "NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS",
-    "UNUSED_ANONYMOUS_PARAMETER", "UNCHECKED_CAST"
-)
 class MainActivity : FragmentActivity() {
-
-    val db = FirebaseFirestore.getInstance()
-    lateinit var functions: FirebaseFunctions
 
     lateinit var binding: ActivityMainBinding
 
     companion object{
-        var items: List<ItemModel> = ArrayList()               //all the items in the inventory list
-        var cart_items_from_shelf: HashMap<String, Int> = HashMap()
-        var cart_items : HashMap<String, Int> = HashMap()          //list of item_ids added to cart along with number of purchases
-        var billing_cart : HashMap<String, Int> = HashMap()        //list of item_ids added to cart along with number of purchases
-
-        var get_button_lock : Boolean = false
-
         var user_state: States =
             States.NEW_SELECT
         var current_fragment: Fragments =
@@ -87,8 +68,6 @@ class MainActivity : FragmentActivity() {
 
         initBottomNavigationView()
         initBottomSwipeUpView()
-
-        functions = FirebaseFunctions.getInstance()
 
 // region Bluetooth Setup
         val bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
@@ -130,133 +109,6 @@ class MainActivity : FragmentActivity() {
         }
 //  endregion
 
-        clearCarts()
-
-        get_button.setOnClickListener{
-            if(cart_items.size == 0 && cart_items_from_shelf.size == 0) {
-                Toast.makeText(this, "Your Cart is Empty", Toast.LENGTH_SHORT).show()
-            } else {
-                get_button_lock = true
-                get_button.isEnabled = false
-
-                createBillingCart()
-
-                if(billing_cart.size == 0) {
-                    val order = HashMap<String, Any>()
-                    order["UID"] = FirebaseAuth.getInstance().uid.toString()
-                    order["Billing_Cart"] =
-                        billing_cart
-                    order["Cart"] =
-                        cart_items
-                    order["Status"] = "From Shelf"
-
-                    db.collection("Orders")
-                        .add(order)
-                        .addOnSuccessListener { orderRef ->
-                            Log.d(TAG, "billReference created with ID: ${orderRef.id}")
-
-                            val order_id = orderRef.id
-
-                            val intent = Intent(this, PaymentActivity::class.java)
-                            intent.putExtra("order_id", order_id)
-                            intent.putExtra("cart_items",
-                                cart_items
-                            )
-                            startActivity(intent)
-                        }
-                        .addOnFailureListener{
-                            Log.d(TAG, "Failed to place order")
-                        }
-
-                } else {
-                    val order = HashMap<String, Any>()
-                    order["UID"] = FirebaseAuth.getInstance().uid.toString()
-                    order["Billing_Cart"] =
-                        billing_cart
-                    order["Cart"] =
-                        cart_items
-                    order["Status"] = "Payment Pending"
-
-                    db.collection("Orders")
-                        .add(order)
-                        .addOnSuccessListener { orderRef ->
-                            Log.d(TAG, "billReference created with ID: ${orderRef.id}")
-
-                            val order_id = orderRef.id
-
-                            val intent = Intent(this, PaymentActivity::class.java)
-                            intent.putExtra("order_id", order_id)
-                            intent.putExtra("cart_items",
-                                cart_items
-                            )
-                            intent.putExtra("billing_cart",
-                                billing_cart
-                            )
-                            startActivity(intent)
-
-                        }
-                        .addOnFailureListener{
-                            Log.d(TAG, "Failed to place order")
-                        }
-                }
-            }
-        }
-
-    }
-
-    override fun onResume() {
-        super.onResume()
-        get_button_lock = false
-        when(user_state) {
-            States.CHECKOUT -> {
-                user_state =
-                    States.CONTINUE_SELECT
-            }
-            else -> {
-
-            }
-        }
-    }
-
-    /**
-     * calculates the billing_cart using
-     *  - cart_items
-     *  - shelf_items
-     * the billing_cart is used in PaymentActivity
-     */
-    private fun createBillingCart() {
-        cart_items.forEach { item ->    //key: id, value: count
-            val id = item.key
-            val count = item.value
-            billing_cart[id] = count
-        }
-
-        cart_items_from_shelf.forEach { item ->    //key: id, value: count
-            val id = item.key
-            var count = item.value
-            if(cart_items.containsKey(id)) {
-                count += cart_items[id]!!
-            }
-            cart_items[id] = count
-        }
-    }
-
-    /**
-     * clears
-     *  - shelf_items
-     *  - cart_items
-     *  - cart_items_from_shelf
-     *  - billing_cart
-     *  - rv_items_list
-     * called when activity is
-     *  - created
-     *  - restarted
-     */
-    private fun clearCarts() {
-        cart_items.clear()
-        cart_items_from_shelf.clear()
-        billing_cart.clear()
-        Log.e(TAG, "called clear cart")
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
