@@ -1,4 +1,4 @@
-package com.xborg.vendx.Bluetooth
+package com.xborg.vendx.bluetooth
 
 import android.Manifest
 import android.annotation.SuppressLint

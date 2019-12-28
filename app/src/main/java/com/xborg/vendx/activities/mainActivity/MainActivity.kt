@@ -11,7 +11,6 @@ import android.util.Log
 import android.view.View
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
@@ -26,7 +25,6 @@ import com.xborg.vendx.activities.mainActivity.fragments.home.HomeFragment
 import com.xborg.vendx.activities.mainActivity.fragments.shelf.ShelfFragment
 import com.xborg.vendx.activities.mainActivity.fragments.shop.ShopFragment
 import com.xborg.vendx.R
-import com.xborg.vendx.databinding.ActivityMainBinding
 import kotlinx.android.synthetic.main.activity_main.*
 
 private const val REQUEST_ENABLE_BT = 2
@@ -53,7 +51,6 @@ enum class Fragments {
 
 class MainActivity : FragmentActivity() {
 
-    lateinit var binding: ActivityMainBinding
     private lateinit var sharedViewModel: SharedViewModel
     private lateinit var viewModel: MainActivityViewModel
 
@@ -66,7 +63,6 @@ class MainActivity : FragmentActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         viewModel = ViewModelProviders.of(this).get(MainActivityViewModel::class.java)
         sharedViewModel = ViewModelProviders.of(this).get(SharedViewModel::class.java)
 
@@ -191,7 +187,7 @@ class MainActivity : FragmentActivity() {
 
     private fun initBottomNavigationView() {
 
-        val bottomNavigation = findViewById<BottomNavigationViewEx>(binding.bottomNavigation.id)
+        val bottomNavigation = findViewById<BottomNavigationViewEx>(bottom_navigation.id)
         bottomNavigation.enableAnimation(false)
         bottomNavigation.enableItemShiftingMode(false)
         bottomNavigation.enableShiftingMode(false)
@@ -244,7 +240,7 @@ class MainActivity : FragmentActivity() {
         var tempFragment: Fragment? = fragmentManager.findFragmentByTag(tagFragmentName)
         if (tempFragment == null) {
             tempFragment = fragment
-            fragmentTransaction.add(binding.fragmentContainer.id, tempFragment, tagFragmentName)
+            fragmentTransaction.add(fragment_container.id, tempFragment, tagFragmentName)
         } else {
             fragmentTransaction.show(tempFragment)
         }
@@ -256,7 +252,7 @@ class MainActivity : FragmentActivity() {
     }
 
     private fun initBottomSwipeUpView() {
-        mLayout = findViewById(binding.bottomSlideUpContainer.id)
+        mLayout = findViewById(bottom_slide_up_container.id)
         mLayout!!.anchorPoint = 0.2f
 
         mLayout!!.addPanelSlideListener(object : SlidingUpPanelLayout.PanelSlideListener {
