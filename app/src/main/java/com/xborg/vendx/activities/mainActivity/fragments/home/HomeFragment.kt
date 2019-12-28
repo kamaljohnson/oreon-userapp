@@ -35,33 +35,34 @@ class HomeFragment : Fragment(), ItemCardAdapter.OnItemListener {
         Log.i(TAG, "onCreateView called!")
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
-        viewModel = ViewModelProviders.of(this).get(HomeViewModel::class.java)
-
-//        MainActivity.items = viewModel.machineItems      //TODO: this code needed to be changed in the future
-
-        viewModel.allGroupItems.observe(this, Observer {
-            Log.i(TAG, "allGroupItems updated")
-            updateItemGroupToRV()
-        })
-
         return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        viewModel = ViewModelProviders.of(activity!!).get(HomeViewModel::class.java)
         sharedViewModel = ViewModelProviders.of(activity!!).get(SharedViewModel::class.java)
 
+        viewModel.allGroupItems.observe(viewLifecycleOwner, Observer {
+            Log.i(TAG, "allGroupItems updated")
+            updateItemGroupToRV()
+        })
         viewModel.machineItems.observe(viewLifecycleOwner, Observer {
             Log.i(TAG, "machineItemList Updated")
 
             sharedViewModel.setMachineItems(viewModel.machineItems.value!!)
         })
-
         viewModel.shelfItems.observe(viewLifecycleOwner, Observer {
             Log.i(TAG, "shelfItemList Updated")
 
             sharedViewModel.setShelfItems(viewModel.shelfItems.value!!)
         })
+        sharedViewModel.cartItem.observe(viewLifecycleOwner, Observer { updatedCart ->
+            Log.i(TAG, "cart updated : $updatedCart")
+
+        })
+
     }
 
     private fun updateItemGroupToRV() {
@@ -75,7 +76,6 @@ class HomeFragment : Fragment(), ItemCardAdapter.OnItemListener {
 
     override fun onItemAddedToCart(itemId: String, itemLoc: String) {
         Log.i(TAG, "item : $itemId from $itemLoc added to cart")
-        Log.i(TAG, "cart updated: ${sharedViewModel.cartItems.value!!}")
         sharedViewModel.addItemToCart(itemId, itemLoc)
 
     }

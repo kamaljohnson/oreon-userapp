@@ -17,7 +17,6 @@ import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
@@ -81,7 +80,7 @@ class MainActivity : FragmentActivity() {
             viewModel.updateCart()
         })
 
-        sharedViewModel.cartItems.observe(this, Observer { updatedCart ->
+        sharedViewModel.cartItem.observe(this, Observer { updatedCart ->
             Log.i(TAG, "cart updated: $updatedCart")
         })
 
