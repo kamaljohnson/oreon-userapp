@@ -57,6 +57,7 @@
                 android:layout_margin="2pt"
                 android:gravity="center"
                 android:textStyle="bold"
+
                 android:background="@drawable/item_count_background"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentLeft="true"/>

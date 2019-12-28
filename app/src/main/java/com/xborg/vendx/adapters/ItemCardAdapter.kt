@@ -57,15 +57,41 @@ class ItemCardAdapter(val items : List<Item>, val context: Context, val onitemLi
         val itemRemoveButton: ImageView = view.remove_button
 
         val onItemListener: OnItemListener = onItemListener
+
         init {
+            purchaseCount.visibility = View.INVISIBLE
+            itemRemoveButton.visibility = View.INVISIBLE
+
             itemView.setOnClickListener(this)
             itemRemoveButton.setOnClickListener {
-                onItemListener.onItemRemovedFromCart(itemId.text.toString(), itemLoc.text.toString())
+                removeItemFromCart()
             }
         }
 
         override fun onClick(v: View?) {
+            addItemToCart()
+        }
+
+        private fun addItemToCart() {
             onItemListener.onItemAddedToCart(itemId.text.toString(), itemLoc.text.toString())
+            var count = purchaseCount.text.toString().toInt()
+            if(count == 0) {
+                purchaseCount.visibility = View.VISIBLE
+                itemRemoveButton.visibility = View.VISIBLE
+            }
+            count += 1
+            purchaseCount.text = count.toString()
+        }
+
+        private fun removeItemFromCart() {
+            onItemListener.onItemRemovedFromCart(itemId.text.toString(), itemLoc.text.toString())
+            var count = purchaseCount.text.toString().toInt()
+            count -= 1
+            purchaseCount.text = count.toString()
+            if(count == 0) {
+                purchaseCount.visibility = View.INVISIBLE
+                itemRemoveButton.visibility = View.INVISIBLE
+            }
         }
     }
 
