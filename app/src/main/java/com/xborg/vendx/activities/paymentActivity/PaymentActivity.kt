@@ -3,6 +3,7 @@ package com.xborg.vendx.activities.paymentActivity
 import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.xborg.vendx.R
@@ -10,11 +11,16 @@ import com.xborg.vendx.activities.paymentActivity.fragments.addPromotions.AddPro
 import com.xborg.vendx.activities.paymentActivity.fragments.cart.CartFragment
 import com.xborg.vendx.activities.paymentActivity.fragments.paymentMethods.PaymentMethodsFragment
 
+const val TAG = "PaymentActivity"
+
 class PaymentActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_payment)
+
+        val cartItemsString = intent.getStringExtra("cartItems")
+        Log.i(TAG, cartItemsString)
         loadInitialFragments()
     }
 
@@ -22,19 +28,16 @@ class PaymentActivity : AppCompatActivity() {
     private fun loadInitialFragments() {
         val fragmentManager: FragmentManager = supportFragmentManager
 
-        val addPromotionsFragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
+        val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
+
         val addPromotionsFragment = AddPromotionsFragment()
-        addPromotionsFragmentTransaction.add(R.id.promotion_fragment_container, addPromotionsFragment)
-        addPromotionsFragmentTransaction.commit()
-
-        val cartFragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
         val cartFragment = CartFragment()
-        cartFragmentTransaction.add(R.id.cart_fragment_container, cartFragment)
-        cartFragmentTransaction.commit()
-
-        val paymentFragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
         val paymentMethodsFragment = PaymentMethodsFragment()
-        paymentFragmentTransaction.add(R.id.payment_method_fragment_container, paymentMethodsFragment)
-        paymentFragmentTransaction.commit()
+
+        fragmentTransaction.add(R.id.promotion_fragment_container, addPromotionsFragment)
+        fragmentTransaction.add(R.id.cart_fragment_container, cartFragment)
+        fragmentTransaction.add(R.id.payment_method_fragment_container, paymentMethodsFragment)
+        fragmentTransaction.commit()
+
     }
 }

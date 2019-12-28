@@ -138,6 +138,7 @@ class MainActivity : FragmentActivity() {
         get_button.setOnClickListener {
             // TODO: use navigation graphs instead
             val intent = Intent(this, PaymentActivity::class.java)
+            intent.putExtra("cartItems", sharedViewModel.cartItem.value.toString())
             startActivity(intent)
         }
 
