@@ -4,17 +4,8 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.google.firebase.auth.FirebaseAuth
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.xborg.vendx.database.Item
-import com.xborg.vendx.database.ItemList
-import com.xborg.vendx.models.ItemGroupModel
-import com.xborg.vendx.network.VendxApi
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import com.xborg.vendx.database.ItemGroup
 
 private const val TAG = "ShelfViewModel"
 
@@ -23,8 +14,8 @@ class ShelfViewModel: ViewModel() {
     var shelfItems: List<Item> = ArrayList()
     var machineItems: List<Item> = ArrayList()
 
-    private val _allGroupItems: MutableLiveData<ArrayList<ItemGroupModel>>
-    val allGroupItems: LiveData<ArrayList<ItemGroupModel>>
+    private val _allGroupItems: MutableLiveData<ArrayList<ItemGroup>>
+    val allGroupItems: LiveData<ArrayList<ItemGroup>>
         get() = _allGroupItems
 
     init {
@@ -43,12 +34,12 @@ class ShelfViewModel: ViewModel() {
             }
         }
 
-        val shelfItemsGroupModel = ItemGroupModel(
+        val shelfItemsGroupModel = ItemGroup(
             items = shelfItems,
             draw_line_breaker = false
         )
 
-        val temp = ArrayList<ItemGroupModel>()
+        val temp = ArrayList<ItemGroup>()
         temp.add(shelfItemsGroupModel)
 
         _allGroupItems.value = temp

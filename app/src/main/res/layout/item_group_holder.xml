@@ -5,7 +5,7 @@
     <data>
         <variable
             name="group_holder"
-            type="com.xborg.vendx.models.ItemGroupModel" />
+            type="com.xborg.vendx.database.ItemGroup" />
     </data>
 
     <androidx.cardview.widget.CardView

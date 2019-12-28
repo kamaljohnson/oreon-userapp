@@ -54,7 +54,7 @@
             android:name=".models.ItemModel"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".models.ItemGroupModel"
+            android:name=".database.ItemGroup"
             android:screenOrientation="portrait" />
     </application>
 

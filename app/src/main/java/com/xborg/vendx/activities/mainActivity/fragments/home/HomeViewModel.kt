@@ -8,7 +8,7 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.xborg.vendx.database.Item
 import com.xborg.vendx.database.ItemList
-import com.xborg.vendx.models.ItemGroupModel
+import com.xborg.vendx.database.ItemGroup
 import com.xborg.vendx.network.VendxApi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -24,7 +24,7 @@ class HomeViewModel : ViewModel() {
     var machineItems: MutableLiveData<List<Item>>
     var shelfItems: MutableLiveData<List<Item>>
 
-    public val allGroupItems: MutableLiveData<ArrayList<ItemGroupModel>>
+    public val allGroupItems: MutableLiveData<ArrayList<ItemGroup>>
 
     private var viewModelJob = Job()
     private var coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
@@ -99,24 +99,25 @@ class HomeViewModel : ViewModel() {
             }
         }
 
-        val temp = ArrayList<ItemGroupModel>()
+        val temp = ArrayList<ItemGroup>()
 
         if (shelfItemsInMachine.isNotEmpty()) {
-            val shelfItemsInMachineGroupModel = ItemGroupModel(
-                items = shelfItemsInMachine,
-                draw_line_breaker = machineItems.value!!.isNotEmpty()
-            )
+            val shelfItemsInMachineGroupModel =
+                ItemGroup(
+                    items = shelfItemsInMachine,
+                    draw_line_breaker = machineItems.value!!.isNotEmpty()
+                )
             temp.add(shelfItemsInMachineGroupModel)
         }
         if (machineItems.value!!.isNotEmpty()) {
-            val machineItemsGroupModel = ItemGroupModel(
+            val machineItemsGroupModel = ItemGroup(
                 items = machineItems.value!!,
                 draw_line_breaker = shelfItems.value!!.isNotEmpty()
             )
             temp.add(machineItemsGroupModel)
         }
         if (shelfItems.value!!.isNotEmpty()) {
-            val shelfItemsGroupModel = ItemGroupModel(
+            val shelfItemsGroupModel = ItemGroup(
                 items = shelfItems.value!!,
                 draw_line_breaker = false
             )

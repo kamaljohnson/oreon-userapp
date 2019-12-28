@@ -8,11 +8,11 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.xborg.vendx.R
-import com.xborg.vendx.models.ItemGroupModel
+import com.xborg.vendx.database.ItemGroup
 import kotlinx.android.synthetic.main.item_group_holder.view.*
 
 class ItemGroupAdapter(
-    val items: ArrayList<ItemGroupModel>,
+    val items: ArrayList<ItemGroup>,
     val context: Context,
     val onItemListener: ItemCardAdapter.OnItemListener
 ) : RecyclerView.Adapter<ItemGroupAdapter.GroupViewHolder>() {
