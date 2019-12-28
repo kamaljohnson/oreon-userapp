@@ -19,8 +19,9 @@ class PaymentActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_payment)
 
-        val cartItemsString = intent.getStringExtra("cartItems")
-        Log.i(TAG, cartItemsString)
+        val cartItemsString = intent.getSerializableExtra("cartItems")
+        Log.i(TAG, cartItemsString.toString())
+
         loadInitialFragments()
     }
 

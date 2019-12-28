@@ -138,10 +138,10 @@ class MainActivity : FragmentActivity() {
         get_button.setOnClickListener {
             // TODO: use navigation graphs instead
             val intent = Intent(this, PaymentActivity::class.java)
-            intent.putExtra("cartItems", sharedViewModel.cartItem.value.toString())
+            val cartItemHashMap: HashMap<String, Int> = sharedViewModel.cartItem.value as HashMap<String, Int>
+            intent.putExtra("cartItems", cartItemHashMap)
             startActivity(intent)
         }
-
     }
 
     override fun onRequestPermissionsResult(
