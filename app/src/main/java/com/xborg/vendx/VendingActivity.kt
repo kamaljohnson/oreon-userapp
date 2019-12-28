@@ -1,22 +1,10 @@
 package com.xborg.vendx
 
-import android.bluetooth.BluetoothAdapter
-import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.xborg.vendx.adapters.ItemSlipAdapter
-import kotlinx.android.synthetic.main.activity_vending.*
-import java.util.*
-import kotlin.collections.HashMap
+
 
 import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothService
 import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothStatus
-import com.xborg.vendx.models.ItemModel
 
 private var TAG = "VendingActivity"
 

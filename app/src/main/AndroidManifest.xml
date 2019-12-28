@@ -4,7 +4,6 @@
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-    <uses-permission android:name="android.permission.BLUETOOTH_PRIVILEGED" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -18,7 +17,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.paymentActivity.PaymentActivity"></activity>
+        <activity
+            android:name=".activities.paymentActivity.PaymentActivity"/>
         <activity
             android:name=".LoginActivity"
             android:screenOrientation="portrait">
@@ -32,10 +32,6 @@
             android:name=".activities.mainActivity.MainActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".PaymentActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".VendingActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -44,14 +40,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ItemInfoActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".Bluetooth.BluetoothConnectionActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".models.ItemModel"
             android:screenOrientation="portrait" />
         <activity
             android:name=".database.ItemGroup"
