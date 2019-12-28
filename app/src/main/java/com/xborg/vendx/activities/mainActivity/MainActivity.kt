@@ -25,6 +25,7 @@ import com.xborg.vendx.activities.mainActivity.fragments.home.HomeFragment
 import com.xborg.vendx.activities.mainActivity.fragments.shelf.ShelfFragment
 import com.xborg.vendx.activities.mainActivity.fragments.shop.ShopFragment
 import com.xborg.vendx.R
+import com.xborg.vendx.activities.paymentActivity.PaymentActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
 private const val REQUEST_ENABLE_BT = 2
@@ -77,7 +78,7 @@ class MainActivity : FragmentActivity() {
         })
 
         sharedViewModel.cartItem.observe(this, Observer { updatedCart ->
-            Log.i(TAG, "cart updated: $updatedCart")
+            Log.i(TAG, "CartFragment updated: $updatedCart")
         })
 
         initBottomNavigationView()
@@ -133,6 +134,12 @@ class MainActivity : FragmentActivity() {
             Log.e(TAG, "bluetooth permission already granted")
         }
 //  endregion
+
+        get_button.setOnClickListener {
+            // TODO: use navigation graphs instead
+            val intent = Intent(this, PaymentActivity::class.java)
+            startActivity(intent)
+        }
 
     }
 
@@ -248,7 +255,6 @@ class MainActivity : FragmentActivity() {
         fragmentTransaction.setPrimaryNavigationFragment(tempFragment)
         fragmentTransaction.setReorderingAllowed(true)
         fragmentTransaction.commitNowAllowingStateLoss()
-
     }
 
     private fun initBottomSwipeUpView() {
