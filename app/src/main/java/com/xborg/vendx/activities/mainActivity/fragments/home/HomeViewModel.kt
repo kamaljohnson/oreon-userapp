@@ -1,7 +1,6 @@
 package com.xborg.vendx.activities.mainActivity.fragments.home
 
 import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
@@ -18,7 +17,7 @@ import kotlinx.coroutines.launch
 
 private const val TAG = "HomeViewModel"
 
-class HomeViewModel: ViewModel() {
+class HomeViewModel : ViewModel() {
 
     val uid = FirebaseAuth.getInstance().uid.toString()
 
@@ -55,7 +54,8 @@ class HomeViewModel: ViewModel() {
                     .add(KotlinJsonAdapterFactory())
                     .build()
 
-                machineItems.value = moshi.adapter(ItemList::class.java).fromJson(listResult)!!.items
+                machineItems.value =
+                    moshi.adapter(ItemList::class.java).fromJson(listResult)!!.items
 
                 updateItemGroupModel()
             } catch (t: Throwable) {
@@ -84,15 +84,16 @@ class HomeViewModel: ViewModel() {
         }
     }
 
-    fun updateItemGroupModel(){
+    fun updateItemGroupModel() {
 
         val shelfItemsInMachine: ArrayList<Item> = ArrayList()
 
-        for(i in machineItems.value!!.indices ) {
-            for(j in shelfItems.value!!.indices) {
-                if(machineItems.value!![i].id == shelfItems.value!![j].id) {
+        for (i in machineItems.value!!.indices) {
+            for (j in shelfItems.value!!.indices) {
+                if (machineItems.value!![i].id == shelfItems.value!![j].id) {
                     shelfItems.value!![j].inMachine = true
-                    shelfItems.value!![j].remainingInMachine = machineItems.value!![i].remainingInMachine
+                    shelfItems.value!![j].remainingInMachine =
+                        machineItems.value!![i].remainingInMachine
                     shelfItemsInMachine.add(shelfItems.value!![j])
                 }
             }
@@ -100,28 +101,28 @@ class HomeViewModel: ViewModel() {
 
         val temp = ArrayList<ItemGroupModel>()
 
-        if(shelfItemsInMachine.isNotEmpty()) {
+        if (shelfItemsInMachine.isNotEmpty()) {
             val shelfItemsInMachineGroupModel = ItemGroupModel(
                 items = shelfItemsInMachine,
                 draw_line_breaker = machineItems.value!!.isNotEmpty()
             )
             temp.add(shelfItemsInMachineGroupModel)
         }
-        if(machineItems.value!!.isNotEmpty()) {
+        if (machineItems.value!!.isNotEmpty()) {
             val machineItemsGroupModel = ItemGroupModel(
                 items = machineItems.value!!,
                 draw_line_breaker = shelfItems.value!!.isNotEmpty()
             )
             temp.add(machineItemsGroupModel)
         }
-        if(shelfItems.value!!.isNotEmpty()) {
+        if (shelfItems.value!!.isNotEmpty()) {
             val shelfItemsGroupModel = ItemGroupModel(
                 items = shelfItems.value!!,
                 draw_line_breaker = false
             )
             temp.add(shelfItemsGroupModel)
         }
-        
+
         allGroupItems.value = temp
     }
 

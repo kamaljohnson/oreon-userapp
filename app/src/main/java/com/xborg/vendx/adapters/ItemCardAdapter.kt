@@ -15,7 +15,11 @@ import kotlinx.android.synthetic.main.item_card.view.*
 
 private var TAG = "ItemCardAdapter"
 
-class ItemCardAdapter(val items : List<Item>, val context: Context, val onitemListener: OnItemListener) :
+class ItemCardAdapter(
+    val items: List<Item>,
+    val context: Context,
+    val onitemListener: OnItemListener
+) :
     RecyclerView.Adapter<ItemCardAdapter.ItemViewHolder>() {
 
     val onItemListener: OnItemListener = onitemListener
@@ -40,15 +44,24 @@ class ItemCardAdapter(val items : List<Item>, val context: Context, val onitemLi
             .load(item.imgScrUrl)
             .into(holder.image)
 
-        holder.itemLoc.text = if(item.inShelf) { "Shelf" } else { "Machine" }
+        holder.itemLoc.text = if (item.inShelf) {
+            "Shelf"
+        } else {
+            "Machine"
+        }
+
         holder.itemsInMachine.text = item.remainingInMachine.toString()
         holder.itemsInShelf.text = item.remainingInShelf.toString()
-        holder.itemsInShelf.visibility = if(item.remainingInShelf == 0) { View.INVISIBLE } else {View.VISIBLE }
+        holder.itemsInShelf.visibility = if (item.remainingInShelf == 0) {
+            View.INVISIBLE
+        } else {
+            View.VISIBLE
+        }
     }
 
     @SuppressLint("SetTextI18n")
-    class ItemViewHolder (view: View, onItemListener: OnItemListener)
-        : RecyclerView.ViewHolder(view), View.OnClickListener {
+    class ItemViewHolder(view: View, onItemListener: OnItemListener) :
+        RecyclerView.ViewHolder(view), View.OnClickListener {
         val itemId: TextView = view.item_id
         val name: TextView = view.name
         val cost: TextView = view.cost
@@ -82,11 +95,11 @@ class ItemCardAdapter(val items : List<Item>, val context: Context, val onitemLi
             var purchaseCount = this.purchaseCount.text.toString().split("/")[0].toInt()
             val purchaseLimitCount = this.purchaseCount.text.toString().split("/")[1].toInt()
 
-            if(purchaseLimitCount == purchaseCount) {
+            if (purchaseLimitCount == purchaseCount) {
                 return
             }
 
-            if(purchaseCount == 0) {
+            if (purchaseCount == 0) {
                 this.purchaseCount.visibility = View.VISIBLE
                 itemRemoveButton.visibility = View.VISIBLE
             }
@@ -101,7 +114,7 @@ class ItemCardAdapter(val items : List<Item>, val context: Context, val onitemLi
 
             purchaseCount -= 1
             this.purchaseCount.text = "$purchaseCount/$purchaseLimitCount"
-            if(purchaseCount == 0) {
+            if (purchaseCount == 0) {
                 this.purchaseCount.visibility = View.INVISIBLE
                 itemRemoveButton.visibility = View.INVISIBLE
             }

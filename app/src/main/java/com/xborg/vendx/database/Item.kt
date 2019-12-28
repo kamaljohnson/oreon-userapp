@@ -9,19 +9,19 @@ enum class ItemCategory {
     Other
 }
 
-data class Item (
-    @Json(name = "Id")                          var id: String,
-    @Json(name = "Name")                        var name: String,
-    @Json(name = "Cost")                        var cost: Long,
-    @Json(name = "Image")                       var imgScrUrl: String,
-    @Json(name = "Category")                    var category: ItemCategory,
+data class Item(
+    @Json(name = "Id") var id: String,
+    @Json(name = "Name") var name: String,
+    @Json(name = "Cost") var cost: Long,
+    @Json(name = "Image") var imgScrUrl: String,
+    @Json(name = "Category") var category: ItemCategory,
 
-    @Json(name = "InShelf")                     var inShelf: Boolean = false,
-    @Json(name = "InMachine")                   var inMachine: Boolean = false,
-    @Json(name = "RemainingInMachine")          var remainingInMachine: Int = 0,
-    @Json(name = "RemainingInShelf")            var remainingInShelf: Int = 0
+    @Json(name = "InShelf") var inShelf: Boolean = false,
+    @Json(name = "InMachine") var inMachine: Boolean = false,
+    @Json(name = "RemainingInMachine") var remainingInMachine: Int = 0,
+    @Json(name = "RemainingInShelf") var remainingInShelf: Int = 0
 )
 
-data class ItemList (
+data class ItemList(
     var items: List<Item>
 )

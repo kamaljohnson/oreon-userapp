@@ -11,10 +11,11 @@ import com.xborg.vendx.R
 import com.xborg.vendx.models.ItemGroupModel
 import kotlinx.android.synthetic.main.item_group_holder.view.*
 
-class ItemGroupAdapter(val items : ArrayList<ItemGroupModel>,
-                       val context: Context,
-                       val onItemListener: ItemCardAdapter.OnItemListener)
-    : RecyclerView.Adapter<ItemGroupAdapter.GroupViewHolder>() {
+class ItemGroupAdapter(
+    val items: ArrayList<ItemGroupModel>,
+    val context: Context,
+    val onItemListener: ItemCardAdapter.OnItemListener
+) : RecyclerView.Adapter<ItemGroupAdapter.GroupViewHolder>() {
 
     override fun getItemCount(): Int {
         return items.size
@@ -31,11 +32,15 @@ class ItemGroupAdapter(val items : ArrayList<ItemGroupModel>,
             layoutManager = GridLayoutManager(context, 3)
             adapter = ItemCardAdapter(parent.items, context, onItemListener)
 
-            if(!parent.draw_line_breaker) {
+            if (!parent.draw_line_breaker) {
                 holder.itemView.line_breaker.visibility = View.INVISIBLE
             }
         }
-        holder.lineBreaker.visibility = if (parent.draw_line_breaker) { View.VISIBLE } else { View.INVISIBLE }
+        holder.lineBreaker.visibility = if (parent.draw_line_breaker) {
+            View.VISIBLE
+        } else {
+            View.INVISIBLE
+        }
     }
 
     class GroupViewHolder(view: View) : RecyclerView.ViewHolder(view) {

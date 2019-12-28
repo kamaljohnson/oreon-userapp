@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.xborg.vendx.database.Item
 
-class SharedViewModel : ViewModel(){
+class SharedViewModel : ViewModel() {
 
     var machineItems = MutableLiveData<List<Item>>()
     var shelfItems = MutableLiveData<List<Item>>()
@@ -19,10 +19,11 @@ class SharedViewModel : ViewModel(){
         _cartItems.value = mutableMapOf()
     }
 
-    fun setMachineItems(machineItems:List<Item>){
+    fun setMachineItems(machineItems: List<Item>) {
         this.machineItems.value = machineItems
     }
-    fun setShelfItems(shelfItems:List<Item>){
+
+    fun setShelfItems(shelfItems: List<Item>) {
         this.shelfItems.value = shelfItems
     }
 
@@ -31,7 +32,7 @@ class SharedViewModel : ViewModel(){
 
         val tempCart = _cartItems.value
 
-        if(tempCart!!.containsKey(sudoItemId)) {
+        if (tempCart!!.containsKey(sudoItemId)) {
             val count = tempCart[sudoItemId]!! + 1
             tempCart[sudoItemId] = count
         } else {
@@ -46,10 +47,10 @@ class SharedViewModel : ViewModel(){
 
         val tempCart = _cartItems.value
 
-        if(tempCart!!.containsKey(sudoItemId)) {
+        if (tempCart!!.containsKey(sudoItemId)) {
             val count = tempCart[sudoItemId]!! - 1
             tempCart[sudoItemId] = count
-            if(tempCart[sudoItemId] == 0) {
+            if (tempCart[sudoItemId] == 0) {
                 tempCart.remove(sudoItemId)
             }
         } else {

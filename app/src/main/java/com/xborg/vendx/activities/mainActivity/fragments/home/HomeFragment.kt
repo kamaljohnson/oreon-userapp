@@ -31,7 +31,11 @@ class HomeFragment : Fragment(), ItemCardAdapter.OnItemListener {
 
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         Log.i(TAG, "onCreateView called!")
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
@@ -66,7 +70,10 @@ class HomeFragment : Fragment(), ItemCardAdapter.OnItemListener {
     }
 
     private fun updateItemGroupToRV() {
-        Log.i(TAG, "allGroupItems : ${viewModel.allGroupItems.value?.size} " + binding.rvMachineItems)
+        Log.i(
+            TAG,
+            "allGroupItems : ${viewModel.allGroupItems.value?.size} " + binding.rvMachineItems
+        )
 
         binding.rvMachineItems.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
