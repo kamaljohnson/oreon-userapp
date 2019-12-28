@@ -81,6 +81,10 @@ class MainActivity : FragmentActivity() {
             viewModel.updateCart()
         })
 
+        sharedViewModel.cartItems.observe(this, Observer { updatedCart ->
+            Log.i(TAG, "cart updated: $updatedCart")
+        })
+
         initBottomNavigationView()
         initBottomSwipeUpView()
 

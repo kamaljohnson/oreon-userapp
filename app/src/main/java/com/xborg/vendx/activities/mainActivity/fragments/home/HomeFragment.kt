@@ -75,9 +75,13 @@ class HomeFragment : Fragment(), ItemCardAdapter.OnItemListener {
 
     override fun onItemAddedToCart(itemId: String, itemLoc: String) {
         Log.i(TAG, "item : $itemId from $itemLoc added to cart")
+        Log.i(TAG, "cart updated: ${sharedViewModel.cartItems.value!!}")
+        sharedViewModel.addItemToCart(itemId, itemLoc)
+
     }
 
     override fun onItemRemovedFromCart(itemId: String, itemLoc: String) {
         Log.i(TAG, "item : $itemId from $itemLoc removed from cart")
+        sharedViewModel.removeItemFromCart(itemId, itemLoc)
     }
 }
