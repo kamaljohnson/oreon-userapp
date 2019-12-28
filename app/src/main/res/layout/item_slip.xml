@@ -20,7 +20,7 @@
         </ImageView>
 
         <TextView
-            android:id="@+id/item_limit"
+            android:id="@+id/items_in_shelf"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:text="0"

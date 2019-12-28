@@ -18,8 +18,8 @@ data class Item (
 
     @Json(name = "InShelf")                     var inShelf: Boolean = false,
     @Json(name = "InMachine")                   var inMachine: Boolean = false,
-    @Json(name = "RemainingInMachine")          var remainingInMachine: Long = 0,
-    @Json(name = "RemainingInShelf")            var remainingInShelf: Long = 0
+    @Json(name = "RemainingInMachine")          var remainingInMachine: Int = 0,
+    @Json(name = "RemainingInShelf")            var remainingInShelf: Int = 0
 )
 
 data class ItemList (

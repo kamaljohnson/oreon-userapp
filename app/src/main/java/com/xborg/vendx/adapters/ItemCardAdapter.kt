@@ -1,11 +1,10 @@
 package com.xborg.vendx.adapters
 
+import android.annotation.SuppressLint
 import android.content.Context
-import android.media.Image
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -42,17 +41,22 @@ class ItemCardAdapter(val items : List<Item>, val context: Context, val onitemLi
             .into(holder.image)
 
         holder.itemLoc.text = if(item.inShelf) { "Shelf" } else { "Machine" }
+        holder.itemsInMachine.text = item.remainingInMachine.toString()
+        holder.itemsInShelf.text = item.remainingInShelf.toString()
+        holder.itemsInShelf.visibility = if(item.remainingInShelf == 0) { View.INVISIBLE } else {View.VISIBLE }
     }
 
+    @SuppressLint("SetTextI18n")
     class ItemViewHolder (view: View, onItemListener: OnItemListener)
         : RecyclerView.ViewHolder(view), View.OnClickListener {
         val itemId: TextView = view.item_id
         val name: TextView = view.name
         val cost: TextView = view.cost
         val image: ImageView = view.image
-        val itemLimit: TextView = view.item_limit
         val purchaseCount: TextView = view.purchase_count
         val itemLoc: TextView = view.item_loc
+        val itemsInShelf: TextView = view.items_in_shelf
+        var itemsInMachine: TextView = view.items_in_machine
 
         val itemRemoveButton: ImageView = view.remove_button
 
@@ -61,6 +65,7 @@ class ItemCardAdapter(val items : List<Item>, val context: Context, val onitemLi
         init {
             purchaseCount.visibility = View.INVISIBLE
             itemRemoveButton.visibility = View.INVISIBLE
+            itemsInShelf.visibility = View.INVISIBLE
 
             itemView.setOnClickListener(this)
             itemRemoveButton.setOnClickListener {
@@ -74,22 +79,30 @@ class ItemCardAdapter(val items : List<Item>, val context: Context, val onitemLi
 
         private fun addItemToCart() {
             onItemListener.onItemAddedToCart(itemId.text.toString(), itemLoc.text.toString())
-            var count = purchaseCount.text.toString().toInt()
-            if(count == 0) {
-                purchaseCount.visibility = View.VISIBLE
+            var purchaseCount = this.purchaseCount.text.toString().split("/")[0].toInt()
+            val purchaseLimitCount = this.purchaseCount.text.toString().split("/")[1].toInt()
+
+            if(purchaseLimitCount == purchaseCount) {
+                return
+            }
+
+            if(purchaseCount == 0) {
+                this.purchaseCount.visibility = View.VISIBLE
                 itemRemoveButton.visibility = View.VISIBLE
             }
-            count += 1
-            purchaseCount.text = count.toString()
+            purchaseCount += 1
+            this.purchaseCount.text = "$purchaseCount/$purchaseLimitCount"
         }
 
         private fun removeItemFromCart() {
             onItemListener.onItemRemovedFromCart(itemId.text.toString(), itemLoc.text.toString())
-            var count = purchaseCount.text.toString().toInt()
-            count -= 1
-            purchaseCount.text = count.toString()
-            if(count == 0) {
-                purchaseCount.visibility = View.INVISIBLE
+            var purchaseCount = this.purchaseCount.text.toString().split("/")[0].toInt()
+            val purchaseLimitCount = this.purchaseCount.text.toString().split("/")[1].toInt()
+
+            purchaseCount -= 1
+            this.purchaseCount.text = "$purchaseCount/$purchaseLimitCount"
+            if(purchaseCount == 0) {
+                this.purchaseCount.visibility = View.INVISIBLE
                 itemRemoveButton.visibility = View.INVISIBLE
             }
         }

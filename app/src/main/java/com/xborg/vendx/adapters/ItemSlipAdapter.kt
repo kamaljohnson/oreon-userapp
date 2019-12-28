@@ -45,7 +45,7 @@ class ItemSlipViewHolder (view: View) : RecyclerView.ViewHolder(view) {
     var item_id = view.item_id
     var name = view.name
     var image = view.image
-    var item_limit = view.item_limit
+    var item_limit = view.items_in_shelf
 
     var context = itemView.getContext()
 }

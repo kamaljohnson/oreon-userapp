@@ -34,7 +34,7 @@
                 android:src="@drawable/common_google_signin_btn_icon_dark"/>
 
             <TextView
-                android:id="@+id/item_limit"
+                android:id="@+id/items_in_shelf"
                 android:layout_width="10pt"
                 android:layout_height="10pt"
                 android:text="0"
@@ -49,10 +49,11 @@
 
             <TextView
                 android:id="@+id/purchase_count"
-                android:layout_width="10pt"
+                android:layout_width="wrap_content"
                 android:layout_height="10pt"
-                android:text="0"
-                android:textSize="6pt"
+                android:text="0/10"
+                android:padding="2dp"
+                android:textSize="5pt"
                 android:textColor="@color/white"
                 android:layout_margin="2pt"
                 android:gravity="center"
@@ -117,6 +118,12 @@
 
         <TextView
             android:id="@+id/item_loc"
+            android:layout_width="wrap_content"
+            android:visibility="invisible"
+            android:layout_height="0dp"/>
+
+        <TextView
+            android:id="@+id/items_in_machine"
             android:layout_width="wrap_content"
             android:visibility="invisible"
             android:layout_height="0dp"/>
