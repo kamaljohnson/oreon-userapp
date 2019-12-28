@@ -3,7 +3,13 @@ package com.xborg.vendx.activities.mainActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.squareup.moshi.JsonAdapter
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.Types
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.xborg.vendx.database.Item
+import java.lang.reflect.Type
+
 
 class SharedViewModel : ViewModel() {
 
@@ -58,5 +64,30 @@ class SharedViewModel : ViewModel() {
         }
 
         _cartItems.value = tempCart
+    }
+
+    fun getCartItemsAsPassable(): HashMap<String, Int> {
+        return cartItem.value as HashMap<String, Int>
+    }
+
+    fun getMachineItemsAsJson(): String {
+        return getListItemsAsJson(machineItems.value!!)
+    }
+
+    fun getShelfItemsAsJson(): String {
+        return getListItemsAsJson(shelfItems.value!!)
+    }
+
+    private fun getListItemsAsJson(items: List<Item>): String {
+        val moshi: Moshi = Moshi.Builder()
+            .add(KotlinJsonAdapterFactory())
+            .build()
+        val itemListDataType: Type = Types.newParameterizedType(
+            MutableList::class.java,
+            Item::class.java
+        )
+        val adapter: JsonAdapter<List<Item>> = moshi.adapter(itemListDataType)
+
+        return adapter.toJson(items)!!
     }
 }

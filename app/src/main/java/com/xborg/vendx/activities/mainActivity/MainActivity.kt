@@ -138,8 +138,9 @@ class MainActivity : FragmentActivity() {
         get_button.setOnClickListener {
             // TODO: use navigation graphs instead
             val intent = Intent(this, PaymentActivity::class.java)
-            val cartItemHashMap: HashMap<String, Int> = sharedViewModel.cartItem.value as HashMap<String, Int>
-            intent.putExtra("cartItems", cartItemHashMap)
+            intent.putExtra("cartItems", sharedViewModel.getCartItemsAsPassable())
+            intent.putExtra("machineItems", sharedViewModel.getMachineItemsAsJson())
+            intent.putExtra("shelfItems", sharedViewModel.getShelfItemsAsJson())
             startActivity(intent)
         }
     }
