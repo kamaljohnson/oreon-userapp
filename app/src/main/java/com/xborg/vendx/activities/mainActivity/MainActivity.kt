@@ -79,6 +79,18 @@ class MainActivity : FragmentActivity() {
 
         sharedViewModel.cartItem.observe(this, Observer { updatedCart ->
             Log.i(TAG, "CartFragment updated: $updatedCart")
+
+            var cartItemCount = 0
+            updatedCart.forEach {item ->
+                var itemCount = item.value
+                cartItemCount += itemCount
+            }
+            if(cartItemCount > 0) {
+                showGetButton()
+            } else {
+                hideGetButton()
+            }
+            cart_item_count.text = cartItemCount.toString()
         })
 
         initBottomNavigationView()
@@ -210,7 +222,7 @@ class MainActivity : FragmentActivity() {
                     current_fragment =
                         Fragments.HOME
                     changeFragment(HomeFragment(), "HomeFragment")
-                    showActionButton()
+                    showGetButton()
                     showSwipeUpContainer()
                     return@setOnNavigationItemSelectedListener true
                 }
@@ -219,7 +231,7 @@ class MainActivity : FragmentActivity() {
                     current_fragment =
                         Fragments.SHOP
                     changeFragment(ShopFragment(), "ShopFragment")
-                    hideActionButton()
+                    hideGetButton()
                     hideSwipeUpContainer()
                     return@setOnNavigationItemSelectedListener true
                 }
@@ -228,7 +240,7 @@ class MainActivity : FragmentActivity() {
                     current_fragment =
                         Fragments.SHELF
                     changeFragment(ShelfFragment(), "ShelfFragment")
-                    showActionButton()
+                    showGetButton()
                     showSwipeUpContainer()
                     return@setOnNavigationItemSelectedListener true
                 }
@@ -266,9 +278,11 @@ class MainActivity : FragmentActivity() {
         mLayout!!.addPanelSlideListener(object : SlidingUpPanelLayout.PanelSlideListener {
             override fun onPanelSlide(panel: View, slideOffset: Float) {
                 if (slideOffset > 0.05f) {
-                    hideActionButton()
+                    hideGetButton()
                 } else if (current_fragment != Fragments.SHOP) {
-                    showActionButton()
+                    if(sharedViewModel.cartItem.value!!.isNotEmpty()) {
+                        showGetButton()
+                    }
                 }
             }
 
@@ -279,12 +293,12 @@ class MainActivity : FragmentActivity() {
         })
     }
 
-    private fun hideActionButton() {
+    private fun hideGetButton() {
         get_button.hide()
         cart_item_count.visibility = View.INVISIBLE
     }
 
-    private fun showActionButton() {
+    private fun showGetButton() {
         get_button.show()
         cart_item_count.visibility = View.VISIBLE
     }
