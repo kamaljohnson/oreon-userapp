@@ -24,7 +24,7 @@ class HomeViewModel : ViewModel() {
     var machineItems: MutableLiveData<List<Item>>
     var shelfItems: MutableLiveData<List<Item>>
 
-    public val allGroupItems: MutableLiveData<ArrayList<ItemGroup>>
+    val allGroupItems: MutableLiveData<ArrayList<ItemGroup>>
 
     private var viewModelJob = Job()
     private var coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)

@@ -13,7 +13,6 @@ import com.xborg.vendx.R
 import com.xborg.vendx.activities.paymentActivity.fragments.addPromotions.AddPromotionsFragment
 import com.xborg.vendx.activities.paymentActivity.fragments.cart.CartFragment
 import com.xborg.vendx.activities.paymentActivity.fragments.paymentMethods.PaymentMethodsFragment
-import com.xborg.vendx.adapters.ItemCardAdapter
 import com.xborg.vendx.adapters.ItemCartSlipAdapter
 import kotlinx.android.synthetic.main.fragment_cart.*
 
@@ -43,21 +42,10 @@ class PaymentActivity : FragmentActivity() {
         })
         sharedViewModel.machineItems.observe(this, Observer { updatedMachineItems ->
             Log.i(TAG, "machineItems updated: $updatedMachineItems")
-
-            updateCartItemsToRV()
         })
         sharedViewModel.shelfItems.observe(this, Observer { updatedShelfItems ->
             Log.i(TAG, "shelfItems updated: $updatedShelfItems")
         })
-
-    }
-
-    private fun updateCartItemsToRV() {
-
-        rv_cart.apply {
-            layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-            adapter = ItemCartSlipAdapter(sharedViewModel.cartItem.value!!, context)
-        }
     }
 
     private fun getDataPassedByMainActivity() {
