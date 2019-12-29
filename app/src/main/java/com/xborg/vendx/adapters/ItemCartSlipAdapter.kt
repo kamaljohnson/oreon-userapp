@@ -51,14 +51,6 @@ class ItemCartSlipAdapter(
             holder.itemsInMachine.visibility = View.VISIBLE
             holder.itemsInMachine.text = item.cartCount.toString()
         }
-
-        holder.itemsInMachine.text = item.remainingInMachine.toString()
-        holder.itemsInShelf.text = item.remainingInShelf.toString()
-        holder.itemsInShelf.visibility = if (item.remainingInShelf == 0) {
-            View.INVISIBLE
-        } else {
-            View.VISIBLE
-        }
     }
 
     @SuppressLint("SetTextI18n")
