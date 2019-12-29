@@ -12,6 +12,14 @@ import com.xborg.vendx.database.Item
 import java.io.Serializable
 import java.lang.reflect.Type
 
+enum class PaymentStatus {
+    None,
+    Init,
+    Processing,
+    Succussful,
+    Failed
+}
+
 class SharedViewModel : ViewModel() {
 
     var machineItems = MutableLiveData<List<Item>>()
@@ -25,8 +33,17 @@ class SharedViewModel : ViewModel() {
     var payableAmount = MutableLiveData<Float>()
     var paymentInitiated = MutableLiveData<Boolean>()
 
+    private var _paymentStatus = MutableLiveData<PaymentStatus>()
+    val paymentStatus: LiveData<PaymentStatus>
+        get() = _paymentStatus
+
     init {
         paymentInitiated.value = false
+        _paymentStatus.value = PaymentStatus.None
+    }
+
+    fun setPaymentStatus(status: PaymentStatus) {
+        _paymentStatus.value = status
     }
 
     fun setCartItemsFromSerializable(cartItemsAsHash: Serializable) {
@@ -86,5 +103,6 @@ class SharedViewModel : ViewModel() {
 
         return adapter.fromJson(json)!!
     }
+
 
 }

@@ -31,7 +31,14 @@
             android:layout_height="140pt"
             android:layout_alignParentBottom="true"/>
 
+
     </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/payment_status_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"/>
 
     <!--    endregion-->
 

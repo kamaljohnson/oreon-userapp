@@ -14,6 +14,7 @@ import com.xborg.vendx.R
 import com.xborg.vendx.activities.paymentActivity.fragments.addPromotions.AddPromotionsFragment
 import com.xborg.vendx.activities.paymentActivity.fragments.cart.CartFragment
 import com.xborg.vendx.activities.paymentActivity.fragments.paymentMethods.PaymentMethodsFragment
+import com.xborg.vendx.activities.paymentActivity.fragments.paymentStatus.PaymentStatusFragment
 import org.json.JSONObject
 import java.lang.Exception
 
@@ -45,8 +46,8 @@ class PaymentActivity : FragmentActivity(), PaymentResultListener {
         sharedViewModel.shelfItems.observe(this, Observer { updatedShelfItems ->
             Log.i(TAG, "shelfItems updated: $updatedShelfItems")
         })
-        sharedViewModel.paymentInitiated.observe(this, Observer {intiated ->
-            if(intiated) {
+        sharedViewModel.paymentInitiated.observe(this, Observer {initiated ->
+            if(initiated) {
                 initiatePayment()
             }
         })
@@ -62,21 +63,29 @@ class PaymentActivity : FragmentActivity(), PaymentResultListener {
     @SuppressLint("ResourceType")
     private fun loadFragments() {
         val fragmentManager: FragmentManager = supportFragmentManager
+        var fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
+
+        fragmentTransaction.add(R.id.promotion_fragment_container, AddPromotionsFragment(), "AddPromotionFragment")
+        fragmentTransaction.add(R.id.cart_fragment_container, CartFragment(), "CartFragment")
+        fragmentTransaction.add(R.id.payment_method_fragment_container, PaymentMethodsFragment(), "PaymentMethodFragment")
+        fragmentTransaction.add(R.id.payment_status_container, PaymentStatusFragment(), "PaymentStatusFragment")
+        fragmentTransaction.commitNowAllowingStateLoss()
+
+        fragmentTransaction = fragmentManager.beginTransaction()
+        fragmentTransaction.hide(fragmentManager.findFragmentByTag("PaymentStatusFragment")!!)
+        fragmentTransaction.commitNowAllowingStateLoss()
+    }
+
+    private fun loadPaymentStatusFragment() {
+        val fragmentManager: FragmentManager = supportFragmentManager
         val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
-
-        val addPromotionsFragment = AddPromotionsFragment()
-        val cartFragment = CartFragment()
-        val paymentMethodsFragment = PaymentMethodsFragment()
-
-        fragmentTransaction.add(R.id.promotion_fragment_container, addPromotionsFragment)
-        fragmentTransaction.add(R.id.cart_fragment_container, cartFragment)
-        fragmentTransaction.add(R.id.payment_method_fragment_container, paymentMethodsFragment)
-        fragmentTransaction.commit()
-
+        fragmentTransaction.show(fragmentManager.findFragmentByTag("PaymentStatusFragment")!!)
+        fragmentTransaction.commitNowAllowingStateLoss()
     }
 
     private fun initiatePayment() {
         Checkout.preload(this)
+        sharedViewModel.setPaymentStatus(PaymentStatus.Init)
         startPayment()
     }
 
@@ -91,18 +100,30 @@ class PaymentActivity : FragmentActivity(), PaymentResultListener {
             options.put("currency", "INR")
             options.put("amount", sharedViewModel.payableAmount.value!!.toInt().toString() + "00")
 
+            sharedViewModel.setPaymentStatus(PaymentStatus.Processing)
             checkout.open(this, options)
         } catch (e: Exception) {
+
+            sharedViewModel.setPaymentStatus(PaymentStatus.Failed)
             Log.e(TAG, "Error in starting Razorpay Checkout: $e")
         }
-
     }
 
     override fun onPaymentError(p0: Int, p1: String?) {
-        Log.e(TAG, "Payment Error: $p0 $p1")
+        try {
+            sharedViewModel.setPaymentStatus(PaymentStatus.Failed)
+            loadPaymentStatusFragment()
+        } catch(e: Exception) {
+            Log.e(TAG, "error : $e")
+        }
     }
 
     override fun onPaymentSuccess(p0: String?) {
-        Log.e(TAG, "Payment Successful")
+        try {
+            sharedViewModel.setPaymentStatus(PaymentStatus.Succussful)
+            loadPaymentStatusFragment()
+        } catch (e: Exception) {
+            Log.e(TAG, "error : $e")
+        }
     }
 }
