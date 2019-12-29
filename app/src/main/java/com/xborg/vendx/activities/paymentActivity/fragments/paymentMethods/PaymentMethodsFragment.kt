@@ -34,6 +34,11 @@ class PaymentMethodsFragment : Fragment() {
         viewModel = ViewModelProviders.of(activity!!).get(PaymentMethodsViewModel::class.java)
 
         observerSharedViewModel()
+
+        pay_button.setOnClickListener {
+            sharedViewModel.payableAmount.value = viewModel.payableAmount.value
+            sharedViewModel.paymentInitiated.value = true
+        }
     }
 
     private fun observerSharedViewModel() {
@@ -54,5 +59,4 @@ class PaymentMethodsFragment : Fragment() {
             total_amount_text.text = "$updatedPayableAmount Rs"
         })
     }
-
 }

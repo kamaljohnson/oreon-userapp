@@ -45,6 +45,10 @@
         <activity
             android:name=".database.ItemGroup"
             android:screenOrientation="portrait" />
+        <meta-data
+            android:name="com.razorpay.ApiKey"
+            android:value="rzp_test_KvfTdnPSCJotdH"
+            />
     </application>
 
 </manifest>

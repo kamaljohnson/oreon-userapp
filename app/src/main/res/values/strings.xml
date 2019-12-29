@@ -23,4 +23,7 @@
     <string name="title_shop">Shop</string>
     <string name="title_shelf">Shelf</string>
 
+    <string name="payment_success">Payment Successful</string>
+    <string name="payment_failed">Payment Failed</string>
+
 </resources>

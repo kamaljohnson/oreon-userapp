@@ -22,6 +22,13 @@ class SharedViewModel : ViewModel() {
     val cartItem: LiveData<List<Item>>
         get() = _cartItems
 
+    var payableAmount = MutableLiveData<Float>()
+    var paymentInitiated = MutableLiveData<Boolean>()
+
+    init {
+        paymentInitiated.value = false
+    }
+
     fun setCartItemsFromSerializable(cartItemsAsHash: Serializable) {
 
         val tempCartMap = cartItemsAsHash as MutableMap<String, Int>

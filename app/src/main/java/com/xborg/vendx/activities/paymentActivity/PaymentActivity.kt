@@ -8,34 +8,33 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.LinearLayoutManager
+import com.razorpay.Checkout
+import com.razorpay.PaymentResultListener
 import com.xborg.vendx.R
 import com.xborg.vendx.activities.paymentActivity.fragments.addPromotions.AddPromotionsFragment
 import com.xborg.vendx.activities.paymentActivity.fragments.cart.CartFragment
 import com.xborg.vendx.activities.paymentActivity.fragments.paymentMethods.PaymentMethodsFragment
-import com.xborg.vendx.adapters.ItemCartSlipAdapter
-import kotlinx.android.synthetic.main.fragment_cart.*
+import org.json.JSONObject
+import java.lang.Exception
 
 const val TAG = "PaymentActivity"
 
-class PaymentActivity : FragmentActivity() {
+class PaymentActivity : FragmentActivity(), PaymentResultListener {
 
     private lateinit var sharedViewModel: SharedViewModel
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_payment)
 
-        sharedViewModel = ViewModelProviders.of(this).get(SharedViewModel::class.java)
-
         observerSharedViewModel()
-
         getDataPassedByMainActivity()
-        loadInitialFragments()
+        loadFragments()
     }
 
     private fun observerSharedViewModel() {
+
+        sharedViewModel = ViewModelProviders.of(this).get(SharedViewModel::class.java)
 
         sharedViewModel.cartItem.observe(this, Observer { updatedCart ->
             Log.i(TAG, "cartItems updated: $updatedCart")
@@ -45,6 +44,11 @@ class PaymentActivity : FragmentActivity() {
         })
         sharedViewModel.shelfItems.observe(this, Observer { updatedShelfItems ->
             Log.i(TAG, "shelfItems updated: $updatedShelfItems")
+        })
+        sharedViewModel.paymentInitiated.observe(this, Observer {intiated ->
+            if(intiated) {
+                initiatePayment()
+            }
         })
     }
 
@@ -56,7 +60,7 @@ class PaymentActivity : FragmentActivity() {
     }
 
     @SuppressLint("ResourceType")
-    private fun loadInitialFragments() {
+    private fun loadFragments() {
         val fragmentManager: FragmentManager = supportFragmentManager
         val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
 
@@ -69,5 +73,36 @@ class PaymentActivity : FragmentActivity() {
         fragmentTransaction.add(R.id.payment_method_fragment_container, paymentMethodsFragment)
         fragmentTransaction.commit()
 
+    }
+
+    private fun initiatePayment() {
+        Checkout.preload(this)
+        startPayment()
+    }
+
+    private fun startPayment() {
+        val checkout = Checkout()
+        checkout.setFullScreenDisable(true)
+
+        try {
+            val options = JSONObject()
+            options.put("name", "VendX")
+            options.put("description", "Reference No. #123456")
+            options.put("currency", "INR")
+            options.put("amount", sharedViewModel.payableAmount.value!!.toInt().toString() + "00")
+
+            checkout.open(this, options)
+        } catch (e: Exception) {
+            Log.e(TAG, "Error in starting Razorpay Checkout: $e")
+        }
+
+    }
+
+    override fun onPaymentError(p0: Int, p1: String?) {
+        Log.e(TAG, "Payment Error: $p0 $p1")
+    }
+
+    override fun onPaymentSuccess(p0: String?) {
+        Log.e(TAG, "Payment Successful")
     }
 }
