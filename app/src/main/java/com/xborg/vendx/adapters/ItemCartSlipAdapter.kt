@@ -11,22 +11,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.xborg.vendx.R
 import com.xborg.vendx.database.Item
-import kotlinx.android.synthetic.main.item_card.view.*
+import kotlinx.android.synthetic.main.item_cart_slip.view.*
 
-private var TAG = "ItemCardAdapter"
-
-class ItemCardAdapter(
+class ItemCartSlipAdapter(
     val items: List<Item>,
-    val context: Context,
-    val onitemListener: OnItemListener
-) :
-    RecyclerView.Adapter<ItemCardAdapter.ItemViewHolder>() {
-
-    val onItemListener: OnItemListener = onitemListener
+    val context: Context
+) : RecyclerView.Adapter<ItemCartSlipAdapter.ItemViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
-        val view = LayoutInflater.from(context).inflate(R.layout.item_card, parent, false)
-        return ItemViewHolder(view, onItemListener)
+        val view = LayoutInflater.from(context).inflate(R.layout.item_cart_slip, parent, false)
+        return ItemViewHolder(view)
     }
 
     override fun getItemCount(): Int {
@@ -60,7 +54,7 @@ class ItemCardAdapter(
     }
 
     @SuppressLint("SetTextI18n")
-    class ItemViewHolder(view: View, onItemListener: OnItemListener) :
+    class ItemViewHolder(view: View) :
         RecyclerView.ViewHolder(view), View.OnClickListener {
         val itemId: TextView = view.item_id
         val name: TextView = view.name
@@ -71,19 +65,11 @@ class ItemCardAdapter(
         val itemsInShelf: TextView = view.items_in_shelf
         var itemsInMachine: TextView = view.items_in_machine
 
-        val itemRemoveButton: ImageView = view.remove_button
-
-        val onItemListener: OnItemListener = onItemListener
-
         init {
             purchaseCount.visibility = View.INVISIBLE
-            itemRemoveButton.visibility = View.INVISIBLE
             itemsInShelf.visibility = View.INVISIBLE
 
             itemView.setOnClickListener(this)
-            itemRemoveButton.setOnClickListener {
-                removeItemFromCart()
-            }
         }
 
         override fun onClick(v: View?) {
@@ -91,7 +77,6 @@ class ItemCardAdapter(
         }
 
         private fun addItemToCart() {
-            onItemListener.onItemAddedToCart(itemId.text.toString(), itemLoc.text.toString())
             var purchaseCount = this.purchaseCount.text.toString().split("/")[0].toInt()
             val purchaseLimitCount = this.purchaseCount.text.toString().split("/")[1].toInt()
 
@@ -101,14 +86,12 @@ class ItemCardAdapter(
 
             if (purchaseCount == 0) {
                 this.purchaseCount.visibility = View.VISIBLE
-                itemRemoveButton.visibility = View.VISIBLE
             }
             purchaseCount += 1
             this.purchaseCount.text = "$purchaseCount/$purchaseLimitCount"
         }
 
         private fun removeItemFromCart() {
-            onItemListener.onItemRemovedFromCart(itemId.text.toString(), itemLoc.text.toString())
             var purchaseCount = this.purchaseCount.text.toString().split("/")[0].toInt()
             val purchaseLimitCount = this.purchaseCount.text.toString().split("/")[1].toInt()
 
@@ -116,14 +99,8 @@ class ItemCardAdapter(
             this.purchaseCount.text = "$purchaseCount/$purchaseLimitCount"
             if (purchaseCount == 0) {
                 this.purchaseCount.visibility = View.INVISIBLE
-                itemRemoveButton.visibility = View.INVISIBLE
             }
         }
     }
 
-    interface OnItemListener {
-        fun onItemAddedToCart(itemId: String, itemLoc: String)
-        fun onItemRemovedFromCart(itemId: String, itemLoc: String)
-    }
 }
-
