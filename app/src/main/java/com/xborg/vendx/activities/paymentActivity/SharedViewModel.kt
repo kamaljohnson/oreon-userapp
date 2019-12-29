@@ -1,5 +1,6 @@
 package com.xborg.vendx.activities.paymentActivity
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -17,16 +18,45 @@ class SharedViewModel : ViewModel() {
     var shelfItems = MutableLiveData<List<Item>>()
 
     // [itemId-from, count]     : from -> {Machine, Shelf}
-    private var _cartItems = MutableLiveData<MutableMap<String, Int>>()
-    val cartItem: LiveData<MutableMap<String, Int>>
+    private var _cartItems = MutableLiveData<List<Item>>()
+    val cartItem: LiveData<List<Item>>
         get() = _cartItems
 
-    init {
-        _cartItems.value = mutableMapOf()
-    }
-
     fun setCartItemsFromSerializable(cartItemsAsHash: Serializable) {
-        _cartItems.value = cartItemsAsHash as MutableMap<String, Int>
+
+        val tempCartMap = cartItemsAsHash as MutableMap<String, Int>
+        val tempCartList = arrayListOf<Item>()
+
+        for((sudoId, count) in tempCartMap) {
+            val from = sudoId.split('/')[0]
+            val id = sudoId.split('/')[1]
+
+            when(from) {
+                "Machine" -> {
+                    machineItems.value!!.forEach { item ->
+                        if(item.id == id) {
+                            Log.i(TAG, "from: $from id: $id")
+                            item.cartCount = count
+                            tempCartList.add(item)
+                        } else {
+                            Log.i(TAG, item.id)
+                        }
+                    }
+                }
+                "Shelf" -> {
+                    shelfItems.value!!.forEach { item ->
+                        if(item.id == id) {
+                            Log.i(TAG, "from: $from id: $id")
+                            item.cartCount = count
+                            tempCartList.add(item)
+                        } else {
+                            Log.i(TAG, item.id)
+                        }
+                    }
+                }
+            }
+        }
+        _cartItems.value = tempCartList
     }
 
     fun setMachineItemsFromSerializable(machineItemsAsJson: Serializable) {

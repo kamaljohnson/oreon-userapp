@@ -44,6 +44,14 @@ class ItemCartSlipAdapter(
             "Machine"
         }
 
+        if(item.inShelf) {
+            holder.itemsInShelf.visibility = View.VISIBLE
+            holder.itemsInShelf.text = item.cartCount.toString()
+        } else {
+            holder.itemsInMachine.visibility = View.VISIBLE
+            holder.itemsInMachine.text = item.cartCount.toString()
+        }
+
         holder.itemsInMachine.text = item.remainingInMachine.toString()
         holder.itemsInShelf.text = item.remainingInShelf.toString()
         holder.itemsInShelf.visibility = if (item.remainingInShelf == 0) {
@@ -68,6 +76,7 @@ class ItemCartSlipAdapter(
         init {
             purchaseCount.visibility = View.INVISIBLE
             itemsInShelf.visibility = View.INVISIBLE
+            itemsInMachine.visibility = View.INVISIBLE
 
             itemView.setOnClickListener(this)
         }

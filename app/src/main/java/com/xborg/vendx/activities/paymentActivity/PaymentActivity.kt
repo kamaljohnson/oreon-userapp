@@ -56,15 +56,15 @@ class PaymentActivity : FragmentActivity() {
 
         rv_cart.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-            adapter = ItemCartSlipAdapter(sharedViewModel.machineItems.value!!, context)
+            adapter = ItemCartSlipAdapter(sharedViewModel.cartItem.value!!, context)
         }
     }
 
     private fun getDataPassedByMainActivity() {
 
-        sharedViewModel.setCartItemsFromSerializable(intent.getSerializableExtra("cartItems")!!)
         sharedViewModel.setMachineItemsFromSerializable(intent.getSerializableExtra("machineItems")!!)
         sharedViewModel.setShelfItemsFromSerializable(intent.getSerializableExtra("shelfItems")!!)
+        sharedViewModel.setCartItemsFromSerializable(intent.getSerializableExtra("cartItems")!!)
     }
 
     @SuppressLint("ResourceType")
