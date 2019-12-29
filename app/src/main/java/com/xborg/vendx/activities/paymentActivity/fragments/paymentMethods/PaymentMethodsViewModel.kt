@@ -5,7 +5,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.xborg.vendx.database.Item
+import com.xborg.vendx.database.ItemList
+import com.xborg.vendx.database.Order
 import com.xborg.vendx.network.VendxApi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -22,9 +26,9 @@ class PaymentMethodsViewModel : ViewModel() {
     val payableAmount: LiveData<Float>
         get() = _payableAmount
 
-    private var _orderId = MutableLiveData<String>()
-    val orderId: LiveData<String>
-        get() = _orderId
+    private var _order = MutableLiveData<Order>()
+    val order: LiveData<Order>
+        get() = _order
 
     private var viewModelJob = Job()
     private var coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
@@ -46,14 +50,23 @@ class PaymentMethodsViewModel : ViewModel() {
 
     private fun postOrderDetails() {
         coroutineScope.launch {
-            val getMachineItemsDeferred = VendxApi.retrofitServices
+            val createOrderDeferred = VendxApi.retrofitServices
                 .createOrderAsync(
                     userId = uid,
                     cart = hashMapOf()
                 )
             try {
-                val listResult = getMachineItemsDeferred.await()
-                Log.i(TAG, "Successful to get response: $listResult ")
+                val listResult = createOrderDeferred.await()
+                Log.i(TAG, "Successful to get response: $listResult")
+                val moshi: Moshi = Moshi.Builder()
+                    .add(KotlinJsonAdapterFactory())
+                    .build()
+
+                _order.value =
+                    moshi.adapter(Order::class.java).fromJson(listResult)!!
+                
+                Log.i(TAG, "order id: " + order.value!!.id)
+
             } catch (t: Throwable) {
                 Log.e(TAG, "Failed to get response: ${t.message}")
             }
