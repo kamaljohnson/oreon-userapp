@@ -25,15 +25,15 @@ class SharedViewModel : ViewModel() {
         _cartItems.value = mutableMapOf()
     }
 
-    fun setCartItems(cartItemsAsHash: Serializable) {
+    fun setCartItemsFromSerializable(cartItemsAsHash: Serializable) {
         _cartItems.value = cartItemsAsHash as MutableMap<String, Int>
     }
 
-    fun setMachineItems(machineItemsAsJson: Serializable) {
-        shelfItems.value = convertJsonToItemList(machineItemsAsJson as String)
+    fun setMachineItemsFromSerializable(machineItemsAsJson: Serializable) {
+        machineItems.value = convertJsonToItemList(machineItemsAsJson as String)
     }
 
-    fun setShelfItems(shelfItemsAsJson: Serializable) {
+    fun setShelfItemsFromSerializable(shelfItemsAsJson: Serializable) {
         shelfItems.value = convertJsonToItemList(shelfItemsAsJson as String)
     }
 
