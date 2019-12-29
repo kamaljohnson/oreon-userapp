@@ -1,11 +1,11 @@
 package com.xborg.vendx.network
 
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
+import com.xborg.vendx.database.Item
 import kotlinx.coroutines.Deferred
 import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
-import retrofit2.http.GET
-import retrofit2.http.Path
+import retrofit2.http.*
 
 private const val BASE_URL = "http://us-central1-vendx-1f40e.cloudfunctions.net/webApi/v1/"
 
@@ -24,7 +24,12 @@ interface VendxAPIService {
     fun getShelfItemsAsync(@Path("id") id: String):
             Deferred<String>
 
-
+    @FormUrlEncoded
+    @POST("orders/create")
+    fun createOrderAsync(
+        @Field("cart") cart: HashMap<String, Int>,
+        @Field("userId") userId: String
+    ): Deferred<String>
 }
 
 object VendxApi {
