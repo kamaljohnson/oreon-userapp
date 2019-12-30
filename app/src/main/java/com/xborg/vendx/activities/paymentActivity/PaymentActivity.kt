@@ -96,7 +96,7 @@ class PaymentActivity : FragmentActivity(), PaymentResultListener {
         try {
             val options = JSONObject()
             options.put("name", "VendX")
-            options.put("description", "Reference No. #123456")
+            options.put("description", "Reference ID. " + sharedViewModel.order.value!!.id)
             options.put("currency", "INR")
             options.put("amount", sharedViewModel.payableAmount.value!!.toInt().toString() + "00")
 

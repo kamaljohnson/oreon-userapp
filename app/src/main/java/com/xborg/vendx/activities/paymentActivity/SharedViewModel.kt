@@ -44,7 +44,7 @@ class SharedViewModel : ViewModel() {
     val order = MutableLiveData<Order>()
 
     init {
-        order.value = Order(id = "not initialized")
+        order.value = Order(id = "")
         paymentInitiated.value = false
         _paymentStatus.value = PaymentStatus.None
     }

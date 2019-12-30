@@ -36,6 +36,8 @@ class PaymentMethodsFragment : Fragment() {
         observerSharedViewModel()
 
         get_button.setOnClickListener {
+            get_button.isClickable = false
+            progress_bar.visibility = View.VISIBLE
             viewModel.order.value = sharedViewModel.order.value
             viewModel.postOrderDetails()
         }
@@ -60,10 +62,11 @@ class PaymentMethodsFragment : Fragment() {
             total_amount_text.text = "$updatedPayableAmount Rs"
         })
         viewModel.order.observe(this, Observer { updatedOrder ->
-            if(updatedOrder.id != "not initialized") {
+            if(updatedOrder.id != "") {
                 sharedViewModel.order.value = updatedOrder
                 sharedViewModel.payableAmount.value = viewModel.payableAmount.value
                 sharedViewModel.paymentInitiated.value = true
+                progress_bar.visibility = View.GONE
             }
         })
 
