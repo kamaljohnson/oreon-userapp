@@ -9,18 +9,20 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.razorpay.Checkout
-import com.razorpay.PaymentResultListener
+import com.razorpay.PaymentData
+import com.razorpay.PaymentResultWithDataListener
 import com.xborg.vendx.R
 import com.xborg.vendx.activities.paymentActivity.fragments.addPromotions.AddPromotionsFragment
 import com.xborg.vendx.activities.paymentActivity.fragments.cart.CartFragment
 import com.xborg.vendx.activities.paymentActivity.fragments.paymentMethods.PaymentMethodsFragment
 import com.xborg.vendx.activities.paymentActivity.fragments.paymentStatus.PaymentStatusFragment
+import com.xborg.vendx.database.Payment
 import org.json.JSONObject
 import java.lang.Exception
 
 const val TAG = "PaymentActivity"
 
-class PaymentActivity : FragmentActivity(), PaymentResultListener {
+class PaymentActivity : FragmentActivity(), PaymentResultWithDataListener {
 
     private lateinit var sharedViewModel: SharedViewModel
 
@@ -109,8 +111,14 @@ class PaymentActivity : FragmentActivity(), PaymentResultListener {
         }
     }
 
-    override fun onPaymentError(p0: Int, p1: String?) {
+    override fun onPaymentError(p0: Int, p1: String?, paymentData: PaymentData) {
         try {
+            Log.i(TAG, "paymentData : ${paymentData.paymentId}")
+            sharedViewModel.paymentData.value = Payment(
+                status = PaymentStatus.Failed,
+                orderId = sharedViewModel.order.value!!.id,
+                uid = sharedViewModel.order.value!!.uid
+            )
             sharedViewModel.setPaymentStatus(PaymentStatus.Failed)
             loadPaymentStatusFragment()
         } catch(e: Exception) {
@@ -118,9 +126,18 @@ class PaymentActivity : FragmentActivity(), PaymentResultListener {
         }
     }
 
-    override fun onPaymentSuccess(p0: String?) {
+    override fun onPaymentSuccess(p0: String?, paymentData: PaymentData) {
         try {
-            sharedViewModel.setPaymentStatus(PaymentStatus.Succussful)
+            Log.i(TAG, "paymentData : ${paymentData.paymentId}")
+            Log.i(TAG, "order : " + sharedViewModel.order.value)
+            sharedViewModel.paymentData.value = Payment(
+                status = PaymentStatus.SuccessfulLocal,
+                orderId = sharedViewModel.order.value!!.id,
+                uid = sharedViewModel.order.value!!.uid,
+                paymentId = paymentData.paymentId
+            )
+
+            sharedViewModel.setPaymentStatus(PaymentStatus.SuccessfulLocal)
             loadPaymentStatusFragment()
         } catch (e: Exception) {
             Log.e(TAG, "error : $e")

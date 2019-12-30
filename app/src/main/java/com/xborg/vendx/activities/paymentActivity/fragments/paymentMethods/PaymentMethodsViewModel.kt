@@ -54,7 +54,6 @@ class PaymentMethodsViewModel : ViewModel() {
                 val listResult = createOrderDeferred.await()
                 Log.i(TAG, "Successful to get response: $listResult")
 
-
                 order.value =
                     moshi.adapter(Order::class.java).fromJson(listResult)!!
 

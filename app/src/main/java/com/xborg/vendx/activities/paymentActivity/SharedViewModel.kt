@@ -5,12 +5,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
+import com.razorpay.PaymentData
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.xborg.vendx.database.Item
 import com.xborg.vendx.database.Order
+import com.xborg.vendx.database.Payment
 import java.io.Serializable
 import java.lang.reflect.Type
 
@@ -18,7 +20,8 @@ enum class PaymentStatus {
     None,
     Init,
     Processing,
-    Succussful,
+    SuccessfulLocal,
+    SuccessfulServer,
     Failed
 }
 
@@ -42,6 +45,8 @@ class SharedViewModel : ViewModel() {
         get() = _paymentStatus
 
     val order = MutableLiveData<Order>()
+
+    val paymentData = MutableLiveData<Payment>()
 
     init {
         order.value = Order(id = "")

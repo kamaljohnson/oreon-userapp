@@ -31,6 +31,12 @@ interface VendxAPIService {
     fun createOrderAsync(
         @Field("order") order: String
     ): Deferred<String>
+
+    @FormUrlEncoded
+    @POST("payments/check/paymentData")
+    fun sendPaymentDataAsync(
+        @Field("paymentData") paymentData: String
+    ): Deferred<String>
 }
 
 object VendxApi {
