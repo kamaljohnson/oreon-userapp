@@ -35,9 +35,9 @@ class PaymentMethodsFragment : Fragment() {
 
         observerSharedViewModel()
 
-        pay_button.setOnClickListener {
-            sharedViewModel.payableAmount.value = viewModel.payableAmount.value
-            sharedViewModel.paymentInitiated.value = true
+        get_button.setOnClickListener {
+            viewModel.order.value = sharedViewModel.order.value
+            viewModel.postOrderDetails()
         }
     }
 
@@ -55,8 +55,17 @@ class PaymentMethodsFragment : Fragment() {
         sharedViewModel.shelfItems.observe(this, Observer { updatedShelfItems ->
             Log.i(TAG, "shelfItems updated: $updatedShelfItems")
         })
+
         viewModel.payableAmount.observe(this, Observer { updatedPayableAmount ->
             total_amount_text.text = "$updatedPayableAmount Rs"
         })
+        viewModel.order.observe(this, Observer { updatedOrder ->
+            if(updatedOrder.id != "not initialized") {
+                sharedViewModel.order.value = updatedOrder
+                sharedViewModel.payableAmount.value = viewModel.payableAmount.value
+                sharedViewModel.paymentInitiated.value = true
+            }
+        })
+
     }
 }

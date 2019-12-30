@@ -4,11 +4,13 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.firebase.auth.FirebaseAuth
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.xborg.vendx.database.Item
+import com.xborg.vendx.database.Order
 import java.io.Serializable
 import java.lang.reflect.Type
 
@@ -21,6 +23,8 @@ enum class PaymentStatus {
 }
 
 class SharedViewModel : ViewModel() {
+
+    private val uid = FirebaseAuth.getInstance().uid.toString()
 
     var machineItems = MutableLiveData<List<Item>>()
     var shelfItems = MutableLiveData<List<Item>>()
@@ -37,7 +41,10 @@ class SharedViewModel : ViewModel() {
     val paymentStatus: LiveData<PaymentStatus>
         get() = _paymentStatus
 
+    val order = MutableLiveData<Order>()
+
     init {
+        order.value = Order(id = "not initialized")
         paymentInitiated.value = false
         _paymentStatus.value = PaymentStatus.None
     }
@@ -46,22 +53,35 @@ class SharedViewModel : ViewModel() {
         _paymentStatus.value = status
     }
 
+    private fun initOrder(cart: MutableMap<String, Int>, billingCart: MutableMap<String, Int>) {
+        order.value!!.uid = uid
+        order.value!!.cart = cart
+        order.value!!.billingCart = billingCart
+        Log.i(TAG, order.value!!.toString())
+    }
+
     fun setCartItemsFromSerializable(cartItemsAsHash: Serializable) {
 
         val tempCartMap = cartItemsAsHash as MutableMap<String, Int>
         val tempCartList = arrayListOf<Item>()
 
-        for((sudoId, count) in tempCartMap) {
+        var tempOrderCartMap = mutableMapOf<String, Int>()
+        var tempOrderBillingCartMap = mutableMapOf<String, Int>()
+
+        for ((sudoId, count) in tempCartMap) {
             val from = sudoId.split('/')[0]
             val id = sudoId.split('/')[1]
 
-            when(from) {
+            tempOrderCartMap[id] = count
+
+            when (from) {
                 "Machine" -> {
                     machineItems.value!!.forEach { item ->
-                        if(item.id == id) {
+                        if (item.id == id) {
                             Log.i(TAG, "from: $from id: $id")
                             item.cartCount = count
                             tempCartList.add(item)
+                            tempOrderBillingCartMap[id] = count
                         } else {
                             Log.i(TAG, item.id)
                         }
@@ -69,7 +89,7 @@ class SharedViewModel : ViewModel() {
                 }
                 "Shelf" -> {
                     shelfItems.value!!.forEach { item ->
-                        if(item.id == id) {
+                        if (item.id == id) {
                             Log.i(TAG, "from: $from id: $id")
                             item.cartCount = count
                             tempCartList.add(item)
@@ -80,7 +100,9 @@ class SharedViewModel : ViewModel() {
                 }
             }
         }
+
         _cartItems.value = tempCartList
+        initOrder(tempOrderCartMap, tempOrderBillingCartMap)
     }
 
     fun setMachineItemsFromSerializable(machineItemsAsJson: Serializable) {

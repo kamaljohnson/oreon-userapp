@@ -57,5 +57,4 @@ class CartFragment : Fragment() {
             adapter = ItemCartSlipAdapter(sharedViewModel.cartItem.value!!, context)
         }
     }
-
 }

@@ -28,7 +28,7 @@
         <FrameLayout
             android:id="@+id/payment_method_fragment_container"
             android:layout_width="match_parent"
-            android:layout_height="140pt"
+            android:layout_height="100pt"
             android:layout_alignParentBottom="true"/>
 
 

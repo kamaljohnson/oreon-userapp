@@ -1,7 +1,9 @@
 package com.xborg.vendx.network
 
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
+import com.squareup.moshi.Json
 import com.xborg.vendx.database.Item
+import com.xborg.vendx.database.Order
 import kotlinx.coroutines.Deferred
 import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
@@ -27,8 +29,7 @@ interface VendxAPIService {
     @FormUrlEncoded
     @POST("orders/create")
     fun createOrderAsync(
-        @Field("cart") cart: HashMap<String, Int>,
-        @Field("userId") userId: String
+        @Field("order") order: String
     ): Deferred<String>
 }
 
