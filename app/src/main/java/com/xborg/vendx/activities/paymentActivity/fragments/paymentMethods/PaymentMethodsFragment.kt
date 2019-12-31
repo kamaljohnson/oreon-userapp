@@ -10,9 +10,11 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.xborg.vendx.R
 import com.xborg.vendx.activities.paymentActivity.SharedViewModel
+import com.xborg.vendx.database.PaymentState
+import com.xborg.vendx.database.PaymentStatus
 import kotlinx.android.synthetic.main.fragment_payment_methods.*
 
-const val TAG = "PaymentMethodFragment"
+private const val TAG = "PaymentMethodFragment"
 
 class PaymentMethodsFragment : Fragment() {
 
@@ -30,26 +32,23 @@ class PaymentMethodsFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        sharedViewModel = ViewModelProviders.of(activity!!).get(SharedViewModel::class.java)
-        viewModel = ViewModelProviders.of(activity!!).get(PaymentMethodsViewModel::class.java)
-
         observerSharedViewModel()
 
         get_button.setOnClickListener {
             get_button.isClickable = false
             progress_bar.visibility = View.VISIBLE
-            viewModel.order.value = sharedViewModel.order.value
+            //TODO: update local order with shared order
             viewModel.postOrderDetails()
         }
     }
 
     private fun observerSharedViewModel() {
 
-        sharedViewModel.cartItem.observe(this, Observer { updatedCart ->
-            Log.i(TAG, "cartItems updated: $updatedCart")
+        sharedViewModel = ViewModelProviders.of(activity!!).get(SharedViewModel::class.java)
+        viewModel = ViewModelProviders.of(activity!!).get(PaymentMethodsViewModel::class.java)
 
+        sharedViewModel.cartItem.observe(this, Observer { updatedCart ->
             viewModel.cartItems.value = updatedCart
-            viewModel.calculatePayableAmount()
         })
         sharedViewModel.machineItems.observe(this, Observer { updatedMachineItems ->
             Log.i(TAG, "machineItems updated: $updatedMachineItems")
@@ -58,17 +57,26 @@ class PaymentMethodsFragment : Fragment() {
             Log.i(TAG, "shelfItems updated: $updatedShelfItems")
         })
 
-        viewModel.payableAmount.observe(this, Observer { updatedPayableAmount ->
-            total_amount_text.text = "$updatedPayableAmount Rs"
-        })
-        viewModel.order.observe(this, Observer { updatedOrder ->
-            if(updatedOrder.id != "") {
-                sharedViewModel.order.value = updatedOrder
-                sharedViewModel.payableAmount.value = viewModel.payableAmount.value
-                sharedViewModel.paymentInitiated.value = true
-                progress_bar.visibility = View.GONE
+        sharedViewModel.paymentState.observe(this, Observer { updatedPaymentState ->
+            if(viewModel.paymentState.value!! < updatedPaymentState) {
+                viewModel.payment.value = sharedViewModel.payment.value
+                viewModel.order.value = sharedViewModel.order.value
+                when(updatedPaymentState) {
+                    PaymentState.OrderInit -> {
+                        viewModel.calculatePayableAmount()
+                        total_amount_text.text = viewModel.order.value!!.amount.toString()
+                    }
+                }
+                viewModel.paymentState.value = updatedPaymentState
             }
         })
 
+        viewModel.paymentState.observe(this, Observer { updatedPaymentState ->
+            if(sharedViewModel.paymentState.value!! < updatedPaymentState) {
+                sharedViewModel.payment.value = viewModel.payment.value
+                sharedViewModel.order.value = viewModel.order.value
+                sharedViewModel.paymentState.value = updatedPaymentState
+            }
+        })
     }
 }

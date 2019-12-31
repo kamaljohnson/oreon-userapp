@@ -129,7 +129,7 @@ class HomeViewModel : ViewModel() {
 
     override fun onCleared() {
         super.onCleared()
-        Log.i(TAG, "HomeViewModel destroyed!")
+        Log.i(TAG, "destroyed!")
         viewModelJob.cancel()
     }
 }

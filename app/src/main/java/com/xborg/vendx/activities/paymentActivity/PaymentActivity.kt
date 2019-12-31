@@ -16,7 +16,8 @@ import com.xborg.vendx.activities.paymentActivity.fragments.addPromotions.AddPro
 import com.xborg.vendx.activities.paymentActivity.fragments.cart.CartFragment
 import com.xborg.vendx.activities.paymentActivity.fragments.paymentMethods.PaymentMethodsFragment
 import com.xborg.vendx.activities.paymentActivity.fragments.paymentStatus.PaymentStatusFragment
-import com.xborg.vendx.database.Payment
+import com.xborg.vendx.database.PaymentState
+import com.xborg.vendx.database.PaymentStatus
 import org.json.JSONObject
 import java.lang.Exception
 
@@ -48,11 +49,16 @@ class PaymentActivity : FragmentActivity(), PaymentResultWithDataListener {
         sharedViewModel.shelfItems.observe(this, Observer { updatedShelfItems ->
             Log.i(TAG, "shelfItems updated: $updatedShelfItems")
         })
-        sharedViewModel.paymentInitiated.observe(this, Observer {initiated ->
-            if(initiated) {
-                initiatePayment()
+
+        sharedViewModel.paymentState.observe(this, Observer { currentPaymentState ->
+            Log.i(TAG, "Payment State: $currentPaymentState")
+            when(currentPaymentState) {
+                PaymentState.PaymentInit -> {
+                    initiatePayment()
+                }
             }
         })
+
     }
 
     private fun getDataPassedByMainActivity() {
@@ -62,6 +68,58 @@ class PaymentActivity : FragmentActivity(), PaymentResultWithDataListener {
         sharedViewModel.setCartItemsFromSerializable(intent.getSerializableExtra("cartItems")!!)
     }
 
+//      region Payment Processing
+    private fun initiatePayment() {
+        Checkout.preload(this)
+        startPayment()
+    }
+
+    private fun startPayment() {
+        val checkout = Checkout()
+        checkout.setFullScreenDisable(true)
+
+        try {
+            val options = JSONObject()
+            options.put("name", "VendX")
+            options.put("description", "Reference ID. " + sharedViewModel.order.value!!.id)
+            options.put("currency", "INR")
+            options.put("amount", sharedViewModel.payment.value!!.amount.toInt().toString() + "00")
+
+            checkout.open(this, options)
+        } catch (e: Exception) {
+
+            Log.e(TAG, "Error in starting Razorpay Checkout: $e")
+        }
+    }
+
+    override fun onPaymentError(p0: Int, p1: String?, paymentData: PaymentData) {
+        try {
+            Log.i(TAG, "payment exited in error")
+            sharedViewModel.updatePaymentAfterMakingPayment(
+                status = PaymentStatus.Failed,
+                razorpayPaymentID = null
+            )
+            loadPaymentStatusFragment()
+        } catch(e: Exception) {
+            Log.e(TAG, "error : $e")
+        }
+    }
+
+    override fun onPaymentSuccess(p0: String?, paymentData: PaymentData) {
+        try {
+            sharedViewModel.updatePaymentAfterMakingPayment(
+                status = PaymentStatus.SuccessfulLocal,
+                razorpayPaymentID = paymentData.paymentId
+            )
+            loadPaymentStatusFragment()
+        } catch (e: Exception) {
+            Log.e(TAG, "error : $e")
+        }
+    }
+
+//      endregion
+
+//      region Fragment Loading
     @SuppressLint("ResourceType")
     private fun loadFragments() {
         val fragmentManager: FragmentManager = supportFragmentManager
@@ -84,63 +142,5 @@ class PaymentActivity : FragmentActivity(), PaymentResultWithDataListener {
         fragmentTransaction.show(fragmentManager.findFragmentByTag("PaymentStatusFragment")!!)
         fragmentTransaction.commitNowAllowingStateLoss()
     }
-
-    private fun initiatePayment() {
-        Checkout.preload(this)
-        sharedViewModel.setPaymentStatus(PaymentStatus.Init)
-        startPayment()
-    }
-
-    private fun startPayment() {
-        val checkout = Checkout()
-        checkout.setFullScreenDisable(true)
-
-        try {
-            val options = JSONObject()
-            options.put("name", "VendX")
-            options.put("description", "Reference ID. " + sharedViewModel.order.value!!.id)
-            options.put("currency", "INR")
-            options.put("amount", sharedViewModel.payableAmount.value!!.toInt().toString() + "00")
-
-            sharedViewModel.setPaymentStatus(PaymentStatus.Processing)
-            checkout.open(this, options)
-        } catch (e: Exception) {
-
-            sharedViewModel.setPaymentStatus(PaymentStatus.Failed)
-            Log.e(TAG, "Error in starting Razorpay Checkout: $e")
-        }
-    }
-
-    override fun onPaymentError(p0: Int, p1: String?, paymentData: PaymentData) {
-        try {
-            Log.i(TAG, "paymentData : ${paymentData.paymentId}")
-            sharedViewModel.paymentData.value = Payment(
-                status = PaymentStatus.Failed,
-                orderId = sharedViewModel.order.value!!.id,
-                uid = sharedViewModel.order.value!!.uid
-            )
-            sharedViewModel.setPaymentStatus(PaymentStatus.Failed)
-            loadPaymentStatusFragment()
-        } catch(e: Exception) {
-            Log.e(TAG, "error : $e")
-        }
-    }
-
-    override fun onPaymentSuccess(p0: String?, paymentData: PaymentData) {
-        try {
-            Log.i(TAG, "paymentData : ${paymentData.paymentId}")
-            Log.i(TAG, "order : " + sharedViewModel.order.value)
-            sharedViewModel.paymentData.value = Payment(
-                status = PaymentStatus.SuccessfulLocal,
-                orderId = sharedViewModel.order.value!!.id,
-                uid = sharedViewModel.order.value!!.uid,
-                paymentId = paymentData.paymentId
-            )
-
-            sharedViewModel.setPaymentStatus(PaymentStatus.SuccessfulLocal)
-            loadPaymentStatusFragment()
-        } catch (e: Exception) {
-            Log.e(TAG, "error : $e")
-        }
-    }
+//      endregion
 }

@@ -1,32 +1,35 @@
 package com.xborg.vendx.activities.paymentActivity.fragments.paymentMethods
 
 import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.squareup.moshi.Json
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import com.xborg.vendx.database.Item
-import com.xborg.vendx.database.Order
+import com.xborg.vendx.database.*
 import com.xborg.vendx.network.VendxApi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.lang.Exception
+
+private const val TAG = "PaymentMethodsViewModel"
 
 class PaymentMethodsViewModel : ViewModel() {
 
     var cartItems = MutableLiveData<List<Item>>()
 
-    private var _payableAmount = MutableLiveData<Float>()
-    val payableAmount: LiveData<Float>
-        get() = _payableAmount
-
     val order = MutableLiveData<Order>()
+    val payment = MutableLiveData<Payment>()
+
+    val paymentState = MutableLiveData<PaymentState>()
 
     private var viewModelJob = Job()
     private var coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
+
+    init {
+        paymentState.value = PaymentState.None
+    }
 
     fun calculatePayableAmount() {
 
@@ -36,7 +39,31 @@ class PaymentMethodsViewModel : ViewModel() {
                 payableAmount += item.cost * item.cartCount
             }
         }
-        _payableAmount.value = payableAmount
+        order.value!!.amount = payableAmount
+    }
+
+    private fun initPayment(
+        id: String,
+        orderId: String,
+        amount: Float,
+        rnd: String,
+        uid: String
+    ) {
+        Log.i(TAG, "payment : " + payment.value)
+        payment.value!!.id = id
+        payment.value!!.orderId = orderId
+        payment.value!!.amount = amount
+        payment.value!!.rnd = rnd
+        payment.value!!.uid = uid
+        payment.value!!.status = PaymentStatus.Init
+
+        paymentState.value = PaymentState.PaymentInit
+    }
+
+    private fun updateOrder(orderId: String, paymentId: String) {
+        order.value!!.id = orderId
+        order.value!!.paymentId = paymentId
+        paymentState.value = PaymentState.OrderIdReceived
     }
 
     fun postOrderDetails() {
@@ -54,12 +81,30 @@ class PaymentMethodsViewModel : ViewModel() {
                 val listResult = createOrderDeferred.await()
                 Log.i(TAG, "Successful to get response: $listResult")
 
-                order.value =
-                    moshi.adapter(Order::class.java).fromJson(listResult)!!
+                val tempPayment = moshi.adapter(Payment::class.java).fromJson(listResult)!!
 
-            } catch (t: Throwable) {
-                Log.e(TAG, "Failed to get response: ${t.message}")
+                Log.i(TAG, "tempPayment: $tempPayment")
+
+                updateOrder(
+                    orderId = tempPayment.orderId,
+                    paymentId = tempPayment.id
+                )
+                initPayment (
+                    id = tempPayment.id,
+                    orderId = tempPayment.orderId,
+                    amount = order.value!!.amount,
+                    rnd = tempPayment.rnd,
+                    uid = order.value!!.uid
+                )
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to get response: $e")
             }
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        Log.i(TAG, "destroyed!")
+        viewModelJob.cancel()
     }
 }

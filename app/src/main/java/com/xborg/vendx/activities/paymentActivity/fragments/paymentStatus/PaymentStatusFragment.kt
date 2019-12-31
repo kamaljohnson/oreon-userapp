@@ -1,7 +1,6 @@
 package com.xborg.vendx.activities.paymentActivity.fragments.paymentStatus
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +8,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.xborg.vendx.R
-import com.xborg.vendx.activities.paymentActivity.PaymentStatus
 import com.xborg.vendx.activities.paymentActivity.SharedViewModel
 import kotlinx.android.synthetic.main.fragment_payment_status.*
 
@@ -31,24 +29,27 @@ class PaymentStatusFragment : Fragment(){
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        sharedViewModel = ViewModelProviders.of(activity!!).get(SharedViewModel::class.java)
-        viewModel = ViewModelProviders.of(activity!!).get(PaymentStatusViewModel::class.java)
         observerSharedViewModel()
     }
 
     private fun observerSharedViewModel() {
 
-        sharedViewModel.paymentStatus.observe(this, Observer { status ->
-            viewModel.paymentStatus.value = status
-            payment_status_container.text = status.toString()
+        sharedViewModel = ViewModelProviders.of(activity!!).get(SharedViewModel::class.java)
+        viewModel = ViewModelProviders.of(activity!!).get(PaymentStatusViewModel::class.java)
+
+        sharedViewModel.paymentState.observe(this, Observer { updatedPaymentState ->
+            if(viewModel.paymentState.value!! < updatedPaymentState) {
+                viewModel.payment.value = sharedViewModel.payment.value
+                viewModel.order.value = sharedViewModel.order.value
+                viewModel.paymentState.value = updatedPaymentState
+            }
         })
 
-        sharedViewModel.paymentData.observe(this, Observer { paymentData ->
-            viewModel.paymentData.value = paymentData
-
-            if(paymentData.status == PaymentStatus.SuccessfulLocal) {
-                Log.i(TAG, viewModel.paymentData.value!!.toString())
-                viewModel.sendPaymentToken()
+        viewModel.paymentState.observe(this, Observer { updatedPaymentState ->
+            if(sharedViewModel.paymentState.value!! < updatedPaymentState) {
+                sharedViewModel.payment.value = viewModel.payment.value
+                sharedViewModel.order.value = viewModel.order.value
+                sharedViewModel.paymentState.value = updatedPaymentState
             }
         })
     }

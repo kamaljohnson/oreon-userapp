@@ -5,25 +5,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
-import com.razorpay.PaymentData
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import com.xborg.vendx.database.Item
-import com.xborg.vendx.database.Order
-import com.xborg.vendx.database.Payment
+import com.xborg.vendx.database.*
 import java.io.Serializable
 import java.lang.reflect.Type
-
-enum class PaymentStatus {
-    None,
-    Init,
-    Processing,
-    SuccessfulLocal,
-    SuccessfulServer,
-    Failed
-}
 
 class SharedViewModel : ViewModel() {
 
@@ -37,32 +25,30 @@ class SharedViewModel : ViewModel() {
     val cartItem: LiveData<List<Item>>
         get() = _cartItems
 
-    var payableAmount = MutableLiveData<Float>()
-    var paymentInitiated = MutableLiveData<Boolean>()
-
-    private var _paymentStatus = MutableLiveData<PaymentStatus>()
-    val paymentStatus: LiveData<PaymentStatus>
-        get() = _paymentStatus
-
     val order = MutableLiveData<Order>()
+    val payment = MutableLiveData<Payment>()
 
-    val paymentData = MutableLiveData<Payment>()
+    val paymentState = MutableLiveData<PaymentState>()
 
     init {
+        paymentState.value = PaymentState.None
+        payment.value = Payment(id = "", orderId = "")
         order.value = Order(id = "")
-        paymentInitiated.value = false
-        _paymentStatus.value = PaymentStatus.None
     }
 
-    fun setPaymentStatus(status: PaymentStatus) {
-        _paymentStatus.value = status
+    fun updatePaymentAfterMakingPayment(status: PaymentStatus, razorpayPaymentID: String?) {
+        payment.value!!.status = status
+        payment.value!!.razorpayPaymentId = razorpayPaymentID ?: "not created, payment failed"
+
+        paymentState.value = PaymentState.PaymentDone
     }
 
     private fun initOrder(cart: MutableMap<String, Int>, billingCart: MutableMap<String, Int>) {
         order.value!!.uid = uid
         order.value!!.cart = cart
         order.value!!.billingCart = billingCart
-        Log.i(TAG, order.value!!.toString())
+
+        paymentState.value = PaymentState.OrderInit
     }
 
     fun setCartItemsFromSerializable(cartItemsAsHash: Serializable) {

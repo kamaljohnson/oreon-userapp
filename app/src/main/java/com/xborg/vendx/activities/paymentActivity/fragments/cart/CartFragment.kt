@@ -37,7 +37,6 @@ class CartFragment : Fragment() {
     }
 
     private fun observerSharedViewModel() {
-
         sharedViewModel.cartItem.observe(this, Observer { updatedCart ->
             Log.i(TAG, "cartItems updated: $updatedCart")
         })
