@@ -41,6 +41,7 @@ class SharedViewModel : ViewModel() {
         payment.value!!.razorpayPaymentId = razorpayPaymentID ?: "not created, payment failed"
 
         paymentState.value = PaymentState.PaymentDone
+        Log.i(TAG, "payment status updated to payment Done")
     }
 
     private fun initOrder(cart: MutableMap<String, Int>, billingCart: MutableMap<String, Int>) {

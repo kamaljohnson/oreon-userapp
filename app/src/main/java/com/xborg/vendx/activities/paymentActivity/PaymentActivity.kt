@@ -1,8 +1,11 @@
 package com.xborg.vendx.activities.paymentActivity
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
+import android.util.AttributeSet
 import android.util.Log
+import android.view.View
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
@@ -58,7 +61,6 @@ class PaymentActivity : FragmentActivity(), PaymentResultWithDataListener {
                 }
             }
         })
-
     }
 
     private fun getDataPassedByMainActivity() {

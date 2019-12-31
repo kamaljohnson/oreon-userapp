@@ -29,7 +29,7 @@ class PaymentStatusViewModel: ViewModel() {
         paymentState.value = PaymentState.None
     }
 
-    private fun sendPaymentToken() {
+    fun sendPaymentToken() {
         val moshi: Moshi = Moshi.Builder()
             .add(KotlinJsonAdapterFactory())
             .build()
@@ -66,6 +66,5 @@ class PaymentStatusViewModel: ViewModel() {
         val digest = md.digest(token.toByteArray())
         payment.value!!.signature = digest.fold("", { str, it -> str + "%02x".format(it) })
         paymentState.value = PaymentState.PaymentTokenCreated
-
     }
 }

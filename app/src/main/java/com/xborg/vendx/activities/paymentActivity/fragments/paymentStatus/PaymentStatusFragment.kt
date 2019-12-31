@@ -9,6 +9,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.xborg.vendx.R
 import com.xborg.vendx.activities.paymentActivity.SharedViewModel
+import com.xborg.vendx.database.PaymentState
 import kotlinx.android.synthetic.main.fragment_payment_status.*
 
 const val TAG = "PaymentStatusFragment"
@@ -42,6 +43,11 @@ class PaymentStatusFragment : Fragment(){
                 viewModel.payment.value = sharedViewModel.payment.value
                 viewModel.order.value = sharedViewModel.order.value
                 viewModel.paymentState.value = updatedPaymentState
+                when(updatedPaymentState) {
+                    PaymentState.PaymentDone -> {
+                        viewModel.sendPaymentToken()
+                    }
+                }
             }
         })
 
