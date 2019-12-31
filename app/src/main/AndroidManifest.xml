@@ -21,7 +21,7 @@
         <activity
             android:name=".activities.paymentActivity.PaymentActivity"/>
         <activity
-            android:name=".LoginActivity"
+            android:name=".activities.loginActivity.LoginActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -33,11 +33,7 @@
             android:name=".activities.mainActivity.MainActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".VendingActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".OfferActivity"
+            android:name=".activities.vendingActivity.VendingActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity

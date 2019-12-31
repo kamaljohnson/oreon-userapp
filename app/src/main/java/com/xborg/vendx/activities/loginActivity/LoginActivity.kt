@@ -1,4 +1,4 @@
-package com.xborg.vendx
+package com.xborg.vendx.activities.loginActivity
 
 import android.app.Activity
 import android.content.Intent
@@ -9,6 +9,7 @@ import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.xborg.vendx.R
 import com.xborg.vendx.activities.mainActivity.MainActivity
 
 val db = FirebaseFirestore.getInstance()
@@ -37,7 +38,8 @@ class LoginActivity : AppCompatActivity() {
                 .createSignInIntentBuilder()
                 .setAvailableProviders(providers)
                 .build(),
-            RC_SIGN_IN)
+            RC_SIGN_IN
+        )
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -118,7 +120,8 @@ class LoginActivity : AppCompatActivity() {
                 .setLogo(R.drawable.fui_idp_button_background_google) // Set logo drawable
                 .setTheme(R.style.AppTheme) // Set theme
                 .build(),
-            RC_SIGN_IN)
+            RC_SIGN_IN
+        )
     }
 
     private fun privacyAndTerms() {
@@ -131,7 +134,8 @@ class LoginActivity : AppCompatActivity() {
                     "https://example.com/terms.html",
                     "https://example.com/privacy.html")
                 .build(),
-            RC_SIGN_IN)
+            RC_SIGN_IN
+        )
     }
 
     companion object {

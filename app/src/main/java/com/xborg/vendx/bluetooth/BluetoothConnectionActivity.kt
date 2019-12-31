@@ -18,7 +18,7 @@ import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothService
 import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothStatus
 import com.xborg.vendx.activities.mainActivity.MainActivity
 import com.xborg.vendx.R
-import com.xborg.vendx.VendingActivity
+import com.xborg.vendx.activities.vendingActivity.VendingActivity
 import kotlinx.android.synthetic.main.activity_bluetooth_connection.*
 
 import java.util.Arrays
