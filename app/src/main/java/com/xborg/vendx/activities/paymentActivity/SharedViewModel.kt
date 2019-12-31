@@ -37,7 +37,11 @@ class SharedViewModel : ViewModel() {
     }
 
     fun updatePaymentAfterMakingPayment(status: PaymentStatus, razorpayPaymentID: String?) {
-        payment.value!!.status = status
+        payment.value!!.status = if (status == PaymentStatus.SuccessfulLocal) {
+            PaymentStatus.Processing
+        } else {
+            status
+        }
         payment.value!!.razorpayPaymentId = razorpayPaymentID ?: "not created, payment failed"
 
         paymentState.value = PaymentState.PaymentDone

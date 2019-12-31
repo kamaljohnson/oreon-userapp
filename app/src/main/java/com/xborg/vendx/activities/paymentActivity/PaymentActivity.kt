@@ -1,11 +1,8 @@
 package com.xborg.vendx.activities.paymentActivity
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.os.Bundle
-import android.util.AttributeSet
 import android.util.Log
-import android.view.View
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
@@ -137,7 +134,7 @@ class PaymentActivity : FragmentActivity(), PaymentResultWithDataListener {
         fragmentTransaction.add(R.id.promotion_fragment_container, AddPromotionsFragment(), "AddPromotionFragment")
         fragmentTransaction.add(R.id.cart_fragment_container, CartFragment(), "CartFragment")
         fragmentTransaction.add(R.id.payment_method_fragment_container, PaymentMethodsFragment(), "PaymentMethodFragment")
-        fragmentTransaction.add(R.id.payment_status_container, PaymentStatusFragment(), "PaymentStatusFragment")
+        fragmentTransaction.add(R.id.payment_status_text, PaymentStatusFragment(), "PaymentStatusFragment")
         fragmentTransaction.commitNowAllowingStateLoss()
 
         fragmentTransaction = fragmentManager.beginTransaction()

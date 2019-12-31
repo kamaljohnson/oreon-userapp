@@ -63,7 +63,7 @@ class PaymentStatusViewModel: ViewModel() {
 
         val token = razorPayPaymentId + paymentId + rnd
 
-        val md = MessageDigest.getInstance("SHA-256")
+        val md = MessageDigest.getInstance("SHA-1")
         val digest = md.digest(token.toByteArray())
         payment.value!!.signature = digest.fold("", { str, it -> str + "%02x".format(it) })
         paymentState.value = PaymentState.PaymentTokenCreated

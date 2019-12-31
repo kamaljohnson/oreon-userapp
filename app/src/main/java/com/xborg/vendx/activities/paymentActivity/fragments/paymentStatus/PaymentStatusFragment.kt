@@ -56,6 +56,7 @@ class PaymentStatusFragment : Fragment(){
                 sharedViewModel.payment.value = viewModel.payment.value
                 sharedViewModel.order.value = viewModel.order.value
                 sharedViewModel.paymentState.value = updatedPaymentState
+                payment_status_text.text = viewModel.payment.value!!.status.toString()
             }
         })
     }
