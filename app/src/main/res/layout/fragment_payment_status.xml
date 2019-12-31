@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,26 +8,88 @@
     tools:context=".activities.paymentActivity.fragments.paymentStatus.PaymentStatusFragment">
 
     <RelativeLayout
+        android:id="@+id/status_container"
+        android:layout_centerInParent="true"
         android:layout_gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <ImageView
+        <pl.droidsonroids.gif.GifImageView
             android:id="@+id/status_icon"
-            android:background="@color/colorAccent"
-            android:layout_width="40dp"
+            android:background="@drawable/processing"
+            android:layout_width="100dp"
             android:layout_centerInParent="true"
-            android:layout_height="40dp"/>
+            android:layout_height="100dp"/>
 
         <TextView
+            android:textAlignment="center"
+            android:layout_centerHorizontal="true"
             android:id="@+id/payment_status_text"
-            android:layout_marginTop="20pt"
+            android:layout_marginTop="5pt"
+            android:textStyle="bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_below="@+id/status_icon"
             android:text="PAYMENT STATUS"/>
 
+        <RelativeLayout
+            android:id="@+id/on_failure_layout"
+            android:layout_below="@+id/payment_status_text"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center"
+            android:layout_centerHorizontal="true"
+            android:layout_height="wrap_content">
+
+           <Button
+               android:textAlignment="center"
+               android:id="@+id/retry_button"
+               android:background="@drawable/rounded_button_accent"
+               android:textStyle="bold"
+               android:textColor="@color/white"
+               android:layout_marginTop="100dp"
+               android:layout_width="wrap_content"
+               android:layout_height="50dp"
+               android:text="Retry"/>
+
+        </RelativeLayout>
+
+
     </RelativeLayout>
 
-</FrameLayout>
+    <RelativeLayout
+        android:visibility="invisible"
+        android:id="@+id/on_success_layout"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_width="wrap_content"
+        android:layout_marginBottom="30dp"
+        android:layout_height="70dp">
+
+        <TextView
+            android:text="Home"
+            android:layout_centerVertical="true"
+            android:textStyle="bold"
+            android:id="@+id/progress_bar"
+            android:textColor="@color/colorAccent"
+            android:layout_marginTop="5pt"
+            android:layout_marginRight="5pt"
+            android:layout_toLeftOf="@id/get_button"
+            android:layout_width="wrap_content"
+            android:layout_height="10pt"/>
+
+        <Button
+            android:layout_centerVertical="true"
+            android:id="@+id/get_button"
+            android:layout_marginRight="10pt"
+            android:text="Vend"
+            android:textStyle="bold"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/rounded_button_accent"
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="20pt"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>
