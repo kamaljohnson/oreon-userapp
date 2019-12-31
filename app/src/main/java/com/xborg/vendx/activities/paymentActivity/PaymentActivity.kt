@@ -59,6 +59,13 @@ class PaymentActivity : FragmentActivity(), PaymentResultWithDataListener {
                 PaymentState.PaymentInit -> {
                     initiatePayment()
                 }
+                PaymentState.PaymentFinished -> {
+                    if(sharedViewModel.payment.value!!.status == PaymentStatus.Successful) {
+                        Log.i(TAG, "Payment Checked and is authentic")
+                    } else {
+                        Log.i(TAG, "Payment Checked and is not authentic")
+                    }
+                }
             }
         })
     }

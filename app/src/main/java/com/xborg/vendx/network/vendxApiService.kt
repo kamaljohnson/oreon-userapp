@@ -33,7 +33,7 @@ interface VendxAPIService {
     ): Deferred<String>
 
     @FormUrlEncoded
-    @POST("payments/check/paymentData")
+    @POST("payments/check/payment_data")
     fun sendPaymentDataAsync(
         @Field("paymentData") paymentData: String
     ): Deferred<String>

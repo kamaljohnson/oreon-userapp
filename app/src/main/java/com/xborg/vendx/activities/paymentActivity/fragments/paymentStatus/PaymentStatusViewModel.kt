@@ -45,9 +45,10 @@ class PaymentStatusViewModel: ViewModel() {
                 val listResult = createOrderDeferred.await()
                 Log.i(TAG, "Successful to get response: $listResult")
                 paymentState.value = PaymentState.PaymentPosted
-                order.value =
-                    moshi.adapter(Order::class.java).fromJson(listResult)!!
+                payment.value =
+                    moshi.adapter(Payment::class.java).fromJson(listResult)!!
 
+                paymentState.value = PaymentState.PaymentFinished
             } catch (t: Throwable) {
                 Log.e(TAG, "Failed to get response: ${t.message}")
             }
@@ -56,11 +57,11 @@ class PaymentStatusViewModel: ViewModel() {
 
     private fun createPaymentSignature(){
 
-        val paymentId = payment.value!!.razorpayPaymentId
-        val orderId = payment.value!!.orderId
+        val paymentId = payment.value!!.id
         val rnd = payment.value!!.rnd
+        val razorPayPaymentId = payment.value!!.razorpayPaymentId
 
-        val token = paymentId + orderId + rnd
+        val token = razorPayPaymentId + paymentId + rnd
 
         val md = MessageDigest.getInstance("SHA-256")
         val digest = md.digest(token.toByteArray())
