@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.xborg.vendx.R
 import com.xborg.vendx.activities.deviceConnectorActivity.SharedViewModel
@@ -30,6 +31,12 @@ class SelectorFragment : Fragment() {
         viewModel = ViewModelProviders.of(activity!!).get(SelectorViewModel::class.java)
         sharedViewModel = ViewModelProviders.of(activity!!).get(SharedViewModel::class.java)
 
+        viewModel.currentConnectionModePermissionRequirements.observe(this, Observer {
+            sharedViewModel.currentConnectionModePermissionRequirements.value =
+                viewModel.currentConnectionModePermissionRequirements.value!!
+
+            sharedViewModel.jumpToNextStep()
+        })
     }
 
 }

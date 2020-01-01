@@ -14,7 +14,7 @@ class PrerequisitesViewModel : ViewModel() {
 
     var permissionsGranted = MutableLiveData<MutableMap<Permissions, Boolean>>()
     var currentConnectionModePermissionRequirements =
-        MutableLiveData<MutableMap<Permissions, Boolean>>()
+        MutableLiveData<MutableList<Permissions>>()
 
     var grantComplete = MutableLiveData<Boolean>()
 
@@ -38,9 +38,8 @@ class PrerequisitesViewModel : ViewModel() {
     fun checkPermissionRequirement() {
         var flag = true
         var nextPermissionToBeRequested = Permissions.None
-        currentConnectionModePermissionRequirements.value!!.forEach loop@{ (permission, status) ->
+        currentConnectionModePermissionRequirements.value!!.forEach loop@{ permission ->
             var permissionStatus = permissionsGranted.value!![permission]!!
-            currentConnectionModePermissionRequirements.value!![permission] = permissionStatus
             if (!permissionStatus) {
                 flag = false
                 nextPermissionToBeRequested = permission

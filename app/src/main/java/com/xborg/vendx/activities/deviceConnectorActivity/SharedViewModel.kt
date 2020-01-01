@@ -13,7 +13,7 @@ enum class ConnectionSteps {
 class SharedViewModel: ViewModel() {
 
     val currentStep = MutableLiveData<ConnectionSteps>()
-    var currentConnectionModePermissionRequirements =  MutableLiveData<MutableMap<Permissions, Boolean>>()
+    var currentConnectionModePermissionRequirements =  MutableLiveData<MutableList<Permissions>>()
 
     init {
         currentStep.value = ConnectionSteps.SelectConnectionType

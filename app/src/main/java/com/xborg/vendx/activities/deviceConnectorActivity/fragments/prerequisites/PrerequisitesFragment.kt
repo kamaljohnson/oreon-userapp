@@ -41,6 +41,10 @@ class PrerequisitesFragment : Fragment() {
         viewModel = ViewModelProviders.of(activity!!).get(PrerequisitesViewModel::class.java)
         sharedViewModel = ViewModelProviders.of(activity!!).get(SharedViewModel::class.java)
 
+        sharedViewModel.currentConnectionModePermissionRequirements.observe(this, Observer { permissionRequirements ->
+            viewModel.currentConnectionModePermissionRequirements.value = permissionRequirements
+        })
+
         viewModel.currentPermissionToBeGranted.observe(this, Observer {
             checkRequiredPermissions()
         })
