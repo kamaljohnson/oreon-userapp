@@ -1,7 +1,7 @@
 package com.xborg.vendx.activities.paymentActivity.fragments.paymentStatus
 
+import android.content.Intent
 import android.os.Bundle
-import android.os.TokenWatcher
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -11,14 +11,17 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.xborg.vendx.R
+import com.xborg.vendx.activities.mainActivity.MainActivity
+import com.xborg.vendx.activities.paymentActivity.PaymentActivity
 import com.xborg.vendx.activities.paymentActivity.SharedViewModel
+import com.xborg.vendx.bluetooth.BluetoothConnectionActivity
 import com.xborg.vendx.database.PaymentState
 import com.xborg.vendx.database.PaymentStatus
 import kotlinx.android.synthetic.main.fragment_payment_status.*
 
 const val TAG = "PaymentStatusFragment"
 
-class PaymentStatusFragment : Fragment(), View.OnKeyListener{
+class PaymentStatusFragment : Fragment(){
 
     private lateinit var sharedViewModel: SharedViewModel
     private lateinit var viewModel: PaymentStatusViewModel
@@ -35,6 +38,16 @@ class PaymentStatusFragment : Fragment(), View.OnKeyListener{
         super.onActivityCreated(savedInstanceState)
 
         observerSharedViewModel()
+
+        get_button.setOnClickListener {
+            proceedToConnectionCreation()
+        }
+        retry_button.setOnClickListener {
+            initPaymentRetry()
+        }
+        home_button.setOnClickListener {
+            proceedToMainActivity()
+        }
     }
 
     private fun observerSharedViewModel() {
@@ -79,39 +92,20 @@ class PaymentStatusFragment : Fragment(), View.OnKeyListener{
         on_failure_layout.visibility = View.VISIBLE
     }
 
-    // region Handling User Events
-    override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
-        if(keyCode == KeyEvent.KEYCODE_BACK) {
-            when(viewModel.paymentState.value) {
-                PaymentState.None -> TODO()
-                PaymentState.OrderInit -> TODO()
-                PaymentState.OrderIdReceived -> return declineEventToast()
-                PaymentState.PaymentInit -> return declineEventToast()
-                PaymentState.PaymentDone -> return declineEventToast()
-                PaymentState.PaymentTokenCreated -> return declineEventToast()
-                PaymentState.PaymentPosted -> return declineEventToast()
-                PaymentState.PaymentFinished -> {
-                    when(viewModel.payment.value!!.status) {
-                        PaymentStatus.Successful -> return proceedToMainActivity()
-                        PaymentStatus.Failed -> return proceedToNewPayment()
-                    }
-                }
-            }
-        }
-        return true
-    }
-    // endregion
-
-    private fun declineEventToast(): Boolean {
-        Toast.makeText(context, "Your transaction is processing, termination will lead to failure", Toast.LENGTH_LONG).show()
-        return false
+    private fun initPaymentRetry() {
+        viewModel.paymentState.value = PaymentState.PaymentRetry
     }
 
-    private fun proceedToNewPayment(): Boolean {
-        return false
+    private fun proceedToMainActivity() {
+        val intent = Intent(context, MainActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        startActivity(intent)
     }
 
-    private fun proceedToMainActivity(): Boolean {
-        return false
+    private fun proceedToConnectionCreation() {
+        val intent = Intent(context, BluetoothConnectionActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
     }
 }

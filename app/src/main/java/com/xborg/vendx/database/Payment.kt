@@ -10,7 +10,9 @@ enum class PaymentState {
     PaymentDone,
     PaymentTokenCreated,    //TODO: this state should be removed
     PaymentPosted,
-    PaymentFinished
+    PaymentFinished,
+
+    PaymentRetry
 }
 
 enum class PaymentStatus {

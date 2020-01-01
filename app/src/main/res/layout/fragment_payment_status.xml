@@ -35,6 +35,7 @@
 
         <RelativeLayout
             android:id="@+id/on_failure_layout"
+            android:visibility="invisible"
             android:layout_below="@+id/payment_status_text"
             android:layout_width="wrap_content"
             android:layout_gravity="center"
@@ -70,7 +71,7 @@
             android:text="Home"
             android:layout_centerVertical="true"
             android:textStyle="bold"
-            android:id="@+id/progress_bar"
+            android:id="@+id/home_button"
             android:textColor="@color/colorAccent"
             android:layout_marginTop="5pt"
             android:layout_marginRight="5pt"
@@ -82,7 +83,7 @@
             android:layout_centerVertical="true"
             android:id="@+id/get_button"
             android:layout_marginRight="10pt"
-            android:text="Vend"
+            android:text="Get"
             android:textStyle="bold"
             android:layout_alignParentRight="true"
             android:background="@drawable/rounded_button_accent"

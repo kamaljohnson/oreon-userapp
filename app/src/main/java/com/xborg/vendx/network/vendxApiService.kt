@@ -5,16 +5,25 @@ import com.squareup.moshi.Json
 import com.xborg.vendx.database.Item
 import com.xborg.vendx.database.Order
 import kotlinx.coroutines.Deferred
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.http.*
+import java.util.concurrent.TimeUnit
 
 private const val BASE_URL = "http://us-central1-vendx-1f40e.cloudfunctions.net/webApi/v1/"
+
+private val okHttpClient = OkHttpClient().newBuilder()
+    .connectTimeout(40, TimeUnit.SECONDS)
+    .readTimeout(60, TimeUnit.SECONDS)
+    .writeTimeout(60, TimeUnit.SECONDS)
+    .build()
 
 private val retrofit = Retrofit.Builder()
     .addConverterFactory(ScalarsConverterFactory.create())
     .addCallAdapterFactory(CoroutineCallAdapterFactory())
     .baseUrl(BASE_URL)
+    .client(okHttpClient)
     .build()
 
 interface VendxAPIService {

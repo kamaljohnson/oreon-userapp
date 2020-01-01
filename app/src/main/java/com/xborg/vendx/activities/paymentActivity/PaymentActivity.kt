@@ -1,6 +1,7 @@
 package com.xborg.vendx.activities.paymentActivity
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.FragmentActivity
@@ -40,7 +41,7 @@ class PaymentActivity : FragmentActivity(), PaymentResultWithDataListener {
 
         sharedViewModel = ViewModelProviders.of(this).get(SharedViewModel::class.java)
 
-        sharedViewModel.cartItem.observe(this, Observer { updatedCart ->
+        sharedViewModel.cartItems.observe(this, Observer { updatedCart ->
             Log.i(TAG, "cartItems updated: $updatedCart")
         })
         sharedViewModel.machineItems.observe(this, Observer { updatedMachineItems ->
@@ -63,15 +64,17 @@ class PaymentActivity : FragmentActivity(), PaymentResultWithDataListener {
                         Log.i(TAG, "Payment Checked and is not authentic")
                     }
                 }
+                PaymentState.PaymentRetry -> {
+                    retryPayment()
+                }
             }
         })
     }
 
     private fun getDataPassedByMainActivity() {
-
         sharedViewModel.setMachineItemsFromSerializable(intent.getSerializableExtra("machineItems")!!)
         sharedViewModel.setShelfItemsFromSerializable(intent.getSerializableExtra("shelfItems")!!)
-        sharedViewModel.setCartItemsFromSerializable(intent.getSerializableExtra("cartItems")!!)
+        sharedViewModel.setCartItemsFromSerializableHashMap(intent.getSerializableExtra("cartItems")!!)
     }
 
 //      region Payment Processing
@@ -123,6 +126,11 @@ class PaymentActivity : FragmentActivity(), PaymentResultWithDataListener {
         }
     }
 
+    private fun retryPayment() {
+        finish()
+        startActivity(intent)
+
+    }
 //      endregion
 
 //      region Fragment Loading

@@ -11,7 +11,6 @@ import androidx.lifecycle.ViewModelProviders
 import com.xborg.vendx.R
 import com.xborg.vendx.activities.paymentActivity.SharedViewModel
 import com.xborg.vendx.database.PaymentState
-import com.xborg.vendx.database.PaymentStatus
 import kotlinx.android.synthetic.main.fragment_payment_methods.*
 
 private const val TAG = "PaymentMethodFragment"
@@ -47,7 +46,7 @@ class PaymentMethodsFragment : Fragment() {
         sharedViewModel = ViewModelProviders.of(activity!!).get(SharedViewModel::class.java)
         viewModel = ViewModelProviders.of(activity!!).get(PaymentMethodsViewModel::class.java)
 
-        sharedViewModel.cartItem.observe(this, Observer { updatedCart ->
+        sharedViewModel.cartItems.observe(this, Observer { updatedCart ->
             viewModel.cartItems.value = updatedCart
         })
         sharedViewModel.machineItems.observe(this, Observer { updatedMachineItems ->

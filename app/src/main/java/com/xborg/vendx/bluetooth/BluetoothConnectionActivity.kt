@@ -66,7 +66,6 @@ class BluetoothConnectionActivity : AppCompatActivity(), BluetoothService.OnBlue
         try_again.setOnClickListener {
             mService!!.startScan()
         }
-
     }
 
     override fun onResume() {

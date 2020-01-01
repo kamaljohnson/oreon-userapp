@@ -37,7 +37,7 @@ class CartFragment : Fragment() {
     }
 
     private fun observerSharedViewModel() {
-        sharedViewModel.cartItem.observe(this, Observer { updatedCart ->
+        sharedViewModel.cartItems.observe(this, Observer { updatedCart ->
             Log.i(TAG, "cartItems updated: $updatedCart")
         })
         sharedViewModel.machineItems.observe(this, Observer { updatedMachineItems ->
@@ -53,7 +53,7 @@ class CartFragment : Fragment() {
     private fun updateCartItemsToRV() {
         rv_cart.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-            adapter = ItemCartSlipAdapter(sharedViewModel.cartItem.value!!, context)
+            adapter = ItemCartSlipAdapter(sharedViewModel.cartItems.value!!, context)
         }
     }
 }

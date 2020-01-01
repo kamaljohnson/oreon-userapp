@@ -35,15 +35,6 @@ private var TAG = "MainActivity"
 
 private var mLayout: SlidingUpPanelLayout? = null
 
-enum class States {
-    NEW_SELECT,
-    CONTINUE_SELECT,
-    CHECKOUT,
-    PAY_INIT,
-    PAY_SUCCESS,
-    VEND
-}
-
 enum class Fragments {
     HOME,
     SHOP,

@@ -22,7 +22,7 @@ class SharedViewModel : ViewModel() {
 
     // [itemId-from, count]     : from -> {Machine, Shelf}
     private var _cartItems = MutableLiveData<List<Item>>()
-    val cartItem: LiveData<List<Item>>
+    val cartItems: LiveData<List<Item>>
         get() = _cartItems
 
     val order = MutableLiveData<Order>()
@@ -56,7 +56,7 @@ class SharedViewModel : ViewModel() {
         paymentState.value = PaymentState.OrderInit
     }
 
-    fun setCartItemsFromSerializable(cartItemsAsHash: Serializable) {
+    fun setCartItemsFromSerializableHashMap(cartItemsAsHash: Serializable) {
 
         val tempCartMap = cartItemsAsHash as MutableMap<String, Int>
         val tempCartList = arrayListOf<Item>()
@@ -122,5 +122,28 @@ class SharedViewModel : ViewModel() {
         return adapter.fromJson(json)!!
     }
 
+    fun getCartItemsAsJson(): String {
+        return getListItemsAsJson(_cartItems.value!!)
+    }
 
+    fun getMachineItemsAsJson(): String {
+        return getListItemsAsJson(machineItems.value!!)
+    }
+
+    fun getShelfItemsAsJson(): String {
+        return getListItemsAsJson(shelfItems.value!!)
+    }
+
+    private fun getListItemsAsJson(items: List<Item>): String {
+        val moshi: Moshi = Moshi.Builder()
+            .add(KotlinJsonAdapterFactory())
+            .build()
+        val itemListDataType: Type = Types.newParameterizedType(
+            MutableList::class.java,
+            Item::class.java
+        )
+        val adapter: JsonAdapter<List<Item>> = moshi.adapter(itemListDataType)
+
+        return adapter.toJson(items)!!
+    }
 }

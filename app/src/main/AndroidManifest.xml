@@ -19,7 +19,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".activities.paymentActivity.PaymentActivity"/>
+            android:name=".activities.paymentActivity.PaymentActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.loginActivity.LoginActivity"
             android:screenOrientation="portrait">
@@ -38,7 +40,8 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".bluetooth.BluetoothConnectionActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".database.ItemGroup"
             android:screenOrientation="portrait" />
