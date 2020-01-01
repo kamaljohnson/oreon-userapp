@@ -63,7 +63,14 @@ class PaymentMethodsFragment : Fragment() {
                 when(updatedPaymentState) {
                     PaymentState.OrderInit -> {
                         viewModel.calculatePayableAmount()
-                        total_amount_text.text = viewModel.order.value!!.amount.toString()
+                        val totalPayableAmount = viewModel.order.value!!.amount
+                        if(totalPayableAmount == 0f) {
+                            total_amount_text.text = " - all items from shelf"
+                            get_button.text = "Get"
+                        } else {
+                            total_amount_text.text = totalPayableAmount.toString()
+                            get_button.text = "Pay"
+                        }
                     }
                 }
                 viewModel.paymentState.value = updatedPaymentState

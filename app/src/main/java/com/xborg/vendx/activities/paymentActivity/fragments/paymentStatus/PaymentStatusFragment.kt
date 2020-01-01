@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.xborg.vendx.R
+import com.xborg.vendx.activities.deviceConnectorActivity.DeviceConnectorActivity
 import com.xborg.vendx.activities.mainActivity.MainActivity
 import com.xborg.vendx.activities.paymentActivity.PaymentActivity
 import com.xborg.vendx.activities.paymentActivity.SharedViewModel
@@ -103,7 +104,7 @@ class PaymentStatusFragment : Fragment(){
     }
 
     private fun proceedToConnectionCreation() {
-        val intent = Intent(context, BluetoothConnectionActivity::class.java)
+        val intent = Intent(context, DeviceConnectorActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(intent)
