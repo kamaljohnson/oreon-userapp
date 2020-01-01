@@ -10,12 +10,13 @@ enum class Permissions {
     FineLocation
 }
 
-class PrerequisitesViewModel: ViewModel() {
+class PrerequisitesViewModel : ViewModel() {
 
-    var permissionsGranted =  MutableLiveData<MutableMap<Permissions, Boolean>>()
-    var currentConnectionModeRequirement =  MutableLiveData<MutableMap<Permissions, Boolean>>()
+    var permissionsGranted = MutableLiveData<MutableMap<Permissions, Boolean>>()
+    var currentConnectionModePermissionRequirements =
+        MutableLiveData<MutableMap<Permissions, Boolean>>()
 
-    var grantComplete =  MutableLiveData<Boolean>()
+    var grantComplete = MutableLiveData<Boolean>()
 
     var currentPermissionToBeGranted = MutableLiveData<Permissions>()
 
@@ -37,10 +38,10 @@ class PrerequisitesViewModel: ViewModel() {
     fun checkPermissionRequirement() {
         var flag = true
         var nextPermissionToBeRequested = Permissions.None
-        currentConnectionModeRequirement.value!!.forEach loop@{ (permission, status) ->
+        currentConnectionModePermissionRequirements.value!!.forEach loop@{ (permission, status) ->
             var permissionStatus = permissionsGranted.value!![permission]!!
-            currentConnectionModeRequirement.value!![permission] = permissionStatus
-            if(!permissionStatus) {
+            currentConnectionModePermissionRequirements.value!![permission] = permissionStatus
+            if (!permissionStatus) {
                 flag = false
                 nextPermissionToBeRequested = permission
                 return@loop

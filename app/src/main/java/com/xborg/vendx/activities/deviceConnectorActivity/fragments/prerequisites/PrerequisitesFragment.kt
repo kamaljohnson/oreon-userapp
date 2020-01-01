@@ -44,6 +44,12 @@ class PrerequisitesFragment : Fragment() {
         viewModel.currentPermissionToBeGranted.observe(this, Observer {
             checkRequiredPermissions()
         })
+
+        viewModel.grantComplete.observe(this, Observer { grantStatus ->
+            if (grantStatus) {
+                sharedViewModel.jumpToNextStep()
+            }
+        })
     }
 
     private fun checkRequiredPermissions() {
