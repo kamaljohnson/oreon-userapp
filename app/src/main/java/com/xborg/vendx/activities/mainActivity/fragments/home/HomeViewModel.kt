@@ -42,13 +42,14 @@ class HomeViewModel : ViewModel() {
 
     }
 
+    //TODO: combine both items from machine and self to single get req
     private fun getItemsFromMachine(machineId: String) {
 
         coroutineScope.launch {
             val getMachineItemsDeferred = VendxApi.retrofitServices.getMachineItemsAsync(machineId)
             try {
                 val listResult = getMachineItemsDeferred.await()
-                Log.i(TAG, "Successful to get response: $listResult ")
+                Log.i(TAG, "Successful to get response: $listResult")
 
                 val moshi: Moshi = Moshi.Builder()
                     .add(KotlinJsonAdapterFactory())
