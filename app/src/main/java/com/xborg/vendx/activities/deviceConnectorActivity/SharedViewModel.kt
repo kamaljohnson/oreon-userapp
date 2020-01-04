@@ -19,7 +19,6 @@ class SharedViewModel: ViewModel() {
     var currentConnectionModePermissionRequirements =  MutableLiveData<MutableList<Permissions>>()
 
     init {
-        Log.i(TAG, "here")
         currentStep.value = ConnectionSteps.SelectConnectionType
     }
 

@@ -31,7 +31,6 @@ class SelectorFragment : Fragment() {
         sharedViewModel = ViewModelProviders.of(activity!!).get(SharedViewModel::class.java)
 
         viewModel.currentConnectionModePermissionRequirements.observe(this, Observer {
-            Log.i(TAG, "Selector selected the prerequisites required ")
             sharedViewModel.currentConnectionModePermissionRequirements.value =
                 viewModel.currentConnectionModePermissionRequirements.value!!
             sharedViewModel.jumpToNextStep()
