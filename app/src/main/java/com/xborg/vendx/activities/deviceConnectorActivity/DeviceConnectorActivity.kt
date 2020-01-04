@@ -3,6 +3,7 @@ package com.xborg.vendx.activities.deviceConnectorActivity
 import android.content.Context
 import android.os.Bundle
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -16,6 +17,8 @@ import com.xborg.vendx.activities.deviceConnectorActivity.fragments.prerequisite
 import com.xborg.vendx.activities.deviceConnectorActivity.fragments.selector.SelectorFragment
 import kotlinx.android.synthetic.main.activity_device_connector.*
 
+private const val TAG = "DeviceConnection"
+
 class DeviceConnectorActivity : FragmentActivity() {
 
     private lateinit var sharedViewModel: SharedViewModel
@@ -23,33 +26,35 @@ class DeviceConnectorActivity : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_device_connector)
-    }
-
-    override fun onCreateView(name: String, context: Context, attrs: AttributeSet): View? {
 
         sharedViewModel = ViewModelProviders.of(this).get(SharedViewModel::class.java)
 
         sharedViewModel.currentStep.observe(this, Observer {
+            Log.i(TAG, "jumping to : " + sharedViewModel.currentStep.value!!)
             jumpToNextStep()
         })
-
-        return super.onCreateView(name, context, attrs)
     }
 
     private fun jumpToNextStep() {
-
         val fragment: Fragment = when(sharedViewModel.currentStep.value!!) {
-            ConnectionSteps.SelectConnectionType -> SelectorFragment()
-            ConnectionSteps.Prerequisites -> PrerequisitesFragment()
-            ConnectionSteps.Connection -> ConnectorFragment()
+            ConnectionSteps.SelectConnectionType -> {
+                Log.i(TAG, "calling fragment : " + "Selector")
+                SelectorFragment()
+            }
+            ConnectionSteps.Prerequisites -> {
+                Log.i(TAG, "calling fragment : " + "Prerequisites")
+                PrerequisitesFragment()
+            }
+            ConnectionSteps.Connection -> {
+                Log.i(TAG, "calling fragment : " + "Connector")
+                ConnectorFragment()
+            }
         }
 
         val fragmentManager: FragmentManager = supportFragmentManager
         val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
 
         fragmentTransaction.add(fragment_container.id, fragment)
-        fragmentTransaction.setPrimaryNavigationFragment(fragment)
-        fragmentTransaction.setReorderingAllowed(true)
         fragmentTransaction.commitNowAllowingStateLoss()
     }
 }

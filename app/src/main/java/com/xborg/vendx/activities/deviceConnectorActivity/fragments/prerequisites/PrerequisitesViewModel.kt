@@ -1,7 +1,10 @@
 package com.xborg.vendx.activities.deviceConnectorActivity.fragments.prerequisites
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+
+private const val TAG = "PrerequisitesViewModel"
 
 enum class Permissions {
     None,
@@ -27,28 +30,24 @@ class PrerequisitesViewModel : ViewModel() {
             Permissions.BluetoothAdmin to false,
             Permissions.FineLocation to false
         )
-        checkPermissionRequirement()
     }
 
     fun updatePermissionsGranted(grantedPermission: Permissions) {
         permissionsGranted.value!![grantedPermission] = true
+        Log.i(TAG, "permissions Granted : " + permissionsGranted.value.toString())
         checkPermissionRequirement()
     }
 
     fun checkPermissionRequirement() {
-        var flag = true
-        var nextPermissionToBeRequested = Permissions.None
-        currentConnectionModePermissionRequirements.value!!.forEach loop@{ permission ->
+        currentConnectionModePermissionRequirements.value!!.forEach { permission ->
             var permissionStatus = permissionsGranted.value!![permission]!!
             if (!permissionStatus) {
-                flag = false
-                nextPermissionToBeRequested = permission
-                return@loop
+                Log.i(TAG, "current permission req: $permission")
+                currentPermissionToBeGranted.value = permission
+                return
             }
         }
+        grantComplete.value = true
 
-        currentPermissionToBeGranted.value = nextPermissionToBeRequested
-        grantComplete.value = flag
     }
-
 }
