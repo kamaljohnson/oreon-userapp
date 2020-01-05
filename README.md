@@ -1,4 +1,4 @@
 # vendx-userapp
-android app for the vendx customer.
+android app for the customer
 
 
