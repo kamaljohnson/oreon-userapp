@@ -12,8 +12,7 @@ class SelectorViewModel: ViewModel() {
     init {
         currentConnectionModePermissionRequirements.value = mutableListOf(
             Permissions.Bluetooth,
-            Permissions.BluetoothAdmin,
-            Permissions.FineLocation
+            Permissions.BluetoothAdmin
         )
     }
 }

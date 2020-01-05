@@ -62,6 +62,8 @@
             android:id="@+id/to_server_text"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:textSize="20dp"
             android:layout_alignParentBottom="true"
             android:layout_alignRight="@+id/to_device_text"
             android:hint="text to server">
