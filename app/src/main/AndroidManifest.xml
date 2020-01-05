@@ -9,7 +9,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
-        android:name=".bluetooth.BluetoothConfig"
+        android:name=".activities.deviceConnectorActivity.BluetoothConfig"
         android:allowBackup="true"
         android:configChanges="orientation|screenSize"
         android:icon="@mipmap/ic_launcher"
@@ -37,10 +37,6 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.vendingActivity.VendingActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".bluetooth.BluetoothConnectionActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity

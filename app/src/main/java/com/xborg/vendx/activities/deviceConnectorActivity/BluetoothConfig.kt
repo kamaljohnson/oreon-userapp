@@ -1,4 +1,4 @@
-package com.xborg.vendx.bluetooth
+package com.xborg.vendx.activities.deviceConnectorActivity
 
 import android.app.Application
 import android.bluetooth.BluetoothDevice
@@ -24,10 +24,13 @@ class BluetoothConfig : Application() {
         config.callListenersInMainThread = true
 
         //config.uuid = null; // When using BluetoothLeService.class set null to show all devices on scan.
-        config.uuid = UUID_DEVICE // For Classic
+        config.uuid =
+            UUID_DEVICE // For Classic
 
-        config.uuidService = UUID_SERVICE // For BLE
-        config.uuidCharacteristic = UUID_CHARACTERISTIC // For BLE
+        config.uuidService =
+            UUID_SERVICE // For BLE
+        config.uuidCharacteristic =
+            UUID_CHARACTERISTIC // For BLE
         config.transport = BluetoothDevice.TRANSPORT_LE // Only for dual-mode devices
 
         BluetoothService.init(config)

@@ -2,6 +2,7 @@ package com.xborg.vendx.activities.deviceConnectorActivity.fragments.prerequisit
 
 import android.Manifest
 import android.app.AlertDialog
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
@@ -10,11 +11,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.xborg.vendx.R
 import com.xborg.vendx.activities.deviceConnectorActivity.SharedViewModel
+import com.xborg.vendx.activities.mainActivity.MainActivity
 
 const val REQUEST_ENABLE_BLUETOOTH = 1
 const val REQUEST_ENABLE_BLUETOOTH_ADMIN = 2
@@ -58,10 +59,10 @@ class PrerequisitesFragment : Fragment() {
         })
     }
 
-    private fun checkRequiredPermissions() {
+    fun checkRequiredPermissions() {
         when (viewModel.currentPermissionToBeGranted.value) {
             Permissions.Bluetooth -> {
-                if (ContextCompat.checkSelfPermission(activity!!, Manifest.permission.BLUETOOTH)
+                if (ActivityCompat.checkSelfPermission(activity!!, Manifest.permission.BLUETOOTH)
                     != PackageManager.PERMISSION_GRANTED
                 ) {
                     if (ActivityCompat.shouldShowRequestPermissionRationale(
@@ -83,8 +84,7 @@ class PrerequisitesFragment : Fragment() {
                         builder.show()
                         // endregion
                     } else {
-                        ActivityCompat.requestPermissions(
-                            activity!!,
+                        requestPermissions(
                             arrayOf(Manifest.permission.BLUETOOTH),
                             REQUEST_ENABLE_BLUETOOTH
                         )
@@ -94,8 +94,7 @@ class PrerequisitesFragment : Fragment() {
                 }
             }
             Permissions.BluetoothAdmin -> {
-                if (ContextCompat.checkSelfPermission(
-                        activity!!,
+                if (ActivityCompat.checkSelfPermission(activity!!,
                         Manifest.permission.BLUETOOTH_ADMIN
                     )
                     != PackageManager.PERMISSION_GRANTED
@@ -109,8 +108,7 @@ class PrerequisitesFragment : Fragment() {
                         val builder = AlertDialog.Builder(context)
                         builder.setMessage("Bluetooth permission required for connecting to the machine")
                             .setPositiveButton(R.string.Ok) { _, _ ->
-                                ActivityCompat.requestPermissions(
-                                    activity!!,
+                                requestPermissions(
                                     arrayOf(Manifest.permission.BLUETOOTH_ADMIN),
                                     REQUEST_ENABLE_BLUETOOTH_ADMIN
                                 )
@@ -119,8 +117,7 @@ class PrerequisitesFragment : Fragment() {
                         builder.show()
                         // endregion
                     } else {
-                        ActivityCompat.requestPermissions(
-                            activity!!,
+                        requestPermissions(
                             arrayOf(Manifest.permission.BLUETOOTH_ADMIN),
                             REQUEST_ENABLE_BLUETOOTH_ADMIN
                         )
@@ -130,23 +127,22 @@ class PrerequisitesFragment : Fragment() {
                 }
             }
             Permissions.FineLocation -> {
-                if (ContextCompat.checkSelfPermission(
+                if (ActivityCompat.checkSelfPermission(
                         activity!!,
                         Manifest.permission.ACCESS_FINE_LOCATION
                     )
                     != PackageManager.PERMISSION_GRANTED
                 ) {
-                    if (ActivityCompat.shouldShowRequestPermissionRationale(
-                            activity!!,
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(activity!!,
                             Manifest.permission.ACCESS_FINE_LOCATION
                         )
                     ) {
-                        // region Showing Message
                         val builder = AlertDialog.Builder(context)
+                        // region Showing Message
                         builder.setMessage("Location permission required for connecting to the machine")
                             .setPositiveButton(R.string.Ok) { _, _ ->
-                                ActivityCompat.requestPermissions(
-                                    activity!!,
+                                Log.i(TAG, "here 1")
+                                requestPermissions(
                                     arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
                                     REQUEST_ENABLE_LOC
                                 )
@@ -155,8 +151,7 @@ class PrerequisitesFragment : Fragment() {
                         builder.show()
                         // endregion
                     } else {
-                        ActivityCompat.requestPermissions(
-                            activity!!,
+                        requestPermissions(
                             arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
                             REQUEST_ENABLE_LOC
                         )
@@ -172,13 +167,13 @@ class PrerequisitesFragment : Fragment() {
         requestCode: Int,
         permissions: Array<String>, grantResults: IntArray
     ) {
+        Log.i(TAG, "here 2")
         when (requestCode) {
             REQUEST_ENABLE_BLUETOOTH -> {
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                     viewModel.updatePermissionsGranted(Permissions.Bluetooth)
                 } else {
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
+                    backToHome()
                 }
                 return
             }
@@ -186,20 +181,31 @@ class PrerequisitesFragment : Fragment() {
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                     viewModel.updatePermissionsGranted(Permissions.BluetoothAdmin)
                 } else {
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
+                    backToHome()
                 }
                 return
             }
             REQUEST_ENABLE_LOC -> {
+                Log.i(TAG, "here 3")
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                     viewModel.updatePermissionsGranted(Permissions.FineLocation)
                 } else {
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
+                    backToHome()
                 }
                 return
             }
         }
+    }
+
+    private fun backToHome() {
+        val builder = AlertDialog.Builder(context)
+        builder.setMessage("Sorry, could'nt connect to device")
+            .setPositiveButton(R.string.Ok) { _, _ ->
+                val intent = Intent(activity, MainActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
+            }
+        builder.create()
+        builder.show()
     }
 }
