@@ -6,86 +6,18 @@
     android:layout_height="match_parent"
     tools:context=".activities.vendingActivity.VendingActivity">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_shelf_items"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:layout_marginBottom="100dp">
-    </androidx.recyclerview.widget.RecyclerView>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:text="Vending . . . "
-        android:background="@color/colorPrimary"
-        android:textAlignment="center"
-        android:layout_alignParentBottom="true">
-    </TextView>
-
-<!--    TODO: below components are to be removed this is just for testing purpose-->
-
-    <RelativeLayout
-        android:id="@+id/fragment_container"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_alignParentBottom="true">
-
-        <Button
-            android:id="@+id/send_to_server"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:text="to server"
-            android:background="@drawable/rounded_button_accent"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true">
-
-        </Button>
-
-        <Button
-            android:id="@+id/send_to_device"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:text="to device"
-            android:background="@drawable/rounded_button_accent"
-            android:layout_alignParentRight="true">
-        </Button>
-
-        <EditText
-            android:id="@+id/to_device_text"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:hint="text to device">
-        </EditText>
-
-        <TextView
-            android:id="@+id/to_server_text"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:textSize="20dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignRight="@+id/to_device_text"
-            android:hint="text to server">
-        </TextView>
-
-    </RelativeLayout>
-
     <FrameLayout
-        android:id="@+id/bluetooth_device_fragment"
+        android:id="@+id/device_communicator_fragment_container"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="101dp"
         android:layout_weight="2" />
 
     <FrameLayout
-        android:id="@+id/bluetooth_fragment"
+        android:id="@+id/server_communicator_fragment_container"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="101dp"
-        android:visibility="invisible"
+        android:layout_above="@id/device_communicator_fragment_container"
         android:layout_weight="2" />
 
 </RelativeLayout >

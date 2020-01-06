@@ -1,37 +1,30 @@
 package com.xborg.vendx.activities.vendingActivity
 
-import android.bluetooth.BluetoothAdapter
-import android.bluetooth.BluetoothDevice
-import android.content.Intent
-import android.content.ServiceConnection
 import android.os.Bundle
-import android.os.PersistableBundle
-import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentActivity
-
-
-import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothService
-import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothStatus
-import com.github.douglasjunior.bluetoothclassiclibrary.BluetoothWriter
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import com.xborg.vendx.R
+import com.xborg.vendx.activities.vendingActivity.fragments.communicators.device.DeviceCommunicatorFragment
+import com.xborg.vendx.activities.vendingActivity.fragments.communicators.server.ServerCommunicatorFragment
 
 private var TAG = "VendingActivity"
 
 class VendingActivity : FragmentActivity() {
 
-    private var mBluetoothAdapter: BluetoothAdapter? = null
-    private var mService: BluetoothService? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_vending)
+        loadFragments()
 
-        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
-        mService = BluetoothService.getDefaultInstance()
+    }
 
-        Log.i(TAG, "device: " + intent.getParcelableExtra("device"))
+    private fun loadFragments() {
+        val fragmentManager: FragmentManager = supportFragmentManager
+        val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
 
-        mService!!.connect(intent.getParcelableExtra("device") as BluetoothDevice)
+        fragmentTransaction.add(R.id.device_communicator_fragment_container, DeviceCommunicatorFragment(), "DeviceCommunicator")
+        fragmentTransaction.add(R.id.server_communicator_fragment_container, ServerCommunicatorFragment(), "ServerCommunicator")
+        fragmentTransaction.commit()
     }
 }
