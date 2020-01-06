@@ -12,6 +12,8 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
+import android.util.Log;
+
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
@@ -52,6 +54,7 @@ public class SerialService extends Service implements SerialListener {
      * Lifecylce
      */
     public SerialService() {
+        Log.i("SS", "SerialService");
         mainLooper = new Handler(Looper.getMainLooper());
         binder = new SerialBinder();
         queue1 = new LinkedList<>();
@@ -68,6 +71,7 @@ public class SerialService extends Service implements SerialListener {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
+        Log.i("SS", "IBinder");
         return binder;
     }
 

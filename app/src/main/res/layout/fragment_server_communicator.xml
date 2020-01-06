@@ -5,11 +5,26 @@
     android:layout_height="match_parent"
     tools:context=".activities.vendingActivity.fragments.communicators.server.ServerCommunicatorFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+    <RelativeLayout
         android:gravity="center"
-        android:text="Server Communicator" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <EditText
+            android:layout_alignParentLeft="true"
+            android:id="@+id/to_server_text"
+            android:layout_toLeftOf="@id/send_to_server_button"
+            android:layout_width="wrap_content"
+            android:hint="Text to server"
+            android:layout_height="50dp"/>
+
+        <Button
+            android:id="@+id/send_to_server_button"
+            android:text="Send"
+            android:layout_width="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_height="50dp"/>
+
+    </RelativeLayout>
 
 </FrameLayout>

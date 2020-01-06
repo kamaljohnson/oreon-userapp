@@ -1,6 +1,5 @@
 package com.xborg.vendx.activities.vendingActivity.fragments.communicators.device
 
-import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.content.ComponentName
 import android.content.Context
@@ -18,10 +17,11 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.xborg.vendx.R
+import kotlinx.android.synthetic.main.fragment_device_communicator.*
 
 const val TAG = "DeviceCommunicator"
 
-class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener{
+class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener {
 
     private enum class Connected {
         False, Pending, True
@@ -37,7 +37,6 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         deviceAddress = "3C:71:BF:79:86:22"
    }
 
@@ -46,22 +45,35 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         return inflater.inflate(R.layout.fragment_device_communicator, container, false)
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        send_to_device_button.setOnClickListener {
+            send(to_device_text.text.toString())
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if(service != null) {
+            Log.i(TAG, "here >>>>>>>>> 1")
+            service!!.attach(this)
+        } else {
+            Log.i(TAG, "here >>>>>>>>> 2")
+            val result = activity!!.startService(Intent(activity, SerialService::class.java)) // prevents service destroy on unbind from recreated activity caused by orientation change
+            Log.i(TAG, "activity : " + activity!!.toString())
+            Log.i(TAG, "result : $result")
+        }
     }
 
     override fun onDestroy() {
         if (connected != Connected.False) disconnect()
         activity!!.stopService(Intent(activity, SerialService::class.java))
         super.onDestroy()
-    }
-
-    override fun onStart() {
-        super.onStart()
-        if(service != null) {
-            service!!.attach(this)
-        } else {
-            activity!!.startService(Intent(context, SerialService::class.java)) // prevents service destroy on unbind from recreated activity caused by orientation change
-        }
     }
 
     override fun onStop() {
@@ -140,6 +152,7 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
 
     private fun receive(data: ByteArray) {
         Log.i(TAG, "received : $data")
+        text_from_device.text = data.toString()
     }
 
     private fun status(str: String) {
@@ -159,6 +172,8 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
 
     override fun onServiceConnected(name: ComponentName?, binder: IBinder?) {
         service = (binder as SerialService.SerialBinder).service
+        Log.i(TAG, "here >>>>>>>>> 3")
+
         if (initialStart) {
             initialStart = false
             activity!!.runOnUiThread(Runnable { connect() })
@@ -166,7 +181,8 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
     }
 
     override fun onSerialIoError(e: Exception?) {
-        status("connection lost: " + e!!.message)
+        Log.i(TAG, "onSerialIoError: " + e!!.message)
+        status("connection lost: " + e.message)
         disconnect()
     }
 
@@ -175,7 +191,8 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
     }
 
     override fun onSerialConnectError(e: Exception?) {
-        status("connection failed: " + e!!.message)
+        Log.i(TAG, "onSerialConnectError: " + e!!.message)
+        status("connection failed: " + e.message)
         disconnect()
     }
 
