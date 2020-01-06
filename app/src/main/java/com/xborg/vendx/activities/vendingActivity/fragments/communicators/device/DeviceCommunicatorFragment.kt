@@ -151,8 +151,9 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
     }
 
     private fun receive(data: ByteArray) {
-        Log.i(TAG, "received : $data")
-        text_from_device.text = data.toString()
+        val dataInString = String(data)
+        Log.i(TAG, "received : $dataInString")
+        text_from_device.text = dataInString
     }
 
     private fun status(str: String) {
