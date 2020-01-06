@@ -46,6 +46,12 @@ interface VendxAPIService {
     fun sendPaymentDataAsync(
         @Field("paymentData") paymentData: String
     ): Deferred<String>
+
+    @FormUrlEncoded
+    @POST("bag/check/otp")
+    fun sendEncryptedOTPAsync(
+        @Field("bag") bag: String
+    ): Deferred<String>
 }
 
 object VendxApi {
