@@ -16,7 +16,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.xborg.vendx.R
+import com.xborg.vendx.activities.vendingActivity.SharedViewModel
+import com.xborg.vendx.database.BagStatus
 import kotlinx.android.synthetic.main.fragment_device_communicator.*
 
 const val TAG = "DeviceCommunicator"
@@ -35,6 +39,9 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
     private var initialStart = true
     private var connected: Connected = Connected.False
 
+    private lateinit var viewModel: DeviceCommunicatorViewModel
+    private lateinit var sharedViewModel: SharedViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         deviceAddress = "3C:71:BF:79:86:22"
@@ -52,6 +59,28 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        viewModel = ViewModelProviders.of(activity!!).get(DeviceCommunicatorViewModel::class.java)
+        sharedViewModel = ViewModelProviders.of(activity!!).get(SharedViewModel::class.java)
+
+        viewModel.bag.observe(this, Observer { updatedBag ->
+            Log.i(TAG, updatedBag.toString())
+            sharedViewModel.bag.value = updatedBag
+            when(updatedBag.status) {
+                BagStatus.Init -> {
+                    send("vendx_init_transaction")
+                }
+                BagStatus.OtpReceived -> {
+
+                }
+                BagStatus.OtpValid -> TODO()
+                BagStatus.OtpInvalid -> TODO()
+                BagStatus.CartPassed -> TODO()
+                BagStatus.Vending -> TODO()
+                BagStatus.Compelte -> TODO()
+                BagStatus.VendingError -> TODO()
+            }
+        })
+
         send_to_device_button.setOnClickListener {
             send(to_device_text.text.toString())
         }
@@ -60,13 +89,9 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
     override fun onStart() {
         super.onStart()
         if(service != null) {
-            Log.i(TAG, "here >>>>>>>>> 1")
             service!!.attach(this)
         } else {
-            Log.i(TAG, "here >>>>>>>>> 2")
-            val result = activity!!.startService(Intent(activity, SerialService::class.java)) // prevents service destroy on unbind from recreated activity caused by orientation change
-            Log.i(TAG, "activity : " + activity!!.toString())
-            Log.i(TAG, "result : $result")
+            activity!!.startService(Intent(activity, SerialService::class.java)) // prevents service destroy on unbind from recreated activity caused by orientation change
         }
     }
 
@@ -102,9 +127,6 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
         }
     }
 
-    /*
-     * Serial + UI
-     */
     private fun connect() {
         try {
             val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
@@ -142,7 +164,6 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
                 spn.length,
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
             )
-//            receiveText.append(spn)
             val data = (str).toByteArray()
             socket!!.write(data)
         } catch (e: java.lang.Exception) {
@@ -154,9 +175,20 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
         val dataInString = String(data)
         Log.i(TAG, "received : $dataInString")
         text_from_device.text = dataInString
+        when(viewModel.bag.value!!.status) {
+            BagStatus.Init -> viewModel.addOtp(dataInString)
+            BagStatus.OtpReceived -> TODO()
+            BagStatus.OtpValid -> TODO()
+            BagStatus.OtpInvalid -> TODO()
+            BagStatus.CartPassed -> TODO()
+            BagStatus.Vending -> TODO()
+            BagStatus.Compelte -> TODO()
+            BagStatus.VendingError -> TODO()
+        }
     }
 
     private fun status(str: String) {
+        Log.i(TAG, "connection status : $str")
         val spn = SpannableStringBuilder(str + '\n')
         spn.setSpan(
             ForegroundColorSpan(resources.getColor(R.color.colorStatusText)),
@@ -164,7 +196,6 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
             spn.length,
             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
         )
-//        receiveText.append(spn)
     }
 
     override fun onServiceDisconnected(name: ComponentName?) {
@@ -173,7 +204,6 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
 
     override fun onServiceConnected(name: ComponentName?, binder: IBinder?) {
         service = (binder as SerialService.SerialBinder).service
-        Log.i(TAG, "here >>>>>>>>> 3")
 
         if (initialStart) {
             initialStart = false
@@ -200,5 +230,6 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
     override fun onSerialConnect() {
         status("connected")
         connected = Connected.True
+        viewModel.initBag()
     }
 }

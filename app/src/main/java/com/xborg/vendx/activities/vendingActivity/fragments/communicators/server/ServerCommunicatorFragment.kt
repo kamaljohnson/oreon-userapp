@@ -5,9 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.xborg.vendx.R
 import com.xborg.vendx.activities.vendingActivity.SharedViewModel
+import com.xborg.vendx.database.BagStatus
 
 const val TAG = "ServerCommunicator"
 
@@ -33,5 +35,20 @@ class ServerCommunicatorFragment : Fragment() {
 
         viewModel = ViewModelProviders.of(activity!!).get(ServerCommunicatorViewModel::class.java)
         sharedViewModel = ViewModelProviders.of(activity!!).get(SharedViewModel::class.java)
+
+        sharedViewModel.bag.observe(this, Observer { updatedBag ->
+            when(updatedBag.status) {
+                BagStatus.OtpReceived -> {
+                    viewModel.bag.value = updatedBag
+                    viewModel.sendEncryptedOtp()
+                }
+                BagStatus.OtpValid -> TODO()
+                BagStatus.OtpInvalid -> TODO()
+                BagStatus.CartPassed -> TODO()
+                BagStatus.Vending -> TODO()
+                BagStatus.Compelte -> TODO()
+                BagStatus.VendingError -> TODO()
+            }
+        })
     }
 }

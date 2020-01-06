@@ -1,6 +1,7 @@
 package com.xborg.vendx.activities.vendingActivity.fragments.communicators.server
 
 import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -17,18 +18,14 @@ class ServerCommunicatorViewModel : ViewModel() {
     private var viewModelJob = Job()
     private var coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
-    init {
-        sendEncryptedOtp("test_otp")
-    }
+    val bag = MutableLiveData<Bag>()
 
-    fun sendEncryptedOtp(encryptedOtp: String) {
+    fun sendEncryptedOtp() {
         val moshi: Moshi = Moshi.Builder()
             .add(KotlinJsonAdapterFactory())
             .build()
 
-        val bag = Bag("otp", BagStatus.Init, "")
-
-        val bagInJson = moshi.adapter(Bag::class.java).toJson(bag)!!
+        val bagInJson = moshi.adapter(Bag::class.java).toJson(bag.value)!!
 
         coroutineScope.launch {
             val createOrderDeferred = VendxApi.retrofitServices
