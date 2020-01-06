@@ -67,7 +67,7 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
             sharedViewModel.bag.value = updatedBag
             when(updatedBag.status) {
                 BagStatus.Init -> {
-                    send("vendx_init_transaction")
+                    initTransaction()
                 }
                 BagStatus.OtpReceived -> {
 
@@ -150,6 +150,10 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
         socket = null
     }
 
+    private fun initTransaction() {
+        send("vendx_init_transaction")
+    }
+
     private fun send(str: String) {
         Log.i(TAG, "sending : $str")
         if (connected != Connected.True) {
@@ -175,15 +179,19 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
         val dataInString = String(data)
         Log.i(TAG, "received : $dataInString")
         text_from_device.text = dataInString
-        when(viewModel.bag.value!!.status) {
-            BagStatus.Init -> viewModel.addOtp(dataInString)
-            BagStatus.OtpReceived -> TODO()
-            BagStatus.OtpValid -> TODO()
-            BagStatus.OtpInvalid -> TODO()
-            BagStatus.CartPassed -> TODO()
-            BagStatus.Vending -> TODO()
-            BagStatus.Compelte -> TODO()
-            BagStatus.VendingError -> TODO()
+        if(dataInString == "OTP_TIMEOUT") {
+            initTransaction()
+        } else {
+            when(viewModel.bag.value!!.status) {
+                BagStatus.Init -> viewModel.addOtp(dataInString)
+                BagStatus.OtpReceived -> TODO()
+                BagStatus.OtpValid -> TODO()
+                BagStatus.OtpInvalid -> TODO()
+                BagStatus.CartPassed -> TODO()
+                BagStatus.Vending -> TODO()
+                BagStatus.Compelte -> TODO()
+                BagStatus.VendingError -> TODO()
+            }
         }
     }
 
