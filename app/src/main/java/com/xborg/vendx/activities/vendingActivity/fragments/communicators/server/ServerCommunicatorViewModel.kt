@@ -19,6 +19,11 @@ class ServerCommunicatorViewModel : ViewModel() {
     private var coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
     val bag = MutableLiveData<Bag>()
+    val bagStatus = MutableLiveData<BagStatus>()
+
+    init {
+        bagStatus.value = BagStatus.None
+    }
 
     fun sendEncryptedOtp() {
         val moshi: Moshi = Moshi.Builder()
@@ -34,7 +39,9 @@ class ServerCommunicatorViewModel : ViewModel() {
                 val listResult = createOrderDeferred.await()
                 Log.i(TAG, "Successful to get response: $listResult")
 
-//                val tempPayment = moshi.adapter(Bag::class.java).fromJson(listResult)!!
+                val tempBag = moshi.adapter(Bag::class.java).fromJson(listResult)!!
+                bag.value!!.encryptedOtpPlusBag = tempBag.encryptedOtpPlusBag
+                bagStatus.value = BagStatus.EncryptedOtpPlusBagReceived
 
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to get response: $e")

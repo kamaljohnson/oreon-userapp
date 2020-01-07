@@ -5,17 +5,23 @@ import com.squareup.moshi.Json
 enum class BagStatus {
     None,
     Init,
-    OtpReceived,
+    EncryptedOtpReceived,
+    EncryptedOtpPlusBagReceived,
     OtpValid,
-    OtpInvalid,
-    CartPassed,
     Vending,
-    Compelte,
-    VendingError
+
+    Complete,
+
+    OtpInvalid,
+    VendingError,
 }
 
-data class Bag(
+data class Bag (
     @Json(name = "EncryptedOtp") var encryptedOtp: String = "",
     @Json(name = "Status") var status: BagStatus = BagStatus.None,
-    @Json(name = "Bag") var bag: String = ""
+    @Json(name = "Bag") var bag: String = "",
+    @Json(name = "MID") var mid: String = "",
+    @Json(name = "UID") var uid: String = "",
+    @Json(name = "EncryptedOtpPlusBag") var encryptedOtpPlusBag: String = ""
+
 )

@@ -24,8 +24,8 @@ class VendingActivity : FragmentActivity() {
 
         sharedViewModel = ViewModelProviders.of(this).get(SharedViewModel::class.java)
 
-        sharedViewModel.bag.observe(this, Observer { updatedBag ->
-            Log.i(TAG, "Bag : $updatedBag")
+        sharedViewModel.bagStatus.observe(this, Observer { updatedBag ->
+            Log.i(TAG, "BagStatus : $updatedBag")
         })
     }
 
@@ -33,8 +33,16 @@ class VendingActivity : FragmentActivity() {
         val fragmentManager: FragmentManager = supportFragmentManager
         val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
 
-        fragmentTransaction.add(R.id.device_communicator_fragment_container, DeviceCommunicatorFragment(), "DeviceCommunicator")
-        fragmentTransaction.add(R.id.server_communicator_fragment_container, ServerCommunicatorFragment(), "ServerCommunicator")
+        fragmentTransaction.add(
+            R.id.device_communicator_fragment_container,
+            DeviceCommunicatorFragment(),
+            "DeviceCommunicator"
+        )
+        fragmentTransaction.add(
+            R.id.server_communicator_fragment_container,
+            ServerCommunicatorFragment(),
+            "ServerCommunicator"
+        )
         fragmentTransaction.commit()
     }
 }

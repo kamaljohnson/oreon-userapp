@@ -36,18 +36,26 @@ class ServerCommunicatorFragment : Fragment() {
         viewModel = ViewModelProviders.of(activity!!).get(ServerCommunicatorViewModel::class.java)
         sharedViewModel = ViewModelProviders.of(activity!!).get(SharedViewModel::class.java)
 
-        sharedViewModel.bag.observe(this, Observer { updatedBag ->
-            when(updatedBag.status) {
-                BagStatus.OtpReceived -> {
-                    viewModel.bag.value = updatedBag
-                    viewModel.sendEncryptedOtp()
+        sharedViewModel.bagStatus.observe(this, Observer { updatedBagStatus ->
+            if (viewModel.bagStatus.value!! < updatedBagStatus) {
+
+                viewModel.bagStatus.value = updatedBagStatus
+                viewModel.bag.value = sharedViewModel.bag.value
+
+                when (updatedBagStatus) {
+                    BagStatus.EncryptedOtpReceived -> {
+                        viewModel.sendEncryptedOtp()
+                    }
                 }
-                BagStatus.OtpValid -> TODO()
-                BagStatus.OtpInvalid -> TODO()
-                BagStatus.CartPassed -> TODO()
-                BagStatus.Vending -> TODO()
-                BagStatus.Compelte -> TODO()
-                BagStatus.VendingError -> TODO()
+            }
+        })
+
+        viewModel.bagStatus.observe(this, Observer { updatedBagStatus ->
+            if (sharedViewModel.bagStatus.value!! < updatedBagStatus) {
+
+                sharedViewModel.bagStatus.value = updatedBagStatus
+                sharedViewModel.bag.value = viewModel.bag.value
+
             }
         })
     }

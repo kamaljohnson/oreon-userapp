@@ -10,6 +10,7 @@ import android.os.IBinder
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
+import android.util.Base64
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -45,7 +46,7 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         deviceAddress = "3C:71:BF:79:86:22"
-   }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -62,22 +63,34 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
         viewModel = ViewModelProviders.of(activity!!).get(DeviceCommunicatorViewModel::class.java)
         sharedViewModel = ViewModelProviders.of(activity!!).get(SharedViewModel::class.java)
 
-        viewModel.bag.observe(this, Observer { updatedBag ->
-            Log.i(TAG, updatedBag.toString())
-            sharedViewModel.bag.value = updatedBag
-            when(updatedBag.status) {
-                BagStatus.Init -> {
-                    initTransaction()
-                }
-                BagStatus.OtpReceived -> {
+        sharedViewModel.bagStatus.observe(this, Observer { updatedBagStatus ->
+            if (viewModel.bagStatus.value!! < updatedBagStatus) {
 
+                viewModel.bagStatus.value = updatedBagStatus
+                viewModel.bag.value = sharedViewModel.bag.value
+
+                when (updatedBagStatus) {
+                    BagStatus.Init -> {
+                        requestOtpFromDevice()
+                    }
+                    BagStatus.EncryptedOtpPlusBagReceived -> {
+                        sendEncryptedOtpPlusBag()
+                    }
+                    BagStatus.OtpValid -> TODO()
+                    BagStatus.Vending -> TODO()
+                    BagStatus.Complete -> TODO()
+                    BagStatus.OtpInvalid -> TODO()
+                    BagStatus.VendingError -> TODO()
                 }
-                BagStatus.OtpValid -> TODO()
-                BagStatus.OtpInvalid -> TODO()
-                BagStatus.CartPassed -> TODO()
-                BagStatus.Vending -> TODO()
-                BagStatus.Compelte -> TODO()
-                BagStatus.VendingError -> TODO()
+            }
+        })
+
+        viewModel.bagStatus.observe(this, Observer { updatedBagStatus ->
+            if (sharedViewModel.bagStatus.value!! < updatedBagStatus) {
+
+                sharedViewModel.bagStatus.value = updatedBagStatus
+                sharedViewModel.bag.value = viewModel.bag.value
+
             }
         })
 
@@ -88,10 +101,15 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
 
     override fun onStart() {
         super.onStart()
-        if(service != null) {
+        if (service != null) {
             service!!.attach(this)
         } else {
-            activity!!.startService(Intent(activity, SerialService::class.java)) // prevents service destroy on unbind from recreated activity caused by orientation change
+            activity!!.startService(
+                Intent(
+                    activity,
+                    SerialService::class.java
+                )
+            ) // prevents service destroy on unbind from recreated activity caused by orientation change
         }
     }
 
@@ -108,7 +126,11 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        activity!!.bindService(Intent(context, SerialService::class.java), this, Context.BIND_AUTO_CREATE)
+        activity!!.bindService(
+            Intent(context, SerialService::class.java),
+            this,
+            Context.BIND_AUTO_CREATE
+        )
     }
 
     override fun onDetach() {
@@ -151,7 +173,15 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
     }
 
     private fun initTransaction() {
+        sharedViewModel.bagStatus.value = BagStatus.Init
+    }
+
+    private fun requestOtpFromDevice() {
         send("vendx_init_transaction")
+    }
+
+    private fun sendEncryptedOtpPlusBag() {
+        send(viewModel.bag.value!!.encryptedOtpPlusBag)
     }
 
     private fun send(str: String) {
@@ -175,21 +205,22 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
         }
     }
 
-    private fun receive(data: ByteArray) {
-        val dataInString = String(data)
-        Log.i(TAG, "received : $dataInString")
-        text_from_device.text = dataInString
-        if(dataInString == "OTP_TIMEOUT") {
-            initTransaction()
+    private fun receive(dataFromDevice: ByteArray) {
+        val dataStr = String(dataFromDevice)
+        val dataFromDeviceBase64 = Base64.encodeToString(dataFromDevice, Base64.NO_WRAP)
+        Log.i(TAG, "received : $dataStr : $dataFromDeviceBase64")
+        text_from_device.text = dataStr
+        if (dataStr == "OTP_TIMEOUT") {
+            requestOtpFromDevice()
         } else {
-            when(viewModel.bag.value!!.status) {
-                BagStatus.Init -> viewModel.addOtp(dataInString)
-                BagStatus.OtpReceived -> TODO()
+            when (viewModel.bagStatus.value!!) {
+                BagStatus.Init -> viewModel.addEncryptedOtp(dataFromDeviceBase64)
+                BagStatus.EncryptedOtpReceived -> TODO()
                 BagStatus.OtpValid -> TODO()
                 BagStatus.OtpInvalid -> TODO()
-                BagStatus.CartPassed -> TODO()
+                BagStatus.EncryptedOtpPlusBagReceived -> TODO()
                 BagStatus.Vending -> TODO()
-                BagStatus.Compelte -> TODO()
+                BagStatus.Complete -> TODO()
                 BagStatus.VendingError -> TODO()
             }
         }
@@ -238,6 +269,6 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
     override fun onSerialConnect() {
         status("connected")
         connected = Connected.True
-        viewModel.initBag()
+        initTransaction()
     }
 }
