@@ -181,24 +181,21 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
     }
 
     private fun sendEncryptedOtpPlusBag() {
-        send(viewModel.bag.value!!.encryptedOtpPlusBag)
+        send(viewModel.bag.value!!.encryptedOtpPlusBag, true)
     }
 
-    private fun send(str: String) {
+    private fun send(str: String, isBase64:Boolean = false) {
         Log.i(TAG, "sending : $str")
         if (connected != Connected.True) {
             Toast.makeText(context, "not connected", Toast.LENGTH_SHORT).show()
             return
         }
         try {
-            val spn = SpannableStringBuilder(str + '\n')
-            spn.setSpan(
-                ForegroundColorSpan(resources.getColor(R.color.colorSendText)),
-                0,
-                spn.length,
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-            val data = (str).toByteArray()
+            val data: ByteArray = if(isBase64) {
+                Base64.decode(str, Base64.NO_WRAP)
+            } else {
+                str.toByteArray()
+            }
             socket!!.write(data)
         } catch (e: java.lang.Exception) {
             onSerialIoError(e)
@@ -206,6 +203,7 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
     }
 
     private fun receive(dataFromDevice: ByteArray) {
+
         val dataStr = String(dataFromDevice)
         val dataFromDeviceBase64 = Base64.encodeToString(dataFromDevice, Base64.NO_WRAP)
         Log.i(TAG, "received : $dataStr : $dataFromDeviceBase64")
@@ -228,13 +226,6 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
 
     private fun status(str: String) {
         Log.i(TAG, "connection status : $str")
-        val spn = SpannableStringBuilder(str + '\n')
-        spn.setSpan(
-            ForegroundColorSpan(resources.getColor(R.color.colorStatusText)),
-            0,
-            spn.length,
-            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
     }
 
     override fun onServiceDisconnected(name: ComponentName?) {

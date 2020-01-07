@@ -2,20 +2,16 @@ package com.xborg.vendx.activities.paymentActivity.fragments.paymentStatus
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.xborg.vendx.R
-import com.xborg.vendx.activities.deviceConnectorActivity.DeviceConnectorActivity
 import com.xborg.vendx.activities.mainActivity.MainActivity
-import com.xborg.vendx.activities.paymentActivity.PaymentActivity
 import com.xborg.vendx.activities.paymentActivity.SharedViewModel
-import com.xborg.vendx.bluetooth.BluetoothConnectionActivity
+import com.xborg.vendx.activities.vendingActivity.VendingActivity
 import com.xborg.vendx.database.PaymentState
 import com.xborg.vendx.database.PaymentStatus
 import kotlinx.android.synthetic.main.fragment_payment_status.*
@@ -41,7 +37,7 @@ class PaymentStatusFragment : Fragment(){
         observerSharedViewModel()
 
         get_button.setOnClickListener {
-            proceedToConnectionCreation()
+            proceedToVending()
         }
         retry_button.setOnClickListener {
             initPaymentRetry()
@@ -103,8 +99,8 @@ class PaymentStatusFragment : Fragment(){
         startActivity(intent)
     }
 
-    private fun proceedToConnectionCreation() {
-        val intent = Intent(context, DeviceConnectorActivity::class.java)
+    private fun proceedToVending() {
+        val intent = Intent(context, VendingActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(intent)
