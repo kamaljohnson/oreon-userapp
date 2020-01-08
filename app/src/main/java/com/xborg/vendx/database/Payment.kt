@@ -5,6 +5,7 @@ import com.squareup.moshi.Json
 enum class PaymentState {
     None,
     OrderInit,
+    UserCheckout,
     OrderIdReceived,
     PaymentInit,
     PaymentDone,

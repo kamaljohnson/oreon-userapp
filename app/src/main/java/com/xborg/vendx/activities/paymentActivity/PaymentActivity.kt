@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
@@ -14,6 +15,7 @@ import com.razorpay.Checkout
 import com.razorpay.PaymentData
 import com.razorpay.PaymentResultWithDataListener
 import com.xborg.vendx.R
+import com.xborg.vendx.activities.mainActivity.MainActivity
 import com.xborg.vendx.activities.paymentActivity.fragments.addPromotions.AddPromotionsFragment
 import com.xborg.vendx.activities.paymentActivity.fragments.cart.CartFragment
 import com.xborg.vendx.activities.paymentActivity.fragments.paymentMethods.PaymentMethodsFragment
@@ -192,5 +194,32 @@ class PaymentActivity : FragmentActivity(), PaymentResultWithDataListener {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(intent)
+    }
+
+    private fun proceedToHome() {
+        val intent = Intent(this, MainActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        startActivity(intent)
+    }
+
+    override fun onBackPressed() {
+        when (sharedViewModel.paymentState.value) {
+            PaymentState.None -> {
+                super.onBackPressed()
+            }
+            PaymentState.OrderInit -> {
+                super.onBackPressed()
+            }
+            PaymentState.PaymentFinished -> {
+                proceedToHome()
+            }
+            else -> {
+                Toast.makeText(
+                    this,
+                    "Event Blocked, Processing Payment!",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
     }
 }

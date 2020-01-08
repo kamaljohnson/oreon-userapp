@@ -34,6 +34,7 @@ class PaymentMethodsFragment : Fragment() {
         observerSharedViewModel()
 
         checkout_button.setOnClickListener {
+            viewModel.paymentState.value = PaymentState.UserCheckout
             checkout_button.isClickable = false
             progress_bar.visibility = View.VISIBLE
             //TODO: update local order with shared order
