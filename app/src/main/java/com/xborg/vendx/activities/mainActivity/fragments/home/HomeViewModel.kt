@@ -85,7 +85,7 @@ class HomeViewModel : ViewModel() {
         }
     }
 
-    fun updateItemGroupModel() {
+    private fun updateItemGroupModel() {
 
         val shelfItemsInMachine: ArrayList<Item> = ArrayList()
 
@@ -105,6 +105,7 @@ class HomeViewModel : ViewModel() {
         if (shelfItemsInMachine.isNotEmpty()) {
             val shelfItemsInMachineGroupModel =
                 ItemGroup(
+                    title = "From Shelf",
                     items = shelfItemsInMachine,
                     draw_line_breaker = machineItems.value!!.isNotEmpty()
                 )
@@ -112,17 +113,33 @@ class HomeViewModel : ViewModel() {
         }
         if (machineItems.value!!.isNotEmpty()) {
             val machineItemsGroupModel = ItemGroup(
+                title = "In Machine",
                 items = machineItems.value!!,
                 draw_line_breaker = shelfItems.value!!.isNotEmpty()
             )
             temp.add(machineItemsGroupModel)
         }
-        if (shelfItems.value!!.isNotEmpty()) {
-            val shelfItemsGroupModel = ItemGroup(
-                items = shelfItems.value!!,
+
+        val shelfItemsNotInMachine: ArrayList<Item> = ArrayList()
+        shelfItems.value!!.forEach{ s_item ->
+            var flag = true
+            machineItems.value!!.forEach { m_item ->
+                if(s_item.id == m_item.id) {
+                    flag = false
+                }
+            }
+            if(flag) {
+                shelfItemsNotInMachine.add(s_item)
+            }
+        }
+
+        if (shelfItemsNotInMachine.isNotEmpty()) {
+            val shelfItemsNotInMachineGroupModel = ItemGroup(
+                title = "Remaining Shelf",
+                items = shelfItemsNotInMachine,
                 draw_line_breaker = false
             )
-            temp.add(shelfItemsGroupModel)
+            temp.add(shelfItemsNotInMachineGroupModel)
         }
 
         allGroupItems.value = temp

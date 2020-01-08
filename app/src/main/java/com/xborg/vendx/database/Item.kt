@@ -22,7 +22,11 @@ data class Item(
     @Json(name = "RemainingInShelf") var remainingInShelf: Int = 0,
 
     var cartCount: Int = 0
-)
+) {
+    override fun toString(): String {
+        return "Item(id='$id', name='$name', inShelf=$inShelf, inMachine=$inMachine, remainingInMachine=$remainingInMachine, remainingInShelf=$remainingInShelf)"
+    }
+}
 
 data class ItemList(
     var items: List<Item>

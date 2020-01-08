@@ -2,6 +2,7 @@ package com.xborg.vendx.adapters
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.opengl.Visibility
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,7 +39,7 @@ class ItemCardAdapter(
 
         holder.itemId.text = item.id
         holder.name.text = item.name
-        holder.cost.text = item.cost.toString()
+        holder.cost.text = "₹ " + item.cost.toString()
         Glide
             .with(context)
             .load(item.imgScrUrl)
@@ -50,6 +51,10 @@ class ItemCardAdapter(
             "Machine"
         }
 
+        if(item.inShelf) {
+            holder.cost.visibility = View.GONE
+        }
+        
         holder.itemsInMachine.text = item.remainingInMachine.toString()
         holder.itemsInShelf.text = item.remainingInShelf.toString()
         holder.itemsInShelf.visibility = if (item.remainingInShelf == 0) {

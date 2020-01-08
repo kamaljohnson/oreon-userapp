@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.xborg.vendx.R
@@ -28,6 +29,7 @@ class ItemGroupAdapter(
 
     override fun onBindViewHolder(holder: GroupViewHolder, position: Int) {
         val parent = items[position]
+        holder.title.text = parent.title
         holder.groupItemsRV.apply {
             layoutManager = GridLayoutManager(context, 3)
             adapter = ItemCardAdapter(parent.items, context, onItemListener)
@@ -37,7 +39,7 @@ class ItemGroupAdapter(
             }
         }
         holder.lineBreaker.visibility = if (parent.draw_line_breaker) {
-            View.VISIBLE
+            View.INVISIBLE
         } else {
             View.INVISIBLE
         }
@@ -46,6 +48,7 @@ class ItemGroupAdapter(
     class GroupViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val groupItemsRV: RecyclerView = view.rv_item_group
         val lineBreaker: ImageView = view.line_breaker
+        val title: TextView = view.title
 
         val context: Context = itemView.context
     }

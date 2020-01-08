@@ -35,6 +35,7 @@ class ShelfViewModel: ViewModel() {
         }
 
         val shelfItemsGroupModel = ItemGroup(
+            title = "From Shelf",
             items = shelfItems,
             draw_line_breaker = false
         )

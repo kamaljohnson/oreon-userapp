@@ -81,6 +81,7 @@
                 android:textSize="7pt" />
 
             <TextView
+                android:layout_centerVertical="true"
                 android:id="@+id/name"
                 android:layout_width="50pt"
                 android:layout_height="wrap_content"
