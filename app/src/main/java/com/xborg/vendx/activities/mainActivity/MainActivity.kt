@@ -31,7 +31,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 private const val REQUEST_ENABLE_BT = 2
 private const val REQUEST_ENABLE_LOC = 3
 
-private var TAG = "MainActivity"
+var TAG = "MainActivity"
 
 private var mLayout: SlidingUpPanelLayout? = null
 
@@ -68,7 +68,7 @@ class MainActivity : FragmentActivity() {
             viewModel.updateCart()
         })
 
-        sharedViewModel.cartItem.observe(this, Observer { updatedCart ->
+        sharedViewModel.taggedCartItem.observe(this, Observer { updatedCart ->
             Log.i(TAG, "CartFragment updated: $updatedCart")
 
             var cartItemCount = 0
@@ -273,7 +273,7 @@ class MainActivity : FragmentActivity() {
                 if (slideOffset > 0.05f) {
                     hideGetButton()
                 } else if (current_fragment != Fragments.SHOP) {
-                    if(sharedViewModel.cartItem.value!!.isNotEmpty()) {
+                    if(sharedViewModel.taggedCartItem.value!!.isNotEmpty()) {
                         showGetButton()
                     }
                 }

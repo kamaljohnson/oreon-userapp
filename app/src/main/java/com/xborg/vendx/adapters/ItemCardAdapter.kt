@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.xborg.vendx.R
@@ -119,15 +120,18 @@ class ItemCardAdapter(
             }
 
             if (purchaseLimitCount == purchaseCount) {
+                displayItemLimitReached(itemView.context)
                 return
             }
 
-            if (purchaseCount == 0) {
-                this.purchaseCount.visibility = View.VISIBLE
-                itemRemoveButton.visibility = View.VISIBLE
-            }
             if(onItemListener.onItemAddedToCart(itemId.text.toString(), itemLoc.text.toString())) {
+                if (purchaseCount == 0) {
+                    this.purchaseCount.visibility = View.VISIBLE
+                    itemRemoveButton.visibility = View.VISIBLE
+                }
                 purchaseCount += 1
+            } else {
+                displayItemLimitReached(itemView.context)
             }
             this.purchaseCount.text = "$purchaseCount/$purchaseLimitCount"
         }
@@ -145,7 +149,13 @@ class ItemCardAdapter(
                 itemRemoveButton.visibility = View.INVISIBLE
             }
         }
+
+        private fun displayItemLimitReached(context: Context) {
+            Toast.makeText(context, "purchase limit reached", Toast.LENGTH_SHORT).show()
+        }
+
     }
+
 
     interface OnItemListener {
         fun onItemAddedToCart(itemId: String, itemLoc: String): Boolean

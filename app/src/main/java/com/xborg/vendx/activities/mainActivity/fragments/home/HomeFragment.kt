@@ -58,7 +58,7 @@ class HomeFragment : Fragment(), ItemCardAdapter.OnItemListener {
 
             sharedViewModel.setShelfItems(viewModel.shelfItems.value!!)
         })
-        sharedViewModel.cartItem.observe(viewLifecycleOwner, Observer { updatedCart ->
+        sharedViewModel.taggedCartItem.observe(viewLifecycleOwner, Observer { updatedCart ->
             Log.i(TAG, "CartFragment updated : $updatedCart")
 
         })

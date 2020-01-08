@@ -1,5 +1,6 @@
 package com.xborg.vendx.activities.mainActivity
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -17,12 +18,14 @@ class SharedViewModel : ViewModel() {
     var shelfItems = MutableLiveData<List<Item>>()
 
     // [itemId-from, count]     : from -> {Machine, Shelf}
-    private var _cartItems = MutableLiveData<MutableMap<String, Int>>()
-    val cartItem: LiveData<MutableMap<String, Int>>
-        get() = _cartItems
+    private var _taggedCartItems = MutableLiveData<MutableMap<String, Int>>()
+    val taggedCartItem: LiveData<MutableMap<String, Int>>
+        get() = _taggedCartItems
+
+    private var _unTaggedCartItems = mutableMapOf<String, Int>()
 
     init {
-        _cartItems.value = mutableMapOf()
+        _taggedCartItems.value = mutableMapOf()
     }
 
     fun setMachineItems(machineItems: List<Item>) {
@@ -36,40 +39,77 @@ class SharedViewModel : ViewModel() {
     fun addItemToCart(itemId: String, itemLoc: String): Boolean {
         val sudoItemId = "$itemLoc/$itemId" //eg Machine/2 , Shelf/5 etc..
 
-        val tempCart = _cartItems.value
+        val tempTaggedCart = _taggedCartItems.value
+        val tempUntaggedCart = _unTaggedCartItems
 
-        if (tempCart!!.containsKey(sudoItemId)) {
-            val count = tempCart[sudoItemId]!! + 1
-            tempCart[sudoItemId] = count
+        val taggedCount: Int
+        val unTaggedCount: Int
+
+        taggedCount = if (tempTaggedCart!!.containsKey(sudoItemId)) {
+            tempTaggedCart[sudoItemId]!! + 1
         } else {
-            tempCart[sudoItemId] = 1
+            1
         }
 
-        _cartItems.value = tempCart
-        return true
+        unTaggedCount = if(tempUntaggedCart!!.containsKey(itemId)) {
+            tempUntaggedCart[itemId]!! + 1
+        } else {
+            1
+        }
+
+        //TODO: change code while handling cart from shop
+        //checking if item purchase limit reached if item in machine
+        machineItems.value!!.forEach{item ->
+            if(item.id == itemId) {
+                return if(item.remainingInMachine >= unTaggedCount) {
+
+                    tempTaggedCart[sudoItemId] = taggedCount
+                    tempUntaggedCart[itemId] = unTaggedCount
+
+                    _taggedCartItems.value = tempTaggedCart
+                    _unTaggedCartItems = tempUntaggedCart
+
+                    Log.i(TAG, "unTagged Cart: $_unTaggedCartItems")
+                    Log.i(TAG, "remaining in machine : " + (item.remainingInMachine - unTaggedCount).toString())
+                    Log.i(TAG, "item can be added to cart")
+                    true
+                } else {
+                    Log.i(TAG, "item can'nt be added to cart")
+                    false
+                }
+            }
+        }
+        Log.i(TAG, "item can'nt be added to cart")
+        return false
     }
 
     fun removeItemFromCart(itemId: String, itemLoc: String) : Boolean{
         val sudoItemId = "$itemLoc/$itemId" //eg Machine/2 , Shelf/5 etc..
 
-        val tempCart = _cartItems.value
+        val tempTaggedCart = _taggedCartItems.value
+        val tempUnTaggedCart = _unTaggedCartItems
 
-        if (tempCart!!.containsKey(sudoItemId)) {
-            val count = tempCart[sudoItemId]!! - 1
-            tempCart[sudoItemId] = count
-            if (tempCart[sudoItemId] == 0) {
-                tempCart.remove(sudoItemId)
+        if (tempTaggedCart!!.containsKey(sudoItemId) && tempUnTaggedCart.containsKey(itemId)) {
+            val taggedCount = tempTaggedCart[sudoItemId]!! - 1
+            val unTaggedCount = tempUnTaggedCart[itemId]!! - 1
+            tempTaggedCart[sudoItemId] = taggedCount
+            tempUnTaggedCart[itemId] = unTaggedCount
+            if (tempTaggedCart[sudoItemId] == 0) {
+                tempTaggedCart.remove(sudoItemId)
+            }
+            if (tempUnTaggedCart[itemId] == 0) {
+                tempUnTaggedCart.remove(itemId)
             }
         } else {
             // this block should not be called
         }
 
-        _cartItems.value = tempCart
+        _taggedCartItems.value = tempTaggedCart
         return true
     }
 
     fun getCartItemsAsPassable(): HashMap<String, Int> {
-        return cartItem.value as HashMap<String, Int>
+        return taggedCartItem.value as HashMap<String, Int>
     }
 
     fun getMachineItemsAsJson(): String {
