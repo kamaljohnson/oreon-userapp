@@ -2,6 +2,8 @@ package com.xborg.vendx.adapters
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Color
+import android.media.Image
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,7 +34,7 @@ class ItemCartSlipAdapter(
 
         holder.itemId.text = item.id
         holder.name.text = item.name
-        holder.cost.text = item.cost.toString()
+        holder.cost.text =  "₹ " + (item.cost * item.cartCount).toString()
         Glide
             .with(context)
             .load(item.imgScrUrl)
@@ -47,6 +49,8 @@ class ItemCartSlipAdapter(
         if(item.inShelf) {
             holder.itemsInShelf.visibility = View.VISIBLE
             holder.itemsInShelf.text = item.cartCount.toString()
+            holder.cost.visibility = View.INVISIBLE
+            holder.paidIcon.visibility = View.VISIBLE
         } else {
             holder.itemsInMachine.visibility = View.VISIBLE
             holder.itemsInMachine.text = item.cartCount.toString()
@@ -64,6 +68,7 @@ class ItemCartSlipAdapter(
         val itemLoc: TextView = view.item_loc
         val itemsInShelf: TextView = view.items_in_shelf
         var itemsInMachine: TextView = view.items_in_machine
+        val paidIcon: ImageView = view.paid_icon
 
         init {
             purchaseCount.visibility = View.INVISIBLE
@@ -74,7 +79,7 @@ class ItemCartSlipAdapter(
         }
 
         override fun onClick(v: View?) {
-            addItemToCart()
+//            addItemToCart()
         }
 
         private fun addItemToCart() {
