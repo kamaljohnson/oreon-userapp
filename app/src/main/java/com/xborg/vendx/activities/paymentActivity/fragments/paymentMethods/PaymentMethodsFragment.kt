@@ -65,10 +65,11 @@ class PaymentMethodsFragment : Fragment() {
                         viewModel.calculatePayableAmount()
                         val totalPayableAmount = viewModel.order.value!!.amount
                         if(totalPayableAmount == 0f) {
-                            total_amount_text.text = " - all items from shelf"
+                            total_amount_text.visibility = View.GONE
+                            total_text.visibility = View.GONE
                             checkout_button.text = getString(R.string.get)
                         } else {
-                            total_amount_text.text = totalPayableAmount.toString()
+                            total_amount_text.text = "₹ $totalPayableAmount"
                             checkout_button.text = getString(R.string.pay)
                         }
                     }

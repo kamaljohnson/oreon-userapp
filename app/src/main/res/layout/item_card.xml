@@ -16,7 +16,7 @@
         style="?android:attr/ambientShadowAlpha"
         android:layout_marginHorizontal="5dp"
         android:layout_marginVertical="10dp"
-        android:translationZ="4dp"
+        android:translationZ="2dp"
         android:background="@drawable/rounded_card">
 
         <RelativeLayout

@@ -2,9 +2,10 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="100pt"
+    android:layout_height="wrap_content"
     tools:context=".activities.paymentActivity.fragments.paymentMethods.PaymentMethodsFragment">
     <RelativeLayout
+        android:background="@color/gray"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
@@ -33,8 +34,8 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:layout_below="@id/bill"
             android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
             android:layout_width="wrap_content"
             android:layout_height="70dp">
 

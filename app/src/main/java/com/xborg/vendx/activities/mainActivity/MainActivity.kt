@@ -76,12 +76,14 @@ class MainActivity : FragmentActivity() {
                 var itemCount = item.value
                 cartItemCount += itemCount
             }
+
+            cart_item_count.text = cartItemCount.toString()
+
             if(cartItemCount > 0) {
                 showGetButton()
             } else {
                 hideGetButton()
             }
-            cart_item_count.text = cartItemCount.toString()
         })
 
         initBottomNavigationView()
@@ -231,8 +233,8 @@ class MainActivity : FragmentActivity() {
                     current_fragment =
                         Fragments.SHELF
                     changeFragment(ShelfFragment(), "ShelfFragment")
-                    showGetButton()
-                    showSwipeUpContainer()
+                    hideGetButton()
+                    hideSwipeUpContainer()
                     return@setOnNavigationItemSelectedListener true
                 }
             }
@@ -290,8 +292,11 @@ class MainActivity : FragmentActivity() {
     }
 
     private fun showGetButton() {
-        checkout_button.show()
-        cart_item_count.visibility = View.VISIBLE
+        if(cart_item_count.text != "0")
+        {
+            checkout_button.show()
+            cart_item_count.visibility = View.VISIBLE
+        }
     }
 
     private fun hideSwipeUpContainer() {

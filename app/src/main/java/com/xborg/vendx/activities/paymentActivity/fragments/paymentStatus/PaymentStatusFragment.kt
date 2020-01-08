@@ -101,8 +101,7 @@ class PaymentStatusFragment : Fragment() {
 
     private fun proceedToVending() {
         val intent = Intent(context, VendingActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
         startActivity(intent)
     }
 }

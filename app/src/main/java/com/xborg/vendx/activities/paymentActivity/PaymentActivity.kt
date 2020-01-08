@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.google.firebase.auth.FirebaseAuth
 import com.razorpay.Checkout
 import com.razorpay.PaymentData
 import com.razorpay.PaymentResultWithDataListener
@@ -21,7 +22,7 @@ import com.xborg.vendx.activities.vendingActivity.VendingActivity
 import com.xborg.vendx.database.PaymentState
 import com.xborg.vendx.database.PaymentStatus
 import org.json.JSONObject
-import java.lang.Exception
+
 
 const val TAG = "PaymentActivity"
 
@@ -101,6 +102,14 @@ class PaymentActivity : FragmentActivity(), PaymentResultWithDataListener {
             options.put("description", "Reference ID. " + sharedViewModel.order.value!!.id)
             options.put("currency", "INR")
             options.put("amount", amount.toInt().toString())
+
+            val phoneNumber = FirebaseAuth.getInstance().currentUser!!.phoneNumber
+            val email = FirebaseAuth.getInstance().currentUser!!.email
+
+            val preFill = JSONObject()
+            preFill.put("email", email)
+            preFill.put("contact", phoneNumber)
+            options.put("prefill", preFill)
 
             checkout.open(this, options)
         } catch (e: Exception) {

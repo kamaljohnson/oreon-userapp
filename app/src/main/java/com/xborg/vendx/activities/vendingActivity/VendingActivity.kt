@@ -1,5 +1,6 @@
 package com.xborg.vendx.activities.vendingActivity
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.FragmentActivity
@@ -8,6 +9,7 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.xborg.vendx.R
+import com.xborg.vendx.activities.mainActivity.MainActivity
 import com.xborg.vendx.activities.vendingActivity.fragments.communicators.device.DeviceCommunicatorFragment
 import com.xborg.vendx.activities.vendingActivity.fragments.communicators.server.ServerCommunicatorFragment
 
@@ -44,5 +46,12 @@ class VendingActivity : FragmentActivity() {
             "ServerCommunicator"
         )
         fragmentTransaction.commit()
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        val intent = Intent(this, MainActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        startActivity(intent)
     }
 }
