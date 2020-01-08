@@ -33,7 +33,7 @@ class SharedViewModel : ViewModel() {
         this.shelfItems.value = shelfItems
     }
 
-    fun addItemToCart(itemId: String, itemLoc: String) {
+    fun addItemToCart(itemId: String, itemLoc: String): Boolean {
         val sudoItemId = "$itemLoc/$itemId" //eg Machine/2 , Shelf/5 etc..
 
         val tempCart = _cartItems.value
@@ -46,9 +46,10 @@ class SharedViewModel : ViewModel() {
         }
 
         _cartItems.value = tempCart
+        return true
     }
 
-    fun removeItemFromCart(itemId: String, itemLoc: String) {
+    fun removeItemFromCart(itemId: String, itemLoc: String) : Boolean{
         val sudoItemId = "$itemLoc/$itemId" //eg Machine/2 , Shelf/5 etc..
 
         val tempCart = _cartItems.value
@@ -64,6 +65,7 @@ class SharedViewModel : ViewModel() {
         }
 
         _cartItems.value = tempCart
+        return true
     }
 
     fun getCartItemsAsPassable(): HashMap<String, Int> {

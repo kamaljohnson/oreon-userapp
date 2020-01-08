@@ -44,6 +44,7 @@ class LoginActivity : AppCompatActivity() {
                         emailUploaded = true
                         loadMainActivity()
                     } else {
+                        Log.e(TAG, "email upload error : " + task.exception)
                         Toast.makeText(this, "email uploading failed", Toast.LENGTH_SHORT).show()
                     }
                 }

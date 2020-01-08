@@ -77,14 +77,13 @@ class HomeFragment : Fragment(), ItemCardAdapter.OnItemListener {
         }
     }
 
-    override fun onItemAddedToCart(itemId: String, itemLoc: String) {
+    override fun onItemAddedToCart(itemId: String, itemLoc: String): Boolean {
         Log.i(TAG, "item : $itemId from $itemLoc added to CartFragment")
-        sharedViewModel.addItemToCart(itemId, itemLoc)
-
+        return sharedViewModel.addItemToCart(itemId, itemLoc)
     }
 
-    override fun onItemRemovedFromCart(itemId: String, itemLoc: String) {
+    override fun onItemRemovedFromCart(itemId: String, itemLoc: String) : Boolean{
         Log.i(TAG, "item : $itemId from $itemLoc removed from CartFragment")
-        sharedViewModel.removeItemFromCart(itemId, itemLoc)
+        return sharedViewModel.removeItemFromCart(itemId, itemLoc)
     }
 }
