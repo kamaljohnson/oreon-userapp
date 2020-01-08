@@ -94,9 +94,9 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
             }
         })
 
-        send_to_device_button.setOnClickListener {
-            send(to_device_text.text.toString())
-        }
+//        send_to_device_button.setOnClickListener {
+//            send(to_device_text.text.toString())
+//        }
     }
 
     override fun onStart() {
@@ -207,7 +207,7 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
         val dataStr = String(dataFromDevice)
         val dataFromDeviceBase64 = Base64.encodeToString(dataFromDevice, Base64.NO_WRAP)
         Log.i(TAG, "received : $dataStr : $dataFromDeviceBase64")
-        text_from_device.text = dataStr
+//        text_from_device.text = dataStr
         if (dataStr == "OTP_TIMEOUT") {
             requestOtpFromDevice()
         } else {
