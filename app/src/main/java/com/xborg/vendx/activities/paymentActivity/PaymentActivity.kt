@@ -17,6 +17,7 @@ import com.xborg.vendx.activities.paymentActivity.fragments.addPromotions.AddPro
 import com.xborg.vendx.activities.paymentActivity.fragments.cart.CartFragment
 import com.xborg.vendx.activities.paymentActivity.fragments.paymentMethods.PaymentMethodsFragment
 import com.xborg.vendx.activities.paymentActivity.fragments.paymentStatus.PaymentStatusFragment
+import com.xborg.vendx.activities.vendingActivity.VendingActivity
 import com.xborg.vendx.database.PaymentState
 import com.xborg.vendx.database.PaymentStatus
 import org.json.JSONObject
@@ -53,12 +54,12 @@ class PaymentActivity : FragmentActivity(), PaymentResultWithDataListener {
 
         sharedViewModel.paymentState.observe(this, Observer { currentPaymentState ->
             Log.i(TAG, "Payment State: $currentPaymentState")
-            when(currentPaymentState) {
+            when (currentPaymentState) {
                 PaymentState.PaymentInit -> {
                     initiatePayment()
                 }
                 PaymentState.PaymentFinished -> {
-                    if(sharedViewModel.payment.value!!.status == PaymentStatus.Successful) {
+                    if (sharedViewModel.payment.value!!.status == PaymentStatus.Successful) {
                         Log.i(TAG, "Payment Checked and is authentic")
                     } else {
                         Log.i(TAG, "Payment Checked and is not authentic")
@@ -77,7 +78,7 @@ class PaymentActivity : FragmentActivity(), PaymentResultWithDataListener {
         sharedViewModel.setCartItemsFromSerializableHashMap(intent.getSerializableExtra("cartItems")!!)
     }
 
-//      region Payment Processing
+    //      region Payment Processing
     private fun initiatePayment() {
         Checkout.preload(this)
         startPayment()
@@ -87,12 +88,19 @@ class PaymentActivity : FragmentActivity(), PaymentResultWithDataListener {
         val checkout = Checkout()
         checkout.setFullScreenDisable(true)
 
+        val amount = sharedViewModel.payment.value!!.amount * 100
+
+        if (amount == 0f) {      //No need of payment
+            proceedToVending()
+            return
+        }
+
         try {
             val options = JSONObject()
             options.put("name", "VendX")
             options.put("description", "Reference ID. " + sharedViewModel.order.value!!.id)
             options.put("currency", "INR")
-            options.put("amount", sharedViewModel.payment.value!!.amount.toInt().toString() + "00")
+            options.put("amount", amount.toInt().toString())
 
             checkout.open(this, options)
         } catch (e: Exception) {
@@ -109,7 +117,7 @@ class PaymentActivity : FragmentActivity(), PaymentResultWithDataListener {
                 razorpayPaymentID = null
             )
             loadPaymentStatusFragment()
-        } catch(e: Exception) {
+        } catch (e: Exception) {
             Log.e(TAG, "error : $e")
         }
     }
@@ -133,16 +141,28 @@ class PaymentActivity : FragmentActivity(), PaymentResultWithDataListener {
     }
 //      endregion
 
-//      region Fragment Loading
+    //      region Fragment Loading
     @SuppressLint("ResourceType")
     private fun loadFragments() {
         val fragmentManager: FragmentManager = supportFragmentManager
         var fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
 
-        fragmentTransaction.add(R.id.promotion_fragment_container, AddPromotionsFragment(), "AddPromotionFragment")
+        fragmentTransaction.add(
+            R.id.promotion_fragment_container,
+            AddPromotionsFragment(),
+            "AddPromotionFragment"
+        )
         fragmentTransaction.add(R.id.cart_fragment_container, CartFragment(), "CartFragment")
-        fragmentTransaction.add(R.id.payment_method_fragment_container, PaymentMethodsFragment(), "PaymentMethodFragment")
-        fragmentTransaction.add(R.id.payment_status_text, PaymentStatusFragment(), "PaymentStatusFragment")
+        fragmentTransaction.add(
+            R.id.payment_method_fragment_container,
+            PaymentMethodsFragment(),
+            "PaymentMethodFragment"
+        )
+        fragmentTransaction.add(
+            R.id.payment_status_text,
+            PaymentStatusFragment(),
+            "PaymentStatusFragment"
+        )
         fragmentTransaction.commitNowAllowingStateLoss()
 
         fragmentTransaction = fragmentManager.beginTransaction()
@@ -157,4 +177,11 @@ class PaymentActivity : FragmentActivity(), PaymentResultWithDataListener {
         fragmentTransaction.commitNowAllowingStateLoss()
     }
 //      endregion
+
+    private fun proceedToVending() {
+        val intent = Intent(this, VendingActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
+    }
 }

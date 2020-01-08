@@ -68,6 +68,8 @@ class PaymentMethodsViewModel : ViewModel() {
 
     fun postOrderDetails() {
 
+        Log.i(TAG, "order : " + order.value.toString())
+
         val moshi: Moshi = Moshi.Builder()
             .add(KotlinJsonAdapterFactory())
             .build()

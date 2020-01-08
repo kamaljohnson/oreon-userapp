@@ -138,7 +138,7 @@ class MainActivity : FragmentActivity() {
         }
 //  endregion
 
-        get_button.setOnClickListener {
+        checkout_button.setOnClickListener {
             // TODO: use navigation graphs instead
             val intent = Intent(this, PaymentActivity::class.java)
             intent.putExtra("cartItems", sharedViewModel.getCartItemsAsPassable())
@@ -285,12 +285,12 @@ class MainActivity : FragmentActivity() {
     }
 
     private fun hideGetButton() {
-        get_button.hide()
+        checkout_button.hide()
         cart_item_count.visibility = View.INVISIBLE
     }
 
     private fun showGetButton() {
-        get_button.show()
+        checkout_button.show()
         cart_item_count.visibility = View.VISIBLE
     }
 

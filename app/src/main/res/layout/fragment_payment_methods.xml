@@ -43,14 +43,14 @@
                 android:id="@+id/progress_bar"
                 android:layout_marginTop="5pt"
                 android:layout_marginRight="5pt"
-                android:layout_toLeftOf="@id/get_button"
+                android:layout_toLeftOf="@id/checkout_button"
                 android:layout_width="10pt"
                 android:visibility="invisible"
                 android:layout_height="10pt"/>
 
             <Button
                 android:layout_centerVertical="true"
-                android:id="@+id/get_button"
+                android:id="@+id/checkout_button"
                 android:layout_marginRight="10pt"
                  android:text="Get"
                 android:textStyle="bold"

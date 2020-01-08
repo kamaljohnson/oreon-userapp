@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.fragment_payment_status.*
 
 const val TAG = "PaymentStatusFragment"
 
-class PaymentStatusFragment : Fragment(){
+class PaymentStatusFragment : Fragment() {
 
     private lateinit var sharedViewModel: SharedViewModel
     private lateinit var viewModel: PaymentStatusViewModel
@@ -36,7 +36,7 @@ class PaymentStatusFragment : Fragment(){
 
         observerSharedViewModel()
 
-        get_button.setOnClickListener {
+        checkout_button.setOnClickListener {
             proceedToVending()
         }
         retry_button.setOnClickListener {
@@ -53,11 +53,11 @@ class PaymentStatusFragment : Fragment(){
         viewModel = ViewModelProviders.of(activity!!).get(PaymentStatusViewModel::class.java)
 
         sharedViewModel.paymentState.observe(this, Observer { updatedPaymentState ->
-            if(viewModel.paymentState.value!! < updatedPaymentState) {
+            if (viewModel.paymentState.value!! < updatedPaymentState) {
                 viewModel.payment.value = sharedViewModel.payment.value
                 viewModel.order.value = sharedViewModel.order.value
                 viewModel.paymentState.value = updatedPaymentState
-                when(updatedPaymentState) {
+                when (updatedPaymentState) {
                     PaymentState.PaymentDone -> {
                         viewModel.sendPaymentToken()
                     }
@@ -66,7 +66,7 @@ class PaymentStatusFragment : Fragment(){
         })
 
         viewModel.paymentState.observe(this, Observer { updatedPaymentState ->
-            if(sharedViewModel.paymentState.value!! < updatedPaymentState) {
+            if (sharedViewModel.paymentState.value!! < updatedPaymentState) {
                 sharedViewModel.payment.value = viewModel.payment.value
                 sharedViewModel.order.value = viewModel.order.value
                 sharedViewModel.paymentState.value = updatedPaymentState

@@ -33,8 +33,8 @@ class PaymentMethodsFragment : Fragment() {
 
         observerSharedViewModel()
 
-        get_button.setOnClickListener {
-            get_button.isClickable = false
+        checkout_button.setOnClickListener {
+            checkout_button.isClickable = false
             progress_bar.visibility = View.VISIBLE
             //TODO: update local order with shared order
             viewModel.postOrderDetails()
@@ -66,10 +66,10 @@ class PaymentMethodsFragment : Fragment() {
                         val totalPayableAmount = viewModel.order.value!!.amount
                         if(totalPayableAmount == 0f) {
                             total_amount_text.text = " - all items from shelf"
-                            get_button.text = "Get"
+                            checkout_button.text = getString(R.string.get)
                         } else {
                             total_amount_text.text = totalPayableAmount.toString()
-                            get_button.text = "Pay"
+                            checkout_button.text = getString(R.string.pay)
                         }
                     }
                 }

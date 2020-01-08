@@ -26,4 +26,7 @@
     <string name="payment_success">Payment Successful</string>
     <string name="payment_failed">Payment Failed</string>
 
+    <string name="get">Get</string>
+    <string name="pay">Pay</string>
+
 </resources>

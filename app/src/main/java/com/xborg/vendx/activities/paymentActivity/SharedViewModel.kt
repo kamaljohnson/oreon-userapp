@@ -68,7 +68,11 @@ class SharedViewModel : ViewModel() {
             val from = sudoId.split('/')[0]
             val id = sudoId.split('/')[1]
 
-            tempOrderCartMap[id] = count
+            if(tempOrderCartMap.containsKey(id)) {
+                tempOrderCartMap[id] = tempOrderCartMap[id]!!  + count
+            } else {
+                tempOrderCartMap[id] = count
+            }
 
             when (from) {
                 "Machine" -> {
