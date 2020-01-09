@@ -75,6 +75,7 @@ class HomeFragment : Fragment(), ItemCardAdapter.OnItemListener {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             adapter = ItemGroupAdapter(viewModel.allGroupItems.value!!, context, this@HomeFragment)
         }
+        progress_bar.visibility = View.GONE
     }
 
     override fun onItemAddedToCart(itemId: String, itemLoc: String): Boolean {

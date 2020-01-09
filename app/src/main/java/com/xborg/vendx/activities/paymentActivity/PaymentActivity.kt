@@ -213,6 +213,10 @@ class PaymentActivity : FragmentActivity(), PaymentResultWithDataListener {
             PaymentState.PaymentFinished -> {
                 proceedToHome()
             }
+            PaymentState.PaymentFailed -> {
+                proceedToHome()
+            }
+
             else -> {
                 Toast.makeText(
                     this,
