@@ -13,8 +13,8 @@ enum class PaymentState {
     PaymentPosted,
     PaymentFinished,
 
-    PaymentRetry,
-    PaymentFailed
+    PaymentFailed,
+    PaymentRetry
 }
 
 enum class PaymentStatus {
