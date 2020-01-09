@@ -22,7 +22,7 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState
 import com.xborg.vendx.BuildConfig
 import com.xborg.vendx.activities.mainActivity.fragments.home.HomeFragment
-import com.xborg.vendx.activities.mainActivity.fragments.shelf.ShelfFragment
+import com.xborg.vendx.activities.mainActivity.fragments.history.HistoryFragment
 import com.xborg.vendx.activities.mainActivity.fragments.shop.ShopFragment
 import com.xborg.vendx.R
 import com.xborg.vendx.activities.paymentActivity.PaymentActivity
@@ -232,7 +232,7 @@ class MainActivity : FragmentActivity() {
                 R.id.navigation_shelf -> {
                     current_fragment =
                         Fragments.SHELF
-                    changeFragment(ShelfFragment(), "ShelfFragment")
+                    changeFragment(HistoryFragment(), "HistoryFragment")
                     hideGetButton()
                     hideSwipeUpContainer()
                     return@setOnNavigationItemSelectedListener true

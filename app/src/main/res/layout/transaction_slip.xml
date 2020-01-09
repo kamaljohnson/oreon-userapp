@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp">
+
+        <ImageView
+            android:id="@+id/transaction_type_image"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_alignParentLeft="true"
+            android:src="@drawable/common_google_signin_btn_icon_dark"/>
+
+        <TextView
+            android:layout_toRightOf="@id/transaction_type_image"
+            android:id="@+id/transaction_id"
+            android:text="Order ID: #TH889"
+            android:paddingLeft="5dp"
+            android:layout_width="170dp"
+            android:layout_height="25dp"
+            android:layout_alignParentRight="true"
+            android:textSize="15dp"/>
+
+        <TextView
+            android:paddingLeft="5dp"
+            android:layout_below="@id/transaction_id"
+            android:layout_toRightOf="@id/transaction_type_image"
+            android:text="Successful"
+            android:id="@+id/status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:paddingLeft="5dp"
+            android:layout_below="@id/status"
+            android:layout_toRightOf="@id/transaction_type_image"
+            android:text="29th September"
+            android:id="@+id/time_stamp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <ImageView
+            android:id="@+id/line_breaker"
+            android:layout_width="match_parent"
+            android:layout_height="2pt"
+            android:layout_marginTop="7pt"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/dotted"
+            android:layout_alignParentBottom="true"/>
+    </RelativeLayout>
+</LinearLayout>

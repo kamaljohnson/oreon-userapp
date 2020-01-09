@@ -35,6 +35,10 @@ interface VendxAPIService {
     fun getShelfItemsAsync(@Path("id") id: String):
             Deferred<String>
 
+    @GET("user/{id}/transactions")
+    fun getTransactionsAsync(@Path("id") id: String):
+            Deferred<String>
+
     @FormUrlEncoded
     @POST("orders/create")
     fun createOrderAsync(
