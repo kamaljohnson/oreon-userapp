@@ -220,7 +220,7 @@ class PaymentActivity : FragmentActivity(), PaymentResultWithDataListener {
             else -> {
                 Toast.makeText(
                     this,
-                    "Event Blocked, Processing Payment!" + sharedViewModel.paymentState.value.toString(),
+                    "Event Blocked, Processing Payment!",
                     Toast.LENGTH_LONG
                 ).show()
             }
