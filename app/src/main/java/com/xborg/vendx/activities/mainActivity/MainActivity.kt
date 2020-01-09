@@ -5,6 +5,7 @@ import android.app.AlertDialog
 import android.bluetooth.BluetoothAdapter
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -72,14 +73,14 @@ class MainActivity : FragmentActivity() {
             Log.i(TAG, "CartFragment updated: $updatedCart")
 
             var cartItemCount = 0
-            updatedCart.forEach {item ->
+            updatedCart.forEach { item ->
                 var itemCount = item.value
                 cartItemCount += itemCount
             }
 
             cart_item_count.text = cartItemCount.toString()
 
-            if(cartItemCount > 0) {
+            if (cartItemCount > 0) {
                 showGetButton()
             } else {
                 hideGetButton()
@@ -267,13 +268,18 @@ class MainActivity : FragmentActivity() {
     private fun initBottomSwipeUpView() {
         mLayout = findViewById(bottom_slide_up_container.id)
         mLayout!!.anchorPoint = 0.2f
+        mLayout!!.coveredFadeColor = Color.WHITE
+
+        mLayout!!.setFadeOnClickListener {
+            mLayout!!.panelState = PanelState.COLLAPSED
+        }
 
         mLayout!!.addPanelSlideListener(object : SlidingUpPanelLayout.PanelSlideListener {
             override fun onPanelSlide(panel: View, slideOffset: Float) {
                 if (slideOffset > 0.05f) {
                     hideGetButton()
                 } else if (current_fragment != Fragments.SHOP) {
-                    if(sharedViewModel.taggedCartItem.value!!.isNotEmpty()) {
+                    if (sharedViewModel.taggedCartItem.value!!.isNotEmpty()) {
                         showGetButton()
                     }
                 }
@@ -292,8 +298,7 @@ class MainActivity : FragmentActivity() {
     }
 
     private fun showGetButton() {
-        if(cart_item_count.text != "0")
-        {
+        if (cart_item_count.text != "0") {
             checkout_button.show()
             cart_item_count.visibility = View.VISIBLE
         }

@@ -213,10 +213,14 @@ class PaymentActivity : FragmentActivity(), PaymentResultWithDataListener {
             PaymentState.PaymentFinished -> {
                 proceedToHome()
             }
+            PaymentState.PaymentFailed -> {
+                proceedToHome()
+            }
+
             else -> {
                 Toast.makeText(
                     this,
-                    "Event Blocked, Processing Payment!",
+                    "Event Blocked, Processing Payment!" + sharedViewModel.paymentState.value.toString(),
                     Toast.LENGTH_LONG
                 ).show()
             }
