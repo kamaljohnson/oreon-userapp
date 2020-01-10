@@ -22,5 +22,4 @@ class SharedViewModel : ViewModel() {
             uid = uid
         )      // TODO: get the mid from paymentActivity
     }
-
 }
