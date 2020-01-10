@@ -11,7 +11,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.xborg.vendx.R
 import com.xborg.vendx.activities.mainActivity.MainActivity
 import com.xborg.vendx.activities.vendingActivity.fragments.deviceCommunicator.DeviceCommunicatorFragment
-import com.xborg.vendx.activities.vendingActivity.fragments.status.ServerCommunicatorFragment
+import com.xborg.vendx.activities.vendingActivity.fragments.status.VendingStatusFragment
 
 private var TAG = "VendingActivity"
 
@@ -27,7 +27,7 @@ class VendingActivity : FragmentActivity() {
         sharedViewModel = ViewModelProviders.of(this).get(SharedViewModel::class.java)
 
         sharedViewModel.bagStatus.observe(this, Observer { updatedBag ->
-            Log.i(TAG, "BagStatus : $updatedBag")
+            Log.i(TAG, "VendingState : $updatedBag")
         })
     }
 
@@ -38,12 +38,12 @@ class VendingActivity : FragmentActivity() {
         fragmentTransaction.add(
             R.id.device_communicator_fragment_container,
             DeviceCommunicatorFragment(),
-            "DeviceCommunicator"
+            "DeviceCommunicatorFragment"
         )
         fragmentTransaction.add(
-            R.id.server_communicator_fragment_container,
-            ServerCommunicatorFragment(),
-            "ServerCommunicator"
+            R.id.vending_status_fragment_container,
+            VendingStatusFragment(),
+            "VendingStatusFragment"
         )
         fragmentTransaction.commit()
     }

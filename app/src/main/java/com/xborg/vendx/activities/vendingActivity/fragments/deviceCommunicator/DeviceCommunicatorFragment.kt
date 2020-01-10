@@ -18,7 +18,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.xborg.vendx.R
 import com.xborg.vendx.activities.vendingActivity.SharedViewModel
-import com.xborg.vendx.database.BagStatus
+import com.xborg.vendx.database.VendingState
 
 const val TAG = "DeviceCommunicator"
 
@@ -66,17 +66,17 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
                 viewModel.bag.value = sharedViewModel.bag.value
 
                 when (updatedBagStatus) {
-                    BagStatus.Init -> {
+                    VendingState.Init -> {
                         requestOtpFromDevice()
                     }
-                    BagStatus.EncryptedOtpPlusBagReceived -> {
+                    VendingState.EncryptedOtpPlusBagReceived -> {
                         sendEncryptedOtpPlusBag()
                     }
-                    BagStatus.OtpValid -> TODO()
-                    BagStatus.Vending -> TODO()
-                    BagStatus.Complete -> TODO()
-                    BagStatus.OtpInvalid -> TODO()
-                    BagStatus.VendingError -> TODO()
+                    VendingState.OtpValid -> TODO()
+                    VendingState.Vending -> TODO()
+                    VendingState.VendingComplete -> TODO()
+                    VendingState.OtpInvalid -> TODO()
+                    VendingState.VendingError -> TODO()
                 }
             }
         })
@@ -169,7 +169,7 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
     }
 
     private fun initTransaction() {
-        sharedViewModel.bagStatus.value = BagStatus.Init
+        sharedViewModel.bagStatus.value = VendingState.Init
     }
 
     private fun requestOtpFromDevice() {
@@ -208,14 +208,14 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
             requestOtpFromDevice()
         } else {
             when (viewModel.bagStatus.value!!) {
-                BagStatus.Init -> viewModel.addEncryptedOtp(dataFromDeviceBase64)
-                BagStatus.EncryptedOtpReceived -> TODO()
-                BagStatus.OtpValid -> TODO()
-                BagStatus.OtpInvalid -> TODO()
-                BagStatus.EncryptedOtpPlusBagReceived -> TODO()
-                BagStatus.Vending -> TODO()
-                BagStatus.Complete -> TODO()
-                BagStatus.VendingError -> TODO()
+                VendingState.Init -> viewModel.addEncryptedOtp(dataFromDeviceBase64)
+                VendingState.EncryptedOtpReceived -> TODO()
+                VendingState.OtpValid -> TODO()
+                VendingState.OtpInvalid -> TODO()
+                VendingState.EncryptedOtpPlusBagReceived -> TODO()
+                VendingState.Vending -> TODO()
+                VendingState.VendingComplete -> TODO()
+                VendingState.VendingError -> TODO()
             }
         }
     }

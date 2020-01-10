@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import com.xborg.vendx.database.Bag
-import com.xborg.vendx.database.BagStatus
+import com.xborg.vendx.database.Vend
+import com.xborg.vendx.database.VendingState
 import com.xborg.vendx.network.VendxApi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -18,11 +18,11 @@ class VendingStatusViewModel : ViewModel() {
     private var viewModelJob = Job()
     private var coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
-    val bag = MutableLiveData<Bag>()
-    val bagStatus = MutableLiveData<BagStatus>()
+    val bag = MutableLiveData<Vend>()
+    val bagStatus = MutableLiveData<VendingState>()
 
     init {
-        bagStatus.value = BagStatus.None
+        bagStatus.value = VendingState.None
     }
 
     fun sendEncryptedOtp() {
@@ -30,7 +30,7 @@ class VendingStatusViewModel : ViewModel() {
             .add(KotlinJsonAdapterFactory())
             .build()
 
-        val bagInJson = moshi.adapter(Bag::class.java).toJson(bag.value)!!
+        val bagInJson = moshi.adapter(Vend::class.java).toJson(bag.value)!!
 
         coroutineScope.launch {
             val createOrderDeferred = VendxApi.retrofitServices
@@ -39,9 +39,9 @@ class VendingStatusViewModel : ViewModel() {
                 val listResult = createOrderDeferred.await()
                 Log.i(TAG, "Successful to get response: $listResult")
 
-                val tempBag = moshi.adapter(Bag::class.java).fromJson(listResult)!!
+                val tempBag = moshi.adapter(Vend::class.java).fromJson(listResult)!!
                 bag.value!!.encryptedOtpPlusBag = tempBag.encryptedOtpPlusBag
-                bagStatus.value = BagStatus.EncryptedOtpPlusBagReceived
+                bagStatus.value = VendingState.EncryptedOtpPlusBagReceived
 
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to get response: $e")

@@ -52,7 +52,7 @@ interface VendxAPIService {
     ): Deferred<String>
 
     @FormUrlEncoded
-    @POST("bag/check/otp")
+    @POST("vends/check/otp")
     fun sendEncryptedOTPAsync(
         @Field("bag") bag: String
     ): Deferred<String>

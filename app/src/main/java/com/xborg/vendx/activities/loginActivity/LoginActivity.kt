@@ -87,7 +87,7 @@ class LoginActivity : AppCompatActivity() {
                             val user = HashMap<String, Any>()
                             val emptyMap = HashMap<String, Number>()
                             user["Shelf"] = emptyMap
-                            user["Bag"] = emptyMap
+                            user["Vend"] = emptyMap
                             db.collection("Users").document(uid)
                                 .set(user)
                                 .addOnSuccessListener { userRef ->

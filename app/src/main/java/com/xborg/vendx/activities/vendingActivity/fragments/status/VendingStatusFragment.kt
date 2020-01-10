@@ -9,11 +9,11 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.xborg.vendx.R
 import com.xborg.vendx.activities.vendingActivity.SharedViewModel
-import com.xborg.vendx.database.BagStatus
+import com.xborg.vendx.database.VendingState
 
 const val TAG = "ServerCommunicator"
 
-class ServerCommunicatorFragment : Fragment() {
+class VendingStatusFragment : Fragment() {
 
     private lateinit var viewModel: VendingStatusViewModel
     private lateinit var sharedViewModel: SharedViewModel
@@ -43,7 +43,7 @@ class ServerCommunicatorFragment : Fragment() {
                 viewModel.bag.value = sharedViewModel.bag.value
 
                 when (updatedBagStatus) {
-                    BagStatus.EncryptedOtpReceived -> {
+                    VendingState.EncryptedOtpReceived -> {
                         viewModel.sendEncryptedOtp()
                     }
                 }
