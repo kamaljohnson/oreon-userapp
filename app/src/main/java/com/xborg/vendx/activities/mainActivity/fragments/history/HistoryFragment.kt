@@ -5,14 +5,17 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.xborg.vendx.R
 import com.xborg.vendx.activities.mainActivity.SharedViewModel
 import com.xborg.vendx.adapters.TransactionSlipAdapter
 import kotlinx.android.synthetic.main.fragment_history.*
+
 
 private var TAG = "HistoryFragment"
 
@@ -24,12 +27,10 @@ class HistoryFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.i(TAG, "Shelf onCreate called!")
-
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_history,container,false)
-
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -46,7 +47,15 @@ class HistoryFragment : Fragment() {
                 shelf_empty_container.visibility = View.VISIBLE
             }
         })
-    }
+
+        rv_transactions.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (!recyclerView.canScrollVertically(1)) {
+                    Toast.makeText(context, "Last", Toast.LENGTH_LONG).show()
+                }
+            }
+        })    }
 
     private fun updateTransactionsToRV() {
         rv_transactions.apply {
@@ -55,3 +64,4 @@ class HistoryFragment : Fragment() {
         }
     }
 }
+

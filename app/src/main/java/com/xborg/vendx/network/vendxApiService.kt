@@ -36,7 +36,7 @@ interface VendxAPIService {
             Deferred<String>
 
     @GET("user/{id}/transactions")
-    fun getTransactionsAsync(@Path("id") id: String):
+    fun getTransactionsAsync(@Path("id" ) id: String):
             Deferred<String>
 
     @FormUrlEncoded
