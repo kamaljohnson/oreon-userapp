@@ -1,4 +1,4 @@
-package com.xborg.vendx.activities.vendingActivity.fragments.communicators.server
+package com.xborg.vendx.activities.vendingActivity.fragments.status
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
@@ -13,7 +13,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
-class ServerCommunicatorViewModel : ViewModel() {
+class VendingStatusViewModel : ViewModel() {
 
     private var viewModelJob = Job()
     private var coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)

@@ -10,8 +10,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.xborg.vendx.R
 import com.xborg.vendx.activities.mainActivity.MainActivity
-import com.xborg.vendx.activities.vendingActivity.fragments.communicators.device.DeviceCommunicatorFragment
-import com.xborg.vendx.activities.vendingActivity.fragments.communicators.server.ServerCommunicatorFragment
+import com.xborg.vendx.activities.vendingActivity.fragments.deviceCommunicator.DeviceCommunicatorFragment
+import com.xborg.vendx.activities.vendingActivity.fragments.status.ServerCommunicatorFragment
 
 private var TAG = "VendingActivity"
 

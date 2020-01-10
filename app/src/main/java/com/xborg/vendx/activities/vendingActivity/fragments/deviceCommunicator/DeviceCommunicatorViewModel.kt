@@ -1,4 +1,4 @@
-package com.xborg.vendx.activities.vendingActivity.fragments.communicators.device
+package com.xborg.vendx.activities.vendingActivity.fragments.deviceCommunicator
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData

@@ -1,4 +1,4 @@
-package com.xborg.vendx.activities.vendingActivity.fragments.communicators.device
+package com.xborg.vendx.activities.vendingActivity.fragments.deviceCommunicator
 
 import android.bluetooth.BluetoothAdapter
 import android.content.ComponentName
@@ -7,9 +7,6 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
-import android.text.Spannable
-import android.text.SpannableStringBuilder
-import android.text.style.ForegroundColorSpan
 import android.util.Base64
 import android.util.Log
 import android.view.LayoutInflater
@@ -22,7 +19,6 @@ import androidx.lifecycle.ViewModelProviders
 import com.xborg.vendx.R
 import com.xborg.vendx.activities.vendingActivity.SharedViewModel
 import com.xborg.vendx.database.BagStatus
-import kotlinx.android.synthetic.main.fragment_device_communicator.*
 
 const val TAG = "DeviceCommunicator"
 

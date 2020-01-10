@@ -1,4 +1,4 @@
-package com.xborg.vendx.activities.vendingActivity.fragments.communicators.server
+package com.xborg.vendx.activities.vendingActivity.fragments.status
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -15,7 +15,7 @@ const val TAG = "ServerCommunicator"
 
 class ServerCommunicatorFragment : Fragment() {
 
-    private lateinit var viewModel: ServerCommunicatorViewModel
+    private lateinit var viewModel: VendingStatusViewModel
     private lateinit var sharedViewModel: SharedViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,13 +27,13 @@ class ServerCommunicatorFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_server_communicator, container, false)
+        return inflater.inflate(R.layout.fragment_vending_status, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        viewModel = ViewModelProviders.of(activity!!).get(ServerCommunicatorViewModel::class.java)
+        viewModel = ViewModelProviders.of(activity!!).get(VendingStatusViewModel::class.java)
         sharedViewModel = ViewModelProviders.of(activity!!).get(SharedViewModel::class.java)
 
         sharedViewModel.bagStatus.observe(this, Observer { updatedBagStatus ->
@@ -55,7 +55,6 @@ class ServerCommunicatorFragment : Fragment() {
 
                 sharedViewModel.bagStatus.value = updatedBagStatus
                 sharedViewModel.bag.value = viewModel.bag.value
-
             }
         })
     }

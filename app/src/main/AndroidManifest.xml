@@ -49,7 +49,7 @@
         <meta-data
             android:name="com.razorpay.ApiKey"
             android:value="rzp_test_KvfTdnPSCJotdH" />
-        <service android:name=".activities.vendingActivity.fragments.communicators.device.SerialService" />
+        <service android:name="com.xborg.vendx.activities.vendingActivity.fragments.deviceCommunicator.SerialService" />
 
     </application>
 
