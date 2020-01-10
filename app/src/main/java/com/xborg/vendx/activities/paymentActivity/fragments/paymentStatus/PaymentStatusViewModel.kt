@@ -48,7 +48,7 @@ class PaymentStatusViewModel: ViewModel() {
                 payment.value =
                     moshi.adapter(Payment::class.java).fromJson(listResult)!!
 
-                paymentState.value = PaymentState.PaymentFinished
+                paymentState.value = PaymentState.PaymentComplete
             } catch (t: Throwable) {
                 Log.e(TAG, "Failed to get response: ${t.message}")
             }

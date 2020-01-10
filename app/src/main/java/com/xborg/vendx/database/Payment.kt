@@ -11,9 +11,8 @@ enum class PaymentState {
     PaymentDone,
     PaymentTokenCreated,    //TODO: this state should be removed
     PaymentPosted,
-    PaymentFinished,
 
-    PaymentFailed,
+    PaymentComplete,
     PaymentRetry
 }
 
@@ -35,5 +34,6 @@ data class Payment(
     @Json(name = "RazorpayOrderId") var razorpayOrderId: String = "",       //TODO: update this while posting order
     @Json(name = "OrderId") var orderId: String,
     @Json(name = "RND") var rnd: String = "",                               //TODO: this should be changed with razorpayOrderId | just a temp fix
-    @Json(name = "UID") var uid: String = ""
+    @Json(name = "UID") var uid: String = "",
+    @Json(name = "TimeStamp") var timeStamp: String = ""
 )

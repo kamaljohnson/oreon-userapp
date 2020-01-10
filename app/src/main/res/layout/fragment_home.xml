@@ -8,6 +8,7 @@
         tools:context=".activities.mainActivity.fragments.home.HomeFragment"
         android:overScrollMode="always"
         android:isScrollContainer="true"
+        android:layout_marginBottom="25pt"
         android:orientation="vertical">
 
     <!--    region  Info Bar-->

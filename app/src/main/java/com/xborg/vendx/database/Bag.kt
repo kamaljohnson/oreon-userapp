@@ -22,6 +22,6 @@ data class Bag (
     @Json(name = "Bag") var bag: String = "",
     @Json(name = "MID") var mid: String = "",
     @Json(name = "UID") var uid: String = "",
-    @Json(name = "EncryptedOtpPlusBag") var encryptedOtpPlusBag: String = ""
-
-)
+    @Json(name = "EncryptedOtpPlusBag") var encryptedOtpPlusBag: String = "",
+    @Json(name = "TimeStamp") var timeStamp: String = ""
+    )

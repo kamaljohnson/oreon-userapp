@@ -8,5 +8,6 @@ data class Order (
     @Json(name = "BillingCart") var billingCart: MutableMap<String, Int> = mutableMapOf(),
     @Json(name = "Amount") var amount: Float = 0f,
     @Json(name = "UID") var uid: String = "",
+    @Json(name = "TimeStamp") var timeStamp: String = "",
     @Json(name = "PaymentId") var paymentId: String = ""
 )

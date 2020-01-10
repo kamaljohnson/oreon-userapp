@@ -10,7 +10,7 @@ enum class TransactionType{
 
 enum class TransactionStatus {
     Processing,
-    Success,
+    Successful,
     Failed,
     Temp    //TODO: remove after adding status to orders
 }
@@ -19,7 +19,7 @@ data class Transaction(
     @Json(name = "Id") var id: String,
     @Json(name = "Type") var type: TransactionType,
     @Json(name = "Status") var status: TransactionStatus,
-    @Json(name = "TimeStamp") var timeStamp: String
+    @Json(name = "TimeStamp") var timeStamp: String = ""
     )
 
 data class TransactionList(

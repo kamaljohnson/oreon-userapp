@@ -61,7 +61,7 @@ class PaymentActivity : FragmentActivity(), PaymentResultWithDataListener {
                 PaymentState.PaymentInit -> {
                     initiatePayment()
                 }
-                PaymentState.PaymentFinished -> {
+                PaymentState.PaymentComplete -> {
                     if (sharedViewModel.payment.value!!.status == PaymentStatus.Successful) {
                         Log.i(TAG, "Payment Checked and is authentic")
                     } else {
@@ -210,10 +210,7 @@ class PaymentActivity : FragmentActivity(), PaymentResultWithDataListener {
             PaymentState.OrderInit -> {
                 super.onBackPressed()
             }
-            PaymentState.PaymentFinished -> {
-                proceedToHome()
-            }
-            PaymentState.PaymentFailed -> {
+            PaymentState.PaymentComplete -> {
                 proceedToHome()
             }
 

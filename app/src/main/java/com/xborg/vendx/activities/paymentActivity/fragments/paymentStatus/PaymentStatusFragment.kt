@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -59,6 +60,7 @@ class PaymentStatusFragment : Fragment() {
                 viewModel.paymentState.value = updatedPaymentState
                 when (updatedPaymentState) {
                     PaymentState.PaymentDone -> {
+                        Toast.makeText(context, "payment done", Toast.LENGTH_SHORT).show()
                         viewModel.sendPaymentToken()
                     }
                 }
@@ -85,7 +87,6 @@ class PaymentStatusFragment : Fragment() {
     }
 
     private fun onPaymentFailed() {
-        sharedViewModel.paymentState.value = PaymentState.PaymentFailed
         status_icon.setBackgroundResource(R.drawable.error)
         on_failure_layout.visibility = View.VISIBLE
     }

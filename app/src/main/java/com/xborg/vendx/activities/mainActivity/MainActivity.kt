@@ -305,14 +305,11 @@ class MainActivity : FragmentActivity() {
     }
 
     private fun hideSwipeUpContainer() {
-        bottom_slide_up_container.isClipPanel = true
-        bottom_slide_up_container.panelState = PanelState.COLLAPSED
-        bottom_slide_up_container.isClipPanel = true
-        bottom_slide_up_container.isTouchEnabled = false
+        bottom_slide_up_container.panelState = PanelState.HIDDEN
     }
 
     private fun showSwipeUpContainer() {
-        bottom_slide_up_container.isTouchEnabled = true
+        bottom_slide_up_container.panelState = PanelState.COLLAPSED
     }
 //    endregion
 }
