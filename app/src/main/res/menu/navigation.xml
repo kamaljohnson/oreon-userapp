@@ -12,7 +12,7 @@
         android:title="@string/title_shop" />
 
     <item
-        android:id="@+id/navigation_shelf"
+        android:id="@+id/navigation_history"
         android:icon="@drawable/ic_shop_basket"
         android:title="@string/title_shelf" />
 </menu>

@@ -10,15 +10,22 @@
         android:layout_width="match_parent"
         android:layout_height="70dp">
 
-        <ImageView
-            android:id="@+id/transaction_type_image"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+        <RelativeLayout
             android:layout_alignParentLeft="true"
-            android:src="@drawable/common_google_signin_btn_icon_dark"/>
+            android:id="@+id/transaction_type"
+            android:layout_marginHorizontal="3dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp">
+            <ImageView
+                android:id="@+id/transaction_icon"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </RelativeLayout>
+
+
 
         <TextView
-            android:layout_toRightOf="@id/transaction_type_image"
+            android:layout_toRightOf="@id/transaction_type"
             android:id="@+id/transaction_id"
             android:text="Order ID: #TH889"
             android:paddingLeft="5dp"
@@ -30,7 +37,7 @@
         <TextView
             android:paddingLeft="5dp"
             android:layout_below="@id/transaction_id"
-            android:layout_toRightOf="@id/transaction_type_image"
+            android:layout_toRightOf="@id/transaction_type"
             android:text="Successful"
             android:id="@+id/status"
             android:layout_width="wrap_content"
@@ -39,7 +46,7 @@
         <TextView
             android:paddingLeft="5dp"
             android:layout_below="@id/status"
-            android:layout_toRightOf="@id/transaction_type_image"
+            android:layout_toRightOf="@id/transaction_type"
             android:text="29th September"
             android:id="@+id/time_stamp"
             android:layout_width="wrap_content"

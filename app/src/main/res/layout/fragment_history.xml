@@ -6,6 +6,20 @@
     tools:context=".activities.mainActivity.fragments.history.HistoryFragment">
 
     <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ProgressBar
+            android:paddingTop="25pt"
+            android:layout_centerInParent="true"
+            android:id="@+id/progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:visibility="invisible"
         android:id="@+id/shelf_empty_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

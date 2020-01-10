@@ -230,7 +230,7 @@ class MainActivity : FragmentActivity() {
                     return@setOnNavigationItemSelectedListener true
                 }
 
-                R.id.navigation_shelf -> {
+                R.id.navigation_history -> {
                     current_fragment =
                         Fragments.SHELF
                     changeFragment(HistoryFragment(), "HistoryFragment")
@@ -305,6 +305,7 @@ class MainActivity : FragmentActivity() {
     }
 
     private fun hideSwipeUpContainer() {
+        bottom_slide_up_container.isClipPanel = true
         bottom_slide_up_container.panelState = PanelState.COLLAPSED
         bottom_slide_up_container.isClipPanel = true
         bottom_slide_up_container.isTouchEnabled = false

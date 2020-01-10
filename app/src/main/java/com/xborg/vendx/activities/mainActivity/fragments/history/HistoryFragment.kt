@@ -38,11 +38,12 @@ class HistoryFragment : Fragment() {
         sharedViewModel = ViewModelProviders.of(activity!!).get(SharedViewModel::class.java)
 
         viewModel.transactions.observe(this, Observer { updatedTransactions ->
+            progress_bar.visibility = View.GONE
             if(updatedTransactions.isNotEmpty()) {
-                empty_gif.visibility = View.GONE
+                shelf_empty_container.visibility = View.GONE
                 updateTransactionsToRV()
             } else {
-                empty_gif.visibility = View.VISIBLE
+                shelf_empty_container.visibility = View.VISIBLE
             }
         })
     }

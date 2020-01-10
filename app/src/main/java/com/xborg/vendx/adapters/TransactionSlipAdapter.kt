@@ -4,10 +4,12 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.xborg.vendx.R
 import com.xborg.vendx.database.Transaction
+import com.xborg.vendx.database.TransactionType
 import kotlinx.android.synthetic.main.transaction_slip.view.*
 
 class TransactionSlipAdapter(
@@ -22,7 +24,6 @@ class TransactionSlipAdapter(
 
     override fun getItemCount(): Int {
         return transactions.size
-
     }
 
     override fun onBindViewHolder(holder: TransactionSlipViewHolder, position: Int) {
@@ -30,6 +31,17 @@ class TransactionSlipAdapter(
         holder.id.text = transaction.id
         holder.status.text = transaction.status.toString()
         holder.timeStamp.text = transaction.timeStamp
+        when(transaction.type) {
+            TransactionType.Order -> {
+                holder.orderIcon.setBackgroundResource(R.drawable.ic_order_icon)
+            }
+            TransactionType.Payment -> {
+                holder.orderIcon.setBackgroundResource(R.drawable.ic_payment_icon)
+            }
+            TransactionType.Vend -> {
+                holder.orderIcon.setBackgroundResource(R.drawable.ic_vend_icon)
+            }
+        }
     }
 
     class TransactionSlipViewHolder(view: View) :
@@ -37,7 +49,7 @@ class TransactionSlipAdapter(
         val id: TextView = view.transaction_id
         val status: TextView = view.status
         val timeStamp: TextView = view.time_stamp
-        val transactionTypeImage = view.transaction_type_image
+        val orderIcon: ImageView = view.transaction_icon
 
         init {
             itemView.setOnClickListener(this)
