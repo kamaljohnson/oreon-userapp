@@ -28,5 +28,6 @@ class SharedViewModel : ViewModel() {
 
     fun updateVendingCount() {
         currentVendingCount.value = currentVendingCount.value!! + 1
+        bag.value!!.status = VendingStatus.Processing
     }
 }

@@ -7,6 +7,7 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.xborg.vendx.database.Vend
 import com.xborg.vendx.database.VendingState
+import com.xborg.vendx.database.VendingStatus
 import com.xborg.vendx.network.VendxApi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -25,7 +26,7 @@ class VendingStatusViewModel : ViewModel() {
         bagState.value = VendingState.Init
     }
 
-    fun sendEncryptedOtp() {
+    fun sendEncryptedOtpToServer() {
         val moshi: Moshi = Moshi.Builder()
             .add(KotlinJsonAdapterFactory())
             .build()
@@ -42,14 +43,13 @@ class VendingStatusViewModel : ViewModel() {
                 val tempBag = moshi.adapter(Vend::class.java).fromJson(listResult)!!
                 bag.value!!.encryptedOtpPlusBag = tempBag.encryptedOtpPlusBag
                 bagState.value = VendingState.EncryptedOtpPlusBagReceived
-
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to get response: $e")
             }
         }
     }
 
-    fun sendOnVendCompleteLog() {
+    fun sendEncryptedDeviceLogToServer() {
         val moshi: Moshi = Moshi.Builder()
             .add(KotlinJsonAdapterFactory())
             .build()

@@ -21,4 +21,10 @@ class DeviceCommunicatorViewModel : ViewModel() {
         bag.value!!.encryptedOtp = encryptedOtp
         bagState.value = VendingState.EncryptedOtpReceived
     }
+
+    fun addEncryptedLog(encryptedLog: String) {
+        Log.i(TAG, bag.value.toString())
+        bag.value!!.encryptedLog = encryptedLog
+        bagState.value = VendingState.EncryptedOtpReceived
+    }
 }

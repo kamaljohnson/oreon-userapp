@@ -44,10 +44,10 @@ class VendingStatusFragment : Fragment() {
 
                 when (updatedVendingState) {
                     VendingState.EncryptedOtpReceived -> {
-                        viewModel.sendEncryptedOtp()
+                        viewModel.sendEncryptedOtpToServer()
                     }
-                    VendingState.VendingComplete -> {
-                        viewModel.sendOnVendCompleteLog()
+                    VendingState.VendingDone -> {
+                        viewModel.sendEncryptedDeviceLogToServer()
                     }
                 }
             }

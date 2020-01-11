@@ -19,6 +19,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.xborg.vendx.R
 import com.xborg.vendx.activities.vendingActivity.SharedViewModel
 import com.xborg.vendx.database.VendingState
+import com.xborg.vendx.database.VendingStatus
 
 const val TAG = "DeviceCommunicator"
 
@@ -72,11 +73,8 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
                     VendingState.EncryptedOtpPlusBagReceived -> {
                         sendEncryptedOtpPlusBagToDevice()
                     }
-                    VendingState.OtpValid -> TODO()
                     VendingState.Vending -> TODO()
-                    VendingState.VendingComplete -> TODO()
-                    VendingState.OtpInvalid -> TODO()
-                    VendingState.VendingError -> TODO()
+                    VendingState.VendingDone -> TODO()
                 }
             }
         })
@@ -175,14 +173,14 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
         send(viewModel.bag.value!!.encryptedOtpPlusBag, true)
     }
 
-    private fun send(str: String, isBase64:Boolean = false) {
+    private fun send(str: String, isBase64: Boolean = false) {
         Log.i(TAG, "sending : $str")
         if (connected != Connected.True) {
             Toast.makeText(context, "not connected", Toast.LENGTH_SHORT).show()
             return
         }
         try {
-            val data: ByteArray = if(isBase64) {
+            val data: ByteArray = if (isBase64) {
                 Base64.decode(str, Base64.NO_WRAP)
             } else {
                 str.toByteArray()
@@ -201,20 +199,19 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
 
         if (dataStr == "OTP_TIMEOUT") {     //otp timed out and required to be re-requested
             requestOtpFromDevice()
-        }
-        else if(dataStr == "VEND_DONE") {   //a single vend is completed by device
+        } else if (dataStr == "VENDING") {   //a single vend is completed by device
             sharedViewModel.bagState.value = VendingState.Vending
             sharedViewModel.updateVendingCount()
-        }
-        else {
+        } else if (dataStr == "VEND_DONE") {
+            sharedViewModel.bagState.value = VendingState.VendingDone
+            sharedViewModel.bag.value!!.status = VendingStatus.Done
+        } else {
             when (viewModel.bagState.value!!) {
                 VendingState.DeviceConnected -> viewModel.addEncryptedOtp(dataFromDeviceBase64)
                 VendingState.EncryptedOtpReceived -> {  //TODO: check validity of the otp
 
                 }
-                VendingState.Vending -> {
-                    sharedViewModel.bagState.value = VendingState.VendingComplete
-                }
+                VendingState.VendingDone -> viewModel.addEncryptedLog(dataFromDeviceBase64)
             }
         }
     }

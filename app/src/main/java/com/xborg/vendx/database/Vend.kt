@@ -7,13 +7,11 @@ enum class VendingState {
     DeviceConnected,
     EncryptedOtpReceived,
     EncryptedOtpPlusBagReceived,
-    OtpValid,
     Vending,
-
-    OtpInvalid,
-    VendingComplete,
-
-    VendingError,
+    VendingDone,
+    EncryptedDeviceLogReceived,
+    VendStatusUpdatedInServer,
+    VendingComplete
 }
 
 enum class VendingStatus {
@@ -35,5 +33,5 @@ data class Vend (
     @Json(name = "EncryptedOtpPlusBag") var encryptedOtpPlusBag: String = "",
     @Json(name = "EncryptedOtpPlusBag") var encryptedVendCompleteStatus: String = "",
     @Json(name = "TimeStamp") var timeStamp: String = "",
-    @Json(name = "Log") var log: String = "test log"
+    @Json(name = "EncryptedLog") var encryptedLog: String = "test log"
     )
