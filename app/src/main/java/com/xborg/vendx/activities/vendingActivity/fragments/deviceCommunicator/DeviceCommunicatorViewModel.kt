@@ -10,15 +10,15 @@ class DeviceCommunicatorViewModel : ViewModel() {
 
 
     val bag = MutableLiveData<Vend>()
-    val bagStatus = MutableLiveData<VendingState>()
+    val bagState = MutableLiveData<VendingState>()
 
     init {
-        bagStatus.value = VendingState.None
+        bagState.value = VendingState.Init
     }
 
     fun addEncryptedOtp(encryptedOtp: String) {
         Log.i(TAG, bag.value.toString())
         bag.value!!.encryptedOtp = encryptedOtp
-        bagStatus.value = VendingState.EncryptedOtpReceived
+        bagState.value = VendingState.EncryptedOtpReceived
     }
 }

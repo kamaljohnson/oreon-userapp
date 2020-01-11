@@ -36,26 +36,37 @@ class VendingStatusFragment : Fragment() {
         viewModel = ViewModelProviders.of(activity!!).get(VendingStatusViewModel::class.java)
         sharedViewModel = ViewModelProviders.of(activity!!).get(SharedViewModel::class.java)
 
-        sharedViewModel.bagStatus.observe(this, Observer { updatedBagStatus ->
-            if (viewModel.bagStatus.value!! < updatedBagStatus) {
+        sharedViewModel.bagState.observe(this, Observer { updatedVendingState ->
+            if (viewModel.bagState.value!! < updatedVendingState) {
 
-                viewModel.bagStatus.value = updatedBagStatus
+                viewModel.bagState.value = updatedVendingState
                 viewModel.bag.value = sharedViewModel.bag.value
 
-                when (updatedBagStatus) {
+                when (updatedVendingState) {
                     VendingState.EncryptedOtpReceived -> {
                         viewModel.sendEncryptedOtp()
+                    }
+                    VendingState.VendingComplete -> {
+                        viewModel.sendOnVendCompleteLog()
                     }
                 }
             }
         })
 
-        viewModel.bagStatus.observe(this, Observer { updatedBagStatus ->
-            if (sharedViewModel.bagStatus.value!! < updatedBagStatus) {
+        sharedViewModel.currentVendingCount.observe(this, Observer { updatedCurrentVendingCount ->
+            updateVendingCount()
+        })
 
-                sharedViewModel.bagStatus.value = updatedBagStatus
+        viewModel.bagState.observe(this, Observer { updatedBagStatus ->
+            if (sharedViewModel.bagState.value!! < updatedBagStatus) {
+
+                sharedViewModel.bagState.value = updatedBagStatus
                 sharedViewModel.bag.value = viewModel.bag.value
             }
         })
+    }
+
+    private fun updateVendingCount() {  //TODO: display vending progress as item vended
+
     }
 }

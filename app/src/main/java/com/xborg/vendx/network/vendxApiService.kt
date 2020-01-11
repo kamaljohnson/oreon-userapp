@@ -28,16 +28,19 @@ private val retrofit = Retrofit.Builder()
 
 interface VendxAPIService {
     @GET("machine/{id}/items")
-    fun getMachineItemsAsync(@Path("id") id: String):
-            Deferred<String>
+    fun getMachineItemsAsync(
+        @Path("id") id: String
+    ): Deferred<String>
 
     @GET("user/{id}/shelf")
-    fun getShelfItemsAsync(@Path("id") id: String):
-            Deferred<String>
+    fun getShelfItemsAsync(
+        @Path("id") id: String
+    ): Deferred<String>
 
     @GET("user/{id}/transactions")
-    fun getTransactionsAsync(@Path("id" ) id: String):
-            Deferred<String>
+    fun getTransactionsAsync(
+        @Path("id") id: String
+    ): Deferred<String>
 
     @FormUrlEncoded
     @POST("orders/create")
@@ -54,6 +57,13 @@ interface VendxAPIService {
     @FormUrlEncoded
     @POST("vends/check/otp")
     fun sendEncryptedOTPAsync(
+        @Field("bag") bag: String
+    ): Deferred<String>
+
+    @FormUrlEncoded
+    @POST("vends/complete/{id}")
+    fun sendOnVendCompleteLogAsync(
+        @Path("id") id: String,
         @Field("bag") bag: String
     ): Deferred<String>
 }
