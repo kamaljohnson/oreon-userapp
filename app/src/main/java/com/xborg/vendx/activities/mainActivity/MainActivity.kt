@@ -26,6 +26,7 @@ import com.xborg.vendx.activities.mainActivity.fragments.home.HomeFragment
 import com.xborg.vendx.activities.mainActivity.fragments.history.HistoryFragment
 import com.xborg.vendx.activities.mainActivity.fragments.shop.ShopFragment
 import com.xborg.vendx.R
+import com.xborg.vendx.activities.mainActivity.fragments.explore.ExploreFragment
 import com.xborg.vendx.activities.paymentActivity.PaymentActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -266,6 +267,8 @@ class MainActivity : FragmentActivity() {
     }
 
     private fun initBottomSwipeUpView() {
+        loadBottomSwipeUpFragment()
+
         mLayout = findViewById(bottom_slide_up_container.id)
         mLayout!!.anchorPoint = 0.2f
         mLayout!!.coveredFadeColor = Color.WHITE
@@ -290,6 +293,14 @@ class MainActivity : FragmentActivity() {
             ) {
             }
         })
+    }
+
+    private fun loadBottomSwipeUpFragment() {
+        val fragmentManager: FragmentManager = supportFragmentManager
+        val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
+
+        fragmentTransaction.add(R.id.explore_fragment_container, ExploreFragment(), "ExploreFragment")
+        fragmentTransaction.commitNowAllowingStateLoss()
     }
 
     private fun hideGetButton() {
