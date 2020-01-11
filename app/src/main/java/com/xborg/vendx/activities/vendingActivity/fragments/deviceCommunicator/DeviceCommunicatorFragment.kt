@@ -42,7 +42,8 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        deviceAddress = "3C:71:BF:79:86:22"
+//        deviceAddress = "3C:71:BF:79:86:22"
+        deviceAddress = "D0:17:C2:6A:EA:04"
     }
 
     override fun onCreateView(
@@ -60,36 +61,33 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
         viewModel = ViewModelProviders.of(activity!!).get(DeviceCommunicatorViewModel::class.java)
         sharedViewModel = ViewModelProviders.of(activity!!).get(SharedViewModel::class.java)
 
-        sharedViewModel.bagState.observe(this, Observer { updatedBagStatus ->
-            if (viewModel.bagState.value!! < updatedBagStatus) {
+        sharedViewModel.vendState.observe(this, Observer { updatedVendState ->
+            if (viewModel.vendState.value!! < updatedVendState) {
 
-                viewModel.bagState.value = updatedBagStatus
+                viewModel.vendState.value = updatedVendState
                 viewModel.bag.value = sharedViewModel.bag.value
 
-                when (updatedBagStatus) {
+                when (updatedVendState) {
                     VendingState.DeviceConnected -> {
                         requestOtpFromDevice()
                     }
-                    VendingState.EncryptedOtpPlusBagReceived -> {
+                    VendingState.EncryptedOtpPlusBagReceivedFromServer -> {
                         sendEncryptedOtpPlusBagToDevice()
                     }
-                    VendingState.Vending -> TODO()
-                    VendingState.VendingDone -> TODO()
+                    VendingState.EncryptedVendStatusReceivedFromServer -> {
+                        sendEncryptedVendStatusToDevice()
+                    }
                 }
             }
         })
 
-        viewModel.bagState.observe(this, Observer { updatedBagStatus ->
-            if (sharedViewModel.bagState.value!! < updatedBagStatus) {
+        viewModel.vendState.observe(this, Observer { updatedBagStatus ->
+            if (sharedViewModel.vendState.value!! < updatedBagStatus) {
 
-                sharedViewModel.bagState.value = updatedBagStatus
+                sharedViewModel.vendState.value = updatedBagStatus
                 sharedViewModel.bag.value = viewModel.bag.value
             }
         })
-
-//        send_to_device_button.setOnClickListener {
-//            send(to_device_text.text.toString())
-//        }
     }
 
     override fun onStart() {
@@ -166,11 +164,15 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
     }
 
     private fun requestOtpFromDevice() {
-        send("vendx_init_transaction")
+        send("INIT_VEND")
     }
 
     private fun sendEncryptedOtpPlusBagToDevice() {
         send(viewModel.bag.value!!.encryptedOtpPlusBag, true)
+    }
+
+    private fun sendEncryptedVendStatusToDevice() {
+        send(viewModel.bag.value!!.encryptedVendCompleteStatus, true)
     }
 
     private fun send(str: String, isBase64: Boolean = false) {
@@ -193,25 +195,27 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
 
     private fun receive(dataFromDevice: ByteArray) {
 
-        val dataStr = String(dataFromDevice)
+        val dataStr = String(dataFromDevice)        //TODO: change to val
         val dataFromDeviceBase64 = Base64.encodeToString(dataFromDevice, Base64.NO_WRAP)
         Log.i(TAG, "received : $dataStr : $dataFromDeviceBase64")
-
-        if (dataStr == "OTP_TIMEOUT") {     //otp timed out and required to be re-requested
-            requestOtpFromDevice()
-        } else if (dataStr == "VENDING") {   //a single vend is completed by device
-            sharedViewModel.bagState.value = VendingState.Vending
-            sharedViewModel.updateVendingCount()
-        } else if (dataStr == "VEND_DONE") {
-            sharedViewModel.bagState.value = VendingState.VendingDone
-            sharedViewModel.bag.value!!.status = VendingStatus.Done
-        } else {
-            when (viewModel.bagState.value!!) {
-                VendingState.DeviceConnected -> viewModel.addEncryptedOtp(dataFromDeviceBase64)
-                VendingState.EncryptedOtpReceived -> {  //TODO: check validity of the otp
-
+        when (dataStr) {
+            "OTP_TIMEOUT" -> {           //otp timed out and required to be re-requested
+                requestOtpFromDevice()
+            }
+            "VENDING" -> {              //a single vend is completed by device
+                sharedViewModel.vendState.value = VendingState.Vending
+                sharedViewModel.updateVendingCount()
+            }
+            "VEND_DONE" -> {            //notified that the vending process is completed
+                sharedViewModel.vendState.value = VendingState.VendingDone
+                sharedViewModel.bag.value!!.status = VendingStatus.Done
+            }
+            else -> {
+                when (viewModel.vendState.value!!) {
+                    VendingState.DeviceConnected -> viewModel.addEncryptedOtp(dataFromDeviceBase64)
+                    VendingState.VendingDone -> viewModel.addEncryptedLog(dataFromDeviceBase64)
+                    else -> TODO("this block should not execute, handle exception")
                 }
-                VendingState.VendingDone -> viewModel.addEncryptedLog(dataFromDeviceBase64)
             }
         }
     }
@@ -252,6 +256,6 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
     override fun onSerialConnect() {
         status("connected")
         connected = Connected.True
-        sharedViewModel.bagState.value = VendingState.DeviceConnected
+        sharedViewModel.vendState.value = VendingState.DeviceConnected
     }
 }

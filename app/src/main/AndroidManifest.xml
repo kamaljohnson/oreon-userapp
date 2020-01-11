@@ -10,7 +10,6 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
-        android:name=".activities.deviceConnectorActivity.BluetoothConfig"
         android:allowBackup="true"
         android:configChanges="orientation|screenSize"
         android:icon="@mipmap/ic_launcher"
@@ -19,8 +18,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.deviceConnectorActivity.DeviceConnectorActivity">
-        </activity>
         <activity
             android:name=".activities.paymentActivity.PaymentActivity"
             android:screenOrientation="portrait"
@@ -40,12 +37,10 @@
         <activity
             android:name=".activities.vendingActivity.VendingActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".database.ItemGroup"
             android:screenOrientation="portrait" />
-
         <meta-data
             android:name="com.razorpay.ApiKey"
             android:value="rzp_test_KvfTdnPSCJotdH" />

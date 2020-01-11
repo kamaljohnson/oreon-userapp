@@ -7,7 +7,6 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.xborg.vendx.database.Vend
 import com.xborg.vendx.database.VendingState
-import com.xborg.vendx.database.VendingStatus
 import com.xborg.vendx.network.VendxApi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -20,10 +19,10 @@ class VendingStatusViewModel : ViewModel() {
     private var coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
     val bag = MutableLiveData<Vend>()
-    val bagState = MutableLiveData<VendingState>()
+    val vendState = MutableLiveData<VendingState>()
 
     init {
-        bagState.value = VendingState.Init
+        vendState.value = VendingState.Init
     }
 
     fun sendEncryptedOtpToServer() {
@@ -42,7 +41,7 @@ class VendingStatusViewModel : ViewModel() {
 
                 val tempBag = moshi.adapter(Vend::class.java).fromJson(listResult)!!
                 bag.value!!.encryptedOtpPlusBag = tempBag.encryptedOtpPlusBag
-                bagState.value = VendingState.EncryptedOtpPlusBagReceived
+                vendState.value = VendingState.EncryptedOtpPlusBagReceivedFromServer
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to get response: $e")
             }
@@ -53,9 +52,7 @@ class VendingStatusViewModel : ViewModel() {
         val moshi: Moshi = Moshi.Builder()
             .add(KotlinJsonAdapterFactory())
             .build()
-
         val bagInJson = moshi.adapter(Vend::class.java).toJson(bag.value)!!
-
         coroutineScope.launch {
             val createOrderDeferred = VendxApi.retrofitServices
                 .sendOnVendCompleteLogAsync(bag = bagInJson, id = bag.value!!.id)
@@ -64,13 +61,11 @@ class VendingStatusViewModel : ViewModel() {
                 Log.i(TAG, "Successful to get response: $listResult")
 
                 val tempBag = moshi.adapter(Vend::class.java).fromJson(listResult)!!
-                bag.value!!.encryptedOtpPlusBag = tempBag.encryptedOtpPlusBag
-                bagState.value = VendingState.EncryptedOtpPlusBagReceived
-
+                bag.value!!.encryptedVendCompleteStatus = tempBag.encryptedVendCompleteStatus
+                vendState.value = VendingState.EncryptedVendStatusReceivedFromServer
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to get response: $e")
             }
         }
     }
-
 }

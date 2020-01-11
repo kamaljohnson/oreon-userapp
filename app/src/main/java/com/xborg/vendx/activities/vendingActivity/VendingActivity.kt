@@ -26,8 +26,8 @@ class VendingActivity : FragmentActivity() {
 
         sharedViewModel = ViewModelProviders.of(this).get(SharedViewModel::class.java)
 
-        sharedViewModel.bagState.observe(this, Observer { updatedBag ->
-            Log.i(TAG, "VendingState : $updatedBag")
+        sharedViewModel.vendState.observe(this, Observer { updatedVendState ->
+            Log.i(TAG, "VendingState : $updatedVendState")
         })
     }
 

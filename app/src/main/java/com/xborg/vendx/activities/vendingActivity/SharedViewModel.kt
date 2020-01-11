@@ -12,12 +12,12 @@ class SharedViewModel : ViewModel() {
     private val uid = FirebaseAuth.getInstance().uid.toString()
 
     val bag = MutableLiveData<Vend>()
-    val bagState = MutableLiveData<VendingState>()
+    val vendState = MutableLiveData<VendingState>()
 
     val currentVendingCount = MutableLiveData<Int>()
 
     init {
-        bagState.value = VendingState.Init
+        vendState.value = VendingState.Init
         bag.value = Vend(
             status = VendingStatus.Init,
             mid = "yDWzDc79Uu1IO2lEeVyG",

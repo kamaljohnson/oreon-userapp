@@ -1,6 +1,7 @@
 package com.xborg.vendx.activities.vendingActivity.fragments.status
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,17 +37,20 @@ class VendingStatusFragment : Fragment() {
         viewModel = ViewModelProviders.of(activity!!).get(VendingStatusViewModel::class.java)
         sharedViewModel = ViewModelProviders.of(activity!!).get(SharedViewModel::class.java)
 
-        sharedViewModel.bagState.observe(this, Observer { updatedVendingState ->
-            if (viewModel.bagState.value!! < updatedVendingState) {
+        sharedViewModel.vendState.observe(this, Observer { updatedVendingState ->
+            if (viewModel.vendState.value!! < updatedVendingState) {
 
-                viewModel.bagState.value = updatedVendingState
+                viewModel.vendState.value = updatedVendingState
                 viewModel.bag.value = sharedViewModel.bag.value
 
                 when (updatedVendingState) {
-                    VendingState.EncryptedOtpReceived -> {
+                    VendingState.EncryptedOtpReceivedFromDevice -> {
                         viewModel.sendEncryptedOtpToServer()
                     }
                     VendingState.VendingDone -> {
+
+                    }
+                    VendingState.EncryptedDeviceLogReceivedFromDevice -> {
                         viewModel.sendEncryptedDeviceLogToServer()
                     }
                 }
@@ -54,19 +58,19 @@ class VendingStatusFragment : Fragment() {
         })
 
         sharedViewModel.currentVendingCount.observe(this, Observer { updatedCurrentVendingCount ->
-            updateVendingCount()
+            updateVendingCount(updatedCurrentVendingCount)
         })
 
-        viewModel.bagState.observe(this, Observer { updatedBagStatus ->
-            if (sharedViewModel.bagState.value!! < updatedBagStatus) {
+        viewModel.vendState.observe(this, Observer { updatedBagStatus ->
+            if (sharedViewModel.vendState.value!! < updatedBagStatus) {
 
-                sharedViewModel.bagState.value = updatedBagStatus
+                sharedViewModel.vendState.value = updatedBagStatus
                 sharedViewModel.bag.value = viewModel.bag.value
             }
         })
     }
 
-    private fun updateVendingCount() {  //TODO: display vending progress as item vended
-
+    private fun updateVendingCount(count : Int) {  //TODO: display vending progress as item vended
+        Log.i(TAG, "vending count : $count")
     }
 }
