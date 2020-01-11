@@ -11,8 +11,19 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.xborg.vendx.database.Item
 import java.lang.reflect.Type
 
+enum class PermissionStatus {
+    None,
+    Requested,
+    Granted,
+    Denied
+}
 
 class SharedViewModel : ViewModel() {
+
+    var handleLocationPermission: MutableLiveData<Boolean> = MutableLiveData(false)
+
+    val bluetoothPermission = MutableLiveData<PermissionStatus>()
+    val locationPermission = MutableLiveData<PermissionStatus>()
 
     var machineItems = MutableLiveData<List<Item>>()
     var shelfItems = MutableLiveData<List<Item>>()
@@ -25,6 +36,9 @@ class SharedViewModel : ViewModel() {
     private var _unTaggedCartItems = mutableMapOf<String, Int>()
 
     init {
+        locationPermission.value = PermissionStatus.None
+        bluetoothPermission.value = PermissionStatus.None
+
         _taggedCartItems.value = mutableMapOf()
     }
 

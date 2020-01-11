@@ -46,7 +46,6 @@ enum class Fragments {
 class MainActivity : FragmentActivity() {
 
     private lateinit var sharedViewModel: SharedViewModel
-    private lateinit var viewModel: MainActivityViewModel
 
     companion object {
         var current_fragment: Fragments =
@@ -57,17 +56,14 @@ class MainActivity : FragmentActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        viewModel = ViewModelProviders.of(this).get(MainActivityViewModel::class.java)
         sharedViewModel = ViewModelProviders.of(this).get(SharedViewModel::class.java)
 
         sharedViewModel.machineItems.observe(this, Observer {
             Log.i(TAG, "machineItem has begin changed")
-            viewModel.updateCart()
         })
 
         sharedViewModel.shelfItems.observe(this, Observer {
             Log.i(TAG, "shelfItems has begin changed")
-            viewModel.updateCart()
         })
 
         sharedViewModel.taggedCartItem.observe(this, Observer { updatedCart ->
@@ -88,10 +84,80 @@ class MainActivity : FragmentActivity() {
             }
         })
 
+        sharedViewModel.handleLocationPermission.observe(this, Observer { requestPermission ->
+            if (requestPermission) {
+                handelLocationPermission()
+            }
+        })
+
         initBottomNavigationView()
         initBottomSwipeUpView()
 
-// region Bluetooth Setup
+        handleBluetoothPermission()
+
+        checkout_button.setOnClickListener {
+            // TODO: use navigation graphs instead
+            val intent = Intent(this, PaymentActivity::class.java)
+            intent.putExtra("cartItems", sharedViewModel.getCartItemsAsPassable())
+            intent.putExtra("machineItems", sharedViewModel.getMachineItemsAsJson())
+            intent.putExtra("shelfItems", sharedViewModel.getShelfItemsAsJson())
+            startActivity(intent)
+        }
+    }
+
+    private fun handelLocationPermission() {
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            // Permission is not granted
+            // Should we show an explanation?
+            sharedViewModel.locationPermission.value = PermissionStatus.Granted
+            Log.e(TAG, "location permission not granted")
+            if (ActivityCompat.shouldShowRequestPermissionRationale(
+                    this,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                )
+            ) {
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+                val builder = AlertDialog.Builder(this)
+                builder.setMessage(
+                    "You had denied access to location before, please proceed to settings " +
+                            "and grand permission to location"
+                )
+                    .setPositiveButton(R.string.Ok) { _, _ ->
+                        ActivityCompat.requestPermissions(
+                            this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                            REQUEST_ENABLE_LOC
+                        )
+//                        val intent = Intent(
+//                            android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+//                            Uri.parse("package:" + BuildConfig.APPLICATION_ID)
+//                        )
+//                        startActivity(intent)
+                    }
+                builder.create()
+                builder.show()
+            } else {
+                // No explanation needed, we can request the permission.
+                ActivityCompat.requestPermissions(
+                    this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                    REQUEST_ENABLE_LOC
+                )
+                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
+        } else {
+            sharedViewModel.locationPermission.value = PermissionStatus.Granted
+            Log.e(TAG, "location permission already granted")
+        }
+    }
+
+    private fun handleBluetoothPermission() {
         val bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
         if (bluetoothAdapter == null) {
             val builder = AlertDialog.Builder(this)
@@ -118,6 +184,7 @@ class MainActivity : FragmentActivity() {
         ) {
             // Permission is not granted
             // Should we show an explanation?
+            sharedViewModel.bluetoothPermission.value = PermissionStatus.Granted
             Log.e(TAG, "bluetooth permission not granted")
             if (ActivityCompat.shouldShowRequestPermissionRationale(
                     this,
@@ -138,17 +205,8 @@ class MainActivity : FragmentActivity() {
                 // result of the request.
             }
         } else {
+            sharedViewModel.bluetoothPermission.value = PermissionStatus.Granted
             Log.e(TAG, "bluetooth permission already granted")
-        }
-//  endregion
-
-        checkout_button.setOnClickListener {
-            // TODO: use navigation graphs instead
-            val intent = Intent(this, PaymentActivity::class.java)
-            intent.putExtra("cartItems", sharedViewModel.getCartItemsAsPassable())
-            intent.putExtra("machineItems", sharedViewModel.getMachineItemsAsJson())
-            intent.putExtra("shelfItems", sharedViewModel.getShelfItemsAsJson())
-            startActivity(intent)
         }
     }
 
@@ -159,45 +217,26 @@ class MainActivity : FragmentActivity() {
     ) {
         when (requestCode) {
             REQUEST_ENABLE_BT -> {
-                // If request is cancelled, the result arrays are empty.
-                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
-                } else {
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                }
+                sharedViewModel.bluetoothPermission.value =
+                    if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                        PermissionStatus.Granted
+                    } else {
+                        PermissionStatus.Denied
+                    }
                 return
             }
             REQUEST_ENABLE_LOC -> {
-                // If request is cancelled, the result arrays are empty.
-                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
-                } else {
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                    val builder = AlertDialog.Builder(this)
-                    builder.setMessage(
-                        "You had denied access to location before, please proceed to settings " +
-                                "and grand permission to location"
-                    )
-                        .setPositiveButton(R.string.Ok) { _, _ ->
-                            val intent = Intent(
-                                android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                                Uri.parse("package:" + BuildConfig.APPLICATION_ID)
-                            )
-                            startActivity(intent)
-                        }
-                    builder.create()
-                    builder.show()
-                }
+                sharedViewModel.locationPermission.value =
+                    if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                        PermissionStatus.Granted
+                    } else {
+                        PermissionStatus.Denied
+                    }
                 return
             }
-            // Add other 'when' lines to check for other
-            // permissions this app might request.
         }
     }
+
 
 //    region Activity Support functions
 
@@ -299,7 +338,11 @@ class MainActivity : FragmentActivity() {
         val fragmentManager: FragmentManager = supportFragmentManager
         val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
 
-        fragmentTransaction.add(R.id.explore_fragment_container, ExploreFragment(), "ExploreFragment")
+        fragmentTransaction.add(
+            R.id.explore_fragment_container,
+            ExploreFragment(),
+            "ExploreFragment"
+        )
         fragmentTransaction.commitNowAllowingStateLoss()
     }
 
