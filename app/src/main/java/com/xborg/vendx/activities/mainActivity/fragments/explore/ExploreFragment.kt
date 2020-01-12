@@ -36,10 +36,12 @@ class ExploreFragment : Fragment() {
         viewModel = ViewModelProviders.of(activity!!).get(ExploreViewModel::class.java)
         sharedViewModel = ViewModelProviders.of(activity!!).get(SharedViewModel::class.java)
 
+        sharedViewModel.checkLocationPermission.value = true
+
         sharedViewModel.locationPermission.observe(this, Observer { permissionStatus ->
             when(permissionStatus) {
                 PermissionStatus.Granted -> {
-                    scan_mode_switch.isChecked = true
+                    scan_mode_switch.visibility = View.GONE
                 }
                 PermissionStatus.Denied -> {
                     scan_mode_switch.isChecked = false
@@ -49,7 +51,7 @@ class ExploreFragment : Fragment() {
 
         scan_mode_switch.setOnCheckedChangeListener { _, isChecked ->
             if(isChecked) {
-                sharedViewModel.handleLocationPermission.value = true
+                sharedViewModel.requestLocationPermission.value = true
             }
         }
     }

@@ -20,7 +20,8 @@ enum class PermissionStatus {
 
 class SharedViewModel : ViewModel() {
 
-    var handleLocationPermission: MutableLiveData<Boolean> = MutableLiveData(false)
+    var checkLocationPermission: MutableLiveData<Boolean> = MutableLiveData(false)
+    var requestLocationPermission: MutableLiveData<Boolean> = MutableLiveData(false)
 
     val bluetoothPermission = MutableLiveData<PermissionStatus>()
     val locationPermission = MutableLiveData<PermissionStatus>()
