@@ -9,22 +9,25 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.xborg.vendx.database.Item
+import com.xborg.vendx.database.Location
 import java.lang.reflect.Type
 
 enum class PermissionStatus {
     None,
-    Requested,
     Granted,
     Denied
 }
 
 class SharedViewModel : ViewModel() {
 
-    var checkLocationPermission: MutableLiveData<Boolean> = MutableLiveData(false)
-    var requestLocationPermission: MutableLiveData<Boolean> = MutableLiveData(false)
+    var getUserLocation: MutableLiveData<Boolean> = MutableLiveData(false)
+    var userLocationAccessed: MutableLiveData<Boolean> = MutableLiveData(false)
 
     val bluetoothPermission = MutableLiveData<PermissionStatus>()
     val locationPermission = MutableLiveData<PermissionStatus>()
+    val locationEnabled = MutableLiveData<Boolean>()
+
+    val userLastLocation = MutableLiveData<Location>()
 
     var machineItems = MutableLiveData<List<Item>>()
     var shelfItems = MutableLiveData<List<Item>>()

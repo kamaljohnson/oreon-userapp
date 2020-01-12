@@ -33,11 +33,6 @@ class ExploreViewModel : ViewModel() {
             .add(KotlinJsonAdapterFactory())
             .build()
 
-        userLocation.value = Location(
-            latitude = 0f,
-            longitude = 0f
-        )
-
         val locationDataInJson = moshi.adapter(Location::class.java).toJson(userLocation.value!!)!!
 
         coroutineScope.launch {

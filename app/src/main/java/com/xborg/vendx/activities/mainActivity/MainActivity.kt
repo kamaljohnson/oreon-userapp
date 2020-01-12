@@ -1,14 +1,21 @@
 package com.xborg.vendx.activities.mainActivity
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.bluetooth.BluetoothAdapter
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
+import android.location.Location
+import android.location.LocationManager
 import android.os.Bundle
+import android.os.Looper
+import android.provider.Settings
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -17,6 +24,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.google.android.gms.location.*
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState
@@ -45,6 +53,8 @@ class MainActivity : FragmentActivity() {
 
     private lateinit var sharedViewModel: SharedViewModel
 
+    private lateinit var mFusedLocationClient: FusedLocationProviderClient
+
     companion object {
         var current_fragment: Fragments =
             Fragments.HOME
@@ -55,15 +65,14 @@ class MainActivity : FragmentActivity() {
         setContentView(R.layout.activity_main)
 
         sharedViewModel = ViewModelProviders.of(this).get(SharedViewModel::class.java)
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         sharedViewModel.machineItems.observe(this, Observer {
             Log.i(TAG, "machineItem has begin changed")
         })
-
         sharedViewModel.shelfItems.observe(this, Observer {
             Log.i(TAG, "shelfItems has begin changed")
         })
-
         sharedViewModel.taggedCartItem.observe(this, Observer { updatedCart ->
             Log.i(TAG, "CartFragment updated: $updatedCart")
 
@@ -81,23 +90,17 @@ class MainActivity : FragmentActivity() {
                 hideGetButton()
             }
         })
-
-        sharedViewModel.requestLocationPermission.observe(this, Observer { requestPermission ->
-            if (requestPermission) {
-                requestLocationPermission()
-            }
-        })
-
-        sharedViewModel.checkLocationPermission.observe(this, Observer { checkPermission ->
-            if (checkPermission) {
-                checkLocationPermission()
+        sharedViewModel.getUserLocation.observe(this, Observer { scan ->
+            if (scan) {
+                getLastLocation()
             }
         })
 
         initBottomNavigationView()
         initBottomSwipeUpView()
-
         enableBluetooth()
+
+        getLastLocation()
 
         checkout_button.setOnClickListener {
             // TODO: use navigation graphs instead
@@ -109,60 +112,17 @@ class MainActivity : FragmentActivity() {
         }
     }
 
-    private fun checkLocationPermission(): Boolean {
-        if (ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
+    override fun onResume() {
+        super.onResume()
+        if (sharedViewModel.getUserLocation.value == true &&
+            sharedViewModel.userLocationAccessed.value == false
         ) {
-            sharedViewModel.locationPermission.value = PermissionStatus.Denied
-            return false
-        } else {
-            sharedViewModel.locationPermission.value = PermissionStatus.Granted
-            return true
+            Log.i(TAG, "getLocation called from onResume")
+            getLastLocation()
         }
     }
 
-    private fun requestLocationPermission() {
-
-        if (ActivityCompat.shouldShowRequestPermissionRationale(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            )
-        ) {
-            // Show an explanation to the user *asynchronously* -- don't block
-            // this thread waiting for the user's response! After the user
-            // sees the explanation, try again to request the permission.
-            val builder = AlertDialog.Builder(this)
-            builder.setMessage(
-                "You had denied access to location before, please proceed to settings " +
-                        "and grand permission to location"
-            )
-                .setPositiveButton(R.string.Ok) { _, _ ->
-                    ActivityCompat.requestPermissions(
-                        this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                        REQUEST_ENABLE_LOC
-                    )
-//                        val intent = Intent(
-//                            android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-//                            Uri.parse("package:" + BuildConfig.APPLICATION_ID)
-//                        )
-//                        startActivity(intent)
-                }
-            builder.create()
-            builder.show()
-        } else {
-            // No explanation needed, we can request the permission.
-            ActivityCompat.requestPermissions(
-                this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                REQUEST_ENABLE_LOC
-            )
-            // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-            // app-defined int constant. The callback method gets the
-            // result of the request.
-        }
-    }
-
+    // region Location and Bluetooth
     private fun enableBluetooth() {
         val bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
         if (bluetoothAdapter == null) {
@@ -216,6 +176,126 @@ class MainActivity : FragmentActivity() {
         }
     }
 
+    private fun checkLocationPermission(): Boolean {
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            sharedViewModel.locationPermission.value = PermissionStatus.Denied
+            return false
+        } else {
+            sharedViewModel.locationPermission.value = PermissionStatus.Granted
+            return true
+        }
+    }
+
+    private fun requestLocationPermission() {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            )
+        ) {
+            // Show an explanation to the user *asynchronously* -- don't block
+            // this thread waiting for the user's response! After the user
+            // sees the explanation, try again to request the permission.
+            val builder = AlertDialog.Builder(this)
+            builder.setMessage(
+                "You had denied access to location before, please proceed to settings " +
+                        "and grand permission to location"
+            )
+                .setPositiveButton(R.string.Ok) { _, _ ->
+                    ActivityCompat.requestPermissions(
+                        this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                        REQUEST_ENABLE_LOC
+                    )
+//                        val intent = Intent(
+//                            android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+//                            Uri.parse("package:" + BuildConfig.APPLICATION_ID)
+//                        )
+//                        startActivity(intent)
+                }
+            builder.create()
+            builder.show()
+        } else {
+            // No explanation needed, we can request the permission.
+            ActivityCompat.requestPermissions(
+                this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                REQUEST_ENABLE_LOC
+            )
+            // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+            // app-defined int constant. The callback method gets the
+            // result of the request.
+        }
+    }
+
+    private fun isLocationEnabled(): Boolean {
+        var locationManager: LocationManager =
+            getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        sharedViewModel.locationEnabled.value =
+            locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
+                LocationManager.NETWORK_PROVIDER
+            )
+        return sharedViewModel.locationEnabled.value!!
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun getLastLocation() {
+        if (checkLocationPermission()) {
+            if (isLocationEnabled()) {
+                mFusedLocationClient.lastLocation.addOnCompleteListener(this) { task ->
+                    val location: Location? = task.result
+                    if (location == null) {
+                        requestNewLocationData()
+                    } else {
+                        sharedViewModel.userLastLocation.value = com.xborg.vendx.database.Location(
+                            latitude = location.latitude,
+                            longitude = location.longitude
+                        )
+                        sharedViewModel.getUserLocation.value = false
+                        sharedViewModel.userLocationAccessed.value = true
+                    }
+                }
+            } else {
+                if (sharedViewModel.getUserLocation.value!!) {
+                    Toast.makeText(this, "Turn on location", Toast.LENGTH_LONG).show()
+                    val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+                    startActivity(intent)
+                }
+            }
+        } else {
+            if (sharedViewModel.getUserLocation.value!!) {
+                requestLocationPermission()
+            }
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun requestNewLocationData() {
+        val mLocationRequest = LocationRequest()
+        mLocationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        mLocationRequest.interval = 0
+        mLocationRequest.fastestInterval = 0
+        mLocationRequest.numUpdates = 1
+
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        mFusedLocationClient.requestLocationUpdates(
+            mLocationRequest, mLocationCallback,
+            Looper.myLooper()
+        )
+    }
+
+    private val mLocationCallback = object : LocationCallback() {
+        override fun onLocationResult(locationResult: LocationResult) {
+            val location: Location = locationResult.lastLocation
+            sharedViewModel.userLastLocation.value = com.xborg.vendx.database.Location(
+                latitude = location.latitude,
+                longitude = location.longitude
+            )
+            sharedViewModel.userLocationAccessed.value = true
+        }
+    }
+
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String>,
@@ -232,16 +312,18 @@ class MainActivity : FragmentActivity() {
                 return
             }
             REQUEST_ENABLE_LOC -> {
-                sharedViewModel.locationPermission.value =
-                    if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                        PermissionStatus.Granted
-                    } else {
-                        PermissionStatus.Denied
-                    }
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    sharedViewModel.locationPermission.value = PermissionStatus.Granted
+                    getLastLocation()
+                } else {
+                    sharedViewModel.locationPermission.value = PermissionStatus.Denied
+                    sharedViewModel.userLocationAccessed.value = false
+                }
                 return
             }
         }
     }
+//    endregion
 //    region Activity Support functions
 
     private fun initBottomNavigationView() {
