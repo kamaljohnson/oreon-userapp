@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.33"
+        android:layout_margin="4pt"
+        style="?android:attr/ambientShadowAlpha"
+        android:layout_marginHorizontal="5dp"
+        android:layout_marginVertical="10dp"
+        android:translationZ="2dp"
+        android:background="@drawable/machine_card">
+
+        <RelativeLayout
+            android:id="@+id/card_top"
+            android:layout_height="40pt"
+            android:layout_width="60pt">
+
+            <TextView
+                android:id="@+id/machine_code"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="RIT-BH1009"
+                android:textSize="15dp"
+                android:layout_margin="5dp"
+                android:textStyle="bold"
+                android:layout_alignParentTop="true"/>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+</layout>

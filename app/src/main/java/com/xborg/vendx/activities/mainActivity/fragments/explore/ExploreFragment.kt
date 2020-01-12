@@ -8,12 +8,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
 
 import com.xborg.vendx.R
 import com.xborg.vendx.activities.mainActivity.SharedViewModel
+import com.xborg.vendx.adapters.MachineCardAdapter
 import kotlinx.android.synthetic.main.fragment_explore.*
 
-val TAG: String = "Explore"
+const val TAG: String = "Explore"
 
 class ExploreFragment : Fragment() {
 
@@ -47,6 +49,10 @@ class ExploreFragment : Fragment() {
             }
         })
 
+        viewModel.machinesNearby.observe(this, Observer {
+            displayNearbyMachines()
+        })
+
         explore_button.setOnClickListener{
             sharedViewModel.getUserLocation.value = true
         }
@@ -69,7 +75,19 @@ class ExploreFragment : Fragment() {
         sharedViewModel.getUserLocation.value = false
     }
 
-    private fun displayExplorer() {
+    private fun displayNearbyMachines() {
         progress_bar.visibility = View.GONE
+        updateMachineCardRV()
+        updateMapView()
+    }
+
+    private fun updateMachineCardRV() {
+        rv_machine_cards.apply {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            adapter = MachineCardAdapter(viewModel.machinesNearby.value!!, context)
+        }
+    }
+    private fun updateMapView() {
+
     }
 }
