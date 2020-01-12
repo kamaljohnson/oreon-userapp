@@ -43,6 +43,13 @@ interface VendxAPIService {
     ): Deferred<String>
 
     @FormUrlEncoded
+    @POST("machines/nearby/{id}")
+    fun requestNearbyMachines(
+        @Path("id") uid: String,
+        @Field("location") location: String
+    ): Deferred<String>
+
+    @FormUrlEncoded
     @POST("orders/create")
     fun createOrderAsync(
         @Field("order") order: String

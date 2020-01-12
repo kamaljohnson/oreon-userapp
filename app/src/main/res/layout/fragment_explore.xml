@@ -27,6 +27,7 @@
 
 <!--        Scan Mode Switch-->
         <Switch
+            android:visibility="invisible"
             android:id="@+id/scan_mode_switch"
             android:layout_width="wrap_content"
             android:scaleX="1.3"
