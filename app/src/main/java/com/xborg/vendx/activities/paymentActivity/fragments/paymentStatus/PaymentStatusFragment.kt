@@ -60,7 +60,6 @@ class PaymentStatusFragment : Fragment() {
                 viewModel.paymentState.value = updatedPaymentState
                 when (updatedPaymentState) {
                     PaymentState.PaymentDone -> {
-                        Toast.makeText(context, "payment done", Toast.LENGTH_SHORT).show()
                         viewModel.sendPaymentToken()
                     }
                 }

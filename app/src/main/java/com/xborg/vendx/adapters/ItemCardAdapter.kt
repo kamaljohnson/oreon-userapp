@@ -151,11 +151,10 @@ class ItemCardAdapter(
         }
 
         private fun displayItemLimitReached(context: Context) {
-            Toast.makeText(context, "purchase limit reached", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "item not remaining in cart", Toast.LENGTH_SHORT).show()
         }
 
     }
-
 
     interface OnItemListener {
         fun onItemAddedToCart(itemId: String, itemLoc: String): Boolean

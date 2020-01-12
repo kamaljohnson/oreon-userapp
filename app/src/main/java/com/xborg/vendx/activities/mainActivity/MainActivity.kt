@@ -395,7 +395,7 @@ class MainActivity : FragmentActivity() {
         loadBottomSwipeUpFragment()
 
         mLayout = findViewById(bottom_slide_up_container.id)
-        mLayout!!.anchorPoint = 0.2f
+        mLayout!!.anchorPoint = 0.15f
         mLayout!!.coveredFadeColor = Color.WHITE
 
         mLayout!!.setFadeOnClickListener {
@@ -416,6 +416,7 @@ class MainActivity : FragmentActivity() {
             override fun onPanelStateChanged(
                 panel: View, previousState: PanelState, newState: PanelState
             ) {
+
             }
         })
     }
@@ -451,5 +452,16 @@ class MainActivity : FragmentActivity() {
     private fun showSwipeUpContainer() {
         bottom_slide_up_container.panelState = PanelState.COLLAPSED
     }
+
+    override fun onBackPressed() {
+        if (mLayout != null &&
+            (mLayout!!.panelState == PanelState.EXPANDED || mLayout!!.panelState == PanelState.ANCHORED)
+        ) {
+            mLayout!!.panelState = PanelState.COLLAPSED
+        } else {
+            super.onBackPressed()
+        }
+    }
+
 //    endregion
 }

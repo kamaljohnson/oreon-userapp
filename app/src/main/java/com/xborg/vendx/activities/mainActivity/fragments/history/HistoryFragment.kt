@@ -52,7 +52,7 @@ class HistoryFragment : Fragment() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
                 if (!recyclerView.canScrollVertically(1)) {
-                    Toast.makeText(context, "Last", Toast.LENGTH_LONG).show()
+                    //TODO: load next transactions from server
                 }
             }
         })    }
