@@ -40,6 +40,13 @@
             android:textOn="ON"
             android:layout_centerInParent="true"/>
 
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:visibility="invisible"
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
     </RelativeLayout>
 
 </RelativeLayout>

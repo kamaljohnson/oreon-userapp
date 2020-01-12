@@ -60,10 +60,16 @@ class ExploreFragment : Fragment() {
 
     private fun scanOnScan() {
         scan_mode_switch.visibility = View.GONE
+        progress_bar.visibility = View.VISIBLE
         viewModel.requestNearbyMachines()
     }
 
     private fun switchOffScan() {
+        scan_mode_switch.visibility = View.VISIBLE
         scan_mode_switch.isChecked = false
+    }
+
+    private fun displayExplorer() {
+        progress_bar.visibility = View.GONE
     }
 }
