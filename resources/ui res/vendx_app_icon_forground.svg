@@ -4,7 +4,7 @@
 <path d="M61.6489 186.285L42.8265 176.788C35.4477 173.066 34.6562 162.84 41.3744 158.026L105.417 112.138C114.692 105.492 114.916 91.7758 105.863 84.8306L99.3044 79.7998C89.1866 72.0382 98.1701 56.1619 110.034 60.8383L172.337 85.3971C180.215 88.5026 181.777 98.9727 175.147 104.242L73.4482 185.075C70.088 187.746 65.4812 188.218 61.6489 186.285Z" stroke="url(#paint1_linear)" stroke-width="6"/>
 </g>
 <g filter="url(#filter1_d)">
-<path d="M8.94423 12.3257L6.21786 11.0995C6.08527 11.0398 5.99999 10.908 5.99999 10.7626C6 10.4539 6.3561 10.2814 6.59831 10.4727L8.94423 12.3257L110.5 58.0015L175.157 83.5845C178.192 84.7854 180.45 87.3918 181.206 90.5669L181.863 93.3259C182.28 95.0766 182.217 96.9072 181.68 98.6249L180.951 100.958C180.332 102.937 179.114 104.675 177.464 105.932L158.17 120.621C154.539 123.386 149.496 123.341 145.914 120.512L8.94423 12.3257Z" fill="url(#paint2_linear)"/>
+<path d="M110.5 58.0015L6.89088 10.5452C6.57325 10.3997 6.27416 10.2167 6 10.0002L145.914 120.512C149.496 123.341 154.539 123.386 158.17 120.621L177.464 105.932C179.114 104.675 180.332 102.937 180.951 100.958L181.68 98.6249C182.217 96.9072 182.28 95.0766 181.863 93.3259L181.206 90.5669C180.45 87.3918 178.192 84.7854 175.157 83.5845L110.5 58.0015Z" fill="url(#paint2_linear)"/>
 </g>
 <defs>
 <filter id="filter0_d" x="27.7803" y="50.9702" width="168.525" height="153.494" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
@@ -16,7 +16,7 @@
 <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow"/>
 <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow" result="shape"/>
 </filter>
-<filter id="filter1_d" x="0" y="0.392578" width="188.135" height="124.273" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<filter id="filter1_d" x="0" y="0" width="188.135" height="124.665" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
 <feFlood flood-opacity="0" result="BackgroundImageFix"/>
 <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"/>
 <feOffset dy="-4"/>
