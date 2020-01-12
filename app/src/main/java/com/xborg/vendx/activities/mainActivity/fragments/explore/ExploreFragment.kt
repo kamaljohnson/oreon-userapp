@@ -42,26 +42,29 @@ class ExploreFragment : Fragment() {
 
         sharedViewModel.userLocationAccessed.observe(this, Observer { accessed ->
             if(accessed) {
-                Log.i(TAG, "here")
                 scanForNearbyMachines()
             } else {
                 switchOffScanMode()
             }
         })
 
+        viewModel.selectedMachine.observe(this, Observer { selectedMachine->
+            selected_machine_code.text = selectedMachine.code
+            sharedViewModel.selectedMachine.value = selectedMachine
+        })
+
         viewModel.machinesNearby.observe(this, Observer {
             displayNearbyMachines()
         })
 
-        explore_button.setOnClickListener{
+        selected_machine_code.setOnClickListener{
             sharedViewModel.getUserLocation.value = true
         }
     }
 
     private fun scanForNearbyMachines() {
-        scan_mode_switch.visibility = View.GONE
         progress_bar.visibility = View.VISIBLE
-        explore_button.isClickable = false
+        selected_machine_code.isClickable = false
 
         viewModel.userLocation.value = sharedViewModel.userLastLocation.value
         sharedViewModel.getUserLocation.value = false
@@ -70,8 +73,6 @@ class ExploreFragment : Fragment() {
     }
 
     private fun switchOffScanMode() {
-        scan_mode_switch.visibility = View.VISIBLE
-        scan_mode_switch.isChecked = false
         sharedViewModel.getUserLocation.value = false
     }
 

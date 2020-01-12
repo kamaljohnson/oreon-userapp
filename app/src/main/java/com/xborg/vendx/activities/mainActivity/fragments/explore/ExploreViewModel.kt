@@ -22,8 +22,8 @@ class ExploreViewModel : ViewModel() {
     val uid = FirebaseAuth.getInstance().uid.toString()
 
     val userLocation = MutableLiveData<Location>()
-
     val machinesNearby = MutableLiveData<List<Machine>>()
+    val selectedMachine = MutableLiveData<Machine>()
 
     private var viewModelJob = Job()
     private var coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
@@ -47,11 +47,17 @@ class ExploreViewModel : ViewModel() {
                 val adapter: JsonAdapter<List<Machine>> = moshi.adapter(machineListType)
 
                 machinesNearby.value = adapter.fromJson(listResult)!!
-
+                if(machinesNearby.value!!.isNotEmpty()) {
+                    selectNearestMachineToUser()
+                }
             } catch (t: Throwable) {
                 Log.e(TAG, "Failed to get response: ${t.message}")
             }
         }
+    }
+
+    private fun selectNearestMachineToUser() {
+        selectedMachine.value = machinesNearby.value!![0]
     }
 }
 

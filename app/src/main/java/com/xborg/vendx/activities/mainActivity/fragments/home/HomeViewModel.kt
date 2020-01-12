@@ -9,17 +9,21 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.xborg.vendx.database.Item
 import com.xborg.vendx.database.ItemList
 import com.xborg.vendx.database.ItemGroup
+import com.xborg.vendx.database.Machine
 import com.xborg.vendx.network.VendxApi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.lang.Exception
 
 private const val TAG = "HomeViewModel"
 
 class HomeViewModel : ViewModel() {
 
     val uid = FirebaseAuth.getInstance().uid.toString()
+
+    val selectedMachine = MutableLiveData<Machine>()
 
     var machineItems: MutableLiveData<List<Item>>
     var shelfItems: MutableLiveData<List<Item>>
@@ -31,15 +35,20 @@ class HomeViewModel : ViewModel() {
 
     init {
         Log.i(TAG, "HomeViewModel created!")
-
         allGroupItems = MutableLiveData()
         machineItems = MutableLiveData()
         shelfItems = MutableLiveData()
 
-        val machineId = "yDWzDc79Uu1IO2lEeVyG"  //TODO: machineId must be passed to the function
-        getItemsFromMachine(machineId)
-        getItemsInShelf(uid)
+        machineItems.value = ArrayList()
+        shelfItems.value = ArrayList()
 
+        getItemsInShelf(uid)
+    }
+
+    fun changedSelectedMachine() {
+        if (selectedMachine.value != null) {
+            getItemsFromMachine(selectedMachine.value!!.id)
+        }
     }
 
     //TODO: combine both items from machine and self to single get req
@@ -86,7 +95,6 @@ class HomeViewModel : ViewModel() {
     }
 
     private fun updateItemGroupModel() {
-
         val shelfItemsInMachine: ArrayList<Item> = ArrayList()
 
         for (i in machineItems.value!!.indices) {
@@ -100,6 +108,7 @@ class HomeViewModel : ViewModel() {
             }
         }
 
+
         val temp = ArrayList<ItemGroup>()
 
         if (shelfItemsInMachine.isNotEmpty()) {
@@ -111,6 +120,7 @@ class HomeViewModel : ViewModel() {
                 )
             temp.add(shelfItemsInMachineGroupModel)
         }
+
         if (machineItems.value!!.isNotEmpty()) {
             val machineItemsGroupModel = ItemGroup(
                 title = "In Machine",
@@ -121,27 +131,30 @@ class HomeViewModel : ViewModel() {
         }
 
         val shelfItemsNotInMachine: ArrayList<Item> = ArrayList()
-        shelfItems.value!!.forEach{ s_item ->
+        shelfItems.value!!.forEach { s_item ->
             var flag = true
             machineItems.value!!.forEach { m_item ->
-                if(s_item.id == m_item.id) {
+                if (s_item.id == m_item.id) {
                     flag = false
                 }
             }
-            if(flag) {
+            if (flag) {
                 shelfItemsNotInMachine.add(s_item)
             }
         }
 
         if (shelfItemsNotInMachine.isNotEmpty()) {
             val shelfItemsNotInMachineGroupModel = ItemGroup(
-                title = "Remaining Shelf",
+                title = if (machineItems.value!!.isEmpty()) {
+                    "Shelf"
+                } else {
+                    "Remaining Shelf"
+                },
                 items = shelfItemsNotInMachine,
                 draw_line_breaker = false
             )
             temp.add(shelfItemsNotInMachineGroupModel)
         }
-
         allGroupItems.value = temp
     }
 

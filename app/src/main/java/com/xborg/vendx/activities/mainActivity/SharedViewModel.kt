@@ -10,6 +10,7 @@ import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.xborg.vendx.database.Item
 import com.xborg.vendx.database.Location
+import com.xborg.vendx.database.Machine
 import java.lang.reflect.Type
 
 enum class PermissionStatus {
@@ -28,6 +29,8 @@ class SharedViewModel : ViewModel() {
     val locationEnabled = MutableLiveData<Boolean>()
 
     val userLastLocation = MutableLiveData<Location>()
+
+    val selectedMachine = MutableLiveData<Machine>()
 
     var machineItems = MutableLiveData<List<Item>>()
     var shelfItems = MutableLiveData<List<Item>>()

@@ -17,7 +17,7 @@
         <RelativeLayout
             android:id="@+id/card_top"
             android:layout_height="40pt"
-            android:layout_width="60pt">
+            android:layout_width="65pt">
 
             <TextView
                 android:id="@+id/machine_code"

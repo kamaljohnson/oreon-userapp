@@ -13,7 +13,9 @@ import com.xborg.vendx.R
 import com.xborg.vendx.adapters.ItemGroupAdapter
 import com.xborg.vendx.activities.mainActivity.SharedViewModel
 import com.xborg.vendx.adapters.ItemCardAdapter
+import kotlinx.android.synthetic.main.fragment_explore.*
 import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.android.synthetic.main.fragment_home.progress_bar
 
 private var TAG = "HomeFragment"
 
@@ -62,7 +64,10 @@ class HomeFragment : Fragment(), ItemCardAdapter.OnItemListener {
             Log.i(TAG, "CartFragment updated : $updatedCart")
 
         })
-
+        sharedViewModel.selectedMachine.observe(this, Observer { selectedMachine ->
+            viewModel.selectedMachine.value = selectedMachine
+            viewModel.changedSelectedMachine()
+        })
     }
 
     private fun updateItemGroupToRV() {

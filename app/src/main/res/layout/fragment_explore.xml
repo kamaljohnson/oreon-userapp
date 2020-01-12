@@ -10,7 +10,7 @@
         android:layout_height="25pt">
 
         <TextView
-            android:id="@+id/explore_button"
+            android:id="@+id/selected_machine_code"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
@@ -25,21 +25,6 @@
         android:layout_below="@+id/sliding_layer_top"
         android:layout_width="match_parent"
         android:layout_height="150dp">
-
-<!--        Scan Mode Switch-->
-        <Switch
-            android:visibility="invisible"
-            android:id="@+id/scan_mode_switch"
-            android:layout_width="wrap_content"
-            android:scaleX="1.3"
-            android:scaleY="1.3"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:text="Scan Mode"
-            android:switchPadding="15pt"
-            android:textOff="OFF"
-            android:textOn="ON"
-            android:layout_centerInParent="true"/>
 
         <ProgressBar
             android:id="@+id/progress_bar"
