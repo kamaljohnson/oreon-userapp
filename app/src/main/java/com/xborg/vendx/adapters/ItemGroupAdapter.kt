@@ -58,4 +58,9 @@ class ItemGroupAdapter(
         val context: Context = itemView.context
     }
 
+    interface OnItemListener {
+        fun onRefreshRequest(itemId: String, itemLoc: String): Boolean
+    }
+
+
 }

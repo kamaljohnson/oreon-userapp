@@ -21,8 +21,7 @@
             android:id="@+id/location_permission_access_dialog"
             android:paddingHorizontal="20dp"
             android:layout_width="250dp"
-            android:layout_height="150dp"
-            android:visibility="invisible"
+            android:layout_height="130dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -34,26 +33,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="To search for outlets near you, allow access to you location"
+                android:textAlignment="center"
+                android:text="To find outlets near you, allow access to your location"
                 android:textSize="15dp">
 
             </TextView>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignTop="@+id/continue_location_permission"
-                android:layout_alignBottom="@+id/continue_location_permission"
-                android:layout_marginTop="0dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="0dp"
-                android:layout_toStartOf="@+id/continue_location_permission"
-                android:gravity="center"
-                android:text="NOT NOW"
-                android:textAlignment="center"
-                android:textColor="@color/colorAccent"
-                android:textSize="@dimen/button_text_size"
-                android:textStyle="bold" />
 
             <Button
                 android:id="@+id/continue_location_permission"
@@ -67,7 +51,7 @@
                 android:textSize="@dimen/button_text_size"
                 android:background="@drawable/rounded_button_accent"
                 android:layout_alignParentBottom="true"
-                android:layout_alignParentRight="true"/>
+                android:layout_centerHorizontal="true"/>
 
         </RelativeLayout>
     <!--    endregion-->

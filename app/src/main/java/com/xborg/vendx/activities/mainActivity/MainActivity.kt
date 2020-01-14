@@ -215,24 +215,10 @@ class MainActivity : FragmentActivity() {
             // Show an explanation to the user *asynchronously* -- don't block
             // this thread waiting for the user's response! After the user
             // sees the explanation, try again to request the permission.
-            val builder = AlertDialog.Builder(this)
-            builder.setMessage(
-                "You had denied access to location before, please proceed to settings " +
-                        "and grand permission to location"
+            ActivityCompat.requestPermissions(
+                this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                REQUEST_ENABLE_LOC
             )
-                .setPositiveButton(R.string.Ok) { _, _ ->
-                    ActivityCompat.requestPermissions(
-                        this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                        REQUEST_ENABLE_LOC
-                    )
-//                        val intent = Intent(
-//                            android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-//                            Uri.parse("package:" + BuildConfig.APPLICATION_ID)
-//                        )
-//                        startActivity(intent)
-                }
-            builder.create()
-            builder.show()
         } else {
             // No explanation needed, we can request the permission.
             ActivityCompat.requestPermissions(

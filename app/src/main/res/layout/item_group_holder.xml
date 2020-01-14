@@ -42,10 +42,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAlignment="center"
-                        android:text="could'nt find\nnearby machines"/>
+                        android:text="No machines\nnear you"/>
 
                     <Button
-                        android:text="Try Again"
+                        android:text="Refresh"
                         android:textColor="@color/white"
                         android:textStyle="bold"
                         android:background="@drawable/rounded_button_accent"

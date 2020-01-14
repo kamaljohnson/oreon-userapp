@@ -2,7 +2,6 @@ package com.xborg.vendx.adapters
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.opengl.Visibility
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -21,15 +20,14 @@ private var TAG = "ItemCardAdapter"
 class ItemCardAdapter(
     val items: List<Item>,
     val context: Context,
-    val onitemListener: OnItemListener
-) :
-    RecyclerView.Adapter<ItemCardAdapter.ItemViewHolder>() {
+    itemCardListener: OnItemListener
+) : RecyclerView.Adapter<ItemCardAdapter.ItemViewHolder>() {
 
-    val onItemListener: OnItemListener = onitemListener
+    private val _onCardItemListener: OnItemListener = itemCardListener
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.item_card, parent, false)
-        return ItemViewHolder(view, onItemListener)
+        return ItemViewHolder(view, _onCardItemListener)
     }
 
     override fun getItemCount(): Int {
@@ -53,7 +51,7 @@ class ItemCardAdapter(
             "Machine"
         }
 
-        if(item.inShelf) {
+        if (item.inShelf) {
             holder.cost.visibility = View.GONE
         }
 
@@ -106,9 +104,9 @@ class ItemCardAdapter(
 
             Log.i(TAG, "item state:  in machine : $itemsInMachineInt from shelf : $itemsInShelfInt")
 
-            when(itemLoc.text) {
+            when (itemLoc.text) {
                 "Shelf" -> {
-                    purchaseLimitCount = if(itemsInMachineInt < itemsInShelfInt) {
+                    purchaseLimitCount = if (itemsInMachineInt < itemsInShelfInt) {
                         itemsInMachineInt
                     } else {
                         itemsInShelfInt
@@ -124,7 +122,7 @@ class ItemCardAdapter(
                 return
             }
 
-            if(onItemListener.onItemAddedToCart(itemId.text.toString(), itemLoc.text.toString())) {
+            if (onItemListener.onItemAddedToCart(itemId.text.toString(), itemLoc.text.toString())) {
                 if (purchaseCount == 0) {
                     this.purchaseCount.visibility = View.VISIBLE
                     itemRemoveButton.visibility = View.VISIBLE
@@ -140,7 +138,11 @@ class ItemCardAdapter(
             var purchaseCount = this.purchaseCount.text.toString().split("/")[0].toInt()
             val purchaseLimitCount = this.purchaseCount.text.toString().split("/")[1].toInt()
 
-            if(onItemListener.onItemRemovedFromCart(itemId.text.toString(), itemLoc.text.toString())) {
+            if (onItemListener.onItemRemovedFromCart(
+                    itemId.text.toString(),
+                    itemLoc.text.toString()
+                )
+            ) {
                 purchaseCount -= 1
             }
             this.purchaseCount.text = "$purchaseCount/$purchaseLimitCount"
@@ -159,10 +161,6 @@ class ItemCardAdapter(
     interface OnItemListener {
         fun onItemAddedToCart(itemId: String, itemLoc: String): Boolean
         fun onItemRemovedFromCart(itemId: String, itemLoc: String): Boolean
-    }
-
-    companion object {
-        //TODO: create cart data which will be used for checking purchase limit
     }
 }
 
