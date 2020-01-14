@@ -59,7 +59,6 @@ class ExploreViewModel : ViewModel() {
     }
 
     private fun selectNearestMachineToUser() {
-//        selectedMachine.value = machinesNearby.value!![0]
-        selectedMachine.value = Machine()   //a empty machine constructor creates a dummy machine
+        selectedMachine.value = machinesNearby.value!![0]
     }
 }

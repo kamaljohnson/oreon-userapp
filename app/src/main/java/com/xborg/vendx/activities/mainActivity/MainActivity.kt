@@ -279,13 +279,14 @@ class MainActivity : FragmentActivity() {
                     val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
                     startActivity(intent)
                 }
+                sharedViewModel.checkedUserLocationAccessed.value = true
             }
         } else {
             if (sharedViewModel.getUserLocation.value!!) {
                 requestLocationPermission()
             }
+            sharedViewModel.checkedUserLocationAccessed.value = true
         }
-        Log.i(TAG, "here 0")
     }
 
     @SuppressLint("MissingPermission")
