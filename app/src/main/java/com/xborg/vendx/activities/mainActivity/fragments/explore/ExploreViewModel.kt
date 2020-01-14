@@ -63,7 +63,18 @@ class ExploreViewModel : ViewModel() {
     }
 
     private fun selectNearestMachineToUser() {
-        if(machinesNearby.value!![0].distance <= 0.01)
+        if(machinesNearby.value!![0].distance <= 0.1)
         selectedMachine.value = machinesNearby.value!![0]
+    }
+    fun changeSelectedMachine(machineId: String) {
+        if(selectedMachine.value!!.id != machineId) {
+            machinesNearby.value!!.forEach { machine ->
+                if(machine.id == machineId) {
+                    Log.i(TAG, "selected machine changed")
+                    selectedMachine.value = machine
+                    return
+                }
+            }
+        }
     }
 }

@@ -1,6 +1,7 @@
 package com.xborg.vendx.activities.mainActivity.fragments.explore
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -12,11 +13,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.xborg.vendx.R
 import com.xborg.vendx.activities.mainActivity.SharedViewModel
 import com.xborg.vendx.adapters.MachineCardAdapter
+import com.xborg.vendx.database.Machine
 import kotlinx.android.synthetic.main.fragment_explore.*
 
 const val TAG: String = "Explore"
 
-class ExploreFragment : Fragment() {
+class ExploreFragment : Fragment(), MachineCardAdapter.OnMachineCardListener{
 
     private lateinit var viewModel: ExploreViewModel
     private lateinit var sharedViewModel: SharedViewModel
@@ -84,10 +86,14 @@ class ExploreFragment : Fragment() {
     private fun updateMachineCardRV() {
         rv_machine_cards.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            adapter = MachineCardAdapter(viewModel.machinesNearby.value!!, context)
+            adapter = MachineCardAdapter(viewModel.machinesNearby.value!!, context, this@ExploreFragment)
         }
     }
     private fun updateMapView() {
 
+    }
+
+    override fun onCardClicked(machineId: String) {
+        viewModel.changeSelectedMachine(machineId)
     }
 }

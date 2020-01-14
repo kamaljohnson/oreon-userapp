@@ -47,7 +47,6 @@ class MachineCardAdapter(
         }
 
         override fun onClick(v: View?) {
-            Log.i(TAG, "Card clicked")
             onCardClicked()
             //TODO: change the current machine to clicked
         }
