@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
@@ -16,7 +17,7 @@ import kotlinx.android.synthetic.main.item_group_holder.view.*
 class ItemGroupAdapter(
     val items: ArrayList<ItemGroup>,
     val context: Context,
-    val onItemListener: ItemCardAdapter.OnItemListener
+    private val onItemListener: ItemCardAdapter.OnItemListener
 ) : RecyclerView.Adapter<ItemGroupAdapter.GroupViewHolder>() {
 
     override fun getItemCount(): Int {
@@ -48,6 +49,11 @@ class ItemGroupAdapter(
         } else {
             View.INVISIBLE
         }
+        holder.progressBar.visibility = if(parent.items.isEmpty()){
+            View.VISIBLE
+        } else {
+            View.GONE
+        }
     }
 
     class GroupViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -55,6 +61,8 @@ class ItemGroupAdapter(
         val lineBreaker: ImageView = view.line_breaker
         val title: TextView = view.title
         val noMachinesNearMessage: RelativeLayout = view.no_machines_near_message
+        val progressBar: ProgressBar = view.progress_bar
+
         val context: Context = itemView.context
     }
 

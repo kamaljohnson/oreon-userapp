@@ -23,7 +23,7 @@ class HomeViewModel : ViewModel() {
     val uid = FirebaseAuth.getInstance().uid.toString()
 
     val selectedMachine = MutableLiveData<Machine>()
-    val selectedMachineLoaded = MutableLiveData<Boolean>()
+    private val selectedMachineLoaded = MutableLiveData<Boolean>()
 
     var machineItems: MutableLiveData<List<Item>>
     var shelfItems: MutableLiveData<List<Item>>
@@ -43,11 +43,13 @@ class HomeViewModel : ViewModel() {
         shelfItems.value = ArrayList()
 
         selectedMachine.value = Machine()
-
         getItemsInShelf(uid)
     }
 
     fun changedSelectedMachine() {
+        selectedMachineLoaded.value = false
+        machineItems.value = ArrayList()
+        updateItemGroupModel()
         if (selectedMachine.value != null) {
             if(selectedMachine.value!!.code != "Dummy Code") {
                 getItemsFromMachine(selectedMachine.value!!.id)
@@ -128,7 +130,7 @@ class HomeViewModel : ViewModel() {
             temp.add(shelfItemsInMachineGroupModel)
         }
 
-        if(selectedMachine.value!!.code != "Dummy Code") {
+        if(selectedMachine.value!!.code != "Dummy Code" && selectedMachineLoaded.value == true) {
             if (machineItems.value!!.isNotEmpty()) {
                 val machineItemsGroupModel = ItemGroup(
                     title = "In Machine",
@@ -137,7 +139,14 @@ class HomeViewModel : ViewModel() {
                 )
                 temp.add(machineItemsGroupModel)
             }
-        } else {
+        } else if(selectedMachineLoaded.value == false) {
+            val machineItemsGroupModel = ItemGroup(
+                title = "Machine",
+                drawLineBreaker = shelfItems.value!!.isNotEmpty()
+            )
+            temp.add(machineItemsGroupModel)
+        }
+         else {
             val machineItemsGroupModel = ItemGroup(
                 title = "Machine",
                 drawLineBreaker = shelfItems.value!!.isNotEmpty(),

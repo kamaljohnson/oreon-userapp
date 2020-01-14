@@ -100,9 +100,6 @@ class MainActivity : FragmentActivity() {
         sharedViewModel.isInternetAvailable.observe(this, Observer { availability ->
             Log.i(TAG, "internet connection available: $availability")
         })
-        sharedViewModel.selectedMachineLoaded.observe(this, Observer { loaded ->
-            Log.i(TAG, "selected machine loaded : $loaded")
-        })
 
         sharedViewModel.userLocationAccessed.observe(this, Observer { accessed ->
             if (accessed && current_fragment == Fragments.HOME) {
