@@ -1,21 +1,19 @@
 package com.xborg.vendx.activities.mainActivity.fragments.home
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.xborg.vendx.R
-import com.xborg.vendx.adapters.ItemGroupAdapter
+import com.xborg.vendx.activities.feedbackActivity.FeedbackActivity
 import com.xborg.vendx.activities.mainActivity.SharedViewModel
 import com.xborg.vendx.adapters.ItemCardAdapter
-import kotlinx.android.synthetic.main.fragment_explore.*
+import com.xborg.vendx.adapters.ItemGroupAdapter
 import kotlinx.android.synthetic.main.fragment_home.*
-import kotlinx.android.synthetic.main.fragment_home.progress_bar
 
 private var TAG = "HomeFragment"
 
@@ -25,6 +23,7 @@ class HomeFragment : Fragment(), ItemCardAdapter.OnItemListener {
     private lateinit var sharedViewModel: SharedViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setHasOptionsMenu(true)
         super.onCreate(savedInstanceState)
         Log.i(TAG, "Home onCreate called!")
 
@@ -115,5 +114,25 @@ class HomeFragment : Fragment(), ItemCardAdapter.OnItemListener {
     override fun onItemRemovedFromCart(itemId: String, itemLoc: String): Boolean {
         Log.i(TAG, "item : $itemId from $itemLoc removed from CartFragment")
         return sharedViewModel.removeItemFromCart(itemId, itemLoc)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.home_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when(item.itemId) {
+            R.id.feedback -> {
+                showFeedback()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun showFeedback() {
+        val intent = Intent(context, FeedbackActivity::class.java)
+        startActivity(intent)
     }
 }

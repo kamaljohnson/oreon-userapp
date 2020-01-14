@@ -18,10 +18,10 @@ import android.provider.Settings
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.MutableLiveData
@@ -31,11 +31,11 @@ import com.google.android.gms.location.*
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState
-import com.xborg.vendx.activities.mainActivity.fragments.home.HomeFragment
-import com.xborg.vendx.activities.mainActivity.fragments.history.HistoryFragment
-import com.xborg.vendx.activities.mainActivity.fragments.shop.ShopFragment
 import com.xborg.vendx.R
 import com.xborg.vendx.activities.mainActivity.fragments.explore.ExploreFragment
+import com.xborg.vendx.activities.mainActivity.fragments.history.HistoryFragment
+import com.xborg.vendx.activities.mainActivity.fragments.home.HomeFragment
+import com.xborg.vendx.activities.mainActivity.fragments.shop.ShopFragment
 import com.xborg.vendx.activities.paymentActivity.PaymentActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -52,7 +52,7 @@ enum class Fragments {
     SHELF
 }
 
-class MainActivity : FragmentActivity() {
+class MainActivity : AppCompatActivity() {
 
     private lateinit var sharedViewModel: SharedViewModel
 
@@ -341,13 +341,13 @@ class MainActivity : FragmentActivity() {
         bottomNavigation.enableShiftingMode(false)
         bottomNavigation.setTextVisibility(false)
 
-        changeFragment(HomeFragment(), "HomeFragment")
+        changeFragment(HomeFragment(), "Home")
 
         bottom_navigation.setOnNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.navigation_home -> {
                     current_fragment.value = Fragments.HOME
-                    changeFragment(HomeFragment(), "HomeFragment")
+                    changeFragment(HomeFragment(), "Home")
                     showGetButton()
                     return@setOnNavigationItemSelectedListener true
                 }
@@ -355,7 +355,7 @@ class MainActivity : FragmentActivity() {
                 R.id.navigation_shop -> {
                     current_fragment.value =
                         Fragments.SHOP
-                    changeFragment(ShopFragment(), "ShopFragment")
+                    changeFragment(ShopFragment(), "Shop")
                     hideGetButton()
                     hideSwipeUpContainer()
                     return@setOnNavigationItemSelectedListener true
@@ -363,7 +363,7 @@ class MainActivity : FragmentActivity() {
 
                 R.id.navigation_history -> {
                     current_fragment.value = Fragments.SHELF
-                    changeFragment(HistoryFragment(), "HistoryFragment")
+                    changeFragment(HistoryFragment(), "History")
                     hideGetButton()
                     hideSwipeUpContainer()
                     return@setOnNavigationItemSelectedListener true
@@ -373,7 +373,7 @@ class MainActivity : FragmentActivity() {
         }
     }
 
-    private fun changeFragment(fragment: Fragment, tagFragmentName: String) {
+    private fun changeFragment(fragment: Fragment, title: String) {
         val fragmentManager: FragmentManager = supportFragmentManager
         val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
 
@@ -382,10 +382,10 @@ class MainActivity : FragmentActivity() {
             fragmentTransaction.hide(currentFragment)
         }
 
-        var tempFragment: Fragment? = fragmentManager.findFragmentByTag(tagFragmentName)
+        var tempFragment: Fragment? = fragmentManager.findFragmentByTag(title)
         if (tempFragment == null) {
             tempFragment = fragment
-            fragmentTransaction.add(fragment_container.id, tempFragment, tagFragmentName)
+            fragmentTransaction.add(fragment_container.id, tempFragment, title)
         } else {
             fragmentTransaction.show(tempFragment)
         }
@@ -393,6 +393,7 @@ class MainActivity : FragmentActivity() {
         fragmentTransaction.setPrimaryNavigationFragment(tempFragment)
         fragmentTransaction.setReorderingAllowed(true)
         fragmentTransaction.commitNowAllowingStateLoss()
+        supportActionBar!!.title = title
     }
 
     private fun initBottomSwipeUpView() {
@@ -481,6 +482,5 @@ class MainActivity : FragmentActivity() {
         }
         return false
     }
-
     //    endregion
 }

@@ -2,14 +2,13 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".activities.mainActivity.fragments.home.HomeFragment"
         android:overScrollMode="always"
         android:isScrollContainer="true"
-        android:layout_marginBottom="25pt"
-        android:orientation="vertical">
+        android:layout_marginBottom="25pt">
 
         <ImageView
             android:id="@+id/connection_lost_image"
@@ -21,13 +20,10 @@
             android:id="@+id/location_permission_access_dialog"
             android:paddingHorizontal="20dp"
             android:layout_width="250dp"
+            android:layout_centerInParent="true"
             android:layout_height="130dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             android:background="@drawable/home_fragment_info_board"
-            android:translationZ="6dp"
-            app:layout_constraintTop_toTopOf="parent">
+            android:translationZ="6dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -75,8 +71,8 @@
                 android:layout_height="match_parent"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 android:orientation="vertical"
-            android:overScrollMode="never"/>
+                android:overScrollMode="never"/>
         </RelativeLayout>
     <!--    endregion-->
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </RelativeLayout>
 </layout>

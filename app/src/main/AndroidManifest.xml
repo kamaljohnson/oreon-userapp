@@ -6,10 +6,8 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
@@ -21,10 +19,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".activities.feedbackActivity.FeedbackActivity"
+            android:screenOrientation="portrait">
+
+        </activity>
         <activity
             android:name=".activities.paymentActivity.PaymentActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activities.loginActivity.LoginActivity"
             android:screenOrientation="portrait">
@@ -39,27 +40,21 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.vendingActivity.VendingActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".database.ItemGroup"
-            android:screenOrientation="portrait" />
-<!--    region Razorpay-->
+            android:screenOrientation="portrait" /> <!-- region Razorpay -->
         <meta-data
             android:name="com.razorpay.ApiKey"
-            android:value="rzp_test_KvfTdnPSCJotdH" />
-<!--     endregion-->
-<!--        region Google Map-->
+            android:value="rzp_test_KvfTdnPSCJotdH" /> <!-- endregion -->
+        <!-- region Google Map -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBmyvFOOGd0rIJpcD2tJJrZIbjHj_PHQcg"/>
+            android:value="AIzaSyBmyvFOOGd0rIJpcD2tJJrZIbjHj_PHQcg" />
         <meta-data
             android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
-<!--        endregion-->
-        <service android:name="com.xborg.vendx.activities.vendingActivity.fragments.deviceCommunicator.SerialService" />
-
+            android:value="@integer/google_play_services_version" /> <!-- endregion -->
+        <service android:name=".activities.vendingActivity.fragments.deviceCommunicator.SerialService" />
     </application>
 
 </manifest>

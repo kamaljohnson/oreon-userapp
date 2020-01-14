@@ -29,4 +29,13 @@
     <string name="get">Get</string>
     <string name="pay">Pay</string>
 
+    <string-array name="feedback_topic">
+        <item>Vulnerability</item>
+        <item>Vending</item>
+        <item>Payments</item>
+        <item>UI/UX</item>
+        <item>Other</item>
+    </string-array>
+    <string name="feedback_prompt">Select topic</string>
+    <string name="feedback">Feedback</string>
 </resources>

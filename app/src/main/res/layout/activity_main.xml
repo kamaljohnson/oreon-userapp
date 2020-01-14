@@ -6,11 +6,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
         tools:context=".activities.mainActivity.MainActivity">
-    <!--    region Top AppBar-->
-
-    <!--    endregion-->
 
     <!--    region SwipeUpLayout + Main Fragment-->
         <com.sothree.slidinguppanel.SlidingUpPanelLayout
