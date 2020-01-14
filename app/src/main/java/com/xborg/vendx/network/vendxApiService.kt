@@ -73,6 +73,13 @@ interface VendxAPIService {
         @Path("id") id: String,
         @Field("bag") bag: String
     ): Deferred<String>
+
+    @FormUrlEncoded
+    @POST("feedback/add/{id}")
+    fun postFeedbackAsync(
+        @Path("id") id: String,
+        @Field("feedback") feedback: String
+    ): Deferred<String>
 }
 
 object VendxApi {

@@ -5,56 +5,77 @@
     android:layout_height="match_parent"
     tools:context=".activities.feedbackActivity.fragments.feedbackForm.FeedbackFormFragment">
     <RelativeLayout
-        android:id="@+id/top"
+        android:layout_centerInParent="true"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
         <ImageView
+            android:layout_above="@id/form"
             android:id="@+id/image"
-            android:layout_width="match_parent"
-            android:layout_height="150dp"/>
-        <TextView
-            android:id="@+id/heading_text"
-            android:layout_below="@id/image"
-            android:textStyle="bold"
-            android:textSize="20dp"
-            android:textAlignment="center"
-            android:text="Help us improve"
-            android:layout_marginBottom="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-        <TextView
-            android:textAlignment="center"
-            android:layout_below="@+id/heading_text"
-            android:layout_marginBottom="50dp"
-            android:text="Please select a topic below and let us\n know ablut your concern"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_below="@id/top"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-        <Spinner
-            android:background="@color/gray"
-            android:layout_marginHorizontal="20dp"
-            android:id="@+id/feedback_topic_spinner"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:prompt="@string/feedback_prompt"
-            android:entries="@array/feedback_topic" />
-
-        <EditText
-            android:layout_marginHorizontal="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_below="@id/feedback_topic_spinner"
-            android:gravity="top"
-            android:inputType="textMultiLine"
-            android:hint="Enter you feedback here"
-            android:id="@+id/feedback_body_edit_text"
+            android:background="@color/colorPrimary"
             android:layout_width="match_parent"
             android:layout_height="300dp"/>
+        <RelativeLayout
+            android:layout_above="@id/form"
+            android:id="@+id/top"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/heading_text"
+                android:textStyle="bold"
+                android:textSize="25dp"
+                android:textAlignment="center"
+                android:text="Help us improve"
+                android:layout_marginBottom="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:id="@+id/description_text"
+                android:textAlignment="center"
+                android:textSize="14dp"
+                android:layout_below="@+id/heading_text"
+                android:layout_marginBottom="50dp"
+                android:text="Please select a topic below and let us\n know about your concern"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_centerInParent="true"
+            android:id="@+id/form"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Spinner
+                android:background="@color/gray"
+                android:layout_marginHorizontal="20dp"
+                android:id="@+id/feedback_topic_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:entries="@array/feedback_topic" />
+
+            <EditText
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_below="@id/feedback_topic_spinner"
+                android:gravity="top"
+                android:inputType="textMultiLine"
+                android:hint="Enter you feedback here"
+                android:id="@+id/feedback_body_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"/>
+
+            <Button
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:background="@drawable/rounded_button_accent"
+                android:layout_marginTop="10dp"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/feedback_body_edit_text"
+                android:text="Submit"
+                android:id="@+id/submit_button"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"/>
+        </RelativeLayout>
     </RelativeLayout>
 
 </RelativeLayout>
