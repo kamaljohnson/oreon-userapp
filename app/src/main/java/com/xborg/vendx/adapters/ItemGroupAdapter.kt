@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -30,15 +31,19 @@ class ItemGroupAdapter(
     override fun onBindViewHolder(holder: GroupViewHolder, position: Int) {
         val parent = items[position]
         holder.title.text = parent.title
-        holder.groupItemsRV.apply {
-            layoutManager = GridLayoutManager(context, 3)
-            adapter = ItemCardAdapter(parent.items, context, onItemListener)
+        if(parent.showNoMachinesNearbyMessage) {
+            holder.noMachinesNearMessage.visibility = View.VISIBLE
+        } else {
+            holder.groupItemsRV.apply {
+                layoutManager = GridLayoutManager(context, 3)
+                adapter = ItemCardAdapter(parent.items, context, onItemListener)
 
-            if (!parent.draw_line_breaker) {
-                holder.itemView.line_breaker.visibility = View.INVISIBLE
+                if (!parent.drawLineBreaker) {
+                    holder.itemView.line_breaker.visibility = View.INVISIBLE
+                }
             }
         }
-        holder.lineBreaker.visibility = if (parent.draw_line_breaker) {
+        holder.lineBreaker.visibility = if (parent.drawLineBreaker) {
             View.INVISIBLE
         } else {
             View.INVISIBLE
@@ -49,7 +54,7 @@ class ItemGroupAdapter(
         val groupItemsRV: RecyclerView = view.rv_item_group
         val lineBreaker: ImageView = view.line_breaker
         val title: TextView = view.title
-
+        val noMachinesNearMessage: RelativeLayout = view.no_machines_near_message
         val context: Context = itemView.context
     }
 

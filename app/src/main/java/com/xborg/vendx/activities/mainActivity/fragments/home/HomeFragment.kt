@@ -68,6 +68,30 @@ class HomeFragment : Fragment(), ItemCardAdapter.OnItemListener {
             viewModel.selectedMachine.value = selectedMachine
             viewModel.changedSelectedMachine()
         })
+        sharedViewModel.isInternetAvailable.observe(this, Observer { avalibility ->
+
+        })
+        sharedViewModel.checkedUserLocationAccessed.observe(this, Observer { checked ->
+            if(checked) {
+                if(sharedViewModel.userLocationAccessed.value == false) {
+                    location_permission_access_dialog.visibility = View.VISIBLE
+                } else {
+                    location_permission_access_dialog.visibility = View.GONE
+                }
+            } else {
+                location_permission_access_dialog.visibility = View.GONE
+            }
+        })
+
+        sharedViewModel.userLocationAccessed.observe(this, Observer { accessed ->
+            if(accessed) {
+                location_permission_access_dialog.visibility = View.GONE
+            }
+        })
+
+        continue_location_permission.setOnClickListener {
+            sharedViewModel.getUserLocation.value = true
+        }
     }
 
     private fun updateItemGroupToRV() {

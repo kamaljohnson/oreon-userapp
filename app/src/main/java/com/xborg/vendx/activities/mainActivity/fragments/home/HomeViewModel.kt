@@ -15,7 +15,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import java.lang.Exception
 
 private const val TAG = "HomeViewModel"
 
@@ -47,7 +46,11 @@ class HomeViewModel : ViewModel() {
 
     fun changedSelectedMachine() {
         if (selectedMachine.value != null) {
-            getItemsFromMachine(selectedMachine.value!!.id)
+            if(selectedMachine.value!!.code != "Dummy Code") {
+                getItemsFromMachine(selectedMachine.value!!.id)
+            } else {
+                updateItemGroupModel()
+            }
         }
     }
 
@@ -116,16 +119,25 @@ class HomeViewModel : ViewModel() {
                 ItemGroup(
                     title = "From Shelf",
                     items = shelfItemsInMachine,
-                    draw_line_breaker = machineItems.value!!.isNotEmpty()
+                    drawLineBreaker = machineItems.value!!.isNotEmpty()
                 )
             temp.add(shelfItemsInMachineGroupModel)
         }
 
-        if (machineItems.value!!.isNotEmpty()) {
+        if(selectedMachine.value!!.code != "Dummy Code") {
+            if (machineItems.value!!.isNotEmpty()) {
+                val machineItemsGroupModel = ItemGroup(
+                    title = "In Machine",
+                    items = machineItems.value!!,
+                    drawLineBreaker = shelfItems.value!!.isNotEmpty()
+                )
+                temp.add(machineItemsGroupModel)
+            }
+        } else {
             val machineItemsGroupModel = ItemGroup(
-                title = "In Machine",
-                items = machineItems.value!!,
-                draw_line_breaker = shelfItems.value!!.isNotEmpty()
+                title = "Machine",
+                drawLineBreaker = shelfItems.value!!.isNotEmpty(),
+                showNoMachinesNearbyMessage = true
             )
             temp.add(machineItemsGroupModel)
         }
@@ -151,7 +163,7 @@ class HomeViewModel : ViewModel() {
                     "Remaining Shelf"
                 },
                 items = shelfItemsNotInMachine,
-                draw_line_breaker = false
+                drawLineBreaker = false
             )
             temp.add(shelfItemsNotInMachineGroupModel)
         }

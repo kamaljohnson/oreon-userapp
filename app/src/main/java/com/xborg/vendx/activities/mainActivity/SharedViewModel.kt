@@ -21,6 +21,9 @@ enum class PermissionStatus {
 
 class SharedViewModel : ViewModel() {
 
+    val isInternetAvailable = MutableLiveData<Boolean>()
+
+    var checkedUserLocationAccessed: MutableLiveData<Boolean> = MutableLiveData(false)
     var getUserLocation: MutableLiveData<Boolean> = MutableLiveData(false)
     var userLocationAccessed: MutableLiveData<Boolean> = MutableLiveData(false)
 

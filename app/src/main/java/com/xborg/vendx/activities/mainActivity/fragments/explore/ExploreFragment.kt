@@ -1,7 +1,6 @@
 package com.xborg.vendx.activities.mainActivity.fragments.explore
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -49,17 +48,17 @@ class ExploreFragment : Fragment() {
         })
 
         viewModel.selectedMachine.observe(this, Observer { selectedMachine->
-            selected_machine_code.text = selectedMachine.code
+            if(selectedMachine.code == "Dummy Code") {
+                selected_machine_code.text = "Explore?"
+            } else {
+                selected_machine_code.text = selectedMachine.code
+            }
             sharedViewModel.selectedMachine.value = selectedMachine
         })
 
         viewModel.machinesNearby.observe(this, Observer {
             displayNearbyMachines()
         })
-
-        selected_machine_code.setOnClickListener{
-            sharedViewModel.getUserLocation.value = true
-        }
     }
 
     private fun scanForNearbyMachines() {

@@ -10,6 +10,8 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.location.Location
 import android.location.LocationManager
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.os.Bundle
 import android.os.Looper
 import android.provider.Settings
@@ -95,6 +97,17 @@ class MainActivity : FragmentActivity() {
                 getLastLocation()
             }
         })
+        sharedViewModel.isInternetAvailable.observe(this, Observer { availability ->
+            Log.i(TAG, "internet connection available: $availability")
+        })
+
+        sharedViewModel.userLocationAccessed.observe(this, Observer { accessed ->
+            if(accessed && current_fragment == Fragments.HOME) {
+                showSwipeUpContainer()
+            } else {
+                hideSwipeUpContainer()
+            }
+        })
 
         initBottomNavigationView()
         initBottomSwipeUpView()
@@ -114,6 +127,9 @@ class MainActivity : FragmentActivity() {
 
     override fun onResume() {
         super.onResume()
+
+        sharedViewModel.isInternetAvailable.value = isInternetAvailable(this)
+
         if (sharedViewModel.getUserLocation.value == true &&
             sharedViewModel.userLocationAccessed.value == false
         ) {
@@ -254,6 +270,7 @@ class MainActivity : FragmentActivity() {
                         )
                         sharedViewModel.getUserLocation.value = false
                         sharedViewModel.userLocationAccessed.value = true
+                        sharedViewModel.checkedUserLocationAccessed.value = true
                     }
                 }
             } else {
@@ -268,6 +285,7 @@ class MainActivity : FragmentActivity() {
                 requestLocationPermission()
             }
         }
+        Log.i(TAG, "here 0")
     }
 
     @SuppressLint("MissingPermission")
@@ -343,7 +361,6 @@ class MainActivity : FragmentActivity() {
                         Fragments.HOME
                     changeFragment(HomeFragment(), "HomeFragment")
                     showGetButton()
-                    showSwipeUpContainer()
                     return@setOnNavigationItemSelectedListener true
                 }
 
@@ -461,6 +478,20 @@ class MainActivity : FragmentActivity() {
         } else {
             super.onBackPressed()
         }
+    }
+
+    private fun isInternetAvailable(context: Context): Boolean {
+        val connectivity = context.getSystemService(
+            Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (connectivity != null) {
+            val info = connectivity.allNetworkInfo
+            if (info != null)
+                for (i in info)
+                    if (i.state == NetworkInfo.State.CONNECTED) {
+                        return true
+                    }
+        }
+        return false
     }
 
 //    endregion

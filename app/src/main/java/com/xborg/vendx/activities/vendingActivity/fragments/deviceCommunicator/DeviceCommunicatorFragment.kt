@@ -42,8 +42,7 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        deviceAddress = "3C:71:BF:79:86:22"
-        deviceAddress = "D0:17:C2:6A:EA:04"
+        deviceAddress = "24:6F:28:B6:29:28"
     }
 
     override fun onCreateView(
@@ -51,13 +50,11 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         return inflater.inflate(R.layout.fragment_device_communicator, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
         viewModel = ViewModelProviders.of(activity!!).get(DeviceCommunicatorViewModel::class.java)
         sharedViewModel = ViewModelProviders.of(activity!!).get(SharedViewModel::class.java)
 
@@ -238,6 +235,7 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
     }
 
     override fun onSerialIoError(e: Exception?) {
+        Log.i(TAG, "onSerialIoError")
         Log.i(TAG, "onSerialIoError: " + e!!.message)
         status("connection lost: " + e.message)
         disconnect()
@@ -248,12 +246,15 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
     }
 
     override fun onSerialConnectError(e: Exception?) {
+        Log.i(TAG, "onSerialConnectError")
         Log.i(TAG, "onSerialConnectError: " + e!!.message)
         status("connection failed: " + e.message)
         disconnect()
     }
 
-    override fun onSerialConnect() {
+    override fun onSerialConnect()
+    {
+        Log.i(TAG, "Connected")
         status("connected")
         connected = Connected.True
         sharedViewModel.vendState.value = VendingState.DeviceConnected

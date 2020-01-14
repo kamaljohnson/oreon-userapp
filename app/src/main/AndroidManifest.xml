@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.xborg.vendx">
 
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -39,13 +40,24 @@
         <activity
             android:name=".activities.vendingActivity.VendingActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
         <activity
             android:name=".database.ItemGroup"
             android:screenOrientation="portrait" />
+<!--    region Razorpay-->
         <meta-data
             android:name="com.razorpay.ApiKey"
             android:value="rzp_test_KvfTdnPSCJotdH" />
+<!--     endregion-->
+<!--        region Google Map-->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBmyvFOOGd0rIJpcD2tJJrZIbjHj_PHQcg"/>
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+<!--        endregion-->
         <service android:name="com.xborg.vendx.activities.vendingActivity.fragments.deviceCommunicator.SerialService" />
 
     </application>

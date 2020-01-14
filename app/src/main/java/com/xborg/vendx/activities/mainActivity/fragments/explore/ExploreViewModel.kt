@@ -49,6 +49,8 @@ class ExploreViewModel : ViewModel() {
                 machinesNearby.value = adapter.fromJson(listResult)!!
                 if(machinesNearby.value!!.isNotEmpty()) {
                     selectNearestMachineToUser()
+                } else {    //adding a dummy machine
+                    selectedMachine.value = Machine()   //a empty machine constructor creates a dummy machine
                 }
             } catch (t: Throwable) {
                 Log.e(TAG, "Failed to get response: ${t.message}")
@@ -57,7 +59,7 @@ class ExploreViewModel : ViewModel() {
     }
 
     private fun selectNearestMachineToUser() {
-        selectedMachine.value = machinesNearby.value!![0]
+//        selectedMachine.value = machinesNearby.value!![0]
+        selectedMachine.value = Machine()   //a empty machine constructor creates a dummy machine
     }
 }
-
