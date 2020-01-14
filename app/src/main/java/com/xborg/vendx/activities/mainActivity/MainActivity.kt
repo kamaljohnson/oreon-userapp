@@ -24,6 +24,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.gms.location.*
@@ -58,8 +59,7 @@ class MainActivity : FragmentActivity() {
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
 
     companion object {
-        var current_fragment: Fragments =
-            Fragments.HOME
+        var current_fragment  = MutableLiveData<Fragments>(Fragments.HOME)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -101,11 +101,13 @@ class MainActivity : FragmentActivity() {
             Log.i(TAG, "internet connection available: $availability")
         })
 
-        sharedViewModel.userLocationAccessed.observe(this, Observer { accessed ->
-            if (accessed && current_fragment == Fragments.HOME) {
-                showSwipeUpContainer()
-            } else {
-                hideSwipeUpContainer()
+        current_fragment.observe(this, Observer { fragment ->
+            if(fragment == Fragments.HOME) {
+                if(sharedViewModel.userLocationAccessed.value == true) {
+                    showSwipeUpContainer()
+                } else {
+                    hideSwipeUpContainer()
+                }
             }
         })
 
@@ -328,8 +330,8 @@ class MainActivity : FragmentActivity() {
             }
         }
     }
-//    endregion
-//    region Activity Support functions
+    //    endregion
+    //    region Activity Support functions
 
     private fun initBottomNavigationView() {
 
@@ -344,15 +346,14 @@ class MainActivity : FragmentActivity() {
         bottom_navigation.setOnNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.navigation_home -> {
-                    current_fragment =
-                        Fragments.HOME
+                    current_fragment.value = Fragments.HOME
                     changeFragment(HomeFragment(), "HomeFragment")
                     showGetButton()
                     return@setOnNavigationItemSelectedListener true
                 }
 
                 R.id.navigation_shop -> {
-                    current_fragment =
+                    current_fragment.value =
                         Fragments.SHOP
                     changeFragment(ShopFragment(), "ShopFragment")
                     hideGetButton()
@@ -361,8 +362,7 @@ class MainActivity : FragmentActivity() {
                 }
 
                 R.id.navigation_history -> {
-                    current_fragment =
-                        Fragments.SHELF
+                    current_fragment.value = Fragments.SHELF
                     changeFragment(HistoryFragment(), "HistoryFragment")
                     hideGetButton()
                     hideSwipeUpContainer()
@@ -410,7 +410,7 @@ class MainActivity : FragmentActivity() {
             override fun onPanelSlide(panel: View, slideOffset: Float) {
                 if (slideOffset > 0.05f) {
                     hideGetButton()
-                } else if (current_fragment != Fragments.SHOP) {
+                } else if (current_fragment.value != Fragments.SHOP) {
                     if (sharedViewModel.taggedCartItem.value!!.isNotEmpty()) {
                         showGetButton()
                     }
@@ -482,5 +482,5 @@ class MainActivity : FragmentActivity() {
         return false
     }
 
-//    endregion
+    //    endregion
 }
