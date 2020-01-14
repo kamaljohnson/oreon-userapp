@@ -41,6 +41,8 @@ class HomeViewModel : ViewModel() {
         machineItems.value = ArrayList()
         shelfItems.value = ArrayList()
 
+        selectedMachine.value = Machine()
+
         getItemsInShelf(uid)
     }
 

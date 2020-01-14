@@ -55,7 +55,8 @@ class HistoryFragment : Fragment() {
                     //TODO: load next transactions from server
                 }
             }
-        })    }
+        })
+    }
 
     private fun updateTransactionsToRV() {
         rv_transactions.apply {

@@ -94,7 +94,7 @@ class MainActivity : FragmentActivity() {
         })
         sharedViewModel.getUserLocation.observe(this, Observer { scan ->
             if (scan) {
-                getLastLocation()
+                getCurrentLocation()
             }
         })
         sharedViewModel.isInternetAvailable.observe(this, Observer { availability ->
@@ -113,7 +113,7 @@ class MainActivity : FragmentActivity() {
         initBottomSwipeUpView()
         enableBluetooth()
 
-        getLastLocation()
+        getCurrentLocation()
 
         checkout_button.setOnClickListener {
             // TODO: use navigation graphs instead
@@ -134,7 +134,7 @@ class MainActivity : FragmentActivity() {
             sharedViewModel.userLocationAccessed.value == false
         ) {
             Log.i(TAG, "getLocation called from onResume")
-            getLastLocation()
+            getCurrentLocation()
         }
     }
 
@@ -256,7 +256,7 @@ class MainActivity : FragmentActivity() {
     }
 
     @SuppressLint("MissingPermission")
-    private fun getLastLocation() {
+    private fun getCurrentLocation() {
         if (checkLocationPermission()) {
             if (isLocationEnabled()) {
                 mFusedLocationClient.lastLocation.addOnCompleteListener(this) { task ->
@@ -333,7 +333,7 @@ class MainActivity : FragmentActivity() {
             REQUEST_ENABLE_LOC -> {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     sharedViewModel.locationPermission.value = PermissionStatus.Granted
-                    getLastLocation()
+                    getCurrentLocation()
                 } else {
                     sharedViewModel.locationPermission.value = PermissionStatus.Denied
                     sharedViewModel.userLocationAccessed.value = false

@@ -28,6 +28,10 @@ class ExploreViewModel : ViewModel() {
     private var viewModelJob = Job()
     private var coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
+    init {
+        selectedMachine.value = Machine()
+    }
+    
     fun requestNearbyMachines() {
         val moshi: Moshi = Moshi.Builder()
             .add(KotlinJsonAdapterFactory())
@@ -59,6 +63,7 @@ class ExploreViewModel : ViewModel() {
     }
 
     private fun selectNearestMachineToUser() {
+        if(machinesNearby.value!![0].distance <= 0.01)
         selectedMachine.value = machinesNearby.value!![0]
     }
 }
