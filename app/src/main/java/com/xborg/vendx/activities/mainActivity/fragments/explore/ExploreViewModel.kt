@@ -25,6 +25,8 @@ class ExploreViewModel : ViewModel() {
     val machinesNearby = MutableLiveData<List<Machine>>()
     val selectedMachine = MutableLiveData<Machine>()
 
+    val selectedMachineLoaded = MutableLiveData<Boolean>()
+
     private var viewModelJob = Job()
     private var coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
@@ -65,6 +67,7 @@ class ExploreViewModel : ViewModel() {
     private fun selectNearestMachineToUser() {
         if(machinesNearby.value!![0].distance <= 0.1)
         selectedMachine.value = machinesNearby.value!![0]
+        selectedMachineLoaded.value = false
     }
     fun changeSelectedMachine(machineId: String) {
         if(selectedMachine.value!!.id != machineId) {

@@ -37,7 +37,7 @@ class HomeFragment : Fragment(), ItemCardAdapter.OnItemListener {
     ): View? {
         Log.i(TAG, "onCreateView called!")
 
-        return inflater.inflate(R.layout.fragment_home,container,false)
+        return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -67,13 +67,14 @@ class HomeFragment : Fragment(), ItemCardAdapter.OnItemListener {
         sharedViewModel.selectedMachine.observe(this, Observer { selectedMachine ->
             viewModel.selectedMachine.value = selectedMachine
             viewModel.changedSelectedMachine()
+            //TODO: display loading sign in group-holder(Machine)
         })
         sharedViewModel.isInternetAvailable.observe(this, Observer { avalibility ->
-
+            //TODO: display network not-connected error
         })
         sharedViewModel.checkedUserLocationAccessed.observe(this, Observer { checked ->
-            if(checked) {
-                if(sharedViewModel.userLocationAccessed.value == false) {
+            if (checked) {
+                if (sharedViewModel.userLocationAccessed.value == false) {
                     location_permission_access_dialog.visibility = View.VISIBLE
                 } else {
                     location_permission_access_dialog.visibility = View.GONE
@@ -82,11 +83,13 @@ class HomeFragment : Fragment(), ItemCardAdapter.OnItemListener {
                 location_permission_access_dialog.visibility = View.GONE
             }
         })
-
         sharedViewModel.userLocationAccessed.observe(this, Observer { accessed ->
-            if(accessed) {
+            if (accessed) {
                 location_permission_access_dialog.visibility = View.GONE
             }
+        })
+        sharedViewModel.selectedMachineLoaded.observe(this, Observer { loaded ->
+            viewModel.selectedMachineLoaded.value = loaded
         })
 
         continue_location_permission.setOnClickListener {
@@ -112,7 +115,7 @@ class HomeFragment : Fragment(), ItemCardAdapter.OnItemListener {
         return sharedViewModel.addItemToCart(itemId, itemLoc)
     }
 
-    override fun onItemRemovedFromCart(itemId: String, itemLoc: String) : Boolean{
+    override fun onItemRemovedFromCart(itemId: String, itemLoc: String): Boolean {
         Log.i(TAG, "item : $itemId from $itemLoc removed from CartFragment")
         return sharedViewModel.removeItemFromCart(itemId, itemLoc)
     }

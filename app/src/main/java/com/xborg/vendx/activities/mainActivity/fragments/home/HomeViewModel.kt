@@ -23,6 +23,7 @@ class HomeViewModel : ViewModel() {
     val uid = FirebaseAuth.getInstance().uid.toString()
 
     val selectedMachine = MutableLiveData<Machine>()
+    val selectedMachineLoaded = MutableLiveData<Boolean>()
 
     var machineItems: MutableLiveData<List<Item>>
     var shelfItems: MutableLiveData<List<Item>>
@@ -71,6 +72,7 @@ class HomeViewModel : ViewModel() {
 
                 machineItems.value =
                     moshi.adapter(ItemList::class.java).fromJson(listResult)!!.items
+                selectedMachineLoaded.value = true
 
                 updateItemGroupModel()
             } catch (t: Throwable) {

@@ -100,9 +100,12 @@ class MainActivity : FragmentActivity() {
         sharedViewModel.isInternetAvailable.observe(this, Observer { availability ->
             Log.i(TAG, "internet connection available: $availability")
         })
+        sharedViewModel.selectedMachineLoaded.observe(this, Observer { loaded ->
+            Log.i(TAG, "selected machine loaded : $loaded")
+        })
 
         sharedViewModel.userLocationAccessed.observe(this, Observer { accessed ->
-            if(accessed && current_fragment == Fragments.HOME) {
+            if (accessed && current_fragment == Fragments.HOME) {
                 showSwipeUpContainer()
             } else {
                 hideSwipeUpContainer()
@@ -469,7 +472,8 @@ class MainActivity : FragmentActivity() {
 
     private fun isInternetAvailable(context: Context): Boolean {
         val connectivity = context.getSystemService(
-            Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            Context.CONNECTIVITY_SERVICE
+        ) as ConnectivityManager
         if (connectivity != null) {
             val info = connectivity.allNetworkInfo
             if (info != null)

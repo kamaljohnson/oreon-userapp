@@ -48,6 +48,9 @@ class ExploreFragment : Fragment(), MachineCardAdapter.OnMachineCardListener{
                 switchOffScanMode()
             }
         })
+        sharedViewModel.selectedMachineLoaded.observe(this, Observer { loaded ->
+            viewModel.selectedMachineLoaded.value = loaded
+        })
 
         viewModel.selectedMachine.observe(this, Observer { selectedMachine->
             if(selectedMachine.code == "Dummy Code") {
