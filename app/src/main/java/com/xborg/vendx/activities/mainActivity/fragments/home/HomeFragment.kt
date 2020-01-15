@@ -23,10 +23,9 @@ class HomeFragment : Fragment(), ItemCardAdapter.OnItemListener {
     private lateinit var sharedViewModel: SharedViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        setHasOptionsMenu(true)
         super.onCreate(savedInstanceState)
         Log.i(TAG, "Home onCreate called!")
-
+        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(

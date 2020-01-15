@@ -42,7 +42,7 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        deviceAddress = "24:6F:28:B6:29:28"
+        deviceAddress = "24:6F:28:B6:29:2A"
     }
 
     override fun onCreateView(

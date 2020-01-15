@@ -40,7 +40,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.vendingActivity.VendingActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".database.ItemGroup"
             android:screenOrientation="portrait" /> <!-- region Razorpay -->

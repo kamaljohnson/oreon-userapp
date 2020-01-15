@@ -1,21 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.vendingActivity.fragments.status.VendingStatusFragment">
 
     <RelativeLayout
-        android:gravity="center"
+        android:id="@+id/progress"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="50dp">
 
-        <TextView
-            android:gravity="center"
-            android:text="Vending Status"
-            android:layout_width="match_parent"
+        <ImageView
+            android:background="@color/colorPrimary"
+            android:layout_alignParentLeft="true"
+            android:id="@+id/connection_progress"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"/>
+        <ImageView
+            android:background="@color/colorAccent"
+            android:layout_toRightOf="@id/connection_progress"
+            android:layout_toLeftOf="@id/finishing_progress"
+            android:id="@+id/vending_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"/>
+        <ImageView
+            android:background="@color/colorPrimary"
+            android:layout_alignParentRight="true"
+            android:id="@+id/finishing_progress"
+            android:layout_width="100dp"
             android:layout_height="match_parent"/>
 
     </RelativeLayout>
+    
+    <RelativeLayout
+        android:layout_below="@id/progress"
+        android:id="@+id/progress_gif"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        
+        <pl.droidsonroids.gif.GifImageView
+            android:foregroundGravity="center"
+            android:src="@drawable/person_codding"
+            android:id="@+id/gif"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </RelativeLayout>
 
-</FrameLayout>
+</RelativeLayout>
