@@ -49,7 +49,7 @@ class ItemGroupAdapter(
         } else {
             View.INVISIBLE
         }
-        holder.progressBar.visibility = if(parent.items.isEmpty()){
+        holder.progressBar.visibility = if(parent.items.isEmpty() && !parent.showNoMachinesNearbyMessage){
             View.VISIBLE
         } else {
             View.GONE
