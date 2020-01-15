@@ -2,20 +2,32 @@ package com.xborg.vendx.activities.feedbackActivity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.xborg.vendx.R
 import com.xborg.vendx.activities.feedbackActivity.fragments.feedbackForm.FeedbackFormFragment
 import kotlinx.android.synthetic.main.activity_feedback.*
 
 class FeedbackActivity : AppCompatActivity() {
 
-
+    private lateinit var sharedViewModel: SharedViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_feedback)
+
+        sharedViewModel = ViewModelProviders.of(this).get(SharedViewModel::class.java)
+
+        sharedViewModel.feedbackPosted.observe(this, Observer { posted ->
+            if(posted) {
+                goBack()
+            }
+        })
+
         changeFragment(FeedbackFormFragment(), "FeedbackForm")
     }
 
@@ -39,5 +51,9 @@ class FeedbackActivity : AppCompatActivity() {
         fragmentTransaction.setPrimaryNavigationFragment(tempFragment)
         fragmentTransaction.setReorderingAllowed(true)
         fragmentTransaction.commitNowAllowingStateLoss()
+    }
+
+    private fun goBack() {
+        finish()
     }
 }

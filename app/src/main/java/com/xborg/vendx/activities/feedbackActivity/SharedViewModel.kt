@@ -20,6 +20,8 @@ class SharedViewModel : ViewModel() {
     val uid = FirebaseAuth.getInstance().uid.toString()
     var userFeedback =  MutableLiveData<Feedback>()
 
+    var feedbackPosted = MutableLiveData<Boolean>()
+
     private var viewModelJob = Job()
     private var coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
