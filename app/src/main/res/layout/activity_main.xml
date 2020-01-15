@@ -81,6 +81,7 @@
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/checkout_button"
                     style="?android:attr/borderlessButtonStyle"
+                    android:background="@color/colorPrimary"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:layout_centerHorizontal="true"

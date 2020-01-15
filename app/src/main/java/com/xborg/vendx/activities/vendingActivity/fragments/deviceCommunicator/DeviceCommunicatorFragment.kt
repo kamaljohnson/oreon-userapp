@@ -1,6 +1,5 @@
 package com.xborg.vendx.activities.vendingActivity.fragments.deviceCommunicator
 
-import android.app.AlertDialog
 import android.bluetooth.BluetoothAdapter
 import android.content.ComponentName
 import android.content.Context
@@ -21,6 +20,7 @@ import com.xborg.vendx.R
 import com.xborg.vendx.activities.vendingActivity.SharedViewModel
 import com.xborg.vendx.database.VendingState
 import com.xborg.vendx.database.VendingStatus
+
 
 const val TAG = "DeviceCommunicator"
 
@@ -184,10 +184,11 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
 
     private fun receive(dataFromDevice: ByteArray) {
 
-        val dataStr = String(dataFromDevice)        //TODO: change to val
+        val state = String(dataFromDevice.copyOfRange(0, 20)).trim()
+        val dataToServer = dataFromDevice.copyOfRange(20, dataFromDevice.size)
 
-        val state = dataStr.split(" ")[0]
-        val encryptedDataToServerBase64= Base64.encodeToString(dataStr.split(" ")[1].toByteArray(), Base64.NO_WRAP)
+        val encryptedDataToServerBase64 = Base64.encodeToString(dataToServer, Base64.NO_WRAP)
+        viewModel.addEncryptedOtp(encryptedDataToServerBase64)
 
         Log.i(TAG, "received : $state : $encryptedDataToServerBase64")
 
