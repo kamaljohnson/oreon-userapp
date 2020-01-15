@@ -11,23 +11,29 @@
         android:layout_height="50dp">
 
         <ImageView
-            android:background="@color/colorPrimary"
+            android:layout_marginVertical="20dp"
+            android:layout_marginHorizontal="5dp"
+            android:background="@drawable/rounded_action_button"
             android:layout_alignParentLeft="true"
             android:id="@+id/connection_progress"
-            android:layout_width="100dp"
+            android:layout_width="70dp"
             android:layout_height="match_parent"/>
         <ImageView
-            android:background="@color/colorAccent"
+            android:layout_marginVertical="20dp"
+            android:layout_marginHorizontal="5dp"
+            android:background="@drawable/rounded_action_button"
             android:layout_toRightOf="@id/connection_progress"
             android:layout_toLeftOf="@id/finishing_progress"
             android:id="@+id/vending_progress"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"/>
         <ImageView
-            android:background="@color/colorPrimary"
+            android:layout_marginVertical="20dp"
+            android:layout_marginHorizontal="5dp"
+            android:background="@drawable/rounded_action_button"
             android:layout_alignParentRight="true"
             android:id="@+id/finishing_progress"
-            android:layout_width="100dp"
+            android:layout_width="60dp"
             android:layout_height="match_parent"/>
 
     </RelativeLayout>

@@ -1,5 +1,6 @@
 package com.xborg.vendx.activities.vendingActivity.fragments.deviceCommunicator
 
+import android.app.AlertDialog
 import android.bluetooth.BluetoothAdapter
 import android.content.ComponentName
 import android.content.Context
@@ -89,16 +90,7 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
 
     override fun onStart() {
         super.onStart()
-        if (service != null) {
-            service!!.attach(this)
-        } else {
-            activity!!.startService(
-                Intent(
-                    activity,
-                    SerialService::class.java
-                )
-            ) // prevents service destroy on unbind from recreated activity caused by orientation change
-        }
+        connectToDevice()
     }
 
     override fun onDestroy() {
@@ -193,26 +185,40 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
     private fun receive(dataFromDevice: ByteArray) {
 
         val dataStr = String(dataFromDevice)        //TODO: change to val
-        val dataFromDeviceBase64 = Base64.encodeToString(dataFromDevice, Base64.NO_WRAP)
-        Log.i(TAG, "received : $dataStr : $dataFromDeviceBase64")
-        when (dataStr) {
+
+        val state = dataStr.split(" ")[0]
+        val encryptedDataToServerBase64= Base64.encodeToString(dataStr.split(" ")[1].toByteArray(), Base64.NO_WRAP)
+
+        Log.i(TAG, "received : $state : $encryptedDataToServerBase64")
+
+        when (state) {
+            "OTP" -> {
+                viewModel.addEncryptedOtp(encryptedDataToServerBase64)
+            }
+
+            "OTP_CORRECT" -> {
+                //TODO: update state of vending locally after vend completion this will be uploaded to server
+            }
             "OTP_TIMEOUT" -> {           //otp timed out and required to be re-requested
                 requestOtpFromDevice()
             }
-            "VENDING" -> {              //a single vend is completed by device
-                sharedViewModel.vendState.value = VendingState.Vending
+            "OTP_INCORRECT" -> {
+                //TODO: handle this properly in the future chance for vulnerability
+                requestOtpFromDevice()
+            }
+
+            "VEND_PROGRESS" -> {
+                sharedViewModel.vendState.value = VendingState.VendProgress
                 sharedViewModel.updateVendingCount()
             }
-            "VEND_DONE" -> {            //notified that the vending process is completed
-                sharedViewModel.vendState.value = VendingState.VendingDone
+            "VEND_DONE" -> {
+                viewModel.addEncryptedLog(encryptedDataToServerBase64)
+                sharedViewModel.vendState.value = VendingState.VendDone
                 sharedViewModel.bag.value!!.status = VendingStatus.Done
             }
+
             else -> {
-                when (viewModel.vendState.value!!) {
-                    VendingState.DeviceConnected -> viewModel.addEncryptedOtp(dataFromDeviceBase64)
-                    VendingState.VendingDone -> viewModel.addEncryptedLog(dataFromDeviceBase64)
-                    else -> TODO("this block should not execute, handle exception")
-                }
+                TODO("this block should not execute, handle exception")
             }
         }
     }
@@ -258,5 +264,19 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
         status("connected")
         connected = Connected.True
         sharedViewModel.vendState.value = VendingState.DeviceConnected
+    }
+
+    private fun connectToDevice() {
+        if (service != null) {
+            service!!.attach(this)
+        } else {
+
+            activity!!.startService(
+                Intent(
+                    activity,
+                    SerialService::class.java
+                )
+            ) // prevents service destroy on unbind from recreated activity caused by orientation change
+        }
     }
 }
