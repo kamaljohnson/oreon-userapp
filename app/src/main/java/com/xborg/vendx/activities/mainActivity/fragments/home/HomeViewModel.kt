@@ -132,6 +132,7 @@ class HomeViewModel : ViewModel() {
 
         if(selectedMachine.value!!.code != "Dummy Code" && selectedMachineLoaded.value == true) {
             if (machineItems.value!!.isNotEmpty()) {
+                Log.i(TAG, "here1")
                 val machineItemsGroupModel = ItemGroup(
                     title = "In Machine",
                     items = machineItems.value!!,
@@ -139,7 +140,8 @@ class HomeViewModel : ViewModel() {
                 )
                 temp.add(machineItemsGroupModel)
             }
-        } else if(selectedMachineLoaded.value == false) {
+        } else if(selectedMachineLoaded.value == false && selectedMachine.value!!.code != "Dummy Code") {
+            Log.i(TAG, "here2")
             val machineItemsGroupModel = ItemGroup(
                 title = "Machine",
                 drawLineBreaker = shelfItems.value!!.isNotEmpty()
@@ -147,6 +149,7 @@ class HomeViewModel : ViewModel() {
             temp.add(machineItemsGroupModel)
         }
          else {
+            Log.i(TAG, "here3")
             val machineItemsGroupModel = ItemGroup(
                 title = "Machine",
                 drawLineBreaker = shelfItems.value!!.isNotEmpty(),

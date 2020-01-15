@@ -101,6 +101,11 @@ class MainActivity : AppCompatActivity() {
             Log.i(TAG, "internet connection available: $availability")
         })
 
+        sharedViewModel.userLocationAccessed.observe(this, Observer { accessed ->
+            if(accessed && current_fragment.value == Fragments.HOME) {
+                showSwipeUpContainer()
+            }
+        })
         current_fragment.observe(this, Observer { fragment ->
             if(fragment == Fragments.HOME) {
                 if(sharedViewModel.userLocationAccessed.value == true) {

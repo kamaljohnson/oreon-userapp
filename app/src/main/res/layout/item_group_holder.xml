@@ -8,12 +8,14 @@
             type="com.xborg.vendx.database.ItemGroup" />
     </data>
 
-        <androidx.cardview.widget.CardView
+        <RelativeLayout
+            android:background="@drawable/drawable_group_holder_card"
             android:id="@+id/card_view"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginVertical="15dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            card_view:cardElevation="0dp"
             card_view:cardBackgroundColor="#fff">
 
             <RelativeLayout
@@ -22,18 +24,21 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:gravity="center"
                     android:textAlignment="center"
-                    android:textSize="15dp"
+                    android:textSize="16dp"
+                    android:textColor="@color/white"
                     android:text="Title"
-                    android:background="@color/gray"
+                    android:background="@drawable/drawable_group_holder_title"
                     android:id="@+id/title"
+                    android:textStyle="bold"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="30dp"/>
                 <RelativeLayout
+                    android:visibility="invisible"
                     android:id="@+id/no_machines_near_message"
                     android:layout_marginVertical="50dp"
                     android:layout_centerInParent="true"
-                    android:visibility="invisible"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
 
@@ -66,6 +71,8 @@
 
 
                 <androidx.recyclerview.widget.RecyclerView
+                    android:layout_marginVertical="10dp"
+                    android:layout_marginHorizontal="5dp"
                     android:layout_below="@id/title"
                     android:layout_marginTop="2pt"
                     android:id="@+id/rv_item_group"
@@ -77,7 +84,7 @@
                 <ImageView
                     android:id="@+id/line_breaker"
                     android:layout_width="match_parent"
-                    android:layout_height="2pt"
+                    android:layout_height="0dp"
                     android:layout_marginTop="7pt"
                     android:layout_centerHorizontal="true"
                     android:background="@drawable/dotted"
@@ -85,5 +92,5 @@
 
             </RelativeLayout>
 
-        </androidx.cardview.widget.CardView>
+        </RelativeLayout>
 </layout>
