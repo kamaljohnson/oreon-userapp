@@ -63,8 +63,11 @@ class ExploreViewModel : ViewModel() {
     }
 
     private fun selectNearestMachineToUser() {
-        if(machinesNearby.value!![0].distance <= 0.1)
-        selectedMachine.value = machinesNearby.value!![0]
+        if(machinesNearby.value!![0].distance <= 0.1) {
+            selectedMachine.value = machinesNearby.value!![0]
+        } else {
+            selectedMachine.value = Machine(code = "Dummy")
+        }
     }
     fun changeSelectedMachine(machineId: String) {
         if(selectedMachine.value!!.id != machineId) {

@@ -11,7 +11,6 @@ import com.xborg.vendx.activities.vendingActivity.SharedViewModel
 import com.xborg.vendx.database.VendingState
 
 const val TAG = "ServerCommunicator"
-
 class VendingStatusFragment : Fragment() {
 
     private lateinit var viewModel: VendingStatusViewModel
@@ -53,10 +52,7 @@ class VendingStatusFragment : Fragment() {
                     }
                 }
             }
-        })
-
-        sharedViewModel.currentVendingCount.observe(this, Observer { updatedCurrentVendingCount ->
-            updateVendingCount(updatedCurrentVendingCount)
+            updateStatusUI()
         })
 
         viewModel.vendState.observe(this, Observer { updatedBagStatus ->
@@ -68,7 +64,35 @@ class VendingStatusFragment : Fragment() {
         })
     }
 
-    private fun updateVendingCount(count : Int) {  //TODO: display vending progress as item vended
-        Log.i(TAG, "vending count : $count")
+    private fun updateStatusUI() {
+        when(sharedViewModel.vendState.value) {
+            VendingState.Init -> {
+
+            }
+            VendingState.DeviceConnected -> {
+
+            }
+            VendingState.EncryptedOtpReceivedFromDevice -> {
+
+            }
+            VendingState.EncryptedOtpPlusBagReceivedFromServer -> {
+
+            }
+            VendingState.VendProgress -> {
+
+            }
+            VendingState.VendDone -> {
+
+            }
+            VendingState.EncryptedDeviceLogReceivedFromDevice -> {
+
+            }
+            VendingState.EncryptedVendStatusReceivedFromServer -> {
+
+            }
+            VendingState.VendingComplete -> {
+
+            }
+        }
     }
 }

@@ -50,7 +50,7 @@ class ExploreFragment : Fragment(), MachineCardAdapter.OnMachineCardListener{
         })
 
         viewModel.selectedMachine.observe(this, Observer { selectedMachine->
-            if(selectedMachine.code == "Dummy Code") {
+            if(selectedMachine.code == "Dummy") {
                 selected_machine_code.text = "Explore?"
             } else {
                 selected_machine_code.text = selectedMachine.code

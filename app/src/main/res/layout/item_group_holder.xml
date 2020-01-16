@@ -49,17 +49,6 @@
                         android:textAlignment="center"
                         android:text="No machines\nnear you"/>
 
-                    <Button
-                        android:text="Refresh"
-                        android:textColor="@color/white"
-                        android:textStyle="bold"
-                        android:background="@drawable/drawable_button"
-                        android:layout_centerHorizontal="true"
-                        android:layout_below="@+id/message_text"
-                        android:layout_marginTop="15dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="40dp"/>
-
                 </RelativeLayout>
 
 

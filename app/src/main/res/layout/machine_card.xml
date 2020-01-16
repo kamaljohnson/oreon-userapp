@@ -16,16 +16,18 @@
 
         <RelativeLayout
             android:id="@+id/card_top"
-            android:layout_height="40pt"
-            android:layout_width="65pt">
+            android:layout_height="45pt"
+            android:layout_width="75pt">
 
             <TextView
+                android:textColor="@color/white"
                 android:id="@+id/machine_code"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="RIT-BH1009"
                 android:textSize="15dp"
-                android:layout_margin="5dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="5dp"
                 android:textStyle="bold"
                 android:layout_alignParentTop="true"/>
 

@@ -29,6 +29,7 @@ private val retrofit = Retrofit.Builder()
 interface VendxAPIService {
     @GET("machine/{id}/items")
     fun getMachineItemsAsync(
+        @Header("authToken") authToken: String,
         @Path("id") id: String
     ): Deferred<String>
 

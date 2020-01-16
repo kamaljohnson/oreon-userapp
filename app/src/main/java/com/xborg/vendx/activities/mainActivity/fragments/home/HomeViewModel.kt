@@ -49,9 +49,10 @@ class HomeViewModel : ViewModel() {
     fun changedSelectedMachine() {
         selectedMachineLoaded.value = false
         machineItems.value = ArrayList()
-        updateItemGroupModel()
         if (selectedMachine.value != null) {
-            if(selectedMachine.value!!.code != "Dummy Code") {
+            updateItemGroupModel()
+            if(selectedMachine.value!!.code != "Dummy" && selectedMachine.value!!.code != "Not Loaded") {
+                Log.i(TAG, "machine Id : " + selectedMachine.value!!.id)
                 getItemsFromMachine(selectedMachine.value!!.id)
             } else {
                 updateItemGroupModel()
@@ -63,7 +64,7 @@ class HomeViewModel : ViewModel() {
     private fun getItemsFromMachine(machineId: String) {
 
         coroutineScope.launch {
-            val getMachineItemsDeferred = VendxApi.retrofitServices.getMachineItemsAsync(machineId)
+            val getMachineItemsDeferred = VendxApi.retrofitServices.getMachineItemsAsync(id = machineId, authToken = "test token")
             try {
                 val listResult = getMachineItemsDeferred.await()
                 Log.i(TAG, "Successful to get response: $listResult")
@@ -130,9 +131,11 @@ class HomeViewModel : ViewModel() {
             temp.add(shelfItemsInMachineGroupModel)
         }
 
-        if(selectedMachine.value!!.code != "Dummy Code" && selectedMachineLoaded.value == true) {
+        Log.i(TAG, "code : " + selectedMachine.value!!.code + " loaded : " + selectedMachineLoaded.value)
+
+        if(selectedMachineLoaded.value == true) {
             if (machineItems.value!!.isNotEmpty()) {
-                Log.i(TAG, "here1")
+                Log.i(TAG, "machine loaded")
                 val machineItemsGroupModel = ItemGroup(
                     title = "In Machine",
                     items = machineItems.value!!,
@@ -140,20 +143,19 @@ class HomeViewModel : ViewModel() {
                 )
                 temp.add(machineItemsGroupModel)
             }
-        } else if(selectedMachineLoaded.value == false && selectedMachine.value!!.code != "Dummy Code") {
-            Log.i(TAG, "here2")
-            val machineItemsGroupModel = ItemGroup(
-                title = "Machine",
-                drawLineBreaker = shelfItems.value!!.isNotEmpty()
-            )
-            temp.add(machineItemsGroupModel)
-        }
-         else {
-            Log.i(TAG, "here3")
+        } else if(selectedMachine.value!!.code == "Dummy") {
+            Log.i(TAG, "no machine near")
             val machineItemsGroupModel = ItemGroup(
                 title = "Machine",
                 drawLineBreaker = shelfItems.value!!.isNotEmpty(),
                 showNoMachinesNearbyMessage = true
+            )
+            temp.add(machineItemsGroupModel)
+        } else {
+            Log.i(TAG, "loading..")
+            val machineItemsGroupModel = ItemGroup(
+                title = "Machine",
+                drawLineBreaker = shelfItems.value!!.isNotEmpty()
             )
             temp.add(machineItemsGroupModel)
         }

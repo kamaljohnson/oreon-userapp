@@ -185,16 +185,16 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
     private fun receive(dataFromDevice: ByteArray) {
 
         val state = String(dataFromDevice.copyOfRange(0, 20)).trim()
-        val dataToServer = dataFromDevice.copyOfRange(20, dataFromDevice.size)
+        val dataToServer = dataFromDevice.copyOfRange(20, 100)
 
         val encryptedDataToServerBase64 = Base64.encodeToString(dataToServer, Base64.NO_WRAP)
-        viewModel.addEncryptedOtp(encryptedDataToServerBase64)
 
+        Log.i(TAG, "received : $state : ${String(dataToServer)}")
         Log.i(TAG, "received : $state : $encryptedDataToServerBase64")
 
         when (state) {
             "OTP" -> {
-                viewModel.addEncryptedOtp(encryptedDataToServerBase64)
+                viewModel.addEncryptedOtpToBag(encryptedDataToServerBase64)
             }
 
             "OTP_CORRECT" -> {
@@ -209,13 +209,13 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
             }
 
             "VEND_PROGRESS" -> {
-                sharedViewModel.vendState.value = VendingState.VendProgress
-                sharedViewModel.updateVendingCount()
+//                sharedViewModel.vendState.value = VendingState.VendProgress
+//                sharedViewModel.updateVendingCount()
             }
             "VEND_DONE" -> {
-                viewModel.addEncryptedLog(encryptedDataToServerBase64)
-                sharedViewModel.vendState.value = VendingState.VendDone
-                sharedViewModel.bag.value!!.status = VendingStatus.Done
+//                viewModel.addEncryptedLogToBag(encryptedDataToServerBase64)
+//                sharedViewModel.vendState.value = VendingState.VendDone
+//                sharedViewModel.bag.value!!.status = VendingStatus.Done
             }
 
             else -> {

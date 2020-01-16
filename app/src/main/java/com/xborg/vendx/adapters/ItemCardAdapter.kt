@@ -153,7 +153,7 @@ class ItemCardAdapter(
         }
 
         private fun displayItemLimitReached(context: Context) {
-            Toast.makeText(context, "item not remaining in cart", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "item not remaining in machine", Toast.LENGTH_SHORT).show()
         }
 
     }
