@@ -7,13 +7,20 @@
     <RelativeLayout
         android:id="@+id/sliding_layer_top"
         android:layout_width="match_parent"
-        android:layout_height="25pt">
-
+        android:layout_height="20pt">
+        <ImageView
+            android:id="@+id/top_dash"
+            android:layout_marginVertical="3pt"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/drawable_explorer_top_dash"
+            android:layout_width="20pt"
+            android:layout_height="1pt"/>
         <TextView
             android:id="@+id/selected_machine_code"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_below="@+id/top_dash"
+            android:layout_centerHorizontal="true"
             android:textAlignment="center"
             android:textSize="20dp"
             android:text="Explore?"/>

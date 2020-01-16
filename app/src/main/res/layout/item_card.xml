@@ -16,8 +16,7 @@
         style="?android:attr/ambientShadowAlpha"
         android:layout_marginHorizontal="5dp"
         android:layout_marginVertical="10dp"
-        android:translationZ="2dp"
-        android:background="@drawable/rounded_card">
+        android:background="@drawable/drawable_item_card">
 
         <RelativeLayout
             android:id="@+id/card_top"
@@ -90,7 +89,7 @@
                 android:layout_marginEnd="5dp"
                 android:paddingLeft="8dp"
                 android:text="Item Name"
-                android:textSize="5pt">
+                android:textSize="6pt">
             </TextView>
 
             <RelativeLayout

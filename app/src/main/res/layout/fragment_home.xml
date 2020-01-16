@@ -8,7 +8,7 @@
         tools:context=".activities.mainActivity.fragments.home.HomeFragment"
         android:overScrollMode="always"
         android:isScrollContainer="true"
-        android:layout_marginBottom="25pt">
+        android:layout_marginBottom="20pt">
 
         <ImageView
             android:id="@+id/connection_lost_image"
@@ -45,7 +45,7 @@
                 android:textColor="@color/white"
                 android:textStyle="bold"
                 android:textSize="@dimen/button_text_size"
-                android:background="@drawable/rounded_button_accent"
+                android:background="@drawable/drawable_button"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"/>
 

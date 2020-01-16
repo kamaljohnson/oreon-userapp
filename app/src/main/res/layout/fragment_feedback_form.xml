@@ -67,7 +67,7 @@
             <Button
                 android:textColor="@color/white"
                 android:textStyle="bold"
-                android:background="@drawable/rounded_button_accent"
+                android:background="@drawable/drawable_button"
                 android:layout_marginTop="10dp"
                 android:layout_centerHorizontal="true"
                 android:layout_below="@+id/feedback_body_edit_text"

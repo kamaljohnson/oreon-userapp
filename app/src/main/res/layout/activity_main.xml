@@ -8,16 +8,16 @@
         android:layout_height="match_parent"
         tools:context=".activities.mainActivity.MainActivity">
 
-    <!--    region SwipeUpLayout + Main Fragment-->
+    <!--    region SwipeUpLayout-->
         <com.sothree.slidinguppanel.SlidingUpPanelLayout
             android:id="@+id/bottom_slide_up_container"
             android:gravity="bottom"
-            app:umanoPanelHeight="25pt"
+            app:umanoPanelHeight="20pt"
             app:umanoParallaxOffset="100dp"
             android:layout_width="match_parent"
             app:umanoOverlay="true"
             android:layout_height="match_parent"
-            app:umanoShadowHeight="0dp"
+            app:umanoShadowHeight="5dp"
             android:layout_above="@id/bottom_navigation_container"
             app:umanoScrollableView="@+id/bottom_sliding_layer">
 
@@ -37,10 +37,9 @@
             <!--    region swipe-up-->
                 <RelativeLayout
                     android:id="@+id/bottom_sliding_layer"
+                    android:background="@color/white"
                     android:layout_width="match_parent"
-                    android:background="@drawable/sliding_layout"
-                    android:translationZ="7dp"
-                    android:layout_height="match_parent">
+                    android:layout_height="80pt">
 
                     <FrameLayout
                         android:id="@+id/explore_fragment_container"
@@ -81,9 +80,9 @@
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/checkout_button"
                     style="?android:attr/borderlessButtonStyle"
-                    android:background="@color/colorPrimary"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
+                    app:backgroundTint="@color/colorPrimary"
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
                     android:src="@drawable/right_arrow_icon"/>

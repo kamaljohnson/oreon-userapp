@@ -405,8 +405,7 @@ class MainActivity : AppCompatActivity() {
         loadBottomSwipeUpFragment()
 
         mLayout = findViewById(bottom_slide_up_container.id)
-        mLayout!!.anchorPoint = 0.15f
-        mLayout!!.coveredFadeColor = Color.WHITE
+        mLayout!!.coveredFadeColor = Color.TRANSPARENT
 
         mLayout!!.setFadeOnClickListener {
             mLayout!!.panelState = PanelState.COLLAPSED
