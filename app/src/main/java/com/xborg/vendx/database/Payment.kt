@@ -26,7 +26,7 @@ enum class PaymentStatus {
 }
 
 data class Payment(
-    @Json(name = "Id") var id: String,
+    @Json(name = "Id") var id: String = "",
     @Json(name = "Amount") var amount: Float = 0f,
     @Json(name = "Status") var status: PaymentStatus = PaymentStatus.None,
     @Json(name = "Signature") var signature: String = "",

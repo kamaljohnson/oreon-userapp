@@ -19,7 +19,7 @@ class FeedbackActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_feedback)
-
+        supportActionBar!!.title = "Feedback"
         sharedViewModel = ViewModelProviders.of(this).get(SharedViewModel::class.java)
 
         sharedViewModel.feedbackPosted.observe(this, Observer { posted ->
