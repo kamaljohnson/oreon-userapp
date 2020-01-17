@@ -101,6 +101,11 @@ class MainActivity : AppCompatActivity() {
             Log.i(TAG, "internet connection available: $availability")
         })
 
+        //resets the items in cart when user changes the selected machine
+        sharedViewModel.selectedMachine.observe(this, Observer {
+            sharedViewModel.resetCart()
+        })
+
         sharedViewModel.userLocationAccessed.observe(this, Observer { accessed ->
             if(accessed && current_fragment.value == Fragments.HOME) {
                 showSwipeUpContainer()
@@ -115,6 +120,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         })
+        
 
         initBottomNavigationView()
         initBottomSwipeUpView()

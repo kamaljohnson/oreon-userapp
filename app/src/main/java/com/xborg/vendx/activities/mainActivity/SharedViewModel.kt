@@ -156,4 +156,9 @@ class SharedViewModel : ViewModel() {
 
         return adapter.toJson(items)!!
     }
+
+    fun resetCart() {
+        _taggedCartItems.value = mutableMapOf()
+        _unTaggedCartItems = mutableMapOf()
+    }
 }
