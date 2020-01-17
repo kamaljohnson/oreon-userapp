@@ -19,7 +19,6 @@ import androidx.lifecycle.ViewModelProviders
 import com.xborg.vendx.R
 import com.xborg.vendx.activities.vendingActivity.SharedViewModel
 import com.xborg.vendx.database.VendingState
-import com.xborg.vendx.database.VendingStatus
 
 
 const val TAG = "DeviceCommunicator"
@@ -184,44 +183,74 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
 
     private fun receive(dataFromDevice: ByteArray) {
 
-        val state = String(dataFromDevice.copyOfRange(0, 20)).trim()
-        val dataToServer = dataFromDevice.copyOfRange(20, dataFromDevice.size)
+//        val state = String(dataFromDevice.copyOfRange(0, 20)).trim()
+//        val data = dataFromDevice.copyOfRange(0, dataFromDevice.size)
+        val dataToPhone = String(dataFromDevice)
+        val encryptedDataToServerBase64 = Base64.encodeToString(dataFromDevice, Base64.NO_WRAP)
 
-        val encryptedDataToServerBase64 = Base64.encodeToString(dataToServer, Base64.NO_WRAP)
+        Log.i(TAG, "received to server: $encryptedDataToServerBase64")
+        Log.i(TAG, "received to phone : $dataToPhone")
 
-        Log.i(TAG, "received : $state : ${String(dataToServer)}")
-        Log.i(TAG, "received : $state : $encryptedDataToServerBase64")
-
-        when (state) {
-            "OTP" -> {
+        when(sharedViewModel.vendState.value) {
+            VendingState.Init -> {
+            }
+            VendingState.DeviceConnected -> {
+                //OTP received
                 viewModel.addEncryptedOtpToBag(encryptedDataToServerBase64)
             }
+            VendingState.EncryptedOtpReceivedFromDevice -> {
+                //OTP_STATUS
+                when(dataToPhone) {
+                    "OTP_CORRECT" -> {
 
-            "OTP_CORRECT" -> {
-                //TODO: update state of vending locally after vend completion this will be uploaded to server
+                    }
+                    "OTP_TIMEOUT" -> {
+                        requestOtpFromDevice()
+                    }
+                    "OTP_INCORRECT" -> {
+                        requestOtpFromDevice()
+                    }
+                }
             }
-            "OTP_TIMEOUT" -> {           //otp timed out and required to be re-requested
-                requestOtpFromDevice()
-            }
-            "OTP_INCORRECT" -> {
-                //TODO: handle this properly in the future chance for vulnerability
-                requestOtpFromDevice()
-            }
-
-            "VEND_PROGRESS" -> {
-//                sharedViewModel.vendState.value = VendingState.VendProgress
-//                sharedViewModel.updateVendingCount()
-            }
-            "VEND_DONE" -> {
-//                viewModel.addEncryptedLogToBag(encryptedDataToServerBase64)
-//                sharedViewModel.vendState.value = VendingState.VendDone
-//                sharedViewModel.bag.value!!.status = VendingStatus.Done
-            }
-
-            else -> {
-                TODO("this block should not execute, handle exception")
-            }
+            VendingState.EncryptedOtpPlusBagReceivedFromServer -> TODO()
+            VendingState.VendProgress -> TODO()
+            VendingState.VendDone -> TODO()
+            VendingState.EncryptedDeviceLogReceivedFromDevice -> TODO()
+            VendingState.EncryptedVendStatusReceivedFromServer -> TODO()
+            VendingState.VendingComplete -> TODO()
+            null -> TODO()
         }
+
+//        when (state) {
+//            "OTP" -> {
+//                viewModel.addEncryptedOtpToBag(encryptedDataToServerBase64)
+//            }
+//
+//            "OTP_CORRECT" -> {
+//                //TODO: update state of vending locally after vend completion this will be uploaded to server
+//            }
+//            "OTP_TIMEOUT" -> {           //otp timed out and required to be re-requested
+//                requestOtpFromDevice()
+//            }
+//            "OTP_INCORRECT" -> {
+//                //TODO: handle this properly in the future chance for vulnerability
+//                requestOtpFromDevice()
+//            }
+//
+//            "VEND_PROGRESS" -> {
+////                sharedViewModel.vendState.value = VendingState.VendProgress
+////                sharedViewModel.updateVendingCount()
+//            }
+//            "VEND_DONE" -> {
+////                viewModel.addEncryptedLogToBag(encryptedDataToServerBase64)
+////                sharedViewModel.vendState.value = VendingState.VendDone
+////                sharedViewModel.bag.value!!.status = VendingStatus.Done
+//            }
+//
+//            else -> {
+//                TODO("this block should not execute, handle exception")
+//            }
+//        }
     }
 
     private fun status(str: String) {
