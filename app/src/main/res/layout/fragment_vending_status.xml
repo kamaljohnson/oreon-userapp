@@ -42,14 +42,15 @@
         android:layout_below="@id/progress"
         android:id="@+id/progress_gif"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
         
         <pl.droidsonroids.gif.GifImageView
             android:foregroundGravity="center"
-            android:src="@drawable/person_codding"
+            android:src="@drawable/vending"
             android:id="@+id/gif"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_centerInParent="true"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"/>
     </RelativeLayout>
 
 </RelativeLayout>

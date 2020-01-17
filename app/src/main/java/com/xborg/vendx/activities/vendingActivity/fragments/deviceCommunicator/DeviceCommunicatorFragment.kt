@@ -185,7 +185,7 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
     private fun receive(dataFromDevice: ByteArray) {
 
         val state = String(dataFromDevice.copyOfRange(0, 20)).trim()
-        val dataToServer = dataFromDevice.copyOfRange(20, 100)
+        val dataToServer = dataFromDevice.copyOfRange(20, dataFromDevice.size)
 
         val encryptedDataToServerBase64 = Base64.encodeToString(dataToServer, Base64.NO_WRAP)
 
