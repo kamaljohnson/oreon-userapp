@@ -193,8 +193,15 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
             VendingState.Init -> {
             }
             VendingState.DeviceConnected -> {
-                //OTP received
-                viewModel.addEncryptedOtpToBag(encryptedDataToServerBase64)
+                when(dataToPhone) {
+                    "OTP_TIMEOUT" -> {
+                        requestOtpFromDevice()
+                    }
+                    //OTP received
+                    else -> {
+                        viewModel.addEncryptedOtpToBag(encryptedDataToServerBase64)
+                    }
+                }
             }
             VendingState.EncryptedOtpReceivedFromDevice -> {
 
