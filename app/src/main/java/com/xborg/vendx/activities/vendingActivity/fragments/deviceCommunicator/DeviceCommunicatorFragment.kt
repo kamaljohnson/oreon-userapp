@@ -19,6 +19,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.xborg.vendx.R
 import com.xborg.vendx.activities.vendingActivity.SharedViewModel
 import com.xborg.vendx.database.VendingState
+import com.xborg.vendx.database.VendingStatus
 
 
 const val TAG = "DeviceCommunicator"
@@ -217,23 +218,19 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
                         requestOtpFromDevice()
                     }
                     "OTP_INCORRECT" -> {
-                        requestOtpFromDevice()
+                        requestOtpFromDevice()          //TODO: this has a vulnerability which should be handled
                     }
                 }
             }
             VendingState.VendProgress -> {
-                when(dataToPhone) {
-                    "VEND_PROGRESS" -> {
-                        sharedViewModel.updateVendingCount()
-                        send("ACKNOWLEDGEMENT")
-                    }
-                    "VEND_DONE" -> {
-                        sharedViewModel.vendState.value = VendingState.VendDone
-                        send("ACKNOWLEDGEMENT")
-                    }
-                }
+                sharedViewModel.vendState.value = VendingState.VendDone
+                sharedViewModel.bag.value!!.status = VendingStatus.Done
+                send("ACKNOWLEDGEMENT")
             }
-            VendingState.VendDone -> TODO()
+            VendingState.VendDone -> {
+                viewModel.addEncryptedLogToBag(encryptedDataToServerBase64)
+                send("ACKNOWLEDGEMENT")
+            }
             VendingState.EncryptedDeviceLogReceivedFromDevice -> TODO()
             VendingState.EncryptedVendStatusReceivedFromServer -> TODO()
             VendingState.VendingComplete -> TODO()
