@@ -183,9 +183,7 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
 
     private fun receive(dataFromDevice: ByteArray) {
 
-//        val state = String(dataFromDevice.copyOfRange(0, 20)).trim()
-//        val data = dataFromDevice.copyOfRange(0, dataFromDevice.size)
-        val dataToPhone = String(dataFromDevice)
+        val dataToPhone = String(dataFromDevice).trim()
         val encryptedDataToServerBase64 = Base64.encodeToString(dataFromDevice, Base64.NO_WRAP)
 
         Log.i(TAG, "received to server: $encryptedDataToServerBase64")
@@ -199,10 +197,14 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
                 viewModel.addEncryptedOtpToBag(encryptedDataToServerBase64)
             }
             VendingState.EncryptedOtpReceivedFromDevice -> {
+
+            }
+            VendingState.EncryptedOtpPlusBagReceivedFromServer -> {
                 //OTP_STATUS
                 when(dataToPhone) {
                     "OTP_CORRECT" -> {
-
+                        send("ACKNOWLEDGEMENT")
+                        sharedViewModel.vendState.value = VendingState.VendProgress
                     }
                     "OTP_TIMEOUT" -> {
                         requestOtpFromDevice()
@@ -212,8 +214,18 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
                     }
                 }
             }
-            VendingState.EncryptedOtpPlusBagReceivedFromServer -> TODO()
-            VendingState.VendProgress -> TODO()
+            VendingState.VendProgress -> {
+                when(dataToPhone) {
+                    "VEND_PROGRESS" -> {
+                        sharedViewModel.updateVendingCount()
+                        send("ACKNOWLEDGEMENT")
+                    }
+                    "VEND_DONE" -> {
+                        sharedViewModel.vendState.value = VendingState.VendDone
+                        send("ACKNOWLEDGEMENT")
+                    }
+                }
+            }
             VendingState.VendDone -> TODO()
             VendingState.EncryptedDeviceLogReceivedFromDevice -> TODO()
             VendingState.EncryptedVendStatusReceivedFromServer -> TODO()
