@@ -56,6 +56,7 @@ class VendingActivity : FragmentActivity() {
         fragmentTransaction.commit()
     }
 
+
     override fun onBackPressed() {
         when (sharedViewModel.vendState.value) {
             VendingState.VendingComplete -> proceedToHome()
@@ -75,6 +76,7 @@ class VendingActivity : FragmentActivity() {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
         startActivity(intent)
     }
+
 
     private fun showFeedback() {
         val intent = Intent(this, FeedbackActivity::class.java)
