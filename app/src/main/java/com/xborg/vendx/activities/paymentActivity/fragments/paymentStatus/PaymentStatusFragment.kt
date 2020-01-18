@@ -37,14 +37,11 @@ class PaymentStatusFragment : Fragment() {
 
         observerSharedViewModel()
 
-        checkout_button.setOnClickListener {
+        get_button.setOnClickListener {
             proceedToVending()
         }
         retry_button.setOnClickListener {
             initPaymentRetry()
-        }
-        home_button.setOnClickListener {
-            proceedToMainActivity()
         }
     }
 
@@ -92,12 +89,6 @@ class PaymentStatusFragment : Fragment() {
 
     private fun initPaymentRetry() {
         viewModel.paymentState.value = PaymentState.PaymentRetry
-    }
-
-    private fun proceedToMainActivity() {
-        val intent = Intent(context, MainActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-        startActivity(intent)
     }
 
     private fun proceedToVending() {

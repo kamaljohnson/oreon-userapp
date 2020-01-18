@@ -196,13 +196,6 @@ class PaymentActivity : FragmentActivity(), PaymentResultWithDataListener {
         startActivity(intent)
     }
 
-    private fun proceedToHome() {
-        val intent = Intent(this, MainActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-        startActivity(intent)
-    }
-
     override fun onBackPressed() {
         when (sharedViewModel.paymentState.value) {
             PaymentState.None -> {
@@ -210,9 +203,6 @@ class PaymentActivity : FragmentActivity(), PaymentResultWithDataListener {
             }
             PaymentState.OrderInit -> {
                 super.onBackPressed()
-            }
-            PaymentState.PaymentComplete -> {
-                proceedToHome()
             }
 
             else -> {
