@@ -1,6 +1,9 @@
 package com.xborg.vendx.preferences
 
 import android.content.Context
+import android.util.Log
+
+const val TAG = "SharedPreference"
 
 class SharedPreference (context: Context) {
     private val PREFERENCE_NAME = "VendxSharedPreference"
@@ -13,6 +16,7 @@ class SharedPreference (context: Context) {
     }
 
     fun setSelectedMachineMac(mac: String) {
+        Log.i(TAG, "Mac: $mac added to preferences")
         val editor = preference.edit()
         editor.putString(PREFERENCE_SELECTED_MACHINE_MAC, mac)
         editor.apply()

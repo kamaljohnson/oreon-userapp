@@ -59,7 +59,7 @@ class ExploreFragment : Fragment(), MachineCardAdapter.OnMachineCardListener{
                 selected_machine_code.text = selectedMachine.code
             }
             sharedViewModel.selectedMachine.value = selectedMachine
-            setSelectedMachineMac(sharedViewModel.selectedMachine.value!!.mac)
+            setSelectedMachineMac(selectedMachine.mac)
         })
 
         viewModel.machinesNearby.observe(this, Observer {
