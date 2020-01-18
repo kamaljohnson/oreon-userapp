@@ -14,7 +14,7 @@ class SharedViewModel : ViewModel() {
     val bag = MutableLiveData<Vend>()
     val vendState = MutableLiveData<VendingState>()
 
-    val currentVendingCount = MutableLiveData<Int>()
+    private val currentVendingCount = MutableLiveData<Int>()
 
     init {
         vendState.value = VendingState.Init

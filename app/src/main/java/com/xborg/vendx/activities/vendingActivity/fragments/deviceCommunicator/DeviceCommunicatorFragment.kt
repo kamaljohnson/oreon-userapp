@@ -184,44 +184,89 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
 
     private fun receive(dataFromDevice: ByteArray) {
 
-        val state = String(dataFromDevice.copyOfRange(0, 20)).trim()
-        val dataToServer = dataFromDevice.copyOfRange(20, 100)
+        val dataToPhone = String(dataFromDevice).trim()
+        val encryptedDataToServerBase64 = Base64.encodeToString(dataFromDevice, Base64.NO_WRAP)
 
-        val encryptedDataToServerBase64 = Base64.encodeToString(dataToServer, Base64.NO_WRAP)
+        Log.i(TAG, "received to server: $encryptedDataToServerBase64")
+        Log.i(TAG, "received to phone : $dataToPhone")
 
-        Log.i(TAG, "received : $state : ${String(dataToServer)}")
-        Log.i(TAG, "received : $state : $encryptedDataToServerBase64")
+        when(sharedViewModel.vendState.value) {
+            VendingState.Init -> {
+            }
+            VendingState.DeviceConnected -> {
+                when(dataToPhone) {
+                    "OTP_TIMEOUT" -> {
+                        requestOtpFromDevice()
+                    }
+                    //OTP received
+                    else -> {
+                        viewModel.addEncryptedOtpToBag(encryptedDataToServerBase64)
+                    }
+                }
+            }
+            VendingState.EncryptedOtpReceivedFromDevice -> {
 
-        when (state) {
-            "OTP" -> {
-                viewModel.addEncryptedOtpToBag(encryptedDataToServerBase64)
             }
-
-            "OTP_CORRECT" -> {
-                //TODO: update state of vending locally after vend completion this will be uploaded to server
+            VendingState.EncryptedOtpPlusBagReceivedFromServer -> {
+                //OTP_STATUS
+                when(dataToPhone) {
+                    "OTP_CORRECT" -> {
+                        send("ACKNOWLEDGEMENT")
+                        sharedViewModel.vendState.value = VendingState.VendProgress
+                    }
+                    "OTP_TIMEOUT" -> {
+                        requestOtpFromDevice()
+                    }
+                    "OTP_INCORRECT" -> {
+                        requestOtpFromDevice()          //TODO: this has a vulnerability which should be handled
+                    }
+                }
             }
-            "OTP_TIMEOUT" -> {           //otp timed out and required to be re-requested
-                requestOtpFromDevice()
+            VendingState.VendProgress -> {
+                sharedViewModel.vendState.value = VendingState.VendDone
+                sharedViewModel.bag.value!!.status = VendingStatus.Done
+                send("ACKNOWLEDGEMENT")
             }
-            "OTP_INCORRECT" -> {
-                //TODO: handle this properly in the future chance for vulnerability
-                requestOtpFromDevice()
-            }
-
-            "VEND_PROGRESS" -> {
-//                sharedViewModel.vendState.value = VendingState.VendProgress
-//                sharedViewModel.updateVendingCount()
-            }
-            "VEND_DONE" -> {
+            VendingState.VendDone -> {
 //                viewModel.addEncryptedLogToBag(encryptedDataToServerBase64)
-//                sharedViewModel.vendState.value = VendingState.VendDone
-//                sharedViewModel.bag.value!!.status = VendingStatus.Done
+                send("ACKNOWLEDGEMENT")
             }
-
-            else -> {
-                TODO("this block should not execute, handle exception")
-            }
+            VendingState.EncryptedDeviceLogReceivedFromDevice -> TODO()
+            VendingState.EncryptedVendStatusReceivedFromServer -> TODO()
+            VendingState.VendingComplete -> TODO()
+            null -> TODO()
         }
+
+//        when (state) {
+//            "OTP" -> {
+//                viewModel.addEncryptedOtpToBag(encryptedDataToServerBase64)
+//            }
+//
+//            "OTP_CORRECT" -> {
+//                //TODO: update state of vending locally after vend completion this will be uploaded to server
+//            }
+//            "OTP_TIMEOUT" -> {           //otp timed out and required to be re-requested
+//                requestOtpFromDevice()
+//            }
+//            "OTP_INCORRECT" -> {
+//                //TODO: handle this properly in the future chance for vulnerability
+//                requestOtpFromDevice()
+//            }
+//
+//            "VEND_PROGRESS" -> {
+////                sharedViewModel.vendState.value = VendingState.VendProgress
+////                sharedViewModel.updateVendingCount()
+//            }
+//            "VEND_DONE" -> {
+////                viewModel.addEncryptedLogToBag(encryptedDataToServerBase64)
+////                sharedViewModel.vendState.value = VendingState.VendDone
+////                sharedViewModel.bag.value!!.status = VendingStatus.Done
+//            }
+//
+//            else -> {
+//                TODO("this block should not execute, handle exception")
+//            }
+//        }
     }
 
     private fun status(str: String) {

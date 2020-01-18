@@ -40,7 +40,7 @@ class MachineCardAdapter(
 
         val df = DecimalFormat("#.#")
         df.roundingMode = RoundingMode.CEILING
-        holder.distance.text = "Km ${df.format(machine.distance)}"
+        holder.distance.text = "${df.format(machine.distance)}Km"
 
         holder.machineId = machine.id
     }
