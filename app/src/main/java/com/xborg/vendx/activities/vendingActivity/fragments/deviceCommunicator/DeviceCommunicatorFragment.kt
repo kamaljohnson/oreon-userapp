@@ -44,7 +44,6 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        deviceAddress = getSelectedMachineMac()
     }
 
     override fun onCreateView(
@@ -315,6 +314,8 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
     }
 
     private fun connectToDevice() {
+        deviceAddress = getSelectedMachineMac()
+        Log.i(TAG, "mac: $deviceAddress")
         if (service != null) {
             service!!.attach(this)
         } else {
