@@ -228,7 +228,7 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
                 send("ACKNOWLEDGEMENT")
             }
             VendingState.VendDone -> {
-                viewModel.addEncryptedLogToBag(encryptedDataToServerBase64)
+//                viewModel.addEncryptedLogToBag(encryptedDataToServerBase64)
                 send("ACKNOWLEDGEMENT")
             }
             VendingState.EncryptedDeviceLogReceivedFromDevice -> TODO()
