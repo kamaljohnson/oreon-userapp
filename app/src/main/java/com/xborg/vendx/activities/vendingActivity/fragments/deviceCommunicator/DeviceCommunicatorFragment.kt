@@ -20,6 +20,7 @@ import com.xborg.vendx.R
 import com.xborg.vendx.activities.vendingActivity.SharedViewModel
 import com.xborg.vendx.database.VendingState
 import com.xborg.vendx.database.VendingStatus
+import com.xborg.vendx.preferences.SharedPreference
 
 
 const val TAG = "DeviceCommunicator"
@@ -43,7 +44,7 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        deviceAddress = "24:6F:28:B6:29:2A"
+        deviceAddress = getSelectedMachineMac()
     }
 
     override fun onCreateView(
@@ -325,5 +326,10 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
                 )
             ) // prevents service destroy on unbind from recreated activity caused by orientation change
         }
+    }
+
+    private fun getSelectedMachineMac() : String {
+        val preference = SharedPreference(context!!)
+        return preference.getSelectedMachineMac()!!
     }
 }
