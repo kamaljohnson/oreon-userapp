@@ -1,5 +1,7 @@
 package com.xborg.vendx.activities.mainActivity.fragments.explore
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -14,6 +16,7 @@ import com.xborg.vendx.R
 import com.xborg.vendx.activities.mainActivity.SharedViewModel
 import com.xborg.vendx.adapters.MachineCardAdapter
 import com.xborg.vendx.database.Machine
+import com.xborg.vendx.preferences.SharedPreference
 import kotlinx.android.synthetic.main.fragment_explore.*
 
 const val TAG: String = "Explore"
@@ -56,6 +59,7 @@ class ExploreFragment : Fragment(), MachineCardAdapter.OnMachineCardListener{
                 selected_machine_code.text = selectedMachine.code
             }
             sharedViewModel.selectedMachine.value = selectedMachine
+            setSelectedMachineMac(sharedViewModel.selectedMachine.value!!.mac)
         })
 
         viewModel.machinesNearby.observe(this, Observer {
@@ -95,5 +99,10 @@ class ExploreFragment : Fragment(), MachineCardAdapter.OnMachineCardListener{
 
     override fun onCardClicked(machineId: String) {
         viewModel.changeSelectedMachine(machineId)
+    }
+
+    private fun setSelectedMachineMac(mac: String) {
+        val preference = SharedPreference(context!!)
+        preference.setSelectedMachineMac(mac)
     }
 }
