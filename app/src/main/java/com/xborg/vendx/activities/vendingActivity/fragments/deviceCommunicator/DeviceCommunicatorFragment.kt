@@ -217,6 +217,7 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
                     "OTP_TIMEOUT" -> {
                         requestOtpFromDevice()
                     }
+
                     "OTP_INCORRECT" -> {
                         requestOtpFromDevice()          //TODO: this has a vulnerability which should be handled
                     }
