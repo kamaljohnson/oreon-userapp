@@ -62,6 +62,11 @@ class ItemCardAdapter(
         } else {
             View.VISIBLE
         }
+        holder.outOfStock.visibility = if (item.remainingInMachine == 0) {
+            View.VISIBLE
+        } else {
+            View.INVISIBLE
+        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -75,6 +80,7 @@ class ItemCardAdapter(
         val itemLoc: TextView = view.item_loc
         val itemsInShelf: TextView = view.items_in_shelf
         var itemsInMachine: TextView = view.items_in_machine
+        var outOfStock: ImageView = view.out_of_stock_icon
 
         val itemRemoveButton: ImageView = view.remove_button
 
