@@ -68,8 +68,10 @@ class PaymentMethodsFragment : Fragment() {
                         if(totalPayableAmount == 0f) {
                             total_amount_text.visibility = View.GONE
                             total_text.visibility = View.GONE
+                            get_info_text.visibility = View.VISIBLE
                             checkout_button.text = getString(R.string.get)
                         } else {
+                            get_info_text.visibility = View.GONE
                             total_amount_text.text = "₹ $totalPayableAmount"
                             checkout_button.text = getString(R.string.pay)
                         }
