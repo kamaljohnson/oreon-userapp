@@ -46,6 +46,8 @@
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentLeft="true"/>
 
+
+
             <TextView
                 android:id="@+id/purchase_count"
                 android:layout_width="wrap_content"
@@ -61,6 +63,15 @@
                 android:background="@drawable/item_count_background"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentLeft="true"/>
+
+            <ImageView
+                android:visibility="invisible"
+                android:id="@+id/out_of_stock_icon"
+                android:src="@drawable/ic_sold_out_icon"
+                android:layout_marginHorizontal="20dp"
+                android:layout_width="match_parent"
+                android:layout_centerInParent="true"
+                android:layout_height="wrap_content"/>
 
         </RelativeLayout>
 
