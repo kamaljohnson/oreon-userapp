@@ -237,37 +237,6 @@ class DeviceCommunicatorFragment : Fragment(), ServiceConnection, SerialListener
             VendingState.VendingComplete -> TODO()
             null -> TODO()
         }
-
-//        when (state) {
-//            "OTP" -> {
-//                viewModel.addEncryptedOtpToBag(encryptedDataToServerBase64)
-//            }
-//
-//            "OTP_CORRECT" -> {
-//                //TODO: update state of vending locally after vend completion this will be uploaded to server
-//            }
-//            "OTP_TIMEOUT" -> {           //otp timed out and required to be re-requested
-//                requestOtpFromDevice()
-//            }
-//            "OTP_INCORRECT" -> {
-//                //TODO: handle this properly in the future chance for vulnerability
-//                requestOtpFromDevice()
-//            }
-//
-//            "VEND_PROGRESS" -> {
-////                sharedViewModel.vendState.value = VendingState.VendProgress
-////                sharedViewModel.updateVendingCount()
-//            }
-//            "VEND_DONE" -> {
-////                viewModel.addEncryptedLogToBag(encryptedDataToServerBase64)
-////                sharedViewModel.vendState.value = VendingState.VendDone
-////                sharedViewModel.bag.value!!.status = VendingStatus.Done
-//            }
-//
-//            else -> {
-//                TODO("this block should not execute, handle exception")
-//            }
-//        }
     }
 
     private fun status(str: String) {
