@@ -21,6 +21,8 @@ class ExploreViewModel : ViewModel() {
 
     val uid = FirebaseAuth.getInstance().uid.toString()
 
+    val apiCallError = MutableLiveData<Boolean>()
+
     val userLocation = MutableLiveData<Location>()
     val machinesNearby = MutableLiveData<List<Machine>>()
     val selectedMachine = MutableLiveData<Machine>()
@@ -58,6 +60,7 @@ class ExploreViewModel : ViewModel() {
                 }
             } catch (t: Throwable) {
                 Log.e(TAG, "Failed to get response: ${t.message}")
+                apiCallError.value = true
             }
         }
     }

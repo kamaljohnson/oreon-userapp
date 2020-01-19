@@ -86,6 +86,11 @@ class HomeFragment : Fragment(), ItemCardAdapter.OnItemListener {
                 location_permission_access_dialog.visibility = View.GONE
             }
         })
+        viewModel.apiCallError.observe(this, Observer { error ->
+            if(error) {
+                sharedViewModel.apiCallError.value = error
+            }
+        })
 
         continue_location_permission.setOnClickListener {
             sharedViewModel.getUserLocation.value = true

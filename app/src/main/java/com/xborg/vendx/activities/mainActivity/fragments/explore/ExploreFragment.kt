@@ -1,9 +1,6 @@
 package com.xborg.vendx.activities.mainActivity.fragments.explore
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -15,7 +12,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.xborg.vendx.R
 import com.xborg.vendx.activities.mainActivity.SharedViewModel
 import com.xborg.vendx.adapters.MachineCardAdapter
-import com.xborg.vendx.database.Machine
 import com.xborg.vendx.preferences.SharedPreference
 import kotlinx.android.synthetic.main.fragment_explore.*
 
@@ -64,6 +60,12 @@ class ExploreFragment : Fragment(), MachineCardAdapter.OnMachineCardListener{
 
         viewModel.machinesNearby.observe(this, Observer {
             displayNearbyMachines()
+        })
+
+        viewModel.apiCallError.observe(this, Observer { error ->
+            if(error) {
+                sharedViewModel.apiCallError.value = error
+            }
         })
     }
 

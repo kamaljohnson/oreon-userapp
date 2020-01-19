@@ -22,6 +22,8 @@ class HomeViewModel : ViewModel() {
 
     val uid = FirebaseAuth.getInstance().uid.toString()
 
+    val apiCallError = MutableLiveData<Boolean>()
+
     val selectedMachine = MutableLiveData<Machine>()
     private val selectedMachineLoaded = MutableLiveData<Boolean>()
 
@@ -51,7 +53,7 @@ class HomeViewModel : ViewModel() {
         machineItems.value = ArrayList()
         if (selectedMachine.value != null) {
             updateItemGroupModel()
-            if(selectedMachine.value!!.code != "Dummy" && selectedMachine.value!!.code != "Not Loaded") {
+            if(selectedMachine.value!!.id != "") {
                 Log.i(TAG, "machine Id : " + selectedMachine.value!!.id)
                 getItemsFromMachine(selectedMachine.value!!.id)
             } else {
@@ -62,7 +64,6 @@ class HomeViewModel : ViewModel() {
 
     //TODO: combine both items from machine and self to single get req
     private fun getItemsFromMachine(machineId: String) {
-
         coroutineScope.launch {
             val getMachineItemsDeferred = VendxApi.retrofitServices.getMachineItemsAsync(id = machineId, authToken = "test token")
             try {
@@ -79,7 +80,8 @@ class HomeViewModel : ViewModel() {
 
                 updateItemGroupModel()
             } catch (t: Throwable) {
-                Log.e(TAG, "Failed to get response: ${t.message}")
+                Log.e(TAG, "Machine Items: Failed to get response: ${t.message}")
+                apiCallError.value = true
             }
         }
     }
@@ -99,7 +101,8 @@ class HomeViewModel : ViewModel() {
 
                 updateItemGroupModel()
             } catch (t: Throwable) {
-                Log.e(TAG, "Failed to get response: ${t.message}")
+                Log.e(TAG, "Shelf Items: Failed to get response: ${t.message}")
+                apiCallError.value = true
             }
         }
     }

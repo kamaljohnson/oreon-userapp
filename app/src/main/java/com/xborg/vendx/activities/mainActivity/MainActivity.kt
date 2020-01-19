@@ -99,6 +99,13 @@ class MainActivity : AppCompatActivity() {
         })
         sharedViewModel.isInternetAvailable.observe(this, Observer { availability ->
             Log.i(TAG, "internet connection available: $availability")
+
+        })
+        sharedViewModel.apiCallError.observe(this, Observer { error ->
+            if(error) {
+                Log.i(TAG, "API Call error occurred")
+                connection_error_dialog.visibility = View.VISIBLE
+            }
         })
 
         //resets the items in cart when user changes the selected machine
@@ -120,7 +127,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         })
-        
 
         initBottomNavigationView()
         initBottomSwipeUpView()

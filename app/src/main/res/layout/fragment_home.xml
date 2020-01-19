@@ -10,11 +10,6 @@
         android:isScrollContainer="true"
         android:layout_marginBottom="20pt">
 
-        <ImageView
-            android:id="@+id/connection_lost_image"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-
     <!--    region  Info Bar-->
         <RelativeLayout
             android:id="@+id/location_permission_access_dialog"

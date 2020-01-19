@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -15,7 +14,6 @@ import com.xborg.vendx.activities.feedbackActivity.FeedbackActivity
 import com.xborg.vendx.activities.mainActivity.SharedViewModel
 import com.xborg.vendx.adapters.TransactionSlipAdapter
 import kotlinx.android.synthetic.main.fragment_history.*
-
 
 private var TAG = "HistoryFragment"
 
@@ -46,6 +44,12 @@ class HistoryFragment : Fragment() {
                 updateTransactionsToRV()
             } else {
                 shelf_empty_container.visibility = View.VISIBLE
+            }
+        })
+
+        viewModel.apiCallError.observe(this, Observer { error ->
+            if(error) {
+                sharedViewModel.apiCallError.value = error
             }
         })
 

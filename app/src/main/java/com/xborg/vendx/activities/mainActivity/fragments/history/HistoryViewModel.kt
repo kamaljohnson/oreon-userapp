@@ -19,6 +19,8 @@ private const val TAG = "HistoryViewModel"
 class HistoryViewModel : ViewModel() {
     val uid = FirebaseAuth.getInstance().uid.toString()
 
+    val apiCallError = MutableLiveData<Boolean>()
+
     var transactions: MutableLiveData<List<Transaction>>
 
     private var viewModelJob = Job()
@@ -47,6 +49,7 @@ class HistoryViewModel : ViewModel() {
 
             } catch (t: Throwable) {
                 Log.e(TAG, "Failed to get response: ${t.message}")
+                apiCallError.value = true
             }
         }
     }

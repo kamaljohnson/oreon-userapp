@@ -1,9 +1,6 @@
 package com.xborg.vendx.network
 
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
-import com.squareup.moshi.Json
-import com.xborg.vendx.database.Item
-import com.xborg.vendx.database.Order
 import kotlinx.coroutines.Deferred
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
