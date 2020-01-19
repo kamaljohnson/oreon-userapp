@@ -40,6 +40,7 @@ class VendingStatusViewModel : ViewModel() {
                 Log.i(TAG, "Successful to get response: $listResult")
 
                 val tempBag = moshi.adapter(Vend::class.java).fromJson(listResult)!!
+                bag.value!!.id = tempBag.id
                 bag.value!!.encryptedOtpPlusBag = tempBag.encryptedOtpPlusBag
                 vendState.value = VendingState.EncryptedOtpPlusBagReceivedFromServer
             } catch (e: Exception) {
