@@ -102,6 +102,8 @@ class VendingStatusFragment : Fragment() {
             }
             VendingState.VendingComplete -> {
                 Log.i(TAG, "finishing progress set to Green")
+                processing_gif.visibility = View.INVISIBLE
+                success_gif.visibility = View.VISIBLE
                 finishing_progress.setBackgroundColor(Color.GREEN)
                 vending_complete_layout.visibility = View.VISIBLE
             }

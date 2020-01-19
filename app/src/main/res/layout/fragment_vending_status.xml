@@ -46,11 +46,20 @@
         
         <pl.droidsonroids.gif.GifImageView
             android:foregroundGravity="center"
-            android:src="@drawable/vending"
-            android:id="@+id/gif"
+            android:src="@drawable/processing"
+            android:id="@+id/processing_gif"
             android:layout_centerInParent="true"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"/>
+            android:layout_width="150dp"
+            android:layout_height="150dp"/>
+
+        <pl.droidsonroids.gif.GifImageView
+            android:visibility="invisible"
+            android:foregroundGravity="center"
+            android:src="@drawable/success"
+            android:id="@+id/success_gif"
+            android:layout_centerInParent="true"
+            android:layout_width="150dp"
+            android:layout_height="150dp"/>
     </RelativeLayout>
 
     <RelativeLayout
