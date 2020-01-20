@@ -25,7 +25,7 @@ private val retrofit = Retrofit.Builder()
 
 interface VendxAPIService {
 
-    @GET("app/version")
+    @GET("app")
     fun getMinimumApplicationVersionAsync(
     ): Deferred<String>
 
