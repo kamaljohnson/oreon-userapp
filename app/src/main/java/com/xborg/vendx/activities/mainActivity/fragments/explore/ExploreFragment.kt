@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.xborg.vendx.R
 import com.xborg.vendx.activities.mainActivity.SharedViewModel
 import com.xborg.vendx.adapters.MachineCardAdapter
-import com.xborg.vendx.database.Machine
 import com.xborg.vendx.preferences.SharedPreference
 import kotlinx.android.synthetic.main.fragment_explore.*
 

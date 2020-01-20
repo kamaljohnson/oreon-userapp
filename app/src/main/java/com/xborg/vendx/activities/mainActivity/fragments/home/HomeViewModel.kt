@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import com.xborg.vendx.activities.loginActivity.db
 import com.xborg.vendx.database.Item
 import com.xborg.vendx.database.ItemList
 import com.xborg.vendx.database.ItemGroup
@@ -57,6 +58,21 @@ class HomeViewModel : ViewModel() {
             } else {
                 updateItemGroupModel()
             }
+        }
+
+        //Checking if current selected machine is updated in server
+        if (selectedMachine.value!!.id == "") return
+        val docRef = db.collection("Machines").document(selectedMachine.value!!.id)
+        docRef.addSnapshotListener { snapshot, e ->
+            if (e != null) {
+                Log.w(TAG, "Listen failed.", e)
+                return@addSnapshotListener
+            }
+
+            if (snapshot != null && snapshot.metadata.hasPendingWrites())
+                Log.i(TAG, "no changes in server")
+            else
+                getItemsFromMachine(selectedMachine.value!!.id)
         }
     }
 
