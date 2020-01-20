@@ -162,6 +162,10 @@ class MainActivity : AppCompatActivity() {
             intent.putExtra("shelfItems", sharedViewModel.getShelfItemsAsJson())
             startActivity(intent)
         }
+
+        alert_message_done_button.setOnClickListener {
+            alert_message_layout.visibility = View.GONE
+        }
     }
 
     override fun onResume() {
