@@ -51,26 +51,6 @@
         </com.sothree.slidinguppanel.SlidingUpPanelLayout>
     <!--    endregion-->
 
-    <!--region Alert Message-->
-        <RelativeLayout
-            android:visibility="invisible"
-            android:id="@+id/connection_error_dialog"
-            android:background="@drawable/drawable_alert_dialog_bg"
-            android:layout_centerInParent="true"
-            android:layout_width="300dp"
-            android:layout_height="300dp">
-
-            <TextView
-                android:id="@+id/info_text"
-                android:textAlignment="center"
-                android:text="Oops! it seams that you are not\nconnected to the internet\n\nPlease connect to the internet\nand Restart the application"
-                android:layout_centerInParent="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-        </RelativeLayout>
-        <!--endregion-->
-
     <!--    region Action Button-->
             <RelativeLayout
                 android:id="@+id/get_button_group"
@@ -134,6 +114,25 @@
             </androidx.coordinatorlayout.widget.CoordinatorLayout>
     <!--    endregion-->
 
+        <!--region Alert Message-->
+        <RelativeLayout
+            android:clickable="true"
+            android:visibility="invisible"
+            android:id="@+id/alert_message_layout"
+            android:background="@drawable/drawable_alert_dialog_bg"
+            android:layout_centerInParent="true"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
+            <TextView
+                android:id="@+id/alert_message_text"
+                android:textAlignment="center"
+                android:text=""
+                android:layout_centerInParent="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </RelativeLayout>
+        <!--endregion-->
     </RelativeLayout>
 </layout>

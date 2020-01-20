@@ -8,10 +8,18 @@ import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import com.xborg.vendx.BuildConfig
+import com.xborg.vendx.database.Application
 import com.xborg.vendx.database.Item
 import com.xborg.vendx.database.Location
 import com.xborg.vendx.database.Machine
+import com.xborg.vendx.network.VendxApi
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import java.lang.reflect.Type
+
 
 enum class PermissionStatus {
     None,
@@ -20,6 +28,8 @@ enum class PermissionStatus {
 }
 
 class SharedViewModel : ViewModel() {
+
+    var versionCode: Int = BuildConfig.VERSION_CODE
 
     val isInternetAvailable = MutableLiveData<Boolean>()
     val apiCallError = MutableLiveData<Boolean>()
@@ -40,12 +50,17 @@ class SharedViewModel : ViewModel() {
     var machineItems = MutableLiveData<List<Item>>()
     var shelfItems = MutableLiveData<List<Item>>()
 
+    var applicationVersionDepricated = MutableLiveData<Boolean>()
+
     // [itemId-from, count]     : from -> {Machine, Shelf}
     private var _taggedCartItems = MutableLiveData<MutableMap<String, Int>>()
     val taggedCartItem: LiveData<MutableMap<String, Int>>
         get() = _taggedCartItems
 
     private var _unTaggedCartItems = mutableMapOf<String, Int>()
+
+    private var viewModelJob = Job()
+    private var coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
     init {
         apiCallError.value = false
@@ -163,5 +178,28 @@ class SharedViewModel : ViewModel() {
     fun resetCart() {
         _taggedCartItems.value = mutableMapOf()
         _unTaggedCartItems = mutableMapOf()
+    }
+
+    fun checkApplicationVersion() {
+        coroutineScope.launch {
+            Log.i(TAG, "checking application version")
+            val getApplicationDiffered = VendxApi.retrofitServices.getMinimumApplicationVersionAsync()
+            try {
+                val listResult = getApplicationDiffered.await()
+                Log.i(TAG, "Successful to get response: $listResult")
+                val moshi: Moshi = Moshi.Builder()
+                    .add(KotlinJsonAdapterFactory())
+                    .build()
+
+                val minimumVersionRequired =
+                    moshi.adapter(Application::class.java).fromJson(listResult)!!.version
+
+                applicationVersionDepricated.value = versionCode != minimumVersionRequired
+
+            } catch (t: Throwable) {
+                Log.e(TAG, "Failed to get response: ${t.message}")
+                apiCallError.value = true
+            }
+        }
     }
 }

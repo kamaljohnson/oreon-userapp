@@ -99,12 +99,16 @@ class MainActivity : AppCompatActivity() {
         })
         sharedViewModel.isInternetAvailable.observe(this, Observer { availability ->
             Log.i(TAG, "internet connection available: $availability")
+            if(availability) {
+                sharedViewModel.checkApplicationVersion()
+            }
 
         })
         sharedViewModel.apiCallError.observe(this, Observer { error ->
             if(error) {
                 Log.i(TAG, "API Call error occurred")
-                connection_error_dialog.visibility = View.VISIBLE
+                alert_message_layout.visibility = View.VISIBLE
+                alert_message_text.text = "Oops! it seams that you are not\nconnected to the internet\n\nPlease connect to the internet\nnand Restart the application"
             }
         })
 
@@ -121,6 +125,13 @@ class MainActivity : AppCompatActivity() {
                 showSwipeUpContainer()
             }
         })
+        sharedViewModel.applicationVersionDepricated.observe(this, Observer { depricated ->
+            if(depricated) {
+                alert_message_layout.visibility = View.VISIBLE
+                alert_message_text.text = "Please update the application\n\na new version is uploaded to the\nplay store"
+            }
+        })
+
         current_fragment.observe(this, Observer { fragment ->
             if(fragment == Fragments.HOME) {
                 if(sharedViewModel.userLocationAccessed.value == true) {
