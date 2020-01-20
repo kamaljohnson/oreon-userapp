@@ -64,7 +64,7 @@ class HomeViewModel : ViewModel() {
     private fun getItemsFromMachine(machineId: String) {
 
         coroutineScope.launch {
-            val getMachineItemsDeferred = VendxApi.retrofitServices.getMachineItemsAsync(id = machineId, authToken = "test token")
+            val getMachineItemsDeferred = VendxApi.retrofitServices.getMachineItemsAsync(id = machineId)
             try {
                 val listResult = getMachineItemsDeferred.await()
                 Log.i(TAG, "Successful to get response: $listResult")
