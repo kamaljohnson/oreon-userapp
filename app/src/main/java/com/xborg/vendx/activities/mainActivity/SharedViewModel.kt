@@ -35,6 +35,7 @@ class SharedViewModel : ViewModel() {
     val userLastLocation = MutableLiveData<Location>()
 
     val selectedMachine = MutableLiveData<Machine>()
+    val selectedMachineLoaded = MutableLiveData<Boolean>()
 
     var machineItems = MutableLiveData<List<Item>>()
     var shelfItems = MutableLiveData<List<Item>>()

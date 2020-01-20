@@ -26,7 +26,7 @@ class HomeViewModel : ViewModel() {
     val apiCallError = MutableLiveData<Boolean>()
 
     val selectedMachine = MutableLiveData<Machine>()
-    private val selectedMachineLoaded = MutableLiveData<Boolean>()
+    val selectedMachineLoaded = MutableLiveData<Boolean>()
 
     var machineItems: MutableLiveData<List<Item>>
     var shelfItems: MutableLiveData<List<Item>>
