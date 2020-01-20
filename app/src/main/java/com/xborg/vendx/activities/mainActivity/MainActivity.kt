@@ -131,6 +131,12 @@ class MainActivity : AppCompatActivity() {
                 jumpable_alert_message_text.text = "Please update the application\n\na new version is uploaded to the\nplay store"
             }
         })
+        sharedViewModel.applicationAlertMessage.observe(this, Observer { message ->
+            if(message != "") {
+                alert_message_layout.visibility = View.VISIBLE
+                alert_message_text.text = message
+            }
+        })
 
         current_fragment.observe(this, Observer { fragment ->
             if(fragment == Fragments.HOME) {

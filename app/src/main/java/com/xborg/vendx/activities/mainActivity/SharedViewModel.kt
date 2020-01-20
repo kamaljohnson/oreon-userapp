@@ -51,6 +51,7 @@ class SharedViewModel : ViewModel() {
     var shelfItems = MutableLiveData<List<Item>>()
 
     var applicationVersionDepricated = MutableLiveData<Boolean>()
+    var applicationAlertMessage = MutableLiveData<String>()
 
     // [itemId-from, count]     : from -> {Machine, Shelf}
     private var _taggedCartItems = MutableLiveData<MutableMap<String, Int>>()
@@ -191,10 +192,11 @@ class SharedViewModel : ViewModel() {
                     .add(KotlinJsonAdapterFactory())
                     .build()
 
-                val minimumVersionRequired =
-                    moshi.adapter(Application::class.java).fromJson(listResult)!!.version
+                val applicationData =
+                    moshi.adapter(Application::class.java).fromJson(listResult)!!
 
-                applicationVersionDepricated.value = versionCode != minimumVersionRequired
+                applicationVersionDepricated.value = versionCode != applicationData.version
+                applicationAlertMessage.value = applicationData.alertMessage
 
             } catch (t: Throwable) {
                 Log.e(TAG, "Failed to get response: ${t.message}")
