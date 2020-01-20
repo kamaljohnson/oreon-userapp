@@ -107,8 +107,8 @@ class MainActivity : AppCompatActivity() {
         sharedViewModel.apiCallError.observe(this, Observer { error ->
             if(error) {
                 Log.i(TAG, "API Call error occurred")
-                alert_message_layout.visibility = View.VISIBLE
-                alert_message_text.text = "Oops! it seams that you are not\nconnected to the internet\n\nPlease connect to the internet\nnand Restart the application"
+                jumpable_alert_message_layout.visibility = View.VISIBLE
+                jumpable_alert_message_text.text = "Oops! it seams that you are not\nconnected to the internet\n\nPlease connect to the internet\nnand Restart the application"
             }
         })
 
@@ -127,8 +127,8 @@ class MainActivity : AppCompatActivity() {
         })
         sharedViewModel.applicationVersionDepricated.observe(this, Observer { depricated ->
             if(depricated) {
-                alert_message_layout.visibility = View.VISIBLE
-                alert_message_text.text = "Please update the application\n\na new version is uploaded to the\nplay store"
+                jumpable_alert_message_layout.visibility = View.VISIBLE
+                jumpable_alert_message_text.text = "Please update the application\n\na new version is uploaded to the\nplay store"
             }
         })
 
