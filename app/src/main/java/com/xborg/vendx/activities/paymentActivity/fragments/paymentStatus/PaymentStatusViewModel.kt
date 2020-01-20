@@ -61,11 +61,17 @@ class PaymentStatusViewModel: ViewModel() {
         val rnd = payment.value!!.rnd
         val razorPayPaymentId = payment.value!!.razorpayPaymentId
 
-        val token = razorPayPaymentId + paymentId + rnd
+        val passToken1 = razorPayPaymentId + paymentId + rnd
 
-        val md = MessageDigest.getInstance("SHA-1")
-        val digest = md.digest(token.toByteArray())
+        var md = MessageDigest.getInstance("SHA-1")
+        var digest = md.digest(passToken1.toByteArray())
+        val passToken2 = digest.fold("", { str, it -> str + "%02x".format(it) }) +
+                "xeFXq7Qc4QsrCAtOWPRd50aVTBcWFQbL0HviSr6ezfLRCjO8rChpMufwP2XXBNNN"
+
+        md = MessageDigest.getInstance("SHA-1")
+        digest = md.digest(passToken2.toByteArray())
         payment.value!!.signature = digest.fold("", { str, it -> str + "%02x".format(it) })
+
         paymentState.value = PaymentState.PaymentTokenCreated
     }
 }
