@@ -129,7 +129,7 @@
                 android:textAlignment="center"
                 android:text="hello there"
                 android:layout_centerInParent="true"
-                android:layout_width="wrap_content"
+                android:layout_width="100pt"
                 android:layout_height="wrap_content"/>
 
             <Button
