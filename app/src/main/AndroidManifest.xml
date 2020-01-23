@@ -46,7 +46,7 @@
             android:screenOrientation="portrait" /> <!-- region Razorpay -->
         <meta-data
             android:name="com.razorpay.ApiKey"
-            android:value="rzp_test_KvfTdnPSCJotdH" /> <!-- endregion -->
+            android:value="rzp_live_NyPdkxve0E0k3c" /> <!-- endregion -->
         <!-- region Google Map -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
