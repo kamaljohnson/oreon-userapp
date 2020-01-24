@@ -20,34 +20,41 @@ private var TAG = "LoginActivity"
 
 class LoginActivity : AppCompatActivity() {
 
-    private val user = FirebaseAuth.getInstance().currentUser
+    private var user = FirebaseAuth.getInstance().currentUser
     private var emailUploaded = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-        emailUploaded = user?.email != ""
+        emailUploaded = user?.email != null
 
-        if(user == null  || !emailUploaded) {
-            Log.i(TAG, "email: " + user?.email.toString())
-            createSignInIntent()
-        } else {
+        Log.i(TAG, "email Uploaded: $emailUploaded")
+
+        if(user != null && emailUploaded) {
             loadMainActivity()
+        } else {
+            createSignInIntent()
         }
 
         done_button.setOnClickListener {
+            user = FirebaseAuth.getInstance().currentUser
             //check if valid email id
-            user?.updateEmail(email_id.text.toString())
-                ?.addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        Toast.makeText(this, "email id updated", Toast.LENGTH_SHORT).show()
-                        emailUploaded = true
-                        loadMainActivity()
-                    } else {
-                        Log.e(TAG, "email upload error : " + task.exception)
-                        Toast.makeText(this, "email uploading failed", Toast.LENGTH_SHORT).show()
+            Log.e(TAG, "done button clicked")
+            if(email_id.text.toString() != "") {
+                user?.updateEmail(email_id.text.toString())
+                    ?.addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            Toast.makeText(this, "email id updated", Toast.LENGTH_SHORT).show()
+                            emailUploaded = true
+                            loadMainActivity()
+                        } else {
+                            Log.e(TAG, "email upload error : " + task.exception)
+                            Toast.makeText(this, "email uploading failed", Toast.LENGTH_SHORT).show()
+                        }
                     }
-                }
+                } else {
+                Toast.makeText(this, "email field must not be empty", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
