@@ -10,7 +10,6 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.location.Location
 import android.location.LocationManager
-import android.net.NetworkInfo
 import android.os.Bundle
 import android.os.Looper
 import android.provider.Settings
@@ -96,13 +95,7 @@ class MainActivity : AppCompatActivity() {
                 getCurrentLocation()
             }
         })
-        sharedViewModel.isInternetAvailable.observe(this, Observer { availability ->
-            Log.i(TAG, "internet connection available: $availability")
-            if(availability) {
-                sharedViewModel.checkApplicationVersion()
-            }
 
-        })
         sharedViewModel.apiCallError.observe(this, Observer { error ->
             if(error) {
 //                showInternetNotAvailableError()
@@ -167,8 +160,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-
-        sharedViewModel.isInternetAvailable.value = isInternetAvailable(this)
 
         if (sharedViewModel.getUserLocation.value == true &&
             sharedViewModel.userLocationAccessed.value == false
@@ -430,7 +421,7 @@ class MainActivity : AppCompatActivity() {
 
         fragmentTransaction.setPrimaryNavigationFragment(tempFragment)
         fragmentTransaction.setReorderingAllowed(true)
-        fragmentTransaction.commitNowAllowingStateLoss()
+        fragmentTransaction.commitAllowingStateLoss()
         supportActionBar!!.title = title
     }
 
@@ -472,7 +463,7 @@ class MainActivity : AppCompatActivity() {
             ExploreFragment(),
             "ExploreFragment"
         )
-        fragmentTransaction.commitNowAllowingStateLoss()
+        fragmentTransaction.commitAllowingStateLoss()
     }
 
     private fun hideGetButton() {
@@ -503,21 +494,6 @@ class MainActivity : AppCompatActivity() {
         } else {
             super.onBackPressed()
         }
-    }
-
-    private fun isInternetAvailable(context: Context): Boolean {
-        val connectivity = context.getSystemService(
-            Context.CONNECTIVITY_SERVICE
-        ) as ConnectivityManager
-        if (connectivity != null) {
-            val info = connectivity.allNetworkInfo
-            if (info != null)
-                for (i in info)
-                    if (i.state == NetworkInfo.State.CONNECTED) {
-                        return true
-                    }
-        }
-        return false
     }
 
     private fun showInternetNotAvailableError() {

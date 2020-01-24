@@ -71,9 +71,6 @@ class HomeFragment : Fragment(), ItemCardAdapter.OnItemListener {
             viewModel.changedSelectedMachine()
             //TODO: display loading sign in group-holder(Machine)
         })
-        sharedViewModel.isInternetAvailable.observe(this, Observer { avalibility ->
-            //TODO: display network not-connected error
-        })
         sharedViewModel.checkedUserLocationAccessed.observe(this, Observer { checked ->
             if (checked) {
                 if (sharedViewModel.userLocationAccessed.value == false) {

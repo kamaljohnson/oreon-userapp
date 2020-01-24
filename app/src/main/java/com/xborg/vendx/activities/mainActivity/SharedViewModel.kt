@@ -31,7 +31,6 @@ class SharedViewModel : ViewModel() {
 
     var versionCode: Int = BuildConfig.VERSION_CODE
 
-    val isInternetAvailable = MutableLiveData<Boolean>()
     val apiCallError = MutableLiveData<Boolean>()
 
     var checkedUserLocationAccessed: MutableLiveData<Boolean> = MutableLiveData(false)
