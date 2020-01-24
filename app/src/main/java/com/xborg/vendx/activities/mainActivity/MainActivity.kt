@@ -109,6 +109,9 @@ class MainActivity : AppCompatActivity() {
         sharedViewModel.selectedMachineLoaded.observe(this, Observer {
             sharedViewModel.resetCart()
         })
+        sharedViewModel.shelfItems.observe(this, Observer {
+            sharedViewModel.resetCart()
+        })
 
         sharedViewModel.userLocationAccessed.observe(this, Observer { accessed ->
             if(accessed && current_fragment.value == Fragments.HOME) {

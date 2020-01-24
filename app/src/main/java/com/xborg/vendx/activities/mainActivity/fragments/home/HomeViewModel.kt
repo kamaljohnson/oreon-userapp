@@ -46,7 +46,23 @@ class HomeViewModel : ViewModel() {
         shelfItems.value = ArrayList()
 
         selectedMachine.value = Machine()
-        getItemsInShelf(uid)
+        handleShelfUpdates()
+    }
+
+    private fun handleShelfUpdates() {
+        //Checking if user shelf is updated in server
+        val docRef = db.collection("Users").document(uid)
+        docRef.addSnapshotListener { snapshot, e ->
+            if (e != null) {
+                Log.w(TAG, "Listen failed.", e)
+                return@addSnapshotListener
+            }
+
+            if (snapshot != null && snapshot.metadata.hasPendingWrites())
+                Log.i(TAG, "no changes in server")
+            else
+                getItemsInShelf(uid)
+        }
     }
 
     fun changedSelectedMachine() {
