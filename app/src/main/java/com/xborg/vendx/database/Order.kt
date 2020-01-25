@@ -1,15 +1,11 @@
 package com.xborg.vendx.database
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
-
-@JsonClass(generateAdapter = true)
 data class Order (
-    @Json(name = "Id") var id: String,
-    @Json(name = "Cart") var cart: MutableMap<String, Int> = mutableMapOf(),
-    @Json(name = "BillingCart") var billingCart: MutableMap<String, Int> = mutableMapOf(),
-    @Json(name = "Amount") var amount: Float = 0f,
-    @Json(name = "UID") var uid: String = "",
-    @Json(name = "TimeStamp") var timeStamp: String = "",
-    @Json(name = "PaymentId") var paymentId: String = ""
+     var id: String,
+    var cart: MutableMap<String, Int> = mutableMapOf(),
+    var billingCart: MutableMap<String, Int> = mutableMapOf(),
+    var amount: Float = 0f,
+    var uid: String = "",
+    var timeStamp: String = "",
+    var paymentId: String = ""
 )

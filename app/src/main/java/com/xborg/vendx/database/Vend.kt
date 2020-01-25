@@ -1,8 +1,5 @@
 package com.xborg.vendx.database
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
-
 enum class VendingState {
     Init,
     DeviceConnected,
@@ -24,16 +21,15 @@ enum class VendingStatus {
     Failed
 }
 
-@JsonClass(generateAdapter = true)
 data class Vend(
-    @Json(name = "Id") var id: String = "",
-    @Json(name = "State") var status: VendingStatus = VendingStatus.Init,
-    @Json(name = "Bag") var bag: String = "",
-    @Json(name = "MID") var mid: String = "",
-    @Json(name = "UID") var uid: String = "",
-    @Json(name = "EncryptedOtp") var encryptedOtp: String = "",
-    @Json(name = "EncryptedOtpPlusBag") var encryptedOtpPlusBag: String = "",
-    @Json(name = "EncryptedLog") var encryptedLog: String = "test log",
-    @Json(name = "EncryptedVendCompleteStatus") var encryptedVendCompleteStatus: String = "",
-    @Json(name = "TimeStamp") var timeStamp: String = ""
+   var id: String = "",
+   var status: VendingStatus = VendingStatus.Init,
+   var bag: String = "",
+   var mid: String = "",
+   var uid: String = "",
+   var encryptedOtp: String = "",
+   var encryptedOtpPlusBag: String = "",
+   var encryptedLog: String = "test log",
+   var encryptedVendCompleteStatus: String = "",
+   var timeStamp: String = ""
 )

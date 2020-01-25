@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.gson.Gson
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
@@ -192,12 +193,10 @@ class SharedViewModel : ViewModel() {
                 val listResult = getApplicationDiffered.await()
                 Log.i(TAG, "Successful to get response: $listResult")
                 debugText.value = " Successful to get response: $listResult\n\n"
-                val moshi: Moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
-                val adapter: JsonAdapter<Application> = moshi.adapter(Application::class.java)
-                val applicationData = adapter.fromJson(listResult)
+                val applicationData = Gson().fromJson(listResult, Application::class.java)
 
-                applicationVersionDepricated.value = versionCode != applicationData!!.version
-                applicationAlertMessage.value = applicationData.alertMessage
+                applicationVersionDepricated.value = versionCode != applicationData!!.Version
+                applicationAlertMessage.value = applicationData.AlertMessage
 
             } catch (t: Throwable) {
                 Log.e(TAG, "Failed to get response: ${t.message}")

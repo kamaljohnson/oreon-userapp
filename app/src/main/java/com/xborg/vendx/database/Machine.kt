@@ -1,13 +1,9 @@
 package com.xborg.vendx.database
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
-
-@JsonClass(generateAdapter = true)
 data class Machine(
-    @Json(name = "Id") var id: String = "",
-    @Json(name = "Code") var code: String = "Loading...",
-    @Json(name = "Mac") var mac: String = "",
-    @Json(name = "Location") var location: Location = Location(0.0, 0.0),
-    @Json(name = "Distance") var distance: Double = 0.0
+    var id: String = "",
+    var code: String = "Loading...",
+    var mac: String = "",
+    var location: Location = Location(0.0, 0.0),
+    var distance: Double = 0.0
     )
