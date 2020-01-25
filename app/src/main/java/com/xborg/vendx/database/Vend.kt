@@ -1,5 +1,7 @@
 package com.xborg.vendx.database
 
+import com.google.gson.annotations.SerializedName
+
 enum class VendingState {
     Init,
     DeviceConnected,
@@ -13,23 +15,22 @@ enum class VendingState {
 }
 
 enum class VendingStatus {
-    Init,
-    Processing,
-    Done,
-
-    Success,
-    Failed
+    @SerializedName("Init")  Init,
+    @SerializedName("Processing")  Processing,
+    @SerializedName("Done")  Done,
+    @SerializedName("Success")  Success,
+    @SerializedName("Failed")  Failed
 }
 
 data class Vend(
-   var id: String = "",
-   var status: VendingStatus = VendingStatus.Init,
-   var bag: String = "",
-   var mid: String = "",
-   var uid: String = "",
-   var encryptedOtp: String = "",
-   var encryptedOtpPlusBag: String = "",
-   var encryptedLog: String = "test log",
-   var encryptedVendCompleteStatus: String = "",
-   var timeStamp: String = ""
+    @SerializedName("Id")  var Id: String = "",
+    @SerializedName("Status")  var Status: VendingStatus = VendingStatus.Init,
+    @SerializedName("Bag")  var Bag: String = "",
+    @SerializedName("mid")  var mid: String = "",
+    @SerializedName("Uid")  var Uid: String = "",
+    @SerializedName("EncryptedOtp")  var EncryptedOtp: String = "",
+    @SerializedName("EncryptedOtpPlusBag")  var EncryptedOtpPlusBag: String = "",
+    @SerializedName("EncryptedLog")  var EncryptedLog: String = "test log",
+    @SerializedName("EncryptedVendCompleteStatus")  var EncryptedVendCompleteStatus: String = "",
+    @SerializedName("TimeStamp")  var TimeStamp: String = ""
 )

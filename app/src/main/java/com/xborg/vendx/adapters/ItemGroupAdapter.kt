@@ -31,25 +31,25 @@ class ItemGroupAdapter(
 
     override fun onBindViewHolder(holder: GroupViewHolder, position: Int) {
         val parent = items[position]
-        holder.title.text = parent.title
-        if(parent.showNoMachinesNearbyMessage) {
+        holder.title.text = parent.Title
+        if(parent.ShowNoMachinesNearbyMessage) {
             holder.noMachinesNearMessage.visibility = View.VISIBLE
         } else {
             holder.groupItemsRV.apply {
                 layoutManager = GridLayoutManager(context, 3)
-                adapter = ItemCardAdapter(parent.items, context, onItemListener)
+                adapter = ItemCardAdapter(parent.Items, context, onItemListener)
 
-                if (!parent.drawLineBreaker) {
+                if (!parent.DrawLineBreaker) {
                     holder.itemView.line_breaker.visibility = View.INVISIBLE
                 }
             }
         }
-        holder.lineBreaker.visibility = if (parent.drawLineBreaker) {
+        holder.lineBreaker.visibility = if (parent.DrawLineBreaker) {
             View.INVISIBLE
         } else {
             View.INVISIBLE
         }
-        holder.progressBar.visibility = if(parent.items.isEmpty() && !parent.showNoMachinesNearbyMessage){
+        holder.progressBar.visibility = if(parent.Items.isEmpty() && !parent.ShowNoMachinesNearbyMessage){
             View.VISIBLE
         } else {
             View.GONE

@@ -49,13 +49,13 @@ class ExploreFragment : Fragment(), MachineCardAdapter.OnMachineCardListener{
         })
 
         viewModel.selectedMachine.observe(this, Observer { selectedMachine->
-            if(selectedMachine.code == "Dummy") {
+            if(selectedMachine.Code == "Dummy") {
                 selected_machine_code.text = "Explore?"
             } else {
-                selected_machine_code.text = selectedMachine.code
+                selected_machine_code.text = selectedMachine.Code
             }
             sharedViewModel.selectedMachine.value = selectedMachine
-            setSelectedMachineMac(selectedMachine.mac)
+            setSelectedMachineMac(selectedMachine.Mac)
         })
 
         viewModel.machinesNearby.observe(this, Observer {

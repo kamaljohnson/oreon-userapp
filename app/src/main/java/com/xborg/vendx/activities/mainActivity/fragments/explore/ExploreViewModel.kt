@@ -3,10 +3,10 @@ package com.xborg.vendx.activities.mainActivity.fragments.explore
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.common.reflect.TypeToken
 import com.google.firebase.auth.FirebaseAuth
-import com.squareup.moshi.JsonAdapter
+import com.google.gson.Gson
 import com.squareup.moshi.Moshi
-import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.xborg.vendx.database.Location
 import com.xborg.vendx.database.Machine
@@ -15,6 +15,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.lang.reflect.Type
 
 
 class ExploreViewModel : ViewModel() {
@@ -45,43 +46,41 @@ class ExploreViewModel : ViewModel() {
 
         val locationDataInJson = moshi.adapter(Location::class.java).toJson(userLocation.value!!)!!
 
-//        coroutineScope.launch {
-//            val createOrderDeferred = VendxApi.retrofitServices
-//                .requestNearbyMachinesAsync(location = locationDataInJson, uid = uid)
-//            try {
-//                val listResult = createOrderDeferred.await()
-//                Log.i(TAG, "Successful to get response: $listResult")
-//                debugText.value = "Successful to get response: $listResult\n\n"
-//
-//                val machineListType =
-//                    Types.newParameterizedType(List::class.java, Machine::class.java)
-//                val adapter: JsonAdapter<List<Machine>> = moshi.adapter(machineListType)
-//
-//                machinesNearby.value = adapter.fromJson(listResult)!!
-//                if(machinesNearby.value!!.isNotEmpty()) {
-//                    selectNearestMachineToUser()
-//                } else {    //adding a dummy machine
-//                    selectedMachine.value = Machine()   //a empty machine constructor creates a dummy machine
-//                }
-//            } catch (t: Throwable) {
-//                Log.e(TAG, "Failed to get response: ${t.message}")
-//                debugText.value = "Failed to get response: ${t.message}\n\n"
-//                apiCallError.value = true
-//            }
-//        }
+        coroutineScope.launch {
+            val createOrderDeferred = VendxApi.retrofitServices
+                .requestNearbyMachinesAsync(location = locationDataInJson, uid = uid)
+            try {
+                val listResult = createOrderDeferred.await()
+                Log.i(TAG, "Successful to get response: $listResult")
+                debugText.value = "Successful to get response: $listResult\n\n"
+
+                val machineListType: Type = object : TypeToken<ArrayList<Machine?>?>() {}.type
+
+                machinesNearby.value = Gson().fromJson(listResult, machineListType)!!
+                if(machinesNearby.value!!.isNotEmpty()) {
+                    selectNearestMachineToUser()
+                } else {    //adding a dummy machine
+                    selectedMachine.value = Machine()   //a empty machine constructor creates a dummy machine
+                }
+            } catch (t: Throwable) {
+                Log.e(TAG, "Failed to get response: ${t.message}")
+                debugText.value = "Failed to get response: ${t.message}\n\n"
+                apiCallError.value = true
+            }
+        }
     }
 
     private fun selectNearestMachineToUser() {
-        if(machinesNearby.value!![0].distance <= 0.1) {
+        if(machinesNearby.value!![0].Distance <= 0.1) {
             selectedMachine.value = machinesNearby.value!![0]
         } else {
-            selectedMachine.value = Machine(code = "Dummy")
+            selectedMachine.value = Machine(Code = "Dummy")
         }
     }
     fun changeSelectedMachine(machineId: String) {
-        if(selectedMachine.value!!.id != machineId) {
+        if(selectedMachine.value!!.Id != machineId) {
             machinesNearby.value!!.forEach { machine ->
-                if(machine.id == machineId) {
+                if(machine.Id == machineId) {
                     Log.i(TAG, "selected machine changed")
                     selectedMachine.value = machine
                     return

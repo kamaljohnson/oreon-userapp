@@ -2,7 +2,6 @@ package com.xborg.vendx.adapters
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,13 +35,13 @@ class MachineCardAdapter(
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: MachineCardViewHolder, position: Int) {
         val machine = machineCards[position]
-        holder.machineCode.text = machine.code
+        holder.machineCode.text = machine.Code
 
         val df = DecimalFormat("#.#")
         df.roundingMode = RoundingMode.CEILING
-        holder.distance.text = "${df.format(machine.distance)}Km"
+        holder.distance.text = "${df.format(machine.Distance)}Km"
 
-        holder.machineId = machine.id
+        holder.machineId = machine.Id
     }
 
     class MachineCardViewHolder(view: View, cardListener: OnMachineCardListener) :

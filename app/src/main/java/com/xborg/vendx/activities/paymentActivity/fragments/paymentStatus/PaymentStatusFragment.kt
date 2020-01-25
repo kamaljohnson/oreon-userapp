@@ -5,12 +5,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.xborg.vendx.R
-import com.xborg.vendx.activities.mainActivity.MainActivity
 import com.xborg.vendx.activities.paymentActivity.SharedViewModel
 import com.xborg.vendx.activities.vendingActivity.VendingActivity
 import com.xborg.vendx.database.PaymentState
@@ -68,8 +66,8 @@ class PaymentStatusFragment : Fragment() {
                 sharedViewModel.payment.value = viewModel.payment.value
                 sharedViewModel.order.value = viewModel.order.value
                 sharedViewModel.paymentState.value = updatedPaymentState
-                payment_status_text.text = viewModel.payment.value!!.status.toString()
-                when (viewModel.payment.value!!.status) {
+                payment_status_text.text = viewModel.payment.value!!.Status.toString()
+                when (viewModel.payment.value!!.Status) {
                     PaymentStatus.Successful -> onPaymentSuccessful()
                     PaymentStatus.Failed -> onPaymentFailed()
                 }

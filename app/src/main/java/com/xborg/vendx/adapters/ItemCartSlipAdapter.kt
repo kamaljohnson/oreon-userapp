@@ -30,21 +30,21 @@ class ItemCartSlipAdapter(
     override fun onBindViewHolder(holder: ItemSlipViewHolder, position: Int) {
         val item = items[position]
 
-        holder.itemId.text = item.id
-        holder.name.text = item.name
-        holder.cost.text =  "₹ " + (item.cost * item.cartCount).toString()
+        holder.itemId.text = item.Id
+        holder.name.text = item.Name
+        holder.cost.text =  "₹ " + (item.Cost * item.cartCount).toString()
         Glide
             .with(context)
-            .load(item.imgScrUrl)
+            .load(item.ImgScrUrl)
             .into(holder.image)
 
-        holder.itemLoc.text = if (item.inShelf) {
+        holder.itemLoc.text = if (item.InShelf) {
             "Shelf"
         } else {
             "Machine"
         }
 
-        if(item.inShelf) {
+        if(item.InShelf) {
             holder.itemsInShelf.visibility = View.VISIBLE
             holder.itemsInShelf.text = item.cartCount.toString()
             holder.cost.visibility = View.INVISIBLE

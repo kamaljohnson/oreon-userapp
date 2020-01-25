@@ -64,7 +64,7 @@ class PaymentMethodsFragment : Fragment() {
                 when(updatedPaymentState) {
                     PaymentState.OrderInit -> {
                         viewModel.calculatePayableAmount()
-                        val totalPayableAmount = viewModel.order.value!!.amount
+                        val totalPayableAmount = viewModel.order.value!!.Amount
                         if(totalPayableAmount == 0f) {
                             total_amount_text.visibility = View.GONE
                             total_text.visibility = View.GONE

@@ -32,25 +32,25 @@ class SharedViewModel : ViewModel() {
 
     init {
         paymentState.value = PaymentState.None
-        payment.value = Payment(id = "", orderId = "")
-        order.value = Order(id = "")
+        payment.value = Payment(Id = "", OrderId = "")
+        order.value = Order(Id = "")
     }
 
     fun updatePaymentAfterMakingPayment(status: PaymentStatus, razorpayPaymentID: String?) {
-        payment.value!!.status = if (status == PaymentStatus.SuccessfulLocal) {
+        payment.value!!.Status = if (status == PaymentStatus.SuccessfulLocal) {
             PaymentStatus.Processing
         } else {
             status
         }
-        payment.value!!.razorpayPaymentId = razorpayPaymentID ?: "not created, payment failed"
+        payment.value!!.RazorpayPaymentId = razorpayPaymentID ?: "not created, payment failed"
 
         paymentState.value = PaymentState.PaymentDone
     }
 
     private fun initOrder(cart: MutableMap<String, Int>, billingCart: MutableMap<String, Int>) {
-        order.value!!.uid = uid
-        order.value!!.cart = cart
-        order.value!!.billingCart = billingCart
+        order.value!!.Uid = uid
+        order.value!!.Cart = cart
+        order.value!!.BillingCart = billingCart
 
         paymentState.value = PaymentState.OrderInit
     }
@@ -76,24 +76,24 @@ class SharedViewModel : ViewModel() {
             when (from) {
                 "Machine" -> {
                     machineItems.value!!.forEach { item ->
-                        if (item.id == id) {
+                        if (item.Id == id) {
                             Log.i(TAG, "from: $from id: $id")
                             item.cartCount = count
                             tempCartList.add(item)
                             tempOrderBillingCartMap[id] = count
                         } else {
-                            Log.i(TAG, item.id)
+                            Log.i(TAG, item.Id)
                         }
                     }
                 }
                 "Shelf" -> {
                     shelfItems.value!!.forEach { item ->
-                        if (item.id == id) {
+                        if (item.Id == id) {
                             Log.i(TAG, "from: $from id: $id")
                             item.cartCount = count
                             tempCartList.add(item)
                         } else {
-                            Log.i(TAG, item.id)
+                            Log.i(TAG, item.Id)
                         }
                     }
                 }

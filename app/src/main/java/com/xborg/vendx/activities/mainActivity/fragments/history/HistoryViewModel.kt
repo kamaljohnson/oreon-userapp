@@ -44,7 +44,7 @@ class HistoryViewModel : ViewModel() {
                 Log.i(TAG, "Successful to get response: $listResult")
 
                 transactions.value =
-                    moshi.adapter(TransactionList::class.java).fromJson(listResult)!!.transactions
+                    moshi.adapter(TransactionList::class.java).fromJson(listResult)!!.Transactions
 
             } catch (t: Throwable) {
                 Log.e(TAG, "Failed to get response: ${t.message}")

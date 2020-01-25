@@ -1,32 +1,29 @@
 package com.xborg.vendx.database
 
+import com.google.gson.annotations.SerializedName
 
 enum class ItemCategory {
-    Snack,
-    Beverage,
-    FastFood,
-    Other
+    @SerializedName("Snack")  Snack,
+    @SerializedName("Beverage")  Beverage,
+    @SerializedName("FastFood")  FastFood,
+    @SerializedName("Other")  Other
 }
 
 data class Item(
-    var id: String,
-    var name: String,
-    var cost: Long,
-    var imgScrUrl: String,
-    var category: ItemCategory,
+    @SerializedName("Id")  var Id: String,
+    @SerializedName("Name")  var Name: String,
+    @SerializedName("Cost")  var Cost: Long,
+    @SerializedName("Image")  var ImgScrUrl: String,
+    @SerializedName("Category")  var Category: ItemCategory,
 
-    var inShelf: Boolean = false,
-    var inMachine: Boolean = false,
-    var remainingInMachine: Int = -1,
-    var remainingInShelf: Int = -1,
+    @SerializedName("InShelf")  var InShelf: Boolean = false,
+    @SerializedName("InMachine")  var InMachine: Boolean = false,
+    @SerializedName("RemainingInMachine")  var RemainingInMachine: Int = -1,
+    @SerializedName("RemainingInShelf")  var RemainingInShelf: Int = -1,
 
-    var cartCount: Int = 0
+    @SerializedName("cartCount")  var cartCount: Int = 0
 ) {
     override fun toString(): String {
-        return "Item(id='$id', name='$name', inShelf=$inShelf, inMachine=$inMachine, remainingInMachine=$remainingInMachine, remainingInShelf=$remainingInShelf)"
+        return "Item(id='$Id', name='$Name', inShelf=$InShelf, inMachine=$InMachine, remainingInMachine=$RemainingInMachine, remainingInShelf=$RemainingInShelf)"
     }
 }
-
-data class ItemList(
-    var items: List<Item>
-)

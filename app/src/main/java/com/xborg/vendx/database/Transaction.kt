@@ -1,5 +1,7 @@
 package com.xborg.vendx.database
 
+import com.google.gson.annotations.SerializedName
+
 enum class TransactionType{
     Order,
     Payment,
@@ -7,19 +9,19 @@ enum class TransactionType{
 }
 
 enum class TransactionStatus {
-    Processing,
-    Successful,
-    Failed,
-    Temp    //TODO: remove after adding status to orders
+    @SerializedName("Processing")  Processing,
+    @SerializedName("Successful")  Successful,
+    @SerializedName("Failed")  Failed,
+    @SerializedName("Temp")  Temp    //TODO: remove after adding status to orders
 }
 
 data class Transaction(
-    var id: String,
-    var type: TransactionType,
-    var status: TransactionStatus,
-    var timeStamp: String = ""
+    @SerializedName("Id")  var Id: String,
+    @SerializedName("Type")  var Type: TransactionType,
+    @SerializedName("Status")  var Status: TransactionStatus,
+    @SerializedName("TimeStamp")  var TimeStamp: String = ""
 )
 
 data class TransactionList(
-    var transactions: List<Transaction>
+    var Transactions: List<Transaction>
 )

@@ -1,8 +1,10 @@
 package com.xborg.vendx.database
 
+import com.google.gson.annotations.SerializedName
+
 
 data class Feedback(
-    var uid: String = "",
-    var topic: String = "",
-    var body: String = ""
-    )
+    @SerializedName("Uid")  var Uid: String = "",
+    @SerializedName("Topic")  var Topic: String = "",
+    @SerializedName("Body")  var Body: String = ""
+)

@@ -37,32 +37,32 @@ class ItemCardAdapter(
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val item = items[position]
 
-        holder.itemId.text = item.id
-        holder.name.text = item.name
-        holder.cost.text = "₹ " + item.cost.toString()
+        holder.itemId.text = item.Id
+        holder.name.text = item.Name
+        holder.cost.text = "₹ " + item.Cost.toString()
         Glide
             .with(context)
-            .load(item.imgScrUrl)
+            .load(item.ImgScrUrl)
             .into(holder.image)
 
-        holder.itemLoc.text = if (item.inShelf) {
+        holder.itemLoc.text = if (item.InShelf) {
             "Shelf"
         } else {
             "Machine"
         }
 
-        if (item.inShelf) {
+        if (item.InShelf) {
             holder.cost.visibility = View.GONE
         }
 
-        holder.itemsInMachine.text = item.remainingInMachine.toString()
-        holder.itemsInShelf.text = item.remainingInShelf.toString()
-        holder.itemsInShelf.visibility = if (item.remainingInShelf <= 0) {
+        holder.itemsInMachine.text = item.RemainingInMachine.toString()
+        holder.itemsInShelf.text = item.RemainingInShelf.toString()
+        holder.itemsInShelf.visibility = if (item.RemainingInShelf <= 0) {
             View.INVISIBLE
         } else {
             View.VISIBLE
         }
-        holder.outOfStock.visibility = if (item.remainingInMachine == 0) {
+        holder.outOfStock.visibility = if (item.RemainingInMachine == 0) {
             View.VISIBLE
         } else {
             View.INVISIBLE

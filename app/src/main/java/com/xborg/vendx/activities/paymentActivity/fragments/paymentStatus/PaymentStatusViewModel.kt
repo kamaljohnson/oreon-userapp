@@ -57,9 +57,9 @@ class PaymentStatusViewModel: ViewModel() {
 
     private fun createPaymentSignature(){
 
-        val paymentId = payment.value!!.id
-        val rnd = payment.value!!.rnd
-        val razorPayPaymentId = payment.value!!.razorpayPaymentId
+        val paymentId = payment.value!!.Id
+        val rnd = payment.value!!.Rnd
+        val razorPayPaymentId = payment.value!!.RazorpayPaymentId
 
         val passToken1 = razorPayPaymentId + paymentId + rnd
 
@@ -70,7 +70,7 @@ class PaymentStatusViewModel: ViewModel() {
 
         md = MessageDigest.getInstance("SHA-1")
         digest = md.digest(passToken2.toByteArray())
-        payment.value!!.signature = digest.fold("", { str, it -> str + "%02x".format(it) })
+        payment.value!!.Signature = digest.fold("", { str, it -> str + "%02x".format(it) })
 
         paymentState.value = PaymentState.PaymentTokenCreated
     }

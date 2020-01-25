@@ -19,15 +19,15 @@ class SharedViewModel : ViewModel() {
     init {
         vendState.value = VendingState.Init
         bag.value = Vend(
-            status = VendingStatus.Init,
+            Status = VendingStatus.Init,
             mid = "yDWzDc79Uu1IO2lEeVyG",
-            uid = uid
+            Uid = uid
         )      // TODO: get the mid from paymentActivity
         currentVendingCount.value = 0
     }
 
     fun updateVendingCount() {
         currentVendingCount.value = currentVendingCount.value!! + 1
-        bag.value!!.status = VendingStatus.Processing
+        bag.value!!.Status = VendingStatus.Processing
     }
 }

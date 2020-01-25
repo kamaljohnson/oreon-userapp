@@ -1,5 +1,7 @@
 package com.xborg.vendx.database
 
+import com.google.gson.annotations.SerializedName
+
 enum class PaymentState {
     None,
     OrderInit,
@@ -15,23 +17,23 @@ enum class PaymentState {
 }
 
 enum class PaymentStatus {
-    None,
-    Init,
-    Processing,
-    SuccessfulLocal,
-    Successful,
-    Failed
+    @SerializedName("None")  None,
+    @SerializedName("Init")  Init,
+    @SerializedName("Processing")  Processing,
+    @SerializedName("SuccessfulLocal")  SuccessfulLocal,
+    @SerializedName("Successful")  Successful,
+    @SerializedName("Failed")  Failed
 }
 
 data class Payment(
-    var id: String = "",
-    var amount: Float = 0f,
-    var status: PaymentStatus = PaymentStatus.None,
-    var signature: String = "",
-    var razorpayPaymentId: String = "",
-    var razorpayOrderId: String = "",       //TODO: update this while posting order
-    var orderId: String,
-    var rnd: String = "",                               //TODO: this should be changed with razorpayOrderId | just a temp fix
-    var uid: String = "",
-    var timeStamp: String = ""
+    @SerializedName("Id")  var Id: String = "",
+    @SerializedName("Amount")  var Amount: Float = 0f,
+    @SerializedName("Status")  var Status: PaymentStatus = PaymentStatus.None,
+    @SerializedName("Signature")  var Signature: String = "",
+    @SerializedName("RazorpayPaymentId")  var RazorpayPaymentId: String = "",
+    @SerializedName("RazorpayOrderId")  var RazorpayOrderId: String = "",       //TODO: update this while posting order
+    @SerializedName("OrderId")  var OrderId: String,
+    @SerializedName("Rnd")  var Rnd: String = "",                               //TODO: this should be changed with razorpayOrderId | just a temp fix
+    @SerializedName("Uid")  var Uid: String = "",
+    @SerializedName("TimeStamp")  var TimeStamp: String = ""
 )

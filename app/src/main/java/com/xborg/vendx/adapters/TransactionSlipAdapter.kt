@@ -28,10 +28,10 @@ class TransactionSlipAdapter(
 
     override fun onBindViewHolder(holder: TransactionSlipViewHolder, position: Int) {
         val transaction = transactions[position]
-        holder.id.text = transaction.id
-        holder.status.text = transaction.status.toString()
-        holder.timeStamp.text = transaction.timeStamp
-        when(transaction.type) {
+        holder.id.text = transaction.Id
+        holder.status.text = transaction.Status.toString()
+        holder.timeStamp.text = transaction.TimeStamp
+        when(transaction.Type) {
             TransactionType.Order -> {
                 holder.orderIcon.setBackgroundResource(R.drawable.ic_order_icon)
             }

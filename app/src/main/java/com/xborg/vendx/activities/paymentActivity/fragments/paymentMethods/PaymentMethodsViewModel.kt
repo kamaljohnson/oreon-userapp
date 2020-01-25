@@ -35,11 +35,11 @@ class PaymentMethodsViewModel : ViewModel() {
 
         var payableAmount = 0f
         cartItems.value!!.forEach { item ->
-            if (!item.inShelf) {
-                payableAmount += item.cost * item.cartCount
+            if (!item.InShelf) {
+                payableAmount += item.Cost * item.cartCount
             }
         }
-        order.value!!.amount = payableAmount
+        order.value!!.Amount = payableAmount
     }
 
     private fun initPayment(
@@ -50,19 +50,19 @@ class PaymentMethodsViewModel : ViewModel() {
         uid: String
     ) {
         Log.i(TAG, "payment : " + payment.value)
-        payment.value!!.id = id
-        payment.value!!.orderId = orderId
-        payment.value!!.amount = amount
-        payment.value!!.rnd = rnd
-        payment.value!!.uid = uid
-        payment.value!!.status = PaymentStatus.Init
+        payment.value!!.Id = id
+        payment.value!!.OrderId = orderId
+        payment.value!!.Amount = amount
+        payment.value!!.Rnd = rnd
+        payment.value!!.Uid = uid
+        payment.value!!.Status = PaymentStatus.Init
 
         paymentState.value = PaymentState.PaymentInit
     }
 
     private fun updateOrder(orderId: String, paymentId: String) {
-        order.value!!.id = orderId
-        order.value!!.paymentId = paymentId
+        order.value!!.Id = orderId
+        order.value!!.PaymentId = paymentId
         paymentState.value = PaymentState.OrderIdReceived
     }
 
@@ -88,15 +88,15 @@ class PaymentMethodsViewModel : ViewModel() {
                 Log.i(TAG, "tempPayment: $tempPayment")
 
                 updateOrder(
-                    orderId = tempPayment.orderId,
-                    paymentId = tempPayment.id
+                    orderId = tempPayment.OrderId,
+                    paymentId = tempPayment.Id
                 )
                 initPayment (
-                    id = tempPayment.id,
-                    orderId = tempPayment.orderId,
-                    amount = order.value!!.amount,
-                    rnd = tempPayment.rnd,
-                    uid = order.value!!.uid
+                    id = tempPayment.Id,
+                    orderId = tempPayment.OrderId,
+                    amount = order.value!!.Amount,
+                    rnd = tempPayment.Rnd,
+                    uid = order.value!!.Uid
                 )
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to get response: $e")

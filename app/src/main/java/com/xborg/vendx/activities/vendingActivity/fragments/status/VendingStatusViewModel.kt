@@ -40,8 +40,8 @@ class VendingStatusViewModel : ViewModel() {
                 Log.i(TAG, "Successful to get response: $listResult")
 
                 val tempBag = moshi.adapter(Vend::class.java).fromJson(listResult)!!
-                bag.value!!.id = tempBag.id
-                bag.value!!.encryptedOtpPlusBag = tempBag.encryptedOtpPlusBag
+                bag.value!!.Id = tempBag.Id
+                bag.value!!.EncryptedOtpPlusBag = tempBag.EncryptedOtpPlusBag
                 vendState.value = VendingState.EncryptedOtpPlusBagReceivedFromServer
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to get response: $e")
@@ -56,13 +56,13 @@ class VendingStatusViewModel : ViewModel() {
         val bagInJson = moshi.adapter(Vend::class.java).toJson(bag.value)!!
         coroutineScope.launch {
             val createOrderDeferred = VendxApi.retrofitServices
-                .sendOnVendCompleteLogAsync(bag = bagInJson, id = bag.value!!.id)
+                .sendOnVendCompleteLogAsync(bag = bagInJson, id = bag.value!!.Id)
             try {
                 val listResult = createOrderDeferred.await()
                 Log.i(TAG, "Successful to get response: $listResult")
 
                 val tempBag = moshi.adapter(Vend::class.java).fromJson(listResult)!!
-                bag.value!!.encryptedVendCompleteStatus = tempBag.encryptedVendCompleteStatus
+                bag.value!!.EncryptedVendCompleteStatus = tempBag.EncryptedVendCompleteStatus
                 vendState.value = VendingState.EncryptedVendStatusReceivedFromServer
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to get response: $e")

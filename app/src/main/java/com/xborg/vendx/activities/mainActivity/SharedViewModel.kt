@@ -107,8 +107,8 @@ class SharedViewModel : ViewModel() {
         //TODO: change code while handling cart from shop
         //checking if item purchase limit reached if item in machine
         machineItems.value!!.forEach{item ->
-            if(item.id == itemId) {
-                return if(item.remainingInMachine >= unTaggedCount) {
+            if(item.Id == itemId) {
+                return if(item.RemainingInMachine >= unTaggedCount) {
 
                     tempTaggedCart[sudoItemId] = taggedCount
                     tempUntaggedCart[itemId] = unTaggedCount
@@ -117,7 +117,7 @@ class SharedViewModel : ViewModel() {
                     _unTaggedCartItems = tempUntaggedCart
 
                     Log.i(TAG, "unTagged Cart: $_unTaggedCartItems")
-                    Log.i(TAG, "remaining in machine : " + (item.remainingInMachine - unTaggedCount).toString())
+                    Log.i(TAG, "remaining in machine : " + (item.RemainingInMachine - unTaggedCount).toString())
                     Log.i(TAG, "item can be added to cart")
                     true
                 } else {
@@ -197,6 +197,7 @@ class SharedViewModel : ViewModel() {
 
                 applicationVersionDepricated.value = versionCode != applicationData!!.Version
                 applicationAlertMessage.value = applicationData.AlertMessage
+                debugText.value = " application Data: $applicationData\n\n"
 
             } catch (t: Throwable) {
                 Log.e(TAG, "Failed to get response: ${t.message}")

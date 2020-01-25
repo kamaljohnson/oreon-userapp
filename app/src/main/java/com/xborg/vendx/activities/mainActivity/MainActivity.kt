@@ -292,8 +292,8 @@ class MainActivity : AppCompatActivity() {
                         requestNewLocationData()
                     } else {
                         sharedViewModel.userLastLocation.value = com.xborg.vendx.database.Location(
-                            latitude = location.latitude,
-                            longitude = location.longitude
+                            Latitude = location.latitude,
+                            Longitude = location.longitude
                         )
                         sharedViewModel.getUserLocation.value = false
                         sharedViewModel.userLocationAccessed.value = true
@@ -335,8 +335,8 @@ class MainActivity : AppCompatActivity() {
         override fun onLocationResult(locationResult: LocationResult) {
             val location: Location = locationResult.lastLocation
             sharedViewModel.userLastLocation.value = com.xborg.vendx.database.Location(
-                latitude = location.latitude,
-                longitude = location.longitude
+                Latitude = location.latitude,
+                Longitude = location.longitude
             )
             sharedViewModel.userLocationAccessed.value = true
         }

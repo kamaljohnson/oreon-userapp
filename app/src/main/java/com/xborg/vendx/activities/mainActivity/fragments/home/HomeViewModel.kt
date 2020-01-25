@@ -3,10 +3,10 @@ package com.xborg.vendx.activities.mainActivity.fragments.home
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.common.reflect.TypeToken
 import com.google.firebase.auth.FirebaseAuth
-import com.squareup.moshi.JsonAdapter
+import com.google.gson.Gson
 import com.squareup.moshi.Moshi
-import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.xborg.vendx.activities.loginActivity.db
 import com.xborg.vendx.database.Item
@@ -17,6 +17,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.lang.reflect.Type
 
 private const val TAG = "HomeViewModel"
 
@@ -75,17 +76,17 @@ class HomeViewModel : ViewModel() {
         machineItems.value = ArrayList()
         if (selectedMachine.value != null) {
             updateItemGroupModel()
-            if(selectedMachine.value!!.id != "") {
-                Log.i(TAG, "machine Id : " + selectedMachine.value!!.id)
-                getItemsFromMachine(selectedMachine.value!!.id)
+            if(selectedMachine.value!!.Id != "") {
+                Log.i(TAG, "machine Id : " + selectedMachine.value!!.Id)
+                getItemsFromMachine(selectedMachine.value!!.Id)
             } else {
                 updateItemGroupModel()
             }
         }
 
         //Checking if current selected machine is updated in server
-        if (selectedMachine.value!!.id == "") return
-        val docRef = db.collection("Machines").document(selectedMachine.value!!.id)
+        if (selectedMachine.value!!.Id == "") return
+        val docRef = db.collection("Machines").document(selectedMachine.value!!.Id)
         docRef.addSnapshotListener { snapshot, e ->
             if (e != null) {
                 Log.w(TAG, "Listen failed.", e)
@@ -95,63 +96,52 @@ class HomeViewModel : ViewModel() {
             if (snapshot != null && snapshot.metadata.hasPendingWrites())
                 Log.i(TAG, "no changes in server")
             else
-                getItemsFromMachine(selectedMachine.value!!.id)
+                getItemsFromMachine(selectedMachine.value!!.Id)
         }
     }
 
     //TODO: combine both items from machine and self to single get req
     private fun getItemsFromMachine(machineId: String) {
-        val moshi: Moshi = Moshi.Builder()
-            .add(KotlinJsonAdapterFactory())
-            .build()
-//        coroutineScope.launch {
-//            val getMachineItemsDeferred = VendxApi.retrofitServices.getMachineItemsAsync(id = machineId)
-//            try {
-//                val listResult = getMachineItemsDeferred.await()
-//                Log.i(TAG, "Successful to get response: $listResult")
-//
-//                val itemListType =
-//                    Types.newParameterizedType(List::class.java, Item::class.java)
-//                val adapter: JsonAdapter<List<Item>> = moshi.adapter(itemListType)
-//
-//                machineItems.value = adapter.fromJson(listResult)!!
-//
-//                selectedMachineLoaded.value = true
-//
-//                updateItemGroupModel()
-//            } catch (t: Throwable) {
-//                Log.e(TAG, "Machine Items: Failed to get response: ${t.message}")
-//                apiCallError.value = true
-//            }
-//        }
+        coroutineScope.launch {
+            val getMachineItemsDeferred = VendxApi.retrofitServices.getMachineItemsAsync(id = machineId)
+            try {
+                val listResult = getMachineItemsDeferred.await()
+                Log.i(TAG, "Successful to get response: $listResult")
+                debugText.value = "Successful to get response: $listResult\n\n"
+
+                val itemListType: Type = object : TypeToken<ArrayList<Item?>?>() {}.type
+                machineItems.value = Gson().fromJson(listResult, itemListType)!!
+                selectedMachineLoaded.value = true
+
+                updateItemGroupModel()
+            } catch (t: Throwable) {
+                Log.e(TAG, "Machine Items: Failed to get response: ${t.message}")
+                debugText.value = "Shelf Items: Failed to get response: ${t.message}\n\n"
+
+                apiCallError.value = true
+            }
+        }
     }
 
     private fun getItemsInShelf(userId: String) {
         debugText.value = "get items from shelf\n\n"
-        val moshi: Moshi = Moshi.Builder()
-            .add(KotlinJsonAdapterFactory())
-            .build()
+        coroutineScope.launch {
+            val getMachineItemsDeferred = VendxApi.retrofitServices.getShelfItemsAsync(userId)
+            try {
+                val listResult = getMachineItemsDeferred.await()
+                Log.i(TAG, "Successful to get response: $listResult ")
+                debugText.value = "Successful to get response: $listResult\n\n"
 
-//        coroutineScope.launch {
-//            val getMachineItemsDeferred = VendxApi.retrofitServices.getShelfItemsAsync(userId)
-//            try {
-//                val listResult = getMachineItemsDeferred.await()
-//                Log.i(TAG, "Successful to get response: $listResult ")
-//                debugText.value = "Successful to get response: $listResult\n\n"
-//
-//                val itemListType =
-//                    Types.newParameterizedType(List::class.java, Item::class.java)
-//                val adapter: JsonAdapter<List<Item>> = moshi.adapter(itemListType)
-//
-//                shelfItems.value = adapter.fromJson(listResult)!!
-//
-//                updateItemGroupModel()
-//            } catch (t: Throwable) {
-//                Log.i(TAG, "Shelf Items: Failed to get response: ${t.message}")
-//                debugText.value = "Shelf Items: Failed to get response: ${t.message}\n\n"
-//                apiCallError.value = true
-//            }
-//        }
+                val itemListType: Type = object : TypeToken<ArrayList<Item?>?>() {}.type
+                shelfItems.value = Gson().fromJson(listResult, itemListType)!!
+
+                updateItemGroupModel()
+            } catch (t: Throwable) {
+                Log.i(TAG, "Shelf Items: Failed to get response: ${t.message}")
+                debugText.value = "Shelf Items: Failed to get response: ${t.message}\n\n"
+                apiCallError.value = true
+            }
+        }
     }
 
     private fun updateItemGroupModel() {
@@ -159,10 +149,10 @@ class HomeViewModel : ViewModel() {
 
         for (i in machineItems.value!!.indices) {
             for (j in shelfItems.value!!.indices) {
-                if (machineItems.value!![i].id == shelfItems.value!![j].id) {
-                    shelfItems.value!![j].inMachine = true
-                    shelfItems.value!![j].remainingInMachine =
-                        machineItems.value!![i].remainingInMachine
+                if (machineItems.value!![i].Id == shelfItems.value!![j].Id) {
+                    shelfItems.value!![j].InMachine = true
+                    shelfItems.value!![j].RemainingInMachine =
+                        machineItems.value!![i].RemainingInMachine
                     shelfItemsInMachine.add(shelfItems.value!![j])
                 }
             }
@@ -174,38 +164,38 @@ class HomeViewModel : ViewModel() {
         if (shelfItemsInMachine.isNotEmpty()) {
             val shelfItemsInMachineGroupModel =
                 ItemGroup(
-                    title = "From Shelf",
-                    items = shelfItemsInMachine,
-                    drawLineBreaker = machineItems.value!!.isNotEmpty()
+                    Title = "From Shelf",
+                    Items = shelfItemsInMachine,
+                    DrawLineBreaker = machineItems.value!!.isNotEmpty()
                 )
             temp.add(shelfItemsInMachineGroupModel)
         }
 
-        Log.i(TAG, "code : " + selectedMachine.value!!.code + " loaded : " + selectedMachineLoaded.value)
+        Log.i(TAG, "code : " + selectedMachine.value!!.Code + " loaded : " + selectedMachineLoaded.value)
 
         if(selectedMachineLoaded.value == true) {
             if (machineItems.value!!.isNotEmpty()) {
                 Log.i(TAG, "machine loaded")
                 val machineItemsGroupModel = ItemGroup(
-                    title = "In Machine",
-                    items = machineItems.value!!,
-                    drawLineBreaker = shelfItems.value!!.isNotEmpty()
+                    Title = "In Machine",
+                    Items = machineItems.value!!,
+                    DrawLineBreaker = shelfItems.value!!.isNotEmpty()
                 )
                 temp.add(machineItemsGroupModel)
             }
-        } else if(selectedMachine.value!!.code == "Dummy") {
+        } else if(selectedMachine.value!!.Code == "Dummy") {
             Log.i(TAG, "no machine near")
             val machineItemsGroupModel = ItemGroup(
-                title = "Machine",
-                drawLineBreaker = shelfItems.value!!.isNotEmpty(),
-                showNoMachinesNearbyMessage = true
+                Title = "Machine",
+                DrawLineBreaker = shelfItems.value!!.isNotEmpty(),
+                ShowNoMachinesNearbyMessage = true
             )
             temp.add(machineItemsGroupModel)
         } else {
             Log.i(TAG, "loading..")
             val machineItemsGroupModel = ItemGroup(
-                title = "Machine",
-                drawLineBreaker = shelfItems.value!!.isNotEmpty()
+                Title = "Machine",
+                DrawLineBreaker = shelfItems.value!!.isNotEmpty()
             )
             temp.add(machineItemsGroupModel)
         }
@@ -214,7 +204,7 @@ class HomeViewModel : ViewModel() {
         shelfItems.value!!.forEach { s_item ->
             var flag = true
             machineItems.value!!.forEach { m_item ->
-                if (s_item.id == m_item.id) {
+                if (s_item.Id == m_item.Id) {
                     flag = false
                 }
             }
@@ -225,13 +215,13 @@ class HomeViewModel : ViewModel() {
 
         if (shelfItemsNotInMachine.isNotEmpty()) {
             val shelfItemsNotInMachineGroupModel = ItemGroup(
-                title = if (machineItems.value!!.isEmpty()) {
+                Title = if (machineItems.value!!.isEmpty()) {
                     "Shelf"
                 } else {
                     "Remaining Shelf"
                 },
-                items = shelfItemsNotInMachine,
-                drawLineBreaker = false
+                Items = shelfItemsNotInMachine,
+                DrawLineBreaker = false
             )
             temp.add(shelfItemsNotInMachineGroupModel)
         }

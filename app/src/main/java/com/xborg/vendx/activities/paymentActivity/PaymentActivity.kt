@@ -15,7 +15,6 @@ import com.razorpay.Checkout
 import com.razorpay.PaymentData
 import com.razorpay.PaymentResultWithDataListener
 import com.xborg.vendx.R
-import com.xborg.vendx.activities.mainActivity.MainActivity
 import com.xborg.vendx.activities.paymentActivity.fragments.addPromotions.AddPromotionsFragment
 import com.xborg.vendx.activities.paymentActivity.fragments.cart.CartFragment
 import com.xborg.vendx.activities.paymentActivity.fragments.paymentMethods.PaymentMethodsFragment
@@ -62,7 +61,7 @@ class PaymentActivity : FragmentActivity(), PaymentResultWithDataListener {
                     initiatePayment()
                 }
                 PaymentState.PaymentComplete -> {
-                    if (sharedViewModel.payment.value!!.status == PaymentStatus.Successful) {
+                    if (sharedViewModel.payment.value!!.Status == PaymentStatus.Successful) {
                         Log.i(TAG, "Payment Checked and is authentic")
                     } else {
                         Log.i(TAG, "Payment Checked and is not authentic")
@@ -91,7 +90,7 @@ class PaymentActivity : FragmentActivity(), PaymentResultWithDataListener {
         val checkout = Checkout()
         checkout.setFullScreenDisable(true)
 
-        val amount = sharedViewModel.payment.value!!.amount * 100
+        val amount = sharedViewModel.payment.value!!.Amount * 100
 
         if (amount == 0f) {      //No need of payment
             proceedToVending()
@@ -101,7 +100,7 @@ class PaymentActivity : FragmentActivity(), PaymentResultWithDataListener {
         try {
             val options = JSONObject()
             options.put("name", "VendX")
-            options.put("description", "Reference ID. " + sharedViewModel.order.value!!.id)
+            options.put("description", "Reference ID. " + sharedViewModel.order.value!!.Id)
             options.put("currency", "INR")
             options.put("amount", amount.toInt().toString())
 

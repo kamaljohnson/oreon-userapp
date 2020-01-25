@@ -1,6 +1,8 @@
 package com.xborg.vendx.database
 
+import com.google.gson.annotations.SerializedName
+
 data class Location(
-    var longitude: Double,
-    var latitude: Double
+    @SerializedName("Longitude")  var Longitude: Double,
+    @SerializedName("Latitude")  var Latitude: Double
     )
