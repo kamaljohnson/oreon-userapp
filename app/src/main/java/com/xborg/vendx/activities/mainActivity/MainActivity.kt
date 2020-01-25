@@ -13,6 +13,7 @@ import android.location.LocationManager
 import android.os.Bundle
 import android.os.Looper
 import android.provider.Settings
+import android.text.method.ScrollingMovementMethod
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -63,6 +64,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        debug_text_view.movementMethod = ScrollingMovementMethod()
 
         sharedViewModel = ViewModelProviders.of(this).get(SharedViewModel::class.java)
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
@@ -139,6 +142,10 @@ class MainActivity : AppCompatActivity() {
                     hideSwipeUpContainer()
                 }
             }
+        })
+
+        sharedViewModel.debugText.observe(this, Observer { text ->
+            debug_text_view.text = text
         })
 
         initBottomNavigationView()
@@ -405,7 +412,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun changeFragment(fragment: Fragment, title: String) {
+    private fun changeFragment(fragment: Fragment, title: String)  {
         val fragmentManager: FragmentManager = supportFragmentManager
         val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
 

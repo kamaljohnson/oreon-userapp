@@ -67,9 +67,15 @@ class ExploreFragment : Fragment(), MachineCardAdapter.OnMachineCardListener{
                 sharedViewModel.apiCallError.value = error
             }
         })
+
+        viewModel.debugText.observe(this, Observer { text ->
+            sharedViewModel.debugText.value += TAG + text
+        })
     }
 
     private fun scanForNearbyMachines() {
+        viewModel.debugText.value = "init explorer\n\n"
+
         progress_bar.visibility = View.VISIBLE
         selected_machine_code.isClickable = false
 

@@ -21,6 +21,8 @@ private const val TAG = "HomeViewModel"
 
 class HomeViewModel : ViewModel() {
 
+    var debugText: MutableLiveData<String> = MutableLiveData()
+
     val uid = FirebaseAuth.getInstance().uid.toString()
 
     val apiCallError = MutableLiveData<Boolean>()
@@ -46,10 +48,12 @@ class HomeViewModel : ViewModel() {
         shelfItems.value = ArrayList()
 
         selectedMachine.value = Machine()
+        debugText.value = "init home\n\n"
         handleShelfUpdates()
     }
 
     private fun handleShelfUpdates() {
+        debugText.value = "handle shelf updates\n"
         //Checking if user shelf is updated in server
         val docRef = db.collection("Users").document(uid)
         docRef.addSnapshotListener { snapshot, e ->
@@ -119,11 +123,14 @@ class HomeViewModel : ViewModel() {
     }
 
     private fun getItemsInShelf(userId: String) {
+        debugText.value = "get items from shelf\n\n"
+
         coroutineScope.launch {
             val getMachineItemsDeferred = VendxApi.retrofitServices.getShelfItemsAsync(userId)
             try {
                 val listResult = getMachineItemsDeferred.await()
                 Log.i(TAG, "Successful to get response: $listResult ")
+                debugText.value = "Successful to get response: $listResult\n\n"
 
                 val moshi: Moshi = Moshi.Builder()
                     .add(KotlinJsonAdapterFactory())
@@ -133,7 +140,8 @@ class HomeViewModel : ViewModel() {
 
                 updateItemGroupModel()
             } catch (t: Throwable) {
-                Log.e(TAG, "Shelf Items: Failed to get response: ${t.message}")
+                Log.i(TAG, "Shelf Items: Failed to get response: ${t.message}")
+                debugText.value = "Shelf Items: Failed to get response: ${t.message}\n\n"
                 apiCallError.value = true
             }
         }

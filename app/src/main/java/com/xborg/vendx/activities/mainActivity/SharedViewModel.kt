@@ -29,6 +29,8 @@ enum class PermissionStatus {
 
 class SharedViewModel : ViewModel() {
 
+    var debugText: MutableLiveData<String> = MutableLiveData()
+
     var versionCode: Int = BuildConfig.VERSION_CODE
 
     val apiCallError = MutableLiveData<Boolean>()
@@ -68,6 +70,7 @@ class SharedViewModel : ViewModel() {
         bluetoothPermission.value = PermissionStatus.None
 
         _taggedCartItems.value = mutableMapOf()
+        debugText.value = "init debugger\n\n"
     }
 
     fun setMachineItems(machineItems: List<Item>) {

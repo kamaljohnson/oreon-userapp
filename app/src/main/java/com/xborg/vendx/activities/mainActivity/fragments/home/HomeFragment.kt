@@ -93,7 +93,12 @@ class HomeFragment : Fragment(), ItemCardAdapter.OnItemListener {
             }
         })
 
+        viewModel.debugText.observe(this, Observer { text ->
+            sharedViewModel.debugText.value += TAG + text
+        })
+
         continue_location_permission.setOnClickListener {
+            viewModel.debugText.value = "continue location permission\n\n"
             sharedViewModel.getUserLocation.value = true
         }
     }

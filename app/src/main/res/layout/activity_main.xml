@@ -167,5 +167,16 @@
 
         </RelativeLayout>
         <!--endregion-->
+        <!--        region debugger for release-->
+        <TextView
+            android:scrollbars = "vertical"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:background="@color/black"
+            android:text="debug message view"
+            android:id="@+id/debug_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"/>
+        <!--        endregion-->
     </RelativeLayout>
 </layout>

@@ -19,6 +19,8 @@ import kotlinx.coroutines.launch
 
 class ExploreViewModel : ViewModel() {
 
+    var debugText: MutableLiveData<String> = MutableLiveData()
+
     val uid = FirebaseAuth.getInstance().uid.toString()
 
     val apiCallError = MutableLiveData<Boolean>()
@@ -32,9 +34,11 @@ class ExploreViewModel : ViewModel() {
 
     init {
         selectedMachine.value = Machine()
+        debugText.value = "init explorer\n\n"
     }
     
     fun requestNearbyMachines() {
+        debugText.value = "request near by machines\n\n"
         val moshi: Moshi = Moshi.Builder()
             .add(KotlinJsonAdapterFactory())
             .build()
@@ -47,6 +51,7 @@ class ExploreViewModel : ViewModel() {
             try {
                 val listResult = createOrderDeferred.await()
                 Log.i(TAG, "Successful to get response: $listResult")
+                debugText.value = "Successful to get response: $listResult\n\n"
 
                 val machineListType =
                     Types.newParameterizedType(List::class.java, Machine::class.java)
@@ -60,6 +65,7 @@ class ExploreViewModel : ViewModel() {
                 }
             } catch (t: Throwable) {
                 Log.e(TAG, "Failed to get response: ${t.message}")
+                debugText.value = "Failed to get response: ${t.message}\n\n"
                 apiCallError.value = true
             }
         }
