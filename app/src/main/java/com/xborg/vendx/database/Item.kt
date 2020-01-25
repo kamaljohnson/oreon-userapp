@@ -1,6 +1,7 @@
 package com.xborg.vendx.database
 
 import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
 enum class ItemCategory {
     Snack,
@@ -9,6 +10,7 @@ enum class ItemCategory {
     Other
 }
 
+@JsonClass(generateAdapter = true)
 data class Item(
     @Json(name = "Id") var id: String,
     @Json(name = "Name") var name: String,

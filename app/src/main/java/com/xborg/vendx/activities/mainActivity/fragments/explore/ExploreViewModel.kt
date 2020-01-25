@@ -45,30 +45,30 @@ class ExploreViewModel : ViewModel() {
 
         val locationDataInJson = moshi.adapter(Location::class.java).toJson(userLocation.value!!)!!
 
-        coroutineScope.launch {
-            val createOrderDeferred = VendxApi.retrofitServices
-                .requestNearbyMachinesAsync(location = locationDataInJson, uid = uid)
-            try {
-                val listResult = createOrderDeferred.await()
-                Log.i(TAG, "Successful to get response: $listResult")
-                debugText.value = "Successful to get response: $listResult\n\n"
-
-                val machineListType =
-                    Types.newParameterizedType(List::class.java, Machine::class.java)
-                val adapter: JsonAdapter<List<Machine>> = moshi.adapter(machineListType)
-
-                machinesNearby.value = adapter.fromJson(listResult)!!
-                if(machinesNearby.value!!.isNotEmpty()) {
-                    selectNearestMachineToUser()
-                } else {    //adding a dummy machine
-                    selectedMachine.value = Machine()   //a empty machine constructor creates a dummy machine
-                }
-            } catch (t: Throwable) {
-                Log.e(TAG, "Failed to get response: ${t.message}")
-                debugText.value = "Failed to get response: ${t.message}\n\n"
-                apiCallError.value = true
-            }
-        }
+//        coroutineScope.launch {
+//            val createOrderDeferred = VendxApi.retrofitServices
+//                .requestNearbyMachinesAsync(location = locationDataInJson, uid = uid)
+//            try {
+//                val listResult = createOrderDeferred.await()
+//                Log.i(TAG, "Successful to get response: $listResult")
+//                debugText.value = "Successful to get response: $listResult\n\n"
+//
+//                val machineListType =
+//                    Types.newParameterizedType(List::class.java, Machine::class.java)
+//                val adapter: JsonAdapter<List<Machine>> = moshi.adapter(machineListType)
+//
+//                machinesNearby.value = adapter.fromJson(listResult)!!
+//                if(machinesNearby.value!!.isNotEmpty()) {
+//                    selectNearestMachineToUser()
+//                } else {    //adding a dummy machine
+//                    selectedMachine.value = Machine()   //a empty machine constructor creates a dummy machine
+//                }
+//            } catch (t: Throwable) {
+//                Log.e(TAG, "Failed to get response: ${t.message}")
+//                debugText.value = "Failed to get response: ${t.message}\n\n"
+//                apiCallError.value = true
+//            }
+//        }
     }
 
     private fun selectNearestMachineToUser() {

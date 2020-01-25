@@ -1,7 +1,9 @@
 package com.xborg.vendx.database
 
 import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class Order (
     @Json(name = "Id") var id: String,
     @Json(name = "Cart") var cart: MutableMap<String, Int> = mutableMapOf(),

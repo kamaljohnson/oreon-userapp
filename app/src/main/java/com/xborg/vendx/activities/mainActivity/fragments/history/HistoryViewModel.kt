@@ -33,16 +33,15 @@ class HistoryViewModel : ViewModel() {
 
     //TODO: combine both items from machine and self to single get req
     private fun getTransactions() {
+        val moshi: Moshi = Moshi.Builder()
+            .add(KotlinJsonAdapterFactory())
+            .build()
 
         coroutineScope.launch {
             val getTransactionsDeferred = VendxApi.retrofitServices.getTransactionsAsync(uid)
             try {
                 val listResult = getTransactionsDeferred.await()
                 Log.i(TAG, "Successful to get response: $listResult")
-
-                val moshi: Moshi = Moshi.Builder()
-                    .add(KotlinJsonAdapterFactory())
-                    .build()
 
                 transactions.value =
                     moshi.adapter(TransactionList::class.java).fromJson(listResult)!!.transactions

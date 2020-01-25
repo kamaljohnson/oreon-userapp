@@ -1,6 +1,7 @@
 package com.xborg.vendx.database
 
 import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
 enum class VendingState {
     Init,
@@ -23,6 +24,7 @@ enum class VendingStatus {
     Failed
 }
 
+@JsonClass(generateAdapter = true)
 data class Vend(
     @Json(name = "Id") var id: String = "",
     @Json(name = "State") var status: VendingStatus = VendingStatus.Init,

@@ -4,11 +4,12 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
+import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
+import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.xborg.vendx.activities.loginActivity.db
 import com.xborg.vendx.database.Item
-import com.xborg.vendx.database.ItemList
 import com.xborg.vendx.database.ItemGroup
 import com.xborg.vendx.database.Machine
 import com.xborg.vendx.network.VendxApi
@@ -100,51 +101,57 @@ class HomeViewModel : ViewModel() {
 
     //TODO: combine both items from machine and self to single get req
     private fun getItemsFromMachine(machineId: String) {
-        coroutineScope.launch {
-            val getMachineItemsDeferred = VendxApi.retrofitServices.getMachineItemsAsync(id = machineId)
-            try {
-                val listResult = getMachineItemsDeferred.await()
-                Log.i(TAG, "Successful to get response: $listResult")
-
-                val moshi: Moshi = Moshi.Builder()
-                    .add(KotlinJsonAdapterFactory())
-                    .build()
-
-                machineItems.value =
-                    moshi.adapter(ItemList::class.java).fromJson(listResult)!!.items
-                selectedMachineLoaded.value = true
-
-                updateItemGroupModel()
-            } catch (t: Throwable) {
-                Log.e(TAG, "Machine Items: Failed to get response: ${t.message}")
-                apiCallError.value = true
-            }
-        }
+        val moshi: Moshi = Moshi.Builder()
+            .add(KotlinJsonAdapterFactory())
+            .build()
+//        coroutineScope.launch {
+//            val getMachineItemsDeferred = VendxApi.retrofitServices.getMachineItemsAsync(id = machineId)
+//            try {
+//                val listResult = getMachineItemsDeferred.await()
+//                Log.i(TAG, "Successful to get response: $listResult")
+//
+//                val itemListType =
+//                    Types.newParameterizedType(List::class.java, Item::class.java)
+//                val adapter: JsonAdapter<List<Item>> = moshi.adapter(itemListType)
+//
+//                machineItems.value = adapter.fromJson(listResult)!!
+//
+//                selectedMachineLoaded.value = true
+//
+//                updateItemGroupModel()
+//            } catch (t: Throwable) {
+//                Log.e(TAG, "Machine Items: Failed to get response: ${t.message}")
+//                apiCallError.value = true
+//            }
+//        }
     }
 
     private fun getItemsInShelf(userId: String) {
         debugText.value = "get items from shelf\n\n"
+        val moshi: Moshi = Moshi.Builder()
+            .add(KotlinJsonAdapterFactory())
+            .build()
 
-        coroutineScope.launch {
-            val getMachineItemsDeferred = VendxApi.retrofitServices.getShelfItemsAsync(userId)
-            try {
-                val listResult = getMachineItemsDeferred.await()
-                Log.i(TAG, "Successful to get response: $listResult ")
-                debugText.value = "Successful to get response: $listResult\n\n"
-
-                val moshi: Moshi = Moshi.Builder()
-                    .add(KotlinJsonAdapterFactory())
-                    .build()
-
-                shelfItems.value = moshi.adapter(ItemList::class.java).fromJson(listResult)!!.items
-
-                updateItemGroupModel()
-            } catch (t: Throwable) {
-                Log.i(TAG, "Shelf Items: Failed to get response: ${t.message}")
-                debugText.value = "Shelf Items: Failed to get response: ${t.message}\n\n"
-                apiCallError.value = true
-            }
-        }
+//        coroutineScope.launch {
+//            val getMachineItemsDeferred = VendxApi.retrofitServices.getShelfItemsAsync(userId)
+//            try {
+//                val listResult = getMachineItemsDeferred.await()
+//                Log.i(TAG, "Successful to get response: $listResult ")
+//                debugText.value = "Successful to get response: $listResult\n\n"
+//
+//                val itemListType =
+//                    Types.newParameterizedType(List::class.java, Item::class.java)
+//                val adapter: JsonAdapter<List<Item>> = moshi.adapter(itemListType)
+//
+//                shelfItems.value = adapter.fromJson(listResult)!!
+//
+//                updateItemGroupModel()
+//            } catch (t: Throwable) {
+//                Log.i(TAG, "Shelf Items: Failed to get response: ${t.message}")
+//                debugText.value = "Shelf Items: Failed to get response: ${t.message}\n\n"
+//                apiCallError.value = true
+//            }
+//        }
     }
 
     private fun updateItemGroupModel() {

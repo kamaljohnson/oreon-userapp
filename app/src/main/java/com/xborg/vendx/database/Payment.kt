@@ -1,6 +1,7 @@
 package com.xborg.vendx.database
 
 import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
 enum class PaymentState {
     None,
@@ -25,6 +26,7 @@ enum class PaymentStatus {
     Failed
 }
 
+@JsonClass(generateAdapter = true)
 data class Payment(
     @Json(name = "Id") var id: String = "",
     @Json(name = "Amount") var amount: Float = 0f,

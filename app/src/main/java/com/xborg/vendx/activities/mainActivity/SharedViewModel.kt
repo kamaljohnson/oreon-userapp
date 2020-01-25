@@ -71,6 +71,7 @@ class SharedViewModel : ViewModel() {
 
         _taggedCartItems.value = mutableMapOf()
         debugText.value = "init debugger\n\n"
+        checkApplicationVersion()
     }
 
     fun setMachineItems(machineItems: List<Item>) {
@@ -183,25 +184,24 @@ class SharedViewModel : ViewModel() {
         _unTaggedCartItems = mutableMapOf()
     }
 
-    fun checkApplicationVersion() {
+    private fun checkApplicationVersion() {
         coroutineScope.launch {
             Log.i(TAG, "checking application version")
             val getApplicationDiffered = VendxApi.retrofitServices.getMinimumApplicationVersionAsync()
             try {
                 val listResult = getApplicationDiffered.await()
                 Log.i(TAG, "Successful to get response: $listResult")
-                val moshi: Moshi = Moshi.Builder()
-                    .add(KotlinJsonAdapterFactory())
-                    .build()
+                debugText.value = " Successful to get response: $listResult\n\n"
+                val moshi: Moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
+                val adapter: JsonAdapter<Application> = moshi.adapter(Application::class.java)
+                val applicationData = adapter.fromJson(listResult)
 
-                val applicationData =
-                    moshi.adapter(Application::class.java).fromJson(listResult)!!
-
-                applicationVersionDepricated.value = versionCode != applicationData.version
+                applicationVersionDepricated.value = versionCode != applicationData!!.version
                 applicationAlertMessage.value = applicationData.alertMessage
 
             } catch (t: Throwable) {
                 Log.e(TAG, "Failed to get response: ${t.message}")
+                debugText.value = " Failed to get response: ${t.message}\n\n"
                 apiCallError.value = true
             }
         }
