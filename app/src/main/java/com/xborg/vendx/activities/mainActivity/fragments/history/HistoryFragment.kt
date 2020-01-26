@@ -37,7 +37,7 @@ class HistoryFragment : Fragment() {
         viewModel = ViewModelProviders.of(this).get(HistoryViewModel::class.java)
         sharedViewModel = ViewModelProviders.of(activity!!).get(SharedViewModel::class.java)
 
-        viewModel.transactions.observe(this, Observer { updatedTransactions ->
+        viewModel.transactions.observe(viewLifecycleOwner, Observer { updatedTransactions ->
             progress_bar.visibility = View.GONE
             if(updatedTransactions.isNotEmpty()) {
                 shelf_empty_container.visibility = View.GONE
@@ -47,7 +47,7 @@ class HistoryFragment : Fragment() {
             }
         })
 
-        viewModel.apiCallError.observe(this, Observer { error ->
+        viewModel.apiCallError.observe(viewLifecycleOwner, Observer { error ->
             if(error) {
                 sharedViewModel.apiCallError.value = error
             }

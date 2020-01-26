@@ -47,17 +47,17 @@ class PaymentMethodsFragment : Fragment() {
         sharedViewModel = ViewModelProviders.of(activity!!).get(SharedViewModel::class.java)
         viewModel = ViewModelProviders.of(activity!!).get(PaymentMethodsViewModel::class.java)
 
-        sharedViewModel.cartItems.observe(this, Observer { updatedCart ->
+        sharedViewModel.cartItems.observe(viewLifecycleOwner, Observer { updatedCart ->
             viewModel.cartItems.value = updatedCart
         })
-        sharedViewModel.machineItems.observe(this, Observer { updatedMachineItems ->
+        sharedViewModel.machineItems.observe(viewLifecycleOwner, Observer { updatedMachineItems ->
             Log.i(TAG, "machineItems updated: $updatedMachineItems")
         })
-        sharedViewModel.shelfItems.observe(this, Observer { updatedShelfItems ->
+        sharedViewModel.shelfItems.observe(viewLifecycleOwner, Observer { updatedShelfItems ->
             Log.i(TAG, "shelfItems updated: $updatedShelfItems")
         })
 
-        sharedViewModel.paymentState.observe(this, Observer { updatedPaymentState ->
+        sharedViewModel.paymentState.observe(viewLifecycleOwner, Observer { updatedPaymentState ->
             if(viewModel.paymentState.value!! < updatedPaymentState) {
                 viewModel.payment.value = sharedViewModel.payment.value
                 viewModel.order.value = sharedViewModel.order.value
@@ -81,7 +81,7 @@ class PaymentMethodsFragment : Fragment() {
             }
         })
 
-        viewModel.paymentState.observe(this, Observer { updatedPaymentState ->
+        viewModel.paymentState.observe(viewLifecycleOwner, Observer { updatedPaymentState ->
             if(sharedViewModel.paymentState.value!! < updatedPaymentState) {
                 sharedViewModel.payment.value = viewModel.payment.value
                 sharedViewModel.order.value = viewModel.order.value

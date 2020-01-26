@@ -66,12 +66,12 @@ class HomeFragment : Fragment(), ItemCardAdapter.OnItemListener {
             Log.i(TAG, "CartFragment updated : $updatedCart")
 
         })
-        sharedViewModel.selectedMachine.observe(this, Observer { selectedMachine ->
+        sharedViewModel.selectedMachine.observe(viewLifecycleOwner, Observer { selectedMachine ->
             viewModel.selectedMachine.value = selectedMachine
             viewModel.changedSelectedMachine()
             //TODO: display loading sign in group-holder(Machine)
         })
-        sharedViewModel.checkedUserLocationAccessed.observe(this, Observer { checked ->
+        sharedViewModel.checkedUserLocationAccessed.observe(viewLifecycleOwner, Observer { checked ->
             if (checked) {
                 if (sharedViewModel.userLocationAccessed.value == false) {
                     location_permission_access_dialog.visibility = View.VISIBLE
@@ -82,18 +82,18 @@ class HomeFragment : Fragment(), ItemCardAdapter.OnItemListener {
                 location_permission_access_dialog.visibility = View.GONE
             }
         })
-        sharedViewModel.userLocationAccessed.observe(this, Observer { accessed ->
+        sharedViewModel.userLocationAccessed.observe(viewLifecycleOwner, Observer { accessed ->
             if (accessed) {
                 location_permission_access_dialog.visibility = View.GONE
             }
         })
-        viewModel.apiCallError.observe(this, Observer { error ->
+        viewModel.apiCallError.observe(viewLifecycleOwner, Observer { error ->
             if(error) {
                 sharedViewModel.apiCallError.value = error
             }
         })
 
-        viewModel.debugText.observe(this, Observer { text ->
+        viewModel.debugText.observe(viewLifecycleOwner, Observer { text ->
             sharedViewModel.debugText.value += TAG + text
         })
 

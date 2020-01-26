@@ -40,7 +40,7 @@ class ExploreFragment : Fragment(), MachineCardAdapter.OnMachineCardListener{
         viewModel = ViewModelProviders.of(activity!!).get(ExploreViewModel::class.java)
         sharedViewModel = ViewModelProviders.of(activity!!).get(SharedViewModel::class.java)
 
-        sharedViewModel.userLocationAccessed.observe(this, Observer { accessed ->
+        sharedViewModel.userLocationAccessed.observe(viewLifecycleOwner, Observer { accessed ->
             if(accessed) {
                 scanForNearbyMachines()
             } else {
@@ -48,7 +48,7 @@ class ExploreFragment : Fragment(), MachineCardAdapter.OnMachineCardListener{
             }
         })
 
-        viewModel.selectedMachine.observe(this, Observer { selectedMachine->
+        viewModel.selectedMachine.observe(viewLifecycleOwner, Observer { selectedMachine->
             if(selectedMachine.Code == "Dummy") {
                 selected_machine_code.text = "Explore?"
             } else {
@@ -58,17 +58,17 @@ class ExploreFragment : Fragment(), MachineCardAdapter.OnMachineCardListener{
             setSelectedMachineMac(selectedMachine.Mac)
         })
 
-        viewModel.machinesNearby.observe(this, Observer {
+        viewModel.machinesNearby.observe(viewLifecycleOwner, Observer {
             displayNearbyMachines()
         })
 
-        viewModel.apiCallError.observe(this, Observer { error ->
+        viewModel.apiCallError.observe(viewLifecycleOwner, Observer { error ->
             if(error) {
                 sharedViewModel.apiCallError.value = error
             }
         })
 
-        viewModel.debugText.observe(this, Observer { text ->
+        viewModel.debugText.observe(viewLifecycleOwner, Observer { text ->
             sharedViewModel.debugText.value += TAG + text
         })
     }

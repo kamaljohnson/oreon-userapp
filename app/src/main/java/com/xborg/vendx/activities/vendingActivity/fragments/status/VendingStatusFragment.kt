@@ -38,7 +38,7 @@ class VendingStatusFragment : Fragment() {
         viewModel = ViewModelProviders.of(activity!!).get(VendingStatusViewModel::class.java)
         sharedViewModel = ViewModelProviders.of(activity!!).get(SharedViewModel::class.java)
 
-        sharedViewModel.vendState.observe(this, Observer { updatedVendingState ->
+        sharedViewModel.vendState.observe(viewLifecycleOwner, Observer { updatedVendingState ->
             if (viewModel.vendState.value!! < updatedVendingState) {
 
                 viewModel.vendState.value = updatedVendingState
@@ -59,7 +59,7 @@ class VendingStatusFragment : Fragment() {
             updateStatusUI()
         })
 
-        viewModel.vendState.observe(this, Observer { updatedBagStatus ->
+        viewModel.vendState.observe(viewLifecycleOwner, Observer { updatedBagStatus ->
             if (sharedViewModel.vendState.value!! < updatedBagStatus) {
 
                 sharedViewModel.vendState.value = updatedBagStatus
