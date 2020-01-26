@@ -4,11 +4,9 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.common.reflect.TypeToken
 import com.google.firebase.auth.FirebaseAuth
-import com.squareup.moshi.JsonAdapter
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.Types
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import com.google.gson.Gson
 import com.xborg.vendx.database.*
 import java.io.Serializable
 import java.lang.reflect.Type
@@ -113,16 +111,8 @@ class SharedViewModel : ViewModel() {
     }
 
     private fun convertJsonToItemList(json: String): List<Item> {
-        val moshi: Moshi = Moshi.Builder()
-            .add(KotlinJsonAdapterFactory())
-            .build()
-        val itemListDataType: Type = Types.newParameterizedType(
-            MutableList::class.java,
-            Item::class.java
-        )
-        val adapter: JsonAdapter<List<Item>> = moshi.adapter(itemListDataType)
-
-        return adapter.fromJson(json)!!
+        val itemListType: Type = object : TypeToken<ArrayList<Item?>?>() {}.type
+        return Gson().fromJson(json, itemListType)
     }
 
     fun getCartItemsAsJson(): String {
@@ -138,15 +128,7 @@ class SharedViewModel : ViewModel() {
     }
 
     private fun getListItemsAsJson(items: List<Item>): String {
-        val moshi: Moshi = Moshi.Builder()
-            .add(KotlinJsonAdapterFactory())
-            .build()
-        val itemListDataType: Type = Types.newParameterizedType(
-            MutableList::class.java,
-            Item::class.java
-        )
-        val adapter: JsonAdapter<List<Item>> = moshi.adapter(itemListDataType)
-
-        return adapter.toJson(items)!!
+        val itemListType: Type = object : TypeToken<ArrayList<Item?>?>() {}.type
+        return Gson().toJson(items, itemListType)
     }
 }

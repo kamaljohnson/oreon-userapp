@@ -3,8 +3,7 @@ package com.xborg.vendx.activities.paymentActivity.fragments.paymentMethods
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import com.google.gson.Gson
 import com.xborg.vendx.database.*
 import com.xborg.vendx.network.VendxApi
 import kotlinx.coroutines.CoroutineScope
@@ -70,11 +69,7 @@ class PaymentMethodsViewModel : ViewModel() {
 
         Log.i(TAG, "order : " + order.value.toString())
 
-        val moshi: Moshi = Moshi.Builder()
-            .add(KotlinJsonAdapterFactory())
-            .build()
-
-        val orderInJson = moshi.adapter(Order::class.java).toJson(order.value!!)!!
+        val orderInJson = Gson().toJson(order.value, Order::class.java)
 
         coroutineScope.launch {
             val createOrderDeferred = VendxApi.retrofitServices
@@ -83,7 +78,7 @@ class PaymentMethodsViewModel : ViewModel() {
                 val listResult = createOrderDeferred.await()
                 Log.i(TAG, "Successful to get response: $listResult")
 
-                val tempPayment = moshi.adapter(Payment::class.java).fromJson(listResult)!!
+                val tempPayment = Gson().fromJson(listResult, Payment::class.java)
 
                 Log.i(TAG, "tempPayment: $tempPayment")
 

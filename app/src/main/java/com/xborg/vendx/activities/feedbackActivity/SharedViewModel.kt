@@ -4,8 +4,7 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import com.google.gson.Gson
 import com.xborg.vendx.database.Feedback
 import com.xborg.vendx.network.VendxApi
 import kotlinx.coroutines.CoroutineScope
@@ -26,12 +25,7 @@ class SharedViewModel : ViewModel() {
     private var coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
     fun postFeedback() {
-        val moshi: Moshi = Moshi.Builder()
-            .add(KotlinJsonAdapterFactory())
-            .build()
-
-        val userFeedbackJson = moshi.adapter(Feedback::class.java).toJson(userFeedback.value!!)!!
-
+        val userFeedbackJson = Gson().toJson(userFeedback.value, Feedback::class.java)
         coroutineScope.launch {
             val createOrderDeferred = VendxApi.retrofitServices
                 .postFeedbackAsync(id = uid, feedback = userFeedbackJson)

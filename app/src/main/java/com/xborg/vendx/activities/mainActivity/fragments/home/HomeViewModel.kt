@@ -6,8 +6,6 @@ import androidx.lifecycle.ViewModel
 import com.google.common.reflect.TypeToken
 import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.Gson
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.xborg.vendx.activities.loginActivity.db
 import com.xborg.vendx.database.Item
 import com.xborg.vendx.database.ItemGroup

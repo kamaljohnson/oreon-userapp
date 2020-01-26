@@ -5,10 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.gson.Gson
-import com.squareup.moshi.JsonAdapter
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.Types
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.xborg.vendx.BuildConfig
 import com.xborg.vendx.database.Application
 import com.xborg.vendx.database.Item
@@ -19,7 +15,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import java.lang.reflect.Type
 
 
 enum class PermissionStatus {
@@ -52,7 +47,7 @@ class SharedViewModel : ViewModel() {
     var machineItems = MutableLiveData<List<Item>>()
     var shelfItems = MutableLiveData<List<Item>>()
 
-    var applicationVersionDepricated = MutableLiveData<Boolean>()
+    var applicationVersionDeprecated = MutableLiveData<Boolean>()
     var applicationAlertMessage = MutableLiveData<String>()
 
     // [itemId-from, count]     : from -> {Machine, Shelf}
@@ -168,16 +163,7 @@ class SharedViewModel : ViewModel() {
     }
 
     private fun getListItemsAsJson(items: List<Item>): String {
-        val moshi: Moshi = Moshi.Builder()
-            .add(KotlinJsonAdapterFactory())
-            .build()
-        val itemListDataType: Type = Types.newParameterizedType(
-            MutableList::class.java,
-            Item::class.java
-        )
-        val adapter: JsonAdapter<List<Item>> = moshi.adapter(itemListDataType)
-
-        return adapter.toJson(items)!!
+        return Gson().toJson(items)
     }
 
     fun resetCart() {
@@ -195,7 +181,7 @@ class SharedViewModel : ViewModel() {
                 debugText.value = " Successful to get response: $listResult\n\n"
                 val applicationData = Gson().fromJson(listResult, Application::class.java)
 
-                applicationVersionDepricated.value = versionCode != applicationData!!.Version
+                applicationVersionDeprecated.value = versionCode != applicationData!!.Version
                 applicationAlertMessage.value = applicationData.AlertMessage
                 debugText.value = " application Data: $applicationData\n\n"
 

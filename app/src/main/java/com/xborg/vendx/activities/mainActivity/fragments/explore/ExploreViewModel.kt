@@ -6,8 +6,6 @@ import androidx.lifecycle.ViewModel
 import com.google.common.reflect.TypeToken
 import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.Gson
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.xborg.vendx.database.Location
 import com.xborg.vendx.database.Machine
 import com.xborg.vendx.network.VendxApi
@@ -40,11 +38,8 @@ class ExploreViewModel : ViewModel() {
     
     fun requestNearbyMachines() {
         debugText.value = "request near by machines\n\n"
-        val moshi: Moshi = Moshi.Builder()
-            .add(KotlinJsonAdapterFactory())
-            .build()
 
-        val locationDataInJson = moshi.adapter(Location::class.java).toJson(userLocation.value!!)!!
+        val locationDataInJson = Gson().toJson(userLocation.value, Location::class.java)
 
         coroutineScope.launch {
             val createOrderDeferred = VendxApi.retrofitServices

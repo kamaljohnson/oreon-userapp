@@ -3,8 +3,7 @@ package com.xborg.vendx.activities.paymentActivity.fragments.paymentStatus
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import com.google.gson.Gson
 import com.xborg.vendx.database.Order
 import com.xborg.vendx.database.Payment
 import com.xborg.vendx.database.PaymentState
@@ -30,13 +29,10 @@ class PaymentStatusViewModel: ViewModel() {
     }
 
     fun sendPaymentToken() {
-        val moshi: Moshi = Moshi.Builder()
-            .add(KotlinJsonAdapterFactory())
-            .build()
 
         createPaymentSignature()   //TODO: change this with actual signature
 
-        val paymentDataInJson = moshi.adapter(Payment::class.java).toJson(payment.value!!)!!
+        val paymentDataInJson = Gson().toJson(payment.value, Payment::class.java)
 
         coroutineScope.launch {
             val createOrderDeferred = VendxApi.retrofitServices
@@ -46,7 +42,7 @@ class PaymentStatusViewModel: ViewModel() {
                 Log.i(TAG, "Successful to get response: $listResult")
                 paymentState.value = PaymentState.PaymentPosted
                 payment.value =
-                    moshi.adapter(Payment::class.java).fromJson(listResult)!!
+                    Gson().fromJson(listResult, Payment::class.java)
 
                 paymentState.value = PaymentState.PaymentComplete
             } catch (t: Throwable) {

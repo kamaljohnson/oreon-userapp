@@ -121,7 +121,7 @@ class MainActivity : AppCompatActivity() {
                 showSwipeUpContainer()
             }
         })
-        sharedViewModel.applicationVersionDepricated.observe(this, Observer { depricated ->
+        sharedViewModel.applicationVersionDeprecated.observe(this, Observer { depricated ->
             if(depricated) {
                 jumpable_alert_message_layout.visibility = View.VISIBLE
                 jumpable_alert_message_text.text = "Please update the application\n\na new version is uploaded to the\nplay store"

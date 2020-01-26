@@ -3,8 +3,7 @@ package com.xborg.vendx.activities.vendingActivity.fragments.status
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import com.google.gson.Gson
 import com.xborg.vendx.database.Vend
 import com.xborg.vendx.database.VendingState
 import com.xborg.vendx.network.VendxApi
@@ -26,12 +25,7 @@ class VendingStatusViewModel : ViewModel() {
     }
 
     fun sendEncryptedOtpToServer() {
-        val moshi: Moshi = Moshi.Builder()
-            .add(KotlinJsonAdapterFactory())
-            .build()
-
-        val bagInJson = moshi.adapter(Vend::class.java).toJson(bag.value)!!
-
+        val bagInJson = Gson().toJson(bag.value, Vend::class.java)
         coroutineScope.launch {
             val createOrderDeferred = VendxApi.retrofitServices
                 .sendEncryptedOTPAsync(bag = bagInJson)
@@ -39,7 +33,7 @@ class VendingStatusViewModel : ViewModel() {
                 val listResult = createOrderDeferred.await()
                 Log.i(TAG, "Successful to get response: $listResult")
 
-                val tempBag = moshi.adapter(Vend::class.java).fromJson(listResult)!!
+                val tempBag = Gson().fromJson(listResult, Vend::class.java)
                 bag.value!!.Id = tempBag.Id
                 bag.value!!.EncryptedOtpPlusBag = tempBag.EncryptedOtpPlusBag
                 vendState.value = VendingState.EncryptedOtpPlusBagReceivedFromServer
@@ -50,10 +44,7 @@ class VendingStatusViewModel : ViewModel() {
     }
 
     fun sendEncryptedDeviceLogToServer() {
-        val moshi: Moshi = Moshi.Builder()
-            .add(KotlinJsonAdapterFactory())
-            .build()
-        val bagInJson = moshi.adapter(Vend::class.java).toJson(bag.value)!!
+        val bagInJson = Gson().toJson(bag.value, Vend::class.java)
         coroutineScope.launch {
             val createOrderDeferred = VendxApi.retrofitServices
                 .sendOnVendCompleteLogAsync(bag = bagInJson, id = bag.value!!.Id)
@@ -61,7 +52,7 @@ class VendingStatusViewModel : ViewModel() {
                 val listResult = createOrderDeferred.await()
                 Log.i(TAG, "Successful to get response: $listResult")
 
-                val tempBag = moshi.adapter(Vend::class.java).fromJson(listResult)!!
+                val tempBag = Gson().fromJson(listResult, Vend::class.java)
                 bag.value!!.EncryptedVendCompleteStatus = tempBag.EncryptedVendCompleteStatus
                 vendState.value = VendingState.EncryptedVendStatusReceivedFromServer
             } catch (e: Exception) {
