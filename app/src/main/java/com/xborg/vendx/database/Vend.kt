@@ -26,7 +26,7 @@ data class Vend(
     @SerializedName("Id")  var Id: String = "",
     @SerializedName("Status")  var Status: VendingStatus = VendingStatus.Init,
     @SerializedName("Bag")  var Bag: String = "",
-    @SerializedName("mid")  var mid: String = "",
+    @SerializedName("Mid")  var mid: String = "",
     @SerializedName("Uid")  var Uid: String = "",
     @SerializedName("EncryptedOtp")  var EncryptedOtp: String = "",
     @SerializedName("EncryptedOtpPlusBag")  var EncryptedOtpPlusBag: String = "",
