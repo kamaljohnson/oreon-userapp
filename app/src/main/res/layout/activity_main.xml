@@ -169,6 +169,7 @@
         <!--endregion-->
         <!--        region debugger for release-->
         <TextView
+            android:visibility="gone"
             android:layout_marginBottom="50pt"
             android:layout_alignParentBottom="true"
             android:scrollbars = "vertical"
