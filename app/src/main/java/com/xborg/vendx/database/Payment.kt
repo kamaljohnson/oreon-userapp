@@ -26,14 +26,14 @@ enum class PaymentStatus {
 }
 
 data class Payment(
-    @SerializedName("Id")  var Id: String = "",
+    @SerializedName("Id")  var Id: String? = "",
     @SerializedName("Amount")  var Amount: Float = 0f,
     @SerializedName("Status")  var Status: PaymentStatus = PaymentStatus.None,
     @SerializedName("Signature")  var Signature: String = "",
     @SerializedName("RazorpayPaymentId")  var RazorpayPaymentId: String = "",
     @SerializedName("RazorpayOrderId")  var RazorpayOrderId: String = "",       //TODO: update this while posting order
     @SerializedName("OrderId")  var OrderId: String,
-    @SerializedName("Rnd")  var Rnd: String = "",                               //TODO: this should be changed with razorpayOrderId | just a temp fix
+    @SerializedName("Rnd")  var Rnd: String? = "",                               //TODO: this should be changed with razorpayOrderId | just a temp fix
     @SerializedName("Uid")  var Uid: String = "",
     @SerializedName("TimeStamp")  var TimeStamp: String = ""
 )

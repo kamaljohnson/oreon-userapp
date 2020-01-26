@@ -41,28 +41,27 @@ class PaymentMethodsViewModel : ViewModel() {
         order.value!!.Amount = payableAmount
     }
 
-    private fun initPayment(
-        id: String,
-        orderId: String,
-        amount: Float,
-        rnd: String,
-        uid: String
-    ) {
-        Log.i(TAG, "payment : " + payment.value)
-        payment.value!!.Id = id
-        payment.value!!.OrderId = orderId
-        payment.value!!.Amount = amount
-        payment.value!!.Rnd = rnd
-        payment.value!!.Uid = uid
-        payment.value!!.Status = PaymentStatus.Init
+    private fun initPayment(payment: Payment, order: Order) {
+        Log.i(TAG, "payment : " + this.payment.value)
+        if(payment.Id != null) {
+            this.payment.value!!.Id = payment.Id!!
+            this.payment.value!!.Rnd = payment.Rnd!!
+        }
+        this.payment.value!!.OrderId = payment.OrderId
+        this.payment.value!!.Amount = order.Amount
+        this.payment.value!!.Uid = order.Uid
+        this.payment.value!!.Status = PaymentStatus.Init
 
         paymentState.value = PaymentState.PaymentInit
+        Log.i(TAG, "payment initiated")
     }
 
-    private fun updateOrder(orderId: String, paymentId: String) {
-        order.value!!.Id = orderId
-        order.value!!.PaymentId = paymentId
-        paymentState.value = PaymentState.OrderIdReceived
+    private fun updateOrder(payment: Payment) {
+        order.value!!.Id = payment.OrderId
+        if(payment.Id != null) {
+            order.value!!.PaymentId = payment.Id!!
+        }
+        Log.i(TAG, "order updated")
     }
 
     fun postOrderDetails() {
@@ -78,20 +77,15 @@ class PaymentMethodsViewModel : ViewModel() {
                 val listResult = createOrderDeferred.await()
                 Log.i(TAG, "Successful to get response: $listResult")
 
-                val tempPayment = Gson().fromJson(listResult, Payment::class.java)
-
-                Log.i(TAG, "tempPayment: $tempPayment")
+                val tempPayment: Payment
+                tempPayment = Gson().fromJson(listResult, Payment::class.java)
 
                 updateOrder(
-                    orderId = tempPayment.OrderId,
-                    paymentId = tempPayment.Id
+                    payment = tempPayment
                 )
                 initPayment (
-                    id = tempPayment.Id,
-                    orderId = tempPayment.OrderId,
-                    amount = order.value!!.Amount,
-                    rnd = tempPayment.Rnd,
-                    uid = order.value!!.Uid
+                    payment = tempPayment,
+                    order = order.value!!
                 )
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to get response: $e")
