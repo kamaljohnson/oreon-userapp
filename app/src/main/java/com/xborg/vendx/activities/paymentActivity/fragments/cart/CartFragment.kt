@@ -37,15 +37,15 @@ class CartFragment : Fragment() {
     }
 
     private fun observerSharedViewModel() {
-        sharedViewModel.cartItems.observe(this, Observer { updatedCart ->
+        sharedViewModel.cartItems.observe(viewLifecycleOwner, Observer { updatedCart ->
             Log.i(TAG, "cartItems updated: $updatedCart")
         })
-        sharedViewModel.machineItems.observe(this, Observer { updatedMachineItems ->
+        sharedViewModel.machineItems.observe(viewLifecycleOwner, Observer { updatedMachineItems ->
             Log.i(TAG, "machineItems updated: $updatedMachineItems")
 
             updateCartItemsToRV()
         })
-        sharedViewModel.shelfItems.observe(this, Observer { updatedShelfItems ->
+        sharedViewModel.shelfItems.observe(viewLifecycleOwner, Observer { updatedShelfItems ->
             Log.i(TAG, "shelfItems updated: $updatedShelfItems")
         })
     }

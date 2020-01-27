@@ -34,7 +34,8 @@
 
             <TextView
                 android:id="@+id/items_in_shelf"
-                android:layout_width="10pt"
+                android:layout_width="wrap_content"
+                android:paddingHorizontal="3.5pt"
                 android:layout_height="10pt"
                 android:text="0"
                 android:textSize="6pt"

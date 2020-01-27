@@ -132,7 +132,7 @@ class HomeViewModel : ViewModel() {
 
                 val itemListType: Type = object : TypeToken<ArrayList<Item?>?>() {}.type
                 shelfItems.value = Gson().fromJson(listResult, itemListType)!!
-
+                Log.i(TAG, "Shelf: " + shelfItems.value.toString())
                 updateItemGroupModel()
             } catch (t: Throwable) {
                 Log.i(TAG, "Shelf Items: Failed to get response: ${t.message}")

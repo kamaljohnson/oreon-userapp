@@ -57,15 +57,15 @@ class ItemCardAdapter(
 
         holder.itemsInMachine.text = item.RemainingInMachine.toString()
         holder.itemsInShelf.text = item.RemainingInShelf.toString()
-        holder.itemsInShelf.visibility = if (item.RemainingInShelf <= 0) {
-            View.INVISIBLE
-        } else {
+        holder.itemsInShelf.visibility = if (item.InShelf) {
             View.VISIBLE
+        } else {
+            View.INVISIBLE
         }
-        holder.outOfStock.visibility = if (item.RemainingInMachine == 0) {
-            View.VISIBLE
-        } else {
+        holder.outOfStock.visibility = if (!item.InMachine) {
             View.INVISIBLE
+        } else {
+            View.VISIBLE
         }
     }
 
