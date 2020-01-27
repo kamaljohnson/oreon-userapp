@@ -64,8 +64,10 @@ class ItemCardAdapter(
         }
         holder.outOfStock.visibility = if (!item.InMachine) {
             View.INVISIBLE
-        } else {
+        } else if(item.RemainingInMachine == 0){
             View.VISIBLE
+        } else {
+            View.INVISIBLE
         }
     }
 
