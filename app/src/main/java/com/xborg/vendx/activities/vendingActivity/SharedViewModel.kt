@@ -3,6 +3,7 @@ package com.xborg.vendx.activities.vendingActivity
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
+import com.xborg.vendx.activities.vendingActivity.fragments.deviceCommunicator.DeviceConnectionStatus
 import com.xborg.vendx.database.Vend
 import com.xborg.vendx.database.VendingState
 import com.xborg.vendx.database.VendingStatus
@@ -13,10 +14,13 @@ class SharedViewModel : ViewModel() {
 
     val bag = MutableLiveData<Vend>()
     val vendState = MutableLiveData<VendingState>()
+    val deviceConnectionStatus = MutableLiveData<DeviceConnectionStatus>()
 
     private val currentVendingCount = MutableLiveData<Int>()
 
     init {
+        deviceConnectionStatus.value = DeviceConnectionStatus.None
+
         vendState.value = VendingState.Init
         bag.value = Vend(
             Status = VendingStatus.Init,

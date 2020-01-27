@@ -11,7 +11,7 @@ enum class VendingState {
     VendDone,
     EncryptedDeviceLogReceivedFromDevice,
     EncryptedVendStatusReceivedFromServer,
-    VendingComplete,
+    VendingComplete
 }
 
 enum class VendingStatus {

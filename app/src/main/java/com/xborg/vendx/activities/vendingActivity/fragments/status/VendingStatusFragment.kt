@@ -11,10 +11,11 @@ import androidx.lifecycle.ViewModelProviders
 import com.xborg.vendx.R
 import com.xborg.vendx.activities.mainActivity.MainActivity
 import com.xborg.vendx.activities.vendingActivity.SharedViewModel
+import com.xborg.vendx.activities.vendingActivity.fragments.deviceCommunicator.DeviceConnectionStatus
 import com.xborg.vendx.database.VendingState
 import kotlinx.android.synthetic.main.fragment_vending_status.*
 
-const val TAG = "ServerCommunicator"
+const val TAG = "VendingStatus"
 class VendingStatusFragment : Fragment() {
 
     private lateinit var viewModel: VendingStatusViewModel
@@ -58,6 +59,17 @@ class VendingStatusFragment : Fragment() {
             }
             updateStatusUI()
         })
+        sharedViewModel.deviceConnectionStatus.observe(viewLifecycleOwner, Observer { connectionStatus ->
+            Log.i(TAG, "here")
+            when(connectionStatus) {
+                DeviceConnectionStatus.ConnectionLost -> {
+                    displayRetry()
+                }
+                DeviceConnectionStatus.ConnectionFailed -> {
+                    displayRetry()
+                }
+            }
+        })
 
         viewModel.vendState.observe(viewLifecycleOwner, Observer { updatedBagStatus ->
             if (sharedViewModel.vendState.value!! < updatedBagStatus) {
@@ -67,9 +79,17 @@ class VendingStatusFragment : Fragment() {
             }
         })
 
+        retry_button.setOnClickListener {
+            retryVend()
+        }
+
         done_button.setOnClickListener {
             goToHome()
         }
+    }
+
+    private fun displayRetry() {
+        vending_retry_layout.visibility = View.VISIBLE
     }
 
     private fun updateStatusUI() {
@@ -108,6 +128,10 @@ class VendingStatusFragment : Fragment() {
                 vending_complete_layout.visibility = View.VISIBLE
             }
         }
+    }
+
+    private fun retryVend() {
+
     }
 
     private fun goToHome() {

@@ -11,6 +11,7 @@ class DeviceCommunicatorViewModel : ViewModel() {
 
     val bag = MutableLiveData<Vend>()
     val vendState = MutableLiveData<VendingState>()
+    val deviceConnectionStatus = MutableLiveData<DeviceConnectionStatus>()
 
     init {
         vendState.value = VendingState.Init
