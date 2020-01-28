@@ -87,7 +87,28 @@
             android:textColor="@color/white"
             android:layout_width="wrap_content"
             android:layout_height="20pt"/>
+    </RelativeLayout>
 
+    <RelativeLayout
+        android:visibility="invisible"
+        android:background="@color/gray"
+        android:id="@+id/on_fail_layout"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_width="wrap_content"
+        android:layout_height="50pt">
+
+        <Button
+            android:layout_centerVertical="true"
+            android:id="@+id/cancel_button"
+            android:layout_marginRight="10pt"
+            android:text="Cancel"
+            android:textStyle="bold"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/drawable_button"
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="20pt"/>
     </RelativeLayout>
 
 </RelativeLayout>

@@ -5,7 +5,6 @@ xmlns:tools="http://schemas.android.com/tools"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
 tools:context=".activities.loginActivity.LoginActivity">
-
     <RelativeLayout
         android:visibility="invisible"
         android:id="@+id/user_email_request_layout"
@@ -28,6 +27,7 @@ tools:context=".activities.loginActivity.LoginActivity">
 
         <EditText
             android:id="@+id/email_id"
+            android:inputType="textEmailAddress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
@@ -45,6 +45,4 @@ tools:context=".activities.loginActivity.LoginActivity">
             android:layout_marginTop="100dp"
             android:layout_centerHorizontal="true"/>
     </RelativeLayout>
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

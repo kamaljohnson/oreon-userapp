@@ -81,6 +81,7 @@ class PaymentStatusFragment : Fragment() {
     }
 
     private fun onPaymentFailed() {
+        on_fail_layout.visibility = View.VISIBLE
         status_icon.setBackgroundResource(R.drawable.error)
         on_failure_layout.visibility = View.VISIBLE
     }
