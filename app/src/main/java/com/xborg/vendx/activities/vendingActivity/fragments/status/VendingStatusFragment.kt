@@ -79,6 +79,10 @@ class VendingStatusFragment : Fragment() {
             }
         })
 
+        viewModel.retryDeviceConnection.observe(viewLifecycleOwner, Observer { retry->
+            sharedViewModel.retryDeviceConnection.value = retry
+        })
+
         retry_button.setOnClickListener {
             retryVend()
         }
@@ -131,7 +135,7 @@ class VendingStatusFragment : Fragment() {
     }
 
     private fun retryVend() {
-
+        viewModel.retryDeviceConnection.value = true
     }
 
     private fun goToHome() {

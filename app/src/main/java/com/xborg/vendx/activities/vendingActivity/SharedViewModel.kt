@@ -15,10 +15,12 @@ class SharedViewModel : ViewModel() {
     val bag = MutableLiveData<Vend>()
     val vendState = MutableLiveData<VendingState>()
     val deviceConnectionStatus = MutableLiveData<DeviceConnectionStatus>()
+    val retryDeviceConnection = MutableLiveData<Boolean>()
 
     private val currentVendingCount = MutableLiveData<Int>()
 
     init {
+        retryDeviceConnection.value = false
         deviceConnectionStatus.value = DeviceConnectionStatus.None
 
         vendState.value = VendingState.Init

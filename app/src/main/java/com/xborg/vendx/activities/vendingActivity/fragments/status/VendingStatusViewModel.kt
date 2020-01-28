@@ -19,6 +19,7 @@ class VendingStatusViewModel : ViewModel() {
 
     val bag = MutableLiveData<Vend>()
     val vendState = MutableLiveData<VendingState>()
+    val retryDeviceConnection = MutableLiveData<Boolean>()
 
     init {
         vendState.value = VendingState.Init
