@@ -30,7 +30,7 @@ class LoginActivity : AppCompatActivity() {
 
         Log.i(TAG, "email Uploaded: $emailUploaded")
 
-        if(user != null && emailUploaded) {
+        if(user != null) {
             loadMainActivity()
         } else {
             createSignInIntent()
@@ -88,6 +88,9 @@ class LoginActivity : AppCompatActivity() {
                 */
                 val uid = FirebaseAuth.getInstance().uid.toString()
                 val usersRef = db.collection("Users").document(uid)
+                user = FirebaseAuth.getInstance().currentUser
+                emailUploaded = user?.email != null
+
                 usersRef.get()
                     .addOnSuccessListener { document ->
                         if (!document.exists()) {
