@@ -34,7 +34,7 @@ class PaymentMethodsViewModel : ViewModel() {
 
         var payableAmount = 0f
         cartItems.value!!.forEach { item ->
-            if (!item.InShelf) {
+            if (!item.InInventory) {
                 payableAmount += item.Cost * item.cartCount
             }
         }

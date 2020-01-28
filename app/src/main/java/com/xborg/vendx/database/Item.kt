@@ -16,14 +16,14 @@ data class Item(
     @SerializedName("Image")  var ImgScrUrl: String,
     @SerializedName("Category")  var Category: Category,
 
-    @SerializedName("InShelf")  var InShelf: Boolean = false,
+    @SerializedName("InInventory")  var InInventory: Boolean = false,
     @SerializedName("InMachine")  var InMachine: Boolean = false,
     @SerializedName("RemainingInMachine")  var RemainingInMachine: Int = -1,
-    @SerializedName("RemainingInShelf")  var RemainingInShelf: Int = -1,
+    @SerializedName("RemainingInInventory")  var RemainingInInventory: Int = -1,
 
     @SerializedName("CartCount")  var cartCount: Int = 0
 ) {
     override fun toString(): String {
-        return "Item(id='$Id', name='$Name', inShelf=$InShelf, inMachine=$InMachine, remainingInMachine=$RemainingInMachine, remainingInShelf=$RemainingInShelf)"
+        return "Item(id='$Id', name='$Name', inShelf=$InInventory, inMachine=$InMachine, remainingInMachine=$RemainingInMachine, remainingInShelf=$RemainingInInventory)"
     }
 }

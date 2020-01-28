@@ -40,10 +40,10 @@ class HistoryFragment : Fragment() {
         viewModel.transactions.observe(viewLifecycleOwner, Observer { updatedTransactions ->
             progress_bar.visibility = View.GONE
             if(updatedTransactions.isNotEmpty()) {
-                shelf_empty_container.visibility = View.GONE
+                inventory_empty_container.visibility = View.GONE
                 updateTransactionsToRV()
             } else {
-                shelf_empty_container.visibility = View.VISIBLE
+                inventory_empty_container.visibility = View.VISIBLE
             }
         })
 

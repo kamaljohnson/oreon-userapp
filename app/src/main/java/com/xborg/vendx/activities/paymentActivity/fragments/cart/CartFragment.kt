@@ -45,8 +45,8 @@ class CartFragment : Fragment() {
 
             updateCartItemsToRV()
         })
-        sharedViewModel.shelfItems.observe(viewLifecycleOwner, Observer { updatedShelfItems ->
-            Log.i(TAG, "shelfItems updated: $updatedShelfItems")
+        sharedViewModel.inventoryItems.observe(viewLifecycleOwner, Observer { updatedInventoryItems ->
+            Log.i(TAG, "inventoryItems updated: $updatedInventoryItems")
         })
     }
 

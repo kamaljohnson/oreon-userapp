@@ -84,7 +84,7 @@ class LoginActivity : AppCompatActivity() {
                  *  -
                  * else
                  *  - create user with id = uid
-                 *  - init shelf {}
+                 *  - init inventory {}
                 */
                 val uid = FirebaseAuth.getInstance().uid.toString()
                 val usersRef = db.collection("Users").document(uid)
@@ -93,8 +93,7 @@ class LoginActivity : AppCompatActivity() {
                         if (!document.exists()) {
                             val user = HashMap<String, Any>()
                             val emptyMap = HashMap<String, Number>()
-                            user["Shelf"] = emptyMap
-                            user["Vend"] = emptyMap
+                            user["Inventory"] = emptyMap
                             db.collection("Users").document(uid)
                                 .set(user)
                                 .addOnSuccessListener { userRef ->

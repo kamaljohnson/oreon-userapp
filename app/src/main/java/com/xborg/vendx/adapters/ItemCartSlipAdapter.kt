@@ -38,15 +38,15 @@ class ItemCartSlipAdapter(
             .load(item.ImgScrUrl)
             .into(holder.image)
 
-        holder.itemLoc.text = if (item.InShelf) {
+        holder.itemLoc.text = if (item.InInventory) {
             "Shelf"
         } else {
             "Machine"
         }
 
-        if(item.InShelf) {
-            holder.itemsInShelf.visibility = View.VISIBLE
-            holder.itemsInShelf.text = item.cartCount.toString()
+        if(item.InInventory) {
+            holder.itemsInInventory.visibility = View.VISIBLE
+            holder.itemsInInventory.text = item.cartCount.toString()
             holder.cost.visibility = View.INVISIBLE
             holder.paidIcon.visibility = View.VISIBLE
         } else {
@@ -62,15 +62,15 @@ class ItemCartSlipAdapter(
         val name: TextView = view.name
         val cost: TextView = view.cost
         val image: ImageView = view.image
-        val purchaseCount: TextView = view.purchase_count
+        private val purchaseCount: TextView = view.purchase_count
         val itemLoc: TextView = view.item_loc
-        val itemsInShelf: TextView = view.items_in_shelf
+        val itemsInInventory: TextView = view.items_in_inventory
         var itemsInMachine: TextView = view.items_in_machine
         val paidIcon: ImageView = view.paid_icon
 
         init {
             purchaseCount.visibility = View.INVISIBLE
-            itemsInShelf.visibility = View.INVISIBLE
+            itemsInInventory.visibility = View.INVISIBLE
             itemsInMachine.visibility = View.INVISIBLE
 
             itemView.setOnClickListener(this)

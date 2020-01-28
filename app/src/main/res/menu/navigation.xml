@@ -14,5 +14,5 @@
     <item
         android:id="@+id/navigation_history"
         android:icon="@drawable/ic_history_icon"
-        android:title="@string/title_shelf" />
+        android:title="@string/title_inventory" />
 </menu>

@@ -45,12 +45,12 @@ class SharedViewModel : ViewModel() {
     val selectedMachineLoaded = MutableLiveData<Boolean>()
 
     var machineItems = MutableLiveData<List<Item>>()
-    var shelfItems = MutableLiveData<List<Item>>()
+    var inventoryItems = MutableLiveData<List<Item>>()
 
     var applicationVersionDeprecated = MutableLiveData<Boolean>()
     var applicationAlertMessage = MutableLiveData<String>()
 
-    // [itemId-from, count]     : from -> {Machine, Shelf}
+    // [itemId-from, count]     : from -> {Machine, Inventory}
     private var _taggedCartItems = MutableLiveData<MutableMap<String, Int>>()
     val taggedCartItem: LiveData<MutableMap<String, Int>>
         get() = _taggedCartItems
@@ -74,12 +74,12 @@ class SharedViewModel : ViewModel() {
         this.machineItems.value = machineItems
     }
 
-    fun setShelfItems(shelfItems: List<Item>) {
-        this.shelfItems.value = shelfItems
+    fun setInventoryItems(inventoryItems: List<Item>) {
+        this.inventoryItems.value = inventoryItems
     }
 
     fun addItemToCart(itemId: String, itemLoc: String): Boolean {
-        val sudoItemId = "$itemLoc/$itemId" //eg Machine/2 , Shelf/5 etc..
+        val sudoItemId = "$itemLoc/$itemId" //eg Machine/2 , Inventory/5 etc..
 
         val tempTaggedCart = _taggedCartItems.value
         val tempUntaggedCart = _unTaggedCartItems
@@ -126,7 +126,7 @@ class SharedViewModel : ViewModel() {
     }
 
     fun removeItemFromCart(itemId: String, itemLoc: String) : Boolean{
-        val sudoItemId = "$itemLoc/$itemId" //eg Machine/2 , Shelf/5 etc..
+        val sudoItemId = "$itemLoc/$itemId" //eg Machine/2 , Inventory/5 etc..
 
         val tempTaggedCart = _taggedCartItems.value
         val tempUnTaggedCart = _unTaggedCartItems
@@ -158,8 +158,8 @@ class SharedViewModel : ViewModel() {
         return getListItemsAsJson(machineItems.value!!)
     }
 
-    fun getShelfItemsAsJson(): String {
-        return getListItemsAsJson(shelfItems.value!!)
+    fun getInventoryItemsAsJson(): String {
+        return getListItemsAsJson(inventoryItems.value!!)
     }
 
     private fun getListItemsAsJson(items: List<Item>): String {

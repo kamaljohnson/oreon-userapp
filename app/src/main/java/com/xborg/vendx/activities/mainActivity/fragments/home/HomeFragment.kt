@@ -53,10 +53,10 @@ class HomeFragment : Fragment(), ItemCardAdapter.OnItemListener {
 
             sharedViewModel.setMachineItems(viewModel.machineItems.value!!)
         })
-        viewModel.shelfItems.observe(viewLifecycleOwner, Observer {
-            Log.i(TAG, "shelfItemList Updated")
+        viewModel.inventoryItems.observe(viewLifecycleOwner, Observer {
+            Log.i(TAG, "inventoryItemList Updated")
 
-            sharedViewModel.setShelfItems(viewModel.shelfItems.value!!)
+            sharedViewModel.setInventoryItems(viewModel.inventoryItems.value!!)
         })
         viewModel.selectedMachineLoaded.observe(viewLifecycleOwner, Observer {  loaded ->
             sharedViewModel.selectedMachineLoaded.value = loaded

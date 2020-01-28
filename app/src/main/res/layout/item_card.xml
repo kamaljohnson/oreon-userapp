@@ -33,7 +33,7 @@
                 android:src="@drawable/common_google_signin_btn_icon_dark"/>
 
             <TextView
-                android:id="@+id/items_in_shelf"
+                android:id="@+id/items_in_inventory"
                 android:layout_width="wrap_content"
                 android:paddingHorizontal="3.5pt"
                 android:layout_height="10pt"

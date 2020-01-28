@@ -34,8 +34,8 @@ interface VendxAPIService {
         @Path("id") id: String
     ): Deferred<String>
 
-    @GET("user/{id}/shelf")
-    fun getShelfItemsAsync(
+    @GET("user/{id}/inventory")
+    fun getInventoryItemsAsync(
         @Path("id") id: String
     ): Deferred<String>
 

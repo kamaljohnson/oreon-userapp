@@ -50,8 +50,8 @@ class PaymentActivity : FragmentActivity(), PaymentResultWithDataListener {
         sharedViewModel.machineItems.observe(this, Observer { updatedMachineItems ->
             Log.i(TAG, "machineItems updated: $updatedMachineItems")
         })
-        sharedViewModel.shelfItems.observe(this, Observer { updatedShelfItems ->
-            Log.i(TAG, "shelfItems updated: $updatedShelfItems")
+        sharedViewModel.inventoryItems.observe(this, Observer { updatedInventoryItems ->
+            Log.i(TAG, "inventoryItems updated: $updatedInventoryItems")
         })
 
         sharedViewModel.paymentState.observe(this, Observer { currentPaymentState ->
@@ -76,7 +76,7 @@ class PaymentActivity : FragmentActivity(), PaymentResultWithDataListener {
 
     private fun getDataPassedByMainActivity() {
         sharedViewModel.setMachineItemsFromSerializable(intent.getSerializableExtra("machineItems")!!)
-        sharedViewModel.setShelfItemsFromSerializable(intent.getSerializableExtra("shelfItems")!!)
+        sharedViewModel.setInventoryItemsFromSerializable(intent.getSerializableExtra("inventoryItems")!!)
         sharedViewModel.setCartItemsFromSerializableHashMap(intent.getSerializableExtra("cartItems")!!)
     }
 

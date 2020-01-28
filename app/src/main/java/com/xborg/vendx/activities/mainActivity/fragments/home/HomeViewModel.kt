@@ -31,7 +31,7 @@ class HomeViewModel : ViewModel() {
     val selectedMachineLoaded = MutableLiveData<Boolean>()
 
     var machineItems: MutableLiveData<List<Item>>
-    var shelfItems: MutableLiveData<List<Item>>
+    var inventoryItems: MutableLiveData<List<Item>>
 
     val allGroupItems: MutableLiveData<ArrayList<ItemGroup>>
 
@@ -42,17 +42,17 @@ class HomeViewModel : ViewModel() {
         Log.i(TAG, "HomeViewModel created!")
         allGroupItems = MutableLiveData()
         machineItems = MutableLiveData()
-        shelfItems = MutableLiveData()
+        inventoryItems = MutableLiveData()
 
         machineItems.value = ArrayList()
-        shelfItems.value = ArrayList()
+        inventoryItems.value = ArrayList()
 
         selectedMachine.value = Machine()
         debugText.value = "init home\n\n"
-        handleShelfUpdates()
+        handleInventoryUpdates()
     }
 
-    private fun handleShelfUpdates() {
+    private fun handleInventoryUpdates() {
         debugText.value = "handle shelf updates\n"
         //Checking if user shelf is updated in server
         val docRef = db.collection("Users").document(uid)
@@ -65,7 +65,7 @@ class HomeViewModel : ViewModel() {
             if (snapshot != null && snapshot.metadata.hasPendingWrites())
                 Log.i(TAG, "no changes in server")
             else
-                getItemsInShelf(uid)
+                getItemsInInventory(uid)
         }
     }
 
@@ -114,29 +114,29 @@ class HomeViewModel : ViewModel() {
                 updateItemGroupModel()
             } catch (t: Throwable) {
                 Log.e(TAG, "Machine Items: Failed to get response: ${t.message}")
-                debugText.value = "Shelf Items: Failed to get response: ${t.message}\n\n"
+                debugText.value = "Inventory Items: Failed to get response: ${t.message}\n\n"
 
                 apiCallError.value = true
             }
         }
     }
 
-    private fun getItemsInShelf(userId: String) {
+    private fun getItemsInInventory(userId: String) {
         debugText.value = "get items from shelf\n\n"
         coroutineScope.launch {
-            val getMachineItemsDeferred = VendxApi.retrofitServices.getShelfItemsAsync(userId)
+            val getMachineItemsDeferred = VendxApi.retrofitServices.getInventoryItemsAsync(userId)
             try {
                 val listResult = getMachineItemsDeferred.await()
                 Log.i(TAG, "Successful to get response: $listResult ")
                 debugText.value = "Successful to get response: $listResult\n\n"
 
                 val itemListType: Type = object : TypeToken<ArrayList<Item?>?>() {}.type
-                shelfItems.value = Gson().fromJson(listResult, itemListType)!!
-                Log.i(TAG, "Shelf: " + shelfItems.value.toString())
+                inventoryItems.value = Gson().fromJson(listResult, itemListType)!!
+                Log.i(TAG, "Inventory: " + inventoryItems.value.toString())
                 updateItemGroupModel()
             } catch (t: Throwable) {
-                Log.i(TAG, "Shelf Items: Failed to get response: ${t.message}")
-                debugText.value = "Shelf Items: Failed to get response: ${t.message}\n\n"
+                Log.i(TAG, "Inventory Items: Failed to get response: ${t.message}")
+                debugText.value = "Inventory Items: Failed to get response: ${t.message}\n\n"
                 apiCallError.value = true
             }
         }
@@ -146,12 +146,12 @@ class HomeViewModel : ViewModel() {
         val shelfItemsInMachine: ArrayList<Item> = ArrayList()
 
         for (i in machineItems.value!!.indices) {
-            for (j in shelfItems.value!!.indices) {
-                if (machineItems.value!![i].Id == shelfItems.value!![j].Id) {
-                    shelfItems.value!![j].InMachine = true
-                    shelfItems.value!![j].RemainingInMachine =
+            for (j in inventoryItems.value!!.indices) {
+                if (machineItems.value!![i].Id == inventoryItems.value!![j].Id) {
+                    inventoryItems.value!![j].InMachine = true
+                    inventoryItems.value!![j].RemainingInMachine =
                         machineItems.value!![i].RemainingInMachine
-                    shelfItemsInMachine.add(shelfItems.value!![j])
+                    shelfItemsInMachine.add(inventoryItems.value!![j])
                 }
             }
         }
@@ -162,7 +162,7 @@ class HomeViewModel : ViewModel() {
         if (shelfItemsInMachine.isNotEmpty()) {
             val shelfItemsInMachineGroupModel =
                 ItemGroup(
-                    Title = "From Shelf",
+                    Title = "From Inventory",
                     Items = shelfItemsInMachine,
                     DrawLineBreaker = machineItems.value!!.isNotEmpty()
                 )
@@ -177,7 +177,7 @@ class HomeViewModel : ViewModel() {
                 val machineItemsGroupModel = ItemGroup(
                     Title = "In Machine",
                     Items = machineItems.value!!,
-                    DrawLineBreaker = shelfItems.value!!.isNotEmpty()
+                    DrawLineBreaker = inventoryItems.value!!.isNotEmpty()
                 )
                 temp.add(machineItemsGroupModel)
             }
@@ -185,7 +185,7 @@ class HomeViewModel : ViewModel() {
             Log.i(TAG, "no machine near")
             val machineItemsGroupModel = ItemGroup(
                 Title = "Machine",
-                DrawLineBreaker = shelfItems.value!!.isNotEmpty(),
+                DrawLineBreaker = inventoryItems.value!!.isNotEmpty(),
                 ShowNoMachinesNearbyMessage = true
             )
             temp.add(machineItemsGroupModel)
@@ -193,13 +193,13 @@ class HomeViewModel : ViewModel() {
             Log.i(TAG, "loading..")
             val machineItemsGroupModel = ItemGroup(
                 Title = "Machine",
-                DrawLineBreaker = shelfItems.value!!.isNotEmpty()
+                DrawLineBreaker = inventoryItems.value!!.isNotEmpty()
             )
             temp.add(machineItemsGroupModel)
         }
 
         val shelfItemsNotInMachine: ArrayList<Item> = ArrayList()
-        shelfItems.value!!.forEach { s_item ->
+        inventoryItems.value!!.forEach { s_item ->
             var flag = true
             machineItems.value!!.forEach { m_item ->
                 if (s_item.Id == m_item.Id) {
@@ -214,9 +214,9 @@ class HomeViewModel : ViewModel() {
         if (shelfItemsNotInMachine.isNotEmpty()) {
             val shelfItemsNotInMachineGroupModel = ItemGroup(
                 Title = if (machineItems.value!!.isEmpty()) {
-                    "Shelf"
+                    "Inventory"
                 } else {
-                    "Remaining Shelf"
+                    "Remaining Inventory"
                 },
                 Items = shelfItemsNotInMachine,
                 DrawLineBreaker = false

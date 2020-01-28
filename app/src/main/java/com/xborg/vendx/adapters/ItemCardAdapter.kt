@@ -45,19 +45,19 @@ class ItemCardAdapter(
             .load(item.ImgScrUrl)
             .into(holder.image)
 
-        holder.itemLoc.text = if (item.InShelf) {
-            "Shelf"
+        holder.itemLoc.text = if (item.InInventory) {
+            "Inventory"
         } else {
             "Machine"
         }
 
-        if (item.InShelf) {
+        if (item.InInventory) {
             holder.cost.visibility = View.GONE
         }
 
         holder.itemsInMachine.text = item.RemainingInMachine.toString()
-        holder.itemsInShelf.text = item.RemainingInShelf.toString()
-        holder.itemsInShelf.visibility = if (item.InShelf) {
+        holder.itemsInInventory.text = item.RemainingInInventory.toString()
+        holder.itemsInInventory.visibility = if (item.InInventory) {
             View.VISIBLE
         } else {
             View.INVISIBLE
@@ -78,20 +78,20 @@ class ItemCardAdapter(
         val name: TextView = view.name
         val cost: TextView = view.cost
         val image: ImageView = view.image
-        val purchaseCount: TextView = view.purchase_count
+        private val purchaseCount: TextView = view.purchase_count
         val itemLoc: TextView = view.item_loc
-        val itemsInShelf: TextView = view.items_in_shelf
+        val itemsInInventory: TextView = view.items_in_inventory
         var itemsInMachine: TextView = view.items_in_machine
         var outOfStock: ImageView = view.out_of_stock_icon
 
-        val itemRemoveButton: ImageView = view.remove_button
+        private val itemRemoveButton: ImageView = view.remove_button
 
-        val onItemListener: OnItemListener = onItemListener
+        private val onItemListener: OnItemListener = onItemListener
 
         init {
             purchaseCount.visibility = View.INVISIBLE
             itemRemoveButton.visibility = View.INVISIBLE
-            itemsInShelf.visibility = View.INVISIBLE
+            itemsInInventory.visibility = View.INVISIBLE
 
             itemView.setOnClickListener(this)
             itemRemoveButton.setOnClickListener {
@@ -107,17 +107,17 @@ class ItemCardAdapter(
             var purchaseCount = this.purchaseCount.text.toString().split("/")[0].toInt()
             var purchaseLimitCount = this.purchaseCount.text.toString().split("/")[1].toInt()
 
-            val itemsInShelfInt = itemsInShelf.text.toString().toInt()
+            val itemsInInventoryInt = itemsInInventory.text.toString().toInt()
             val itemsInMachineInt = itemsInMachine.text.toString().toInt()
 
-            Log.i(TAG, "item state:  in machine : $itemsInMachineInt from shelf : $itemsInShelfInt")
+            Log.i(TAG, "item state:  in machine : $itemsInMachineInt from inventory : $itemsInInventoryInt")
 
             when (itemLoc.text) {
                 "Shelf" -> {
-                    purchaseLimitCount = if (itemsInMachineInt < itemsInShelfInt) {
+                    purchaseLimitCount = if (itemsInMachineInt < itemsInInventoryInt) {
                         itemsInMachineInt
                     } else {
-                        itemsInShelfInt
+                        itemsInInventoryInt
                     }
                 }
                 "Machine" -> {

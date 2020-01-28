@@ -16,9 +16,9 @@ class SharedViewModel : ViewModel() {
     private val uid = FirebaseAuth.getInstance().uid.toString()
 
     var machineItems = MutableLiveData<List<Item>>()
-    var shelfItems = MutableLiveData<List<Item>>()
+    var inventoryItems = MutableLiveData<List<Item>>()
 
-    // [itemId-from, count]     : from -> {Machine, Shelf}
+    // [itemId-from, count]     : from -> {Machine, Inventory}
     private var _cartItems = MutableLiveData<List<Item>>()
     val cartItems: LiveData<List<Item>>
         get() = _cartItems
@@ -84,8 +84,8 @@ class SharedViewModel : ViewModel() {
                         }
                     }
                 }
-                "Shelf" -> {
-                    shelfItems.value!!.forEach { item ->
+                "Inventory" -> {
+                    inventoryItems.value!!.forEach { item ->
                         if (item.Id == id) {
                             Log.i(TAG, "from: $from id: $id")
                             item.cartCount = count
@@ -106,8 +106,8 @@ class SharedViewModel : ViewModel() {
         machineItems.value = convertJsonToItemList(machineItemsAsJson as String)
     }
 
-    fun setShelfItemsFromSerializable(shelfItemsAsJson: Serializable) {
-        shelfItems.value = convertJsonToItemList(shelfItemsAsJson as String)
+    fun setInventoryItemsFromSerializable(inventoryItemsAsJson: Serializable) {
+        inventoryItems.value = convertJsonToItemList(inventoryItemsAsJson as String)
     }
 
     private fun convertJsonToItemList(json: String): List<Item> {
@@ -123,8 +123,8 @@ class SharedViewModel : ViewModel() {
         return getListItemsAsJson(machineItems.value!!)
     }
 
-    fun getShelfItemsAsJson(): String {
-        return getListItemsAsJson(shelfItems.value!!)
+    fun getInventoryItemsAsJson(): String {
+        return getListItemsAsJson(inventoryItems.value!!)
     }
 
     private fun getListItemsAsJson(items: List<Item>): String {

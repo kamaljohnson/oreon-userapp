@@ -48,7 +48,7 @@ private var mLayout: SlidingUpPanelLayout? = null
 enum class Fragments {
     HOME,
     SHOP,
-    SHELF
+    INVENTORY
 }
 
 class MainActivity : AppCompatActivity() {
@@ -73,8 +73,8 @@ class MainActivity : AppCompatActivity() {
         sharedViewModel.machineItems.observe(this, Observer {
             Log.i(TAG, "machineItem has begin changed")
         })
-        sharedViewModel.shelfItems.observe(this, Observer {
-            Log.i(TAG, "shelfItems has begin changed")
+        sharedViewModel.inventoryItems.observe(this, Observer {
+            Log.i(TAG, "inventoryItems has begin changed")
         })
         sharedViewModel.taggedCartItem.observe(this, Observer { updatedCart ->
             Log.i(TAG, "CartFragment updated: $updatedCart")
@@ -112,7 +112,7 @@ class MainActivity : AppCompatActivity() {
         sharedViewModel.selectedMachineLoaded.observe(this, Observer {
             sharedViewModel.resetCart()
         })
-        sharedViewModel.shelfItems.observe(this, Observer {
+        sharedViewModel.inventoryItems.observe(this, Observer {
             sharedViewModel.resetCart()
         })
 
@@ -159,7 +159,7 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, PaymentActivity::class.java)
             intent.putExtra("cartItems", sharedViewModel.getCartItemsAsPassable())
             intent.putExtra("machineItems", sharedViewModel.getMachineItemsAsJson())
-            intent.putExtra("shelfItems", sharedViewModel.getShelfItemsAsJson())
+            intent.putExtra("inventoryItems", sharedViewModel.getInventoryItemsAsJson())
             startActivity(intent)
         }
 
@@ -401,7 +401,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 R.id.navigation_history -> {
-                    current_fragment.value = Fragments.SHELF
+                    current_fragment.value = Fragments.INVENTORY
                     changeFragment(HistoryFragment(), "History")
                     hideGetButton()
                     hideSwipeUpContainer()
