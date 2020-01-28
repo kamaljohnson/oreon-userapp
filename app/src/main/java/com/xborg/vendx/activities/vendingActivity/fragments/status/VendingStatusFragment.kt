@@ -142,6 +142,7 @@ class VendingStatusFragment : Fragment() {
         goToHome()      //TODO: handle this using server code
     }
     private fun retryVend() {
+        vending_fail_resolution_layout.visibility = View.INVISIBLE
         viewModel.retryDeviceConnection.value = true
     }
 

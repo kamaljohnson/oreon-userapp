@@ -88,8 +88,16 @@
         android:layout_width="match_parent"
         android:layout_height="200dp">
 
+        <TextView
+            android:id="@+id/retry_info_text"
+            android:layout_centerHorizontal="true"
+            android:text="Unable to discover outlet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
         <Button
-            android:layout_marginTop="10pt"
+            android:layout_below="@+id/retry_info_text"
+            android:layout_marginTop="5pt"
             android:id="@+id/retry_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
