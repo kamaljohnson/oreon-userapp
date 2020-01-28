@@ -59,6 +59,7 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:visibility="invisible"
         android:background="@color/gray"
         android:id="@+id/on_success_layout"
         android:layout_alignParentRight="true"
