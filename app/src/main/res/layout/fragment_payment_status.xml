@@ -59,13 +59,12 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:visibility="invisible"
+        android:background="@color/gray"
         android:id="@+id/on_success_layout"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:layout_width="wrap_content"
-        android:layout_marginBottom="30dp"
-        android:layout_height="70dp">
+        android:layout_height="50pt">
 
         <TextView
             android:textAlignment="center"

@@ -97,6 +97,8 @@ class VendingStatusFragment : Fragment() {
     }
 
     private fun displayRetry() {
+        processing_gif.visibility = View.INVISIBLE
+        fail_gif.visibility = View.VISIBLE
         vending_fail_resolution_layout.visibility = View.VISIBLE
     }
 
@@ -141,7 +143,10 @@ class VendingStatusFragment : Fragment() {
     private fun cancelVend() {
         goToHome()      //TODO: handle this using server code
     }
+
     private fun retryVend() {
+        processing_gif.visibility = View.VISIBLE
+        fail_gif.visibility = View.INVISIBLE
         vending_fail_resolution_layout.visibility = View.INVISIBLE
         viewModel.retryDeviceConnection.value = true
     }
