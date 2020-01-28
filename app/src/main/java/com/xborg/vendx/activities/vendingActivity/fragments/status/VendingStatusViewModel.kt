@@ -61,4 +61,8 @@ class VendingStatusViewModel : ViewModel() {
             }
         }
     }
+
+    fun sendCancelVendRequestToServer() {
+        //TODO: handle this
+    }
 }

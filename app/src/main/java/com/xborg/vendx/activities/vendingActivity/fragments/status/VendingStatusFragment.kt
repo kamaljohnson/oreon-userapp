@@ -83,6 +83,10 @@ class VendingStatusFragment : Fragment() {
             sharedViewModel.retryDeviceConnection.value = retry
         })
 
+        cancel_button.setOnClickListener {
+            cancelVend()
+        }
+
         retry_button.setOnClickListener {
             retryVend()
         }
@@ -93,7 +97,7 @@ class VendingStatusFragment : Fragment() {
     }
 
     private fun displayRetry() {
-        vending_retry_layout.visibility = View.VISIBLE
+        vending_fail_resolution_layout.visibility = View.VISIBLE
     }
 
     private fun updateStatusUI() {
@@ -134,6 +138,9 @@ class VendingStatusFragment : Fragment() {
         }
     }
 
+    private fun cancelVend() {
+        goToHome()      //TODO: handle this using server code
+    }
     private fun retryVend() {
         viewModel.retryDeviceConnection.value = true
     }

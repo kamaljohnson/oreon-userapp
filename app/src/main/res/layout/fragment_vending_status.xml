@@ -83,20 +83,42 @@
     <RelativeLayout
         android:visibility="invisible"
         android:layout_centerHorizontal="true"
-        android:id="@+id/vending_retry_layout"
+        android:id="@+id/vending_fail_resolution_layout"
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="200dp">
 
         <Button
+            android:layout_marginTop="10pt"
             android:id="@+id/retry_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_centerHorizontal="true"
             android:background="@drawable/drawable_button"
             android:text="Retry"
             android:textColor="@color/white"
             android:textStyle="bold" />
+        <Button
+            android:id="@+id/cancel_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/drawable_button"
+            android:text="Cancel"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
+        <TextView
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="25dp"
+            android:textDirection="rtl"
+            android:layout_alignParentBottom="true"
+            android:layout_toLeftOf="@+id/cancel_button"
+            android:text="The items will be added to your inventory if vending is cancelled"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
     </RelativeLayout>
 

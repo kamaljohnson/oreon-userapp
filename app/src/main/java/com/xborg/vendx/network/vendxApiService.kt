@@ -77,6 +77,13 @@ interface VendxAPIService {
     ): Deferred<String>
 
     @FormUrlEncoded
+    @POST("vends/cancel/{id}")
+    fun sendOnVendCancelAsync(
+        @Path("id") id: String,
+        @Field("bag") bag: String
+    ): Deferred<String>
+
+    @FormUrlEncoded
     @POST("feedback/add/{id}")
     fun postFeedbackAsync(
         @Path("id") id: String,
