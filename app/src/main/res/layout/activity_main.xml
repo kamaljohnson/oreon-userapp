@@ -147,21 +147,40 @@
         </RelativeLayout>
         <!--endregion-->
 
-        <!--region Jump-able Alert Message-->
+        <!--region Alert Message-->
         <RelativeLayout
             android:clickable="true"
             android:visibility="invisible"
             android:id="@+id/jumpable_alert_message_layout"
             android:background="@drawable/drawable_alert_dialog_bg"
-            android:layout_centerInParent="true"
+            android:layout_marginBottom="15pt"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
+            <ImageView
+                android:visibility="invisible"
+                android:layout_marginBottom="20dp"
+                android:layout_centerInParent="true"
+                android:id="@+id/no_internet_connection_image"
+                android:src="@drawable/no_internet_connection"
+                android:layout_width="200dp"
+                android:layout_height="200dp"/>
+
+            <ImageView
+                android:visibility="invisible"
+                android:layout_marginBottom="20dp"
+                android:layout_centerInParent="true"
+                android:id="@+id/update_image_icon"
+                android:src="@drawable/update_icon"
+                android:layout_width="100dp"
+                android:layout_height="100dp"/>
 
             <TextView
                 android:id="@+id/jumpable_alert_message_text"
                 android:textAlignment="center"
                 android:text=""
-                android:layout_centerInParent="true"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@id/no_internet_connection_image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 

@@ -125,8 +125,7 @@ class MainActivity : AppCompatActivity() {
         })
         sharedViewModel.applicationVersionDeprecated.observe(this, Observer { depricated ->
             if(depricated) {
-                jumpable_alert_message_layout.visibility = View.VISIBLE
-                jumpable_alert_message_text.text = "Please update the application\n\na new version is uploaded to the\nplay store"
+                showVersionDeprecatedError()
             }
         })
         sharedViewModel.applicationAlertMessage.observe(this, Observer { message ->
@@ -519,9 +518,17 @@ class MainActivity : AppCompatActivity() {
     private fun showInternetNotAvailableError() {
         Log.i(TAG, "API Call error occurred")
         jumpable_alert_message_layout.visibility = View.VISIBLE
+        no_internet_connection_image.visibility = View.VISIBLE
+        update_image_icon.visibility = View.INVISIBLE
         jumpable_alert_message_text.text = "Oops! it seams that you are not\nconnected to the internet\n\nPlease connect to the internet\nand Restart the application"
     }
 
+    private fun showVersionDeprecatedError() {
+        jumpable_alert_message_layout.visibility = View.VISIBLE
+        update_image_icon.visibility = View.VISIBLE
+        no_internet_connection_image.visibility = View.INVISIBLE
+        jumpable_alert_message_text.text = "Please update the application\n\na new version is available in the\nplay store"
+    }
 
     private fun isInternetAvailable(context: Context): Boolean {
         val connectivity = context.getSystemService(
