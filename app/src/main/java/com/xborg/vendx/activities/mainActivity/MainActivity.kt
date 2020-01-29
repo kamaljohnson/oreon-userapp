@@ -10,6 +10,8 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.location.Location
 import android.location.LocationManager
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.os.Bundle
 import android.os.Looper
 import android.provider.Settings
@@ -101,7 +103,7 @@ class MainActivity : AppCompatActivity() {
 
         sharedViewModel.apiCallError.observe(this, Observer { error ->
             if(error) {
-//                showInternetNotAvailableError()
+                Toast.makeText(this, "Api call error occurred", Toast.LENGTH_SHORT).show()
             }
         })
 
@@ -148,6 +150,12 @@ class MainActivity : AppCompatActivity() {
             debug_text_view.text = text
         })
 
+        sharedViewModel.isInternetAvailable.observe(this, Observer { available ->
+            if(!available) {
+                showInternetNotAvailableError()
+            }
+        })
+
         initBottomNavigationView()
         initBottomSwipeUpView()
         enableBluetooth()
@@ -170,6 +178,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+
+        sharedViewModel.isInternetAvailable.value = isInternetAvailable(this)
 
         if (sharedViewModel.getUserLocation.value == true &&
             sharedViewModel.userLocationAccessed.value == false
@@ -510,6 +520,22 @@ class MainActivity : AppCompatActivity() {
         Log.i(TAG, "API Call error occurred")
         jumpable_alert_message_layout.visibility = View.VISIBLE
         jumpable_alert_message_text.text = "Oops! it seams that you are not\nconnected to the internet\n\nPlease connect to the internet\nand Restart the application"
+    }
+
+
+    private fun isInternetAvailable(context: Context): Boolean {
+        val connectivity = context.getSystemService(
+            Context.CONNECTIVITY_SERVICE
+        ) as ConnectivityManager
+        if (connectivity != null) {
+            val info = connectivity.allNetworkInfo
+            if (info != null)
+                for (i in info)
+                    if (i.state == NetworkInfo.State.CONNECTED) {
+                        return true
+                    }
+        }
+        return false
     }
     //    endregion
 }
