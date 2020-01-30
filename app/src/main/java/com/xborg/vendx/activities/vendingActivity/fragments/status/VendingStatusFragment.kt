@@ -3,6 +3,7 @@ package com.xborg.vendx.activities.vendingActivity.fragments.status
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
@@ -46,6 +47,20 @@ class VendingStatusFragment : Fragment() {
                 viewModel.bag.value = sharedViewModel.bag.value
 
                 when (updatedVendingState) {
+                    VendingState.DeviceConnected -> {
+                        object: CountDownTimer(10000, 1000) {
+                            override fun onTick(millisUntilFinished: Long) {
+                                Log.i(TAG, "Timer: tick")
+                                //TODO: show a time_out counter
+                            }
+                            override fun onFinish() {
+                                Log.i(TAG, "Timer: finish, Status: " + viewModel.vendState.value)
+                                if(viewModel.vendState.value == VendingState.DeviceConnected) {
+                                    displayRetry()
+                                }
+                            }
+                        }.start()
+                    }
                     VendingState.EncryptedOtpReceivedFromDevice -> {
                         viewModel.sendEncryptedOtpToServer()
                     }
@@ -145,6 +160,7 @@ class VendingStatusFragment : Fragment() {
     }
 
     private fun retryVend() {
+        viewModel.vendState.value = VendingState.Init
         processing_gif.visibility = View.VISIBLE
         fail_gif.visibility = View.INVISIBLE
         vending_fail_resolution_layout.visibility = View.INVISIBLE
