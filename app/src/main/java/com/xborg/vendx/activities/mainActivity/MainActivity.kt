@@ -50,7 +50,7 @@ private var mLayout: SlidingUpPanelLayout? = null
 enum class Fragments {
     HOME,
     SHOP,
-    INVENTORY
+    HISTORY
 }
 
 class MainActivity : AppCompatActivity() {
@@ -401,8 +401,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 R.id.navigation_shop -> {
-                    current_fragment.value =
-                        Fragments.SHOP
+                    current_fragment.value = Fragments.SHOP
                     changeFragment(ShopFragment(), "Shop")
                     hideGetButton()
                     hideSwipeUpContainer()
@@ -410,7 +409,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 R.id.navigation_history -> {
-                    current_fragment.value = Fragments.INVENTORY
+                    current_fragment.value = Fragments.HISTORY
                     changeFragment(HistoryFragment(), "History")
                     hideGetButton()
                     hideSwipeUpContainer()
@@ -458,7 +457,7 @@ class MainActivity : AppCompatActivity() {
             override fun onPanelSlide(panel: View, slideOffset: Float) {
                 if (slideOffset > 0.05f) {
                     hideGetButton()
-                } else if (current_fragment.value != Fragments.SHOP) {
+                } else if (current_fragment.value == Fragments.HOME) {
                     if (sharedViewModel.taggedCartItem.value!!.isNotEmpty()) {
                         showGetButton()
                     }
