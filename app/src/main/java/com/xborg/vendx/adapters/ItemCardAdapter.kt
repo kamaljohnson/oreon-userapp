@@ -113,7 +113,7 @@ class ItemCardAdapter(
             Log.i(TAG, "item state:  in machine : $itemsInMachineInt from inventory : $itemsInInventoryInt")
 
             when (itemLoc.text) {
-                "Shelf" -> {
+                "Inventory" -> {
                     purchaseLimitCount = if (itemsInMachineInt < itemsInInventoryInt) {
                         itemsInMachineInt
                     } else {
