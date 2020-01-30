@@ -103,7 +103,6 @@ class MainActivity : AppCompatActivity() {
 
         sharedViewModel.apiCallError.observe(this, Observer { error ->
             if(error) {
-                Toast.makeText(this, "Api call error occurred", Toast.LENGTH_SHORT).show()
             }
         })
 
