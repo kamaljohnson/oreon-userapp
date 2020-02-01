@@ -42,8 +42,16 @@ class ItemCardAdapter(
         holder.cost.text = "₹ " + item.Cost.toString()
         Glide
             .with(context)
-            .load(item.ImgScrUrl)
-            .into(holder.image)
+            .load(item.PackageImageUrl)
+            .into(holder.packageImage)
+        Glide
+            .with(context)
+            .load(item.BgImageUrl)
+            .into(holder.cardBg)
+        Glide
+            .with(context)
+            .load(item.InfoImageUrl)
+            .into(holder.infoImg)
 
         holder.itemLoc.text = if (item.InInventory) {
             "Inventory"
@@ -77,7 +85,9 @@ class ItemCardAdapter(
         val itemId: TextView = view.item_id
         val name: TextView = view.name
         val cost: TextView = view.cost
-        val image: ImageView = view.image
+        val packageImage: ImageView = view.package_image
+        val cardBg: ImageView = view.card_bg
+        val infoImg: ImageView = view.info_img
         private val purchaseCount: TextView = view.purchase_count
         val itemLoc: TextView = view.item_loc
         val itemsInInventory: TextView = view.items_in_inventory

@@ -11,7 +11,7 @@
         android:layout_height="70dp">
 
         <ImageView
-            android:id="@+id/image"
+            android:id="@+id/package_image"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_alignParentLeft="true"
@@ -49,7 +49,7 @@
             android:gravity="center"/>
 
         <TextView
-            android:layout_toRightOf="@id/image"
+            android:layout_toRightOf="@id/package_image"
             android:id="@+id/name"
             android:text="Item Name"
             android:paddingLeft="5dp"
@@ -78,7 +78,7 @@
             android:visibility="invisible"
             android:paddingLeft="5dp"
             android:layout_below="@id/name"
-            android:layout_toRightOf="@id/image"
+            android:layout_toRightOf="@id/package_image"
             android:layout_width="50dp"
             android:src="@drawable/ic_paid_icon"
             android:layout_height="20dp"/>
@@ -86,7 +86,7 @@
         <TextView
             android:paddingLeft="5dp"
             android:layout_below="@id/name"
-            android:layout_toRightOf="@id/image"
+            android:layout_toRightOf="@id/package_image"
             android:text="₹ 10"
             android:id="@+id/cost"
             android:layout_width="wrap_content"

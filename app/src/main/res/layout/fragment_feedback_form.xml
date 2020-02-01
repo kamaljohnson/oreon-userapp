@@ -10,7 +10,7 @@
         android:layout_height="match_parent">
         <ImageView
             android:layout_above="@id/form"
-            android:id="@+id/image"
+            android:id="@+id/package_image"
             android:background="@color/colorPrimary"
             android:layout_width="match_parent"
             android:layout_height="300dp"/>

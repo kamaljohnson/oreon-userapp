@@ -11,7 +11,7 @@
         android:layout_height="70dp">
 
         <ImageView
-            android:id="@+id/image"
+            android:id="@+id/package_image"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_alignParentLeft="true"

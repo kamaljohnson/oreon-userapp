@@ -6,7 +6,7 @@
         android:layout_height="wrap_content">
 
     <ImageView
-            android:id="@+id/image"
+            android:id="@+id/package_image"
             android:layout_width="match_parent"
             android:layout_height="300dp"
             android:src="@drawable/common_google_signin_btn_icon_dark">

@@ -13,7 +13,9 @@ data class Item(
     @SerializedName("Id")  var Id: String,
     @SerializedName("Name")  var Name: String,
     @SerializedName("Cost")  var Cost: Long,
-    @SerializedName("Image")  var ImgScrUrl: String,
+    @SerializedName("Package")  var PackageImageUrl: String,
+    @SerializedName("Info")  var InfoImageUrl: String,
+    @SerializedName("Bg")  var BgImageUrl: String,
     @SerializedName("Category")  var Category: Category,
 
     @SerializedName("InInventory")  var InInventory: Boolean = false,

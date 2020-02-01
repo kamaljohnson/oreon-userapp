@@ -35,7 +35,7 @@ class ItemCartSlipAdapter(
         holder.cost.text =  "₹ " + (item.Cost * item.cartCount).toString()
         Glide
             .with(context)
-            .load(item.ImgScrUrl)
+            .load(item.PackageImageUrl)
             .into(holder.image)
 
         holder.itemLoc.text = if (item.InInventory) {
@@ -61,7 +61,7 @@ class ItemCartSlipAdapter(
         val itemId: TextView = view.item_id
         val name: TextView = view.name
         val cost: TextView = view.cost
-        val image: ImageView = view.image
+        val image: ImageView = view.package_image
         private val purchaseCount: TextView = view.purchase_count
         val itemLoc: TextView = view.item_loc
         val itemsInInventory: TextView = view.items_in_inventory
