@@ -55,7 +55,8 @@ class VendingStatusFragment : Fragment() {
                             }
                             override fun onFinish() {
                                 Log.i(TAG, "Timer: finish, Status: " + viewModel.vendState.value)
-                                if(viewModel.vendState.value == VendingState.DeviceConnected) {
+                                if(viewModel.vendState.value == VendingState.DeviceConnected ||
+                                        viewModel.vendState.value == VendingState.Init) {
                                     displayRetry()
                                 }
                             }
