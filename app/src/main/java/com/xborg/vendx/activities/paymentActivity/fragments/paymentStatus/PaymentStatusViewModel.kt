@@ -63,7 +63,6 @@ class PaymentStatusViewModel: ViewModel() {
         var digest = md.digest(passToken1.toByteArray())
         val passToken2 = digest.fold("", { str, it -> str + "%02x".format(it) }) +
                 "xeFXq7Qc4QsrCAtOWPRd50aVTBcWFQbL0HviSr6ezfLRCjO8rChpMufwP2XXBNNN"
-
         md = MessageDigest.getInstance("SHA-1")
         digest = md.digest(passToken2.toByteArray())
         payment.value!!.Signature = digest.fold("", { str, it -> str + "%02x".format(it) })

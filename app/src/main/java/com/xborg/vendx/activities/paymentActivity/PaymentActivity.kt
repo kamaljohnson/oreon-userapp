@@ -61,6 +61,7 @@ class PaymentActivity : FragmentActivity(), PaymentResultWithDataListener {
                     initiatePayment()
                 }
                 PaymentState.PaymentComplete -> {
+                    Log.i(TAG, "Payment Status : " + sharedViewModel.payment.value!!.Status)
                     if (sharedViewModel.payment.value!!.Status == PaymentStatus.Successful) {
                         Log.i(TAG, "Payment Checked and is authentic")
                     } else {
@@ -134,6 +135,7 @@ class PaymentActivity : FragmentActivity(), PaymentResultWithDataListener {
 
     override fun onPaymentSuccess(p0: String?, paymentData: PaymentData) {
         try {
+            Log.i(TAG, "payment exited in success")
             sharedViewModel.updatePaymentAfterMakingPayment(
                 status = PaymentStatus.SuccessfulLocal,
                 razorpayPaymentID = paymentData.paymentId
@@ -203,7 +205,9 @@ class PaymentActivity : FragmentActivity(), PaymentResultWithDataListener {
             PaymentState.OrderInit -> {
                 super.onBackPressed()
             }
-
+            PaymentState.PaymentComplete -> {
+                super.onBackPressed()
+            }
             else -> {
                 Toast.makeText(
                     this,
