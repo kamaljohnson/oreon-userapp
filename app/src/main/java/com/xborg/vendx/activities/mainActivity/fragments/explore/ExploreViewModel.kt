@@ -38,7 +38,7 @@ class ExploreViewModel : ViewModel() {
     
     fun requestNearbyMachines() {
         debugText.value = "request near by machines\n\n"
-
+        Log.i(TAG, "request near by machines")
         val locationDataInJson = Gson().toJson(userLocation.value, Location::class.java)
 
         coroutineScope.launch {

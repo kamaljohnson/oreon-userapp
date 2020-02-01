@@ -78,10 +78,14 @@ class VendingStatusFragment : Fragment() {
             Log.i(TAG, "here")
             when(connectionStatus) {
                 DeviceConnectionStatus.ConnectionLost -> {
-                    displayRetry()
+                    if(sharedViewModel.vendState.value != VendingState.VendingComplete) {
+                        displayRetry()
+                    }
                 }
                 DeviceConnectionStatus.ConnectionFailed -> {
-                    displayRetry()
+                    if(sharedViewModel.vendState.value != VendingState.VendingComplete) {
+                        displayRetry()
+                    }
                 }
             }
         })
