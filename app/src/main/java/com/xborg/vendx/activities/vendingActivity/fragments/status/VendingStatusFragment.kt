@@ -16,7 +16,7 @@ import com.xborg.vendx.activities.vendingActivity.fragments.deviceCommunicator.D
 import com.xborg.vendx.database.VendingState
 import kotlinx.android.synthetic.main.fragment_vending_status.*
 
-const val TAG = "VendingStatus"
+const val TAG = "VendingStatusFragment"
 class VendingStatusFragment : Fragment() {
 
     private lateinit var viewModel: VendingStatusViewModel
