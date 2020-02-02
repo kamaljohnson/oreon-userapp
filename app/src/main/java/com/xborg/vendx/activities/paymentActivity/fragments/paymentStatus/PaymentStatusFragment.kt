@@ -46,6 +46,9 @@ class PaymentStatusFragment : Fragment() {
         cancel_button.setOnClickListener {
             proceedToHome()
         }
+        add_to_inventory_button.setOnClickListener {
+            proceedToHome()
+        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -82,14 +85,11 @@ class PaymentStatusFragment : Fragment() {
     }
 
     private fun onPaymentSuccessful() {
-        status_icon.setBackgroundResource(R.drawable.success)
-        on_success_layout.visibility = View.VISIBLE
+        success_status_container.visibility = View.VISIBLE
     }
 
     private fun onPaymentFailed() {
-        on_fail_layout.visibility = View.VISIBLE
-        status_icon.setBackgroundResource(R.drawable.error)
-        on_failure_layout.visibility = View.VISIBLE
+        fail_status_container.visibility = View.VISIBLE
     }
 
     private fun initPaymentRetry() {

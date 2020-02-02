@@ -36,7 +36,7 @@ class SerialSocket implements Runnable {
     }
 
     /**
-     * connect-success and most connect-errors are returned asynchronously to listener
+     * connect-success_gif and most connect-errors are returned asynchronously to listener
      */
     void connect(Context context, SerialListener listener, BluetoothDevice device) throws IOException {
         if(connected || socket != null)

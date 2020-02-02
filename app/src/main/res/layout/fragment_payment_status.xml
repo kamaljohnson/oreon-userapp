@@ -4,18 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
     tools:context=".activities.paymentActivity.fragments.paymentStatus.PaymentStatusFragment">
 
     <RelativeLayout
-        android:id="@+id/status_container"
+        android:background="@color/white"
+        android:id="@+id/processing_container"
         android:layout_centerInParent="true"
         android:layout_gravity="center"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <pl.droidsonroids.gif.GifImageView
-            android:id="@+id/status_icon"
+            android:id="@+id/processing_gif"
             android:background="@drawable/processing"
             android:layout_width="100dp"
             android:layout_centerInParent="true"
@@ -30,87 +30,195 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_below="@+id/status_icon"
-            android:text="PAYMENT STATUS"/>
-
-        <RelativeLayout
-            android:id="@+id/on_failure_layout"
-            android:visibility="invisible"
-            android:layout_below="@+id/payment_status_text"
-            android:layout_width="wrap_content"
-            android:layout_gravity="center"
-            android:layout_centerHorizontal="true"
-            android:layout_height="wrap_content">
-
-           <Button
-               android:textAlignment="center"
-               android:id="@+id/retry_button"
-               android:background="@drawable/rounded_button_accent"
-               android:textStyle="bold"
-               android:textColor="@color/white"
-               android:layout_marginTop="100dp"
-               android:layout_width="wrap_content"
-               android:layout_height="50dp"
-               android:text="Retry"/>
+            android:layout_below="@+id/processing_gif"
+            android:text="PAYMENT PROCESSING"/>
 
         </RelativeLayout>
 
+    <RelativeLayout
+        android:visibility="invisible"
+        android:background="#BDF7DD"
+        android:id="@+id/success_status_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
+        <RelativeLayout
+            android:id="@+id/success_card"
+            android:layout_centerInParent="true"
+            android:layout_width="350dp"
+            android:layout_height="320dp">
+
+            <ImageView
+                android:layout_marginTop="30dp"
+                android:layout_alignParentTop="true"
+                android:background="@drawable/drawable_status_card_bg"
+                android:layout_width="350dp"
+                android:layout_height="300dp"/>
+
+            <ImageView
+                android:layout_marginTop="30dp"
+                android:layout_alignParentTop="true"
+                android:background="@drawable/drawable_status_success_top"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"/>
+
+            <ImageView
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/drawable_status_success_bottom"
+                android:layout_width="match_parent"
+                android:layout_height="15dp"/>
+
+            <ImageView
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentTop="true"
+                android:src="@drawable/success"
+                android:id="@+id/success_icon"
+                android:layout_width="80dp"
+                android:layout_height="80dp"/>
+
+            <TextView
+                android:textSize="20dp"
+                android:layout_marginBottom="20dp"
+                android:layout_above="@id/success_info_text"
+                android:textColor="#32BA7C"
+                android:textStyle="bold"
+                android:text="PAYMENT SUCCESSFUL"
+                android:textAlignment="center"
+                android:id="@+id/success_heading_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_centerInParent="true"
+                android:text="We are delighted to inform you that we\nreceived your payment."
+                android:textAlignment="center"
+                android:id="@+id/success_info_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+
+            <RelativeLayout
+                android:layout_marginBottom="30dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp">
+
+                <TextView
+                    android:layout_centerVertical="true"
+                    android:id="@+id/add_to_inventory_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ADD TO INVENTORY"
+                    android:textColor="#32BA7C"
+                    android:textStyle="bold"/>
+
+                <Button
+                    android:layout_marginLeft="10dp"
+                    android:layout_toRightOf="@+id/add_to_inventory_button"
+                    android:id="@+id/get_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/drawable_success_button"
+                    android:text="Continue"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"/>
+            </RelativeLayout>
+        </RelativeLayout>
     </RelativeLayout>
 
     <RelativeLayout
-        android:background="@color/gray"
         android:visibility="invisible"
-        android:id="@+id/on_success_layout"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-        android:layout_width="wrap_content"
-        android:layout_height="50pt">
+        android:background="#FA958E"
+        android:id="@+id/fail_status_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <TextView
-            android:textAlignment="center"
-            android:text="ADD TO INVENTORY"
-            android:textStyle="bold"
-            android:textColor="@color/colorPrimary"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/get_button"
-            android:layout_marginRight="20dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+        <RelativeLayout
+            android:id="@+id/fail_card"
+            android:layout_centerInParent="true"
+            android:layout_width="350dp"
+            android:layout_height="320dp">
 
-        <Button
-            android:layout_centerVertical="true"
-            android:id="@+id/get_button"
-            android:layout_marginRight="10pt"
-            android:text="Get"
-            android:textStyle="bold"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/drawable_button"
-            android:textColor="@color/white"
-            android:layout_width="wrap_content"
-            android:layout_height="20pt"/>
-    </RelativeLayout>
+            <ImageView
+                android:layout_marginTop="30dp"
+                android:layout_alignParentTop="true"
+                android:background="@drawable/drawable_status_card_bg"
+                android:layout_width="350dp"
+                android:layout_height="300dp"/>
 
-    <RelativeLayout
-        android:visibility="invisible"
-        android:background="@color/gray"
-        android:id="@+id/on_fail_layout"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-        android:layout_width="wrap_content"
-        android:layout_height="50pt">
+            <ImageView
+                android:layout_marginTop="30dp"
+                android:layout_alignParentTop="true"
+                android:background="@drawable/drawable_status_fail_top"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"/>
 
-        <Button
-            android:layout_centerVertical="true"
-            android:id="@+id/cancel_button"
-            android:layout_marginRight="10pt"
-            android:text="Cancel"
-            android:textStyle="bold"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/drawable_button"
-            android:textColor="@color/white"
-            android:layout_width="wrap_content"
-            android:layout_height="20pt"/>
+            <ImageView
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/drawable_status_fail_bottom"
+                android:layout_width="match_parent"
+                android:layout_height="15dp"/>
+
+            <ImageView
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentTop="true"
+                android:src="@drawable/error"
+                android:id="@+id/fail_icon"
+                android:layout_width="80dp"
+                android:layout_height="80dp"/>
+
+            <TextView
+                android:textSize="20dp"
+                android:layout_marginBottom="20dp"
+                android:layout_above="@id/fail_info_text"
+                android:textColor="#F15249"
+                android:textStyle="bold"
+                android:text="PAYMENT FAILED"
+                android:textAlignment="center"
+                android:id="@+id/fail_heading_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_centerInParent="true"
+                android:text="Unfortunately we have an issue with\nyour payment try again later"
+                android:textAlignment="center"
+                android:id="@+id/fail_info_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+
+            <RelativeLayout
+                android:layout_marginBottom="30dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp">
+
+                <TextView
+                    android:layout_centerVertical="true"
+                    android:id="@+id/cancel_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="CANCEL"
+                    android:textColor="#F15249"
+                    android:textStyle="bold"/>
+
+                <Button
+                    android:layout_marginLeft="10dp"
+                    android:layout_toRightOf="@+id/cancel_button"
+                    android:id="@+id/retry_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/drawable_status_fail_button"
+                    android:text="TRY AGAIN"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"/>
+            </RelativeLayout>
+        </RelativeLayout>
     </RelativeLayout>
 
 </RelativeLayout>

@@ -135,7 +135,7 @@ class PaymentActivity : FragmentActivity(), PaymentResultWithDataListener {
 
     override fun onPaymentSuccess(p0: String?, paymentData: PaymentData) {
         try {
-            Log.i(TAG, "payment exited in success")
+            Log.i(TAG, "payment exited in success_gif")
             sharedViewModel.updatePaymentAfterMakingPayment(
                 status = PaymentStatus.SuccessfulLocal,
                 razorpayPaymentID = paymentData.paymentId

@@ -55,7 +55,7 @@
         <pl.droidsonroids.gif.GifImageView
             android:visibility="invisible"
             android:foregroundGravity="center"
-            android:src="@drawable/success"
+            android:src="@drawable/success_gif"
             android:id="@+id/success_gif"
             android:layout_centerInParent="true"
             android:layout_width="150dp"
