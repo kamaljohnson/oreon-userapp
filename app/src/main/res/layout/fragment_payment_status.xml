@@ -59,8 +59,8 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:visibility="invisible"
         android:background="@color/gray"
+        android:visibility="invisible"
         android:id="@+id/on_success_layout"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
@@ -69,7 +69,9 @@
 
         <TextView
             android:textAlignment="center"
-            android:text="Please Stand near the\nmachine and press Get"
+            android:text="ADD TO INVENTORY"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimary"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/get_button"
             android:layout_marginRight="20dp"
