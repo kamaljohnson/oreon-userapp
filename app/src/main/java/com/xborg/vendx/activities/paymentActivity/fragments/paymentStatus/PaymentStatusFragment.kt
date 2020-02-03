@@ -38,15 +38,19 @@ class PaymentStatusFragment : Fragment() {
         observerSharedViewModel()
 
         get_button.setOnClickListener {
+            get_button.isClickable = false
             proceedToVending()
         }
         retry_button.setOnClickListener {
+            retry_button.isClickable = false
             initPaymentRetry()
         }
         cancel_button.setOnClickListener {
+            cancel_button.isClickable = false
             proceedToHome()
         }
         add_to_inventory_button.setOnClickListener {
+            add_to_inventory_button.isClickable = false
             proceedToHome()
         }
     }
