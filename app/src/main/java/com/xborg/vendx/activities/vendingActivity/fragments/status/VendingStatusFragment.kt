@@ -48,6 +48,8 @@ class VendingStatusFragment : Fragment() {
 
                 when (updatedVendingState) {
                     VendingState.DeviceConnected -> {
+                        pairing_request_dialog.visibility = View.INVISIBLE
+                        processing_gif.visibility = View.VISIBLE
                         object: CountDownTimer(10000, 1000) {
                             override fun onTick(millisUntilFinished: Long) {
                                 Log.i(TAG, "Timer: tick")

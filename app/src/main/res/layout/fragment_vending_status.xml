@@ -37,7 +37,25 @@
             android:layout_height="match_parent"/>
 
     </RelativeLayout>
-    
+
+    <RelativeLayout
+        android:layout_marginBottom="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/drawable_dialog_box_bg"
+        android:id="@+id/pairing_request_dialog"
+        android:layout_width="200dp"
+        android:layout_height="100dp">
+
+        <TextView
+            android:textStyle="bold"
+            android:layout_centerInParent="true"
+            android:textAlignment="center"
+            android:text="Please accept the bluetooth\npairing request"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </RelativeLayout>
+
     <RelativeLayout
         android:layout_below="@id/progress"
         android:id="@+id/progress_gif"
@@ -91,8 +109,8 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:visibility="invisible"
         android:background="@color/gray"
+        android:visibility="invisible"
         android:layout_centerHorizontal="true"
         android:id="@+id/vending_fail_resolution_layout"
         android:layout_alignParentBottom="true"
@@ -141,5 +159,6 @@
             android:layout_height="wrap_content"/>
 
     </RelativeLayout>
+
 
 </RelativeLayout>

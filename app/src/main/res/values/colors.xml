@@ -10,7 +10,7 @@
     <color name="green">#8BC34A</color>
     <color name="cyan">#24DDFF</color>
     <color name="white">#FFFFFF</color>
-    <color name="gray">#6BD5D5D5</color>
+    <color name="gray">#DBDBDB</color>
 
     <color name="colorRecieveText">#00FF00</color>
     <color name="colorSendText">#82CAFF</color>
