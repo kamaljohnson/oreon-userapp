@@ -15,6 +15,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
 
 
 enum class PermissionStatus {
@@ -176,21 +180,30 @@ class SharedViewModel : ViewModel() {
         coroutineScope.launch {
             Log.i(TAG, "checking application version")
             val getApplicationDiffered = VendxApi.retrofitServices.getMinimumApplicationVersionAsync()
-            try {
-                val listResult = getApplicationDiffered.await()
-                Log.i(TAG, "Successful to get response: $listResult")
-                debugText.value = " Successful to get response: $listResult\n\n"
-                val applicationData = Gson().fromJson(listResult, Application::class.java)
+            getApplicationDiffered.enqueue(object : Callback<Application> {
+                override fun onResponse(call: Call<Application>, response: Response<Application>) {
+                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                }
 
-                applicationVersionDeprecated.value = versionCode != applicationData!!.Version
-                applicationAlertMessage.value = applicationData.AlertMessage
-                debugText.value = " application Data: $applicationData\n\n"
-
-            } catch (t: Throwable) {
-                Log.e(TAG, "Failed to get response: ${t.message}")
-                debugText.value = " Failed to get response: ${t.message}\n\n"
-                apiCallError.value = true
-            }
+                override fun onFailure(call: Call<Application>, t: Throwable) {
+                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                }
+            })
+//            try {
+//                val listResult = getApplicationDiffered.await()
+//                Log.i(TAG, "Successful to get response: $listResult")
+//                debugText.value = " Successful to get response: $listResult\n\n"
+//                val applicationData = Gson().fromJson(listResult, Application::class.java)
+//
+//                applicationVersionDeprecated.value = versionCode != applicationData!!.Version
+//                applicationAlertMessage.value = applicationData.AlertMessage
+//                debugText.value = " application Data: $applicationData\n\n"
+//
+//            } catch (t: Throwable) {
+//                Log.e(TAG, "Failed to get response: ${t.message}")
+//                debugText.value = " Failed to get response: ${t.message}\n\n"
+//                apiCallError.value = true
+//            }
         }
     }
 }

@@ -1,8 +1,10 @@
 package com.xborg.vendx.network
 
+import android.app.Application
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import kotlinx.coroutines.Deferred
 import okhttp3.OkHttpClient
+import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.http.*
@@ -11,9 +13,9 @@ import java.util.concurrent.TimeUnit
 private const val BASE_URL = "https://us-central1-vendx-1f40e.cloudfunctions.net/webApi/v1/"
 
 private val okHttpClient = OkHttpClient().newBuilder()
-    .connectTimeout(40, TimeUnit.SECONDS)
-    .readTimeout(60, TimeUnit.SECONDS)
-    .writeTimeout(60, TimeUnit.SECONDS)
+    .connectTimeout(10, TimeUnit.SECONDS)
+    .readTimeout(10, TimeUnit.SECONDS)
+    .writeTimeout(10, TimeUnit.SECONDS)
     .build()
 
 private val retrofit = Retrofit.Builder()
@@ -27,7 +29,7 @@ interface VendxAPIService {
 
     @GET("app")
     fun getMinimumApplicationVersionAsync(
-    ): Deferred<String>
+    ): Call<Application>
 
     @GET("machine/{id}/items")
     fun getMachineItemsAsync(
