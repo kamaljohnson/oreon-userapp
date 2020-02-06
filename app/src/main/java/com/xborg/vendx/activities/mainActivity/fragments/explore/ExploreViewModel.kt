@@ -13,7 +13,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.io.IOException
 import java.lang.reflect.Type
+import java.net.SocketTimeoutException
 
 
 class ExploreViewModel : ViewModel() {
@@ -37,31 +42,49 @@ class ExploreViewModel : ViewModel() {
     }
     
     fun requestNearbyMachines() {
-        debugText.value = "request near by machines\n\n"
         Log.i(TAG, "request near by machines")
         val locationDataInJson = Gson().toJson(userLocation.value, Location::class.java)
 
         coroutineScope.launch {
-            val createOrderDeferred = VendxApi.retrofitServices
+            val nearbyMachinesCall = VendxApi.retrofitServices
                 .requestNearbyMachinesAsync(location = locationDataInJson, uid = uid)
-            try {
-                val listResult = createOrderDeferred.await()
-                Log.i(TAG, "Successful to get response: $listResult")
-                debugText.value = "Successful to get response: $listResult\n\n"
-
-                val machineListType: Type = object : TypeToken<ArrayList<Machine?>?>() {}.type
-
-                machinesNearby.value = Gson().fromJson(listResult, machineListType)!!
-                if(machinesNearby.value!!.isNotEmpty()) {
-                    selectNearestMachineToUser()
-                } else {    //adding a dummy machine
-                    selectedMachine.value = Machine()   //a empty machine constructor creates a dummy machine
+            nearbyMachinesCall.enqueue(object : Callback<List<Machine>> {
+                override fun onResponse(call: Call<List<Machine>>, response: Response<List<Machine>>) {
+                    Log.i("Debug", "checkApplicationVersion")
+                    if(response.code() == 200) {
+                        Log.i("Debug", "Successful Response code : 200 : items: " + response.body())
+                        machinesNearby.value = response.body()
+                        if(machinesNearby.value!!.isNotEmpty()) {
+                            selectNearestMachineToUser()
+                        } else {    //adding a dummy machine
+                            selectedMachine.value = Machine()   //a empty machine constructor creates a dummy machine
+                        }
+                    } else {
+                        Log.e("Debug", "Failed to get response")
+                        apiCallError.value = true
+                    }
                 }
-            } catch (t: Throwable) {
-                Log.e(TAG, "Failed to get response: ${t.message}")
-                debugText.value = "Failed to get response: ${t.message}\n\n"
-                apiCallError.value = true
-            }
+
+                override fun onFailure(call: Call<List<Machine>>, error: Throwable) {
+                    apiCallError.value = true
+                    Log.e("Debug", "Failed to get response ${error.message}")
+                    if(error is SocketTimeoutException) {
+                        //Connection Timeout
+                        Log.e("Debug", "error type : connectionTimeout")
+                    } else if(error is IOException) {
+                        //Timeout
+                        Log.e("Debug", "error type : timeout")
+                    } else {
+                        if(nearbyMachinesCall.isCanceled) {
+                            //Call cancelled forcefully
+                            Log.e("Debug", "error type : cancelledForcefully")
+                        } else {
+                            //generic error handling
+                            Log.e("Debug", "error type : genericError")
+                        }
+                    }
+                }
+            })
         }
     }
 

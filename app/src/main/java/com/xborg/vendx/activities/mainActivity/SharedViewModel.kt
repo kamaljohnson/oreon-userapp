@@ -18,7 +18,8 @@ import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
+import java.io.IOException
+import java.net.SocketTimeoutException
 
 
 enum class PermissionStatus {
@@ -179,31 +180,38 @@ class SharedViewModel : ViewModel() {
     private fun checkApplicationVersion() {
         coroutineScope.launch {
             Log.i(TAG, "checking application version")
-            val getApplicationDiffered = VendxApi.retrofitServices.getMinimumApplicationVersionAsync()
-            getApplicationDiffered.enqueue(object : Callback<Application> {
+            val applicationCall = VendxApi.retrofitServices.getMinimumApplicationVersionAsync()
+            applicationCall.enqueue(object : Callback<Application> {
                 override fun onResponse(call: Call<Application>, response: Response<Application>) {
-                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    if(response.code() == 200) {
+                        Log.i("Debug", "Successful Response code : 200")
+                        val applicationData = response.body()
+                        applicationVersionDeprecated.value = versionCode != applicationData!!.Version
+                        applicationAlertMessage.value = applicationData.AlertMessage
+                    } else {
+                        Log.e("Debug", "Failed to get response")
+                    }
                 }
 
-                override fun onFailure(call: Call<Application>, t: Throwable) {
-                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                override fun onFailure(call: Call<Application>, error: Throwable) {
+                    Log.e("Debug", "Failed to get response ${error.message}")
+                    if(error is SocketTimeoutException) {
+                        //Connection Timeout
+                        Log.e("Debug", "error type : connectionTimeout")
+                    } else if(error is IOException) {
+                        //Timeout
+                        Log.e("Debug", "error type : timeout")
+                    } else {
+                        if(applicationCall.isCanceled) {
+                            //Call cancelled forcefully
+                            Log.e("Debug", "error type : cancelledForcefully")
+                        } else {
+                            //generic error handling
+                            Log.e("Debug", "error type : genericError")
+                        }
+                    }
                 }
             })
-//            try {
-//                val listResult = getApplicationDiffered.await()
-//                Log.i(TAG, "Successful to get response: $listResult")
-//                debugText.value = " Successful to get response: $listResult\n\n"
-//                val applicationData = Gson().fromJson(listResult, Application::class.java)
-//
-//                applicationVersionDeprecated.value = versionCode != applicationData!!.Version
-//                applicationAlertMessage.value = applicationData.AlertMessage
-//                debugText.value = " application Data: $applicationData\n\n"
-//
-//            } catch (t: Throwable) {
-//                Log.e(TAG, "Failed to get response: ${t.message}")
-//                debugText.value = " Failed to get response: ${t.message}\n\n"
-//                apiCallError.value = true
-//            }
         }
     }
 }
