@@ -63,9 +63,6 @@ class SharedViewModel : ViewModel() {
 
     private var _unTaggedCartItems = mutableMapOf<String, Int>()
 
-    private var viewModelJob = Job()
-    private var coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
-
     init {
         apiCallError.value = false
         locationPermission.value = PermissionStatus.None
@@ -178,40 +175,38 @@ class SharedViewModel : ViewModel() {
     }
 
     private fun checkApplicationVersion() {
-        coroutineScope.launch {
-            Log.i(TAG, "checking application version")
-            val applicationCall = VendxApi.retrofitServices.getMinimumApplicationVersionAsync()
-            applicationCall.enqueue(object : Callback<Application> {
-                override fun onResponse(call: Call<Application>, response: Response<Application>) {
-                    if(response.code() == 200) {
-                        Log.i("Debug", "Successful Response code : 200")
-                        val applicationData = response.body()
-                        applicationVersionDeprecated.value = versionCode != applicationData!!.Version
-                        applicationAlertMessage.value = applicationData.AlertMessage
-                    } else {
-                        Log.e("Debug", "Failed to get response")
-                    }
+        Log.i(TAG, "checking application version")
+        val applicationCall = VendxApi.retrofitServices.getMinimumApplicationVersionAsync()
+        applicationCall.enqueue(object : Callback<Application> {
+            override fun onResponse(call: Call<Application>, response: Response<Application>) {
+                if(response.code() == 200) {
+                    Log.i("Debug", "Successful Response code : 200")
+                    val applicationData = response.body()
+                    applicationVersionDeprecated.value = versionCode != applicationData!!.Version
+                    applicationAlertMessage.value = applicationData.AlertMessage
+                } else {
+                    Log.e("Debug", "Failed to get response")
                 }
+            }
 
-                override fun onFailure(call: Call<Application>, error: Throwable) {
-                    Log.e("Debug", "Failed to get response ${error.message}")
-                    if(error is SocketTimeoutException) {
-                        //Connection Timeout
-                        Log.e("Debug", "error type : connectionTimeout")
-                    } else if(error is IOException) {
-                        //Timeout
-                        Log.e("Debug", "error type : timeout")
+            override fun onFailure(call: Call<Application>, error: Throwable) {
+                Log.e("Debug", "Failed to get response ${error.message}")
+                if(error is SocketTimeoutException) {
+                    //Connection Timeout
+                    Log.e("Debug", "error type : connectionTimeout")
+                } else if(error is IOException) {
+                    //Timeout
+                    Log.e("Debug", "error type : timeout")
+                } else {
+                    if(applicationCall.isCanceled) {
+                        //Call cancelled forcefully
+                        Log.e("Debug", "error type : cancelledForcefully")
                     } else {
-                        if(applicationCall.isCanceled) {
-                            //Call cancelled forcefully
-                            Log.e("Debug", "error type : cancelledForcefully")
-                        } else {
-                            //generic error handling
-                            Log.e("Debug", "error type : genericError")
-                        }
+                        //generic error handling
+                        Log.e("Debug", "error type : genericError")
                     }
                 }
-            })
-        }
+            }
+        })
     }
 }

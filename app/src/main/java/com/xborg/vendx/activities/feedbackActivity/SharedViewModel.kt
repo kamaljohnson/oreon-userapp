@@ -26,9 +26,6 @@ class SharedViewModel : ViewModel() {
 
     var feedbackPosted = MutableLiveData<Boolean>()
 
-    private var viewModelJob = Job()
-    private var coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
-
     fun postFeedback() {
         val userFeedbackJson = Gson().toJson(userFeedback.value, Feedback::class.java)
         val feedbackCall = VendxApi.retrofitServices

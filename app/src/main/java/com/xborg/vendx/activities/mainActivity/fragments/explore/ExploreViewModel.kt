@@ -33,9 +33,6 @@ class ExploreViewModel : ViewModel() {
     val machinesNearby = MutableLiveData<List<Machine>>()
     val selectedMachine = MutableLiveData<Machine>()
 
-    private var viewModelJob = Job()
-    private var coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
-
     init {
         selectedMachine.value = Machine()
         debugText.value = "init explorer\n\n"
@@ -45,47 +42,45 @@ class ExploreViewModel : ViewModel() {
         Log.i(TAG, "request near by machines")
         val locationDataInJson = Gson().toJson(userLocation.value, Location::class.java)
 
-        coroutineScope.launch {
-            val nearbyMachinesCall = VendxApi.retrofitServices
-                .requestNearbyMachinesAsync(location = locationDataInJson, uid = uid)
-            nearbyMachinesCall.enqueue(object : Callback<List<Machine>> {
-                override fun onResponse(call: Call<List<Machine>>, response: Response<List<Machine>>) {
-                    Log.i("Debug", "checkApplicationVersion")
-                    if(response.code() == 200) {
-                        Log.i("Debug", "Successful Response code : 200 : items: " + response.body())
-                        machinesNearby.value = response.body()
-                        if(machinesNearby.value!!.isNotEmpty()) {
-                            selectNearestMachineToUser()
-                        } else {    //adding a dummy machine
-                            selectedMachine.value = Machine()   //a empty machine constructor creates a dummy machine
-                        }
-                    } else {
-                        Log.e("Debug", "Failed to get response")
-                        apiCallError.value = true
+        val nearbyMachinesCall = VendxApi.retrofitServices
+            .requestNearbyMachinesAsync(location = locationDataInJson, uid = uid)
+        nearbyMachinesCall.enqueue(object : Callback<List<Machine>> {
+            override fun onResponse(call: Call<List<Machine>>, response: Response<List<Machine>>) {
+                Log.i("Debug", "checkApplicationVersion")
+                if(response.code() == 200) {
+                    Log.i("Debug", "Successful Response code : 200 : items: " + response.body())
+                    machinesNearby.value = response.body()
+                    if(machinesNearby.value!!.isNotEmpty()) {
+                        selectNearestMachineToUser()
+                    } else {    //adding a dummy machine
+                        selectedMachine.value = Machine()   //a empty machine constructor creates a dummy machine
                     }
-                }
-
-                override fun onFailure(call: Call<List<Machine>>, error: Throwable) {
+                } else {
+                    Log.e("Debug", "Failed to get response")
                     apiCallError.value = true
-                    Log.e("Debug", "Failed to get response ${error.message}")
-                    if(error is SocketTimeoutException) {
-                        //Connection Timeout
-                        Log.e("Debug", "error type : connectionTimeout")
-                    } else if(error is IOException) {
-                        //Timeout
-                        Log.e("Debug", "error type : timeout")
+                }
+            }
+
+            override fun onFailure(call: Call<List<Machine>>, error: Throwable) {
+                apiCallError.value = true
+                Log.e("Debug", "Failed to get response ${error.message}")
+                if(error is SocketTimeoutException) {
+                    //Connection Timeout
+                    Log.e("Debug", "error type : connectionTimeout")
+                } else if(error is IOException) {
+                    //Timeout
+                    Log.e("Debug", "error type : timeout")
+                } else {
+                    if(nearbyMachinesCall.isCanceled) {
+                        //Call cancelled forcefully
+                        Log.e("Debug", "error type : cancelledForcefully")
                     } else {
-                        if(nearbyMachinesCall.isCanceled) {
-                            //Call cancelled forcefully
-                            Log.e("Debug", "error type : cancelledForcefully")
-                        } else {
-                            //generic error handling
-                            Log.e("Debug", "error type : genericError")
-                        }
+                        //generic error handling
+                        Log.e("Debug", "error type : genericError")
                     }
                 }
-            })
-        }
+            }
+        })
     }
 
     private fun selectNearestMachineToUser() {

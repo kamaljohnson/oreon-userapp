@@ -26,9 +26,6 @@ class HistoryViewModel : ViewModel() {
 
     var transactions: MutableLiveData<List<Transaction>> = MutableLiveData()
 
-    private var viewModelJob = Job()
-    private var coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
-
     init {
         getTransactions()
     }
@@ -36,39 +33,37 @@ class HistoryViewModel : ViewModel() {
     //TODO: combine both items from machine and self to single get req
     private fun getTransactions() {
 
-        coroutineScope.launch {
-            val transactionsCall = VendxApi.retrofitServices.getTransactionsAsync(uid)
-            transactionsCall.enqueue(object : Callback<List<Transaction>> {
-                override fun onResponse(call: Call<List<Transaction>>, response: Response<List<Transaction>>) {
-                    if(response.code() == 200) {
-                        Log.i("Debug", "Successful Response code : 200 : items: " + response.body())
-                        transactions.value = response.body()
-                    } else {
-                        Log.e("Debug", "Failed to get response")
-                        apiCallError.value = true
-                    }
-                }
-
-                override fun onFailure(call: Call<List<Transaction>>, error: Throwable) {
+        val transactionsCall = VendxApi.retrofitServices.getTransactionsAsync(uid)
+        transactionsCall.enqueue(object : Callback<List<Transaction>> {
+            override fun onResponse(call: Call<List<Transaction>>, response: Response<List<Transaction>>) {
+                if(response.code() == 200) {
+                    Log.i("Debug", "Successful Response code : 200 : items: " + response.body())
+                    transactions.value = response.body()
+                } else {
+                    Log.e("Debug", "Failed to get response")
                     apiCallError.value = true
-                    Log.e("Debug", "Failed to get response ${error.message}")
-                    if(error is SocketTimeoutException) {
-                        //Connection Timeout
-                        Log.e("Debug", "error type : connectionTimeout")
-                    } else if(error is IOException) {
-                        //Timeout
-                        Log.e("Debug", "error type : timeout")
+                }
+            }
+
+            override fun onFailure(call: Call<List<Transaction>>, error: Throwable) {
+                apiCallError.value = true
+                Log.e("Debug", "Failed to get response ${error.message}")
+                if(error is SocketTimeoutException) {
+                    //Connection Timeout
+                    Log.e("Debug", "error type : connectionTimeout")
+                } else if(error is IOException) {
+                    //Timeout
+                    Log.e("Debug", "error type : timeout")
+                } else {
+                    if(transactionsCall.isCanceled) {
+                        //Call cancelled forcefully
+                        Log.e("Debug", "error type : cancelledForcefully")
                     } else {
-                        if(transactionsCall.isCanceled) {
-                            //Call cancelled forcefully
-                            Log.e("Debug", "error type : cancelledForcefully")
-                        } else {
-                            //generic error handling
-                            Log.e("Debug", "error type : genericError")
-                        }
+                        //generic error handling
+                        Log.e("Debug", "error type : genericError")
                     }
                 }
-            })
-        }
+            }
+        })
     }
 }

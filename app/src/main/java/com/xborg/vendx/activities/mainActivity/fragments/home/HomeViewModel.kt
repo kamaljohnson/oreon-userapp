@@ -40,9 +40,6 @@ class HomeViewModel : ViewModel() {
 
     val allGroupItems: MutableLiveData<ArrayList<ItemGroup>>
 
-    private var viewModelJob = Job()
-    private var coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
-
     init {
         Log.i(TAG, "HomeViewModel created!")
         allGroupItems = MutableLiveData()
@@ -105,80 +102,77 @@ class HomeViewModel : ViewModel() {
 
     //TODO: combine both items from machine and self to single get req
     private fun getItemsFromMachine(machineId: String) {
-        coroutineScope.launch {
-            val machineItemsCall = VendxApi.retrofitServices.getMachineItemsAsync(id = machineId)
-            machineItemsCall.enqueue(object : Callback<List<Item>> {
-                override fun onResponse(call: Call<List<Item>>, response: Response<List<Item>>) {
-                    if(response.code() == 200) {
-                        Log.i("Debug", "Successful Response code : 200 : items: " + response.body())
-                        machineItems.value = response.body()
-                        selectedMachineLoaded.value = true
-                        updateItemGroupModel()
-                    } else {
-                        Log.e("Debug", "Failed to get response")
-                        apiCallError.value = true
-                    }
-                }
-
-                override fun onFailure(call: Call<List<Item>>, error: Throwable) {
+        val machineItemsCall = VendxApi.retrofitServices.getMachineItemsAsync(id = machineId)
+        machineItemsCall.enqueue(object : Callback<List<Item>> {
+            override fun onResponse(call: Call<List<Item>>, response: Response<List<Item>>) {
+                if(response.code() == 200) {
+                    Log.i("Debug", "Successful Response code : 200 : items: " + response.body())
+                    machineItems.value = response.body()
+                    selectedMachineLoaded.value = true
+                    updateItemGroupModel()
+                } else {
+                    Log.e("Debug", "Failed to get response")
                     apiCallError.value = true
-                    Log.e("Debug", "Failed to get response ${error.message}")
-                    if(error is SocketTimeoutException) {
-                        //Connection Timeout
-                        Log.e("Debug", "error type : connectionTimeout")
-                    } else if(error is IOException) {
-                        //Timeout
-                        Log.e("Debug", "error type : timeout")
+                }
+            }
+
+            override fun onFailure(call: Call<List<Item>>, error: Throwable) {
+                apiCallError.value = true
+                Log.e("Debug", "Failed to get response ${error.message}")
+                if(error is SocketTimeoutException) {
+                    //Connection Timeout
+                    Log.e("Debug", "error type : connectionTimeout")
+                } else if(error is IOException) {
+                    //Timeout
+                    Log.e("Debug", "error type : timeout")
+                } else {
+                    if(machineItemsCall.isCanceled) {
+                        //Call cancelled forcefully
+                        Log.e("Debug", "error type : cancelledForcefully")
                     } else {
-                        if(machineItemsCall.isCanceled) {
-                            //Call cancelled forcefully
-                            Log.e("Debug", "error type : cancelledForcefully")
-                        } else {
-                            //generic error handling
-                            Log.e("Debug", "error type : genericError")
-                        }
+                        //generic error handling
+                        Log.e("Debug", "error type : genericError")
                     }
                 }
-            })
-        }
+            }
+        })
     }
 
     private fun getItemsInInventory(userId: String) {
         debugText.value = "get items from shelf\n\n"
-        coroutineScope.launch {
-            val inventoryItemsCall = VendxApi.retrofitServices.getInventoryItemsAsync(userId)
-            inventoryItemsCall.enqueue(object : Callback<List<Item>> {
-                override fun onResponse(call: Call<List<Item>>, response: Response<List<Item>>) {
-                    if(response.code() == 200) {
-                        Log.i("Debug", "Successful Response code : 200 : items: " + response.body())
-                        inventoryItems.value = response.body()
-                    } else {
-                        Log.e("Debug", "Failed to get response")
-                        apiCallError.value = true
-                    }
-                }
-
-                override fun onFailure(call: Call<List<Item>>, error: Throwable) {
+        val inventoryItemsCall = VendxApi.retrofitServices.getInventoryItemsAsync(userId)
+        inventoryItemsCall.enqueue(object : Callback<List<Item>> {
+            override fun onResponse(call: Call<List<Item>>, response: Response<List<Item>>) {
+                if(response.code() == 200) {
+                    Log.i("Debug", "Successful Response code : 200 : items: " + response.body())
+                    inventoryItems.value = response.body()
+                    updateItemGroupModel()
+                } else {
+                    Log.e("Debug", "Failed to get response")
                     apiCallError.value = true
-                    Log.e("Debug", "Failed to get response ${error.message}")
-                    if(error is SocketTimeoutException) {
-                        //Connection Timeout
-                        Log.e("Debug", "error type : connectionTimeout")
-                    } else if(error is IOException) {
-                        //Timeout
-                        Log.e("Debug", "error type : timeout")
+                }
+            }
+
+            override fun onFailure(call: Call<List<Item>>, error: Throwable) {
+                apiCallError.value = true
+                Log.e("Debug", "Failed to get response ${error.message}")
+                if(error is SocketTimeoutException) {
+                    //Connection Timeout
+                    Log.e("Debug", "error type : connectionTimeout")
+                } else if(error is IOException) {
+                    //Timeout
+                    Log.e("Debug", "error type : timeout")
+                } else {
+                    if(inventoryItemsCall.isCanceled) {
+                        //Call cancelled forcefully
+                        Log.e("Debug", "error type : cancelledForcefully")
                     } else {
-                        if(inventoryItemsCall.isCanceled) {
-                            //Call cancelled forcefully
-                            Log.e("Debug", "error type : cancelledForcefully")
-                        } else {
-                            //generic error handling
-                            Log.e("Debug", "error type : genericError")
-                        }
+                        //generic error handling
+                        Log.e("Debug", "error type : genericError")
                     }
                 }
-            })
-        }
+            }
+        })
     }
 
     private fun updateItemGroupModel() {
@@ -268,6 +262,5 @@ class HomeViewModel : ViewModel() {
     override fun onCleared() {
         super.onCleared()
         Log.i(TAG, "destroyed!")
-        viewModelJob.cancel()
     }
 }

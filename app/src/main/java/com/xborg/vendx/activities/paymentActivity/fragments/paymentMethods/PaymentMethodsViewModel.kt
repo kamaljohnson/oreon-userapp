@@ -28,9 +28,6 @@ class PaymentMethodsViewModel : ViewModel() {
 
     val paymentState = MutableLiveData<PaymentState>()
 
-    private var viewModelJob = Job()
-    private var coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
-
     init {
         paymentState.value = PaymentState.None
     }
@@ -75,53 +72,50 @@ class PaymentMethodsViewModel : ViewModel() {
 
         val orderInJson = Gson().toJson(order.value, Order::class.java)
 
-        coroutineScope.launch {
-            val ordersCall = VendxApi.retrofitServices
-                .createOrderAsync(order = orderInJson)
-            ordersCall.enqueue(object : Callback<Payment> {
-                override fun onResponse(call: Call<Payment>, response: Response<Payment>) {
-                    Log.i("Debug", "checkApplicationVersion")
-                    if(response.code() == 200) {
-                        Log.i("Debug", "Successful Response code : 200 : items: " + response.body())
-                        val tempPayment: Payment? = response.body()
+        val ordersCall = VendxApi.retrofitServices
+            .createOrderAsync(order = orderInJson)
+        ordersCall.enqueue(object : Callback<Payment> {
+            override fun onResponse(call: Call<Payment>, response: Response<Payment>) {
+                Log.i("Debug", "checkApplicationVersion")
+                if(response.code() == 200) {
+                    Log.i("Debug", "Successful Response code : 200 : items: " + response.body())
+                    val tempPayment: Payment? = response.body()
 
-                        updateOrder(
-                            payment = tempPayment!!
-                        )
-                        initPayment (
-                            payment = tempPayment,
-                            order = order.value!!
-                        )
+                    updateOrder(
+                        payment = tempPayment!!
+                    )
+                    initPayment (
+                        payment = tempPayment,
+                        order = order.value!!
+                    )
+                } else {
+                    Log.e("Debug", "Failed to get response")
+                }
+            }
+
+            override fun onFailure(call: Call<Payment>, error: Throwable) {
+                Log.e("Debug", "Failed to get response ${error.message}")
+                if(error is SocketTimeoutException) {
+                    //Connection Timeout
+                    Log.e("Debug", "error type : connectionTimeout")
+                } else if(error is IOException) {
+                    //Timeout
+                    Log.e("Debug", "error type : timeout")
+                } else {
+                    if(ordersCall.isCanceled) {
+                        //Call cancelled forcefully
+                        Log.e("Debug", "error type : cancelledForcefully")
                     } else {
-                        Log.e("Debug", "Failed to get response")
+                        //generic error handling
+                        Log.e("Debug", "error type : genericError")
                     }
                 }
-
-                override fun onFailure(call: Call<Payment>, error: Throwable) {
-                    Log.e("Debug", "Failed to get response ${error.message}")
-                    if(error is SocketTimeoutException) {
-                        //Connection Timeout
-                        Log.e("Debug", "error type : connectionTimeout")
-                    } else if(error is IOException) {
-                        //Timeout
-                        Log.e("Debug", "error type : timeout")
-                    } else {
-                        if(ordersCall.isCanceled) {
-                            //Call cancelled forcefully
-                            Log.e("Debug", "error type : cancelledForcefully")
-                        } else {
-                            //generic error handling
-                            Log.e("Debug", "error type : genericError")
-                        }
-                    }
-                }
-            })
-        }
+            }
+        })
     }
 
     override fun onCleared() {
         super.onCleared()
         Log.i(TAG, "destroyed!")
-        viewModelJob.cancel()
     }
 }
