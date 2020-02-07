@@ -87,6 +87,11 @@ class HomeFragment : Fragment(), ItemCardAdapter.OnItemListener {
                 location_permission_access_dialog.visibility = View.GONE
             }
         })
+        sharedViewModel.apiCallRetry.observe(viewLifecycleOwner, Observer { retry ->
+            if(retry) {
+                viewModel.handleInventoryUpdates()
+            }
+        })
         viewModel.apiCallError.observe(viewLifecycleOwner, Observer { error ->
             if(error) {
                 sharedViewModel.apiCallError.value = error

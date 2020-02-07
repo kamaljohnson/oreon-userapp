@@ -46,6 +46,7 @@ private const val REQUEST_ENABLE_LOC = 3
 var TAG = "MainActivity"
 
 private var mLayout: SlidingUpPanelLayout? = null
+private var retryDialogDisplayed = false
 
 enum class Fragments {
     HOME,
@@ -102,7 +103,9 @@ class MainActivity : AppCompatActivity() {
         })
 
         sharedViewModel.apiCallError.observe(this, Observer { error ->
-            if(error) {
+            if(error && sharedViewModel.isInternetAvailable.value!!) {
+                sharedViewModel.apiCallRetry.value = false
+                showConnectionErrorDialog()
             }
         })
 
@@ -541,6 +544,21 @@ class MainActivity : AppCompatActivity() {
                     }
         }
         return false
+    }
+
+    private fun showConnectionErrorDialog() {
+        if(!retryDialogDisplayed) {
+            retryDialogDisplayed = true
+            val builder = AlertDialog.Builder(this@MainActivity)
+            builder.setTitle("Network Error")
+            builder.setMessage("An error occurred while connecting to server, please check your internet connection and retry")
+            builder.setPositiveButton("Retry"){ _, _ ->
+                sharedViewModel.apiCallRetry.value = true
+                retryDialogDisplayed = false
+            }
+            val dialog: AlertDialog = builder.create()
+            dialog.show()
+        }
     }
     //    endregion
 }

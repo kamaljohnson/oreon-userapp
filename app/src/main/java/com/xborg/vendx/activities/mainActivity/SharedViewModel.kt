@@ -36,6 +36,7 @@ class SharedViewModel : ViewModel() {
 
     val isInternetAvailable = MutableLiveData<Boolean>()
     val apiCallError = MutableLiveData<Boolean>()
+    val apiCallRetry = MutableLiveData<Boolean>()
 
     var checkedUserLocationAccessed: MutableLiveData<Boolean> = MutableLiveData(false)
     var getUserLocation: MutableLiveData<Boolean> = MutableLiveData(false)

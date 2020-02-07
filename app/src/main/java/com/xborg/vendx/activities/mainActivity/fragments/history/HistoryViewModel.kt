@@ -31,7 +31,7 @@ class HistoryViewModel : ViewModel() {
     }
 
     //TODO: combine both items from machine and self to single get req
-    private fun getTransactions() {
+    fun getTransactions() {
 
         val transactionsCall = VendxApi.retrofitServices.getTransactionsAsync(uid)
         transactionsCall.enqueue(object : Callback<List<Transaction>> {

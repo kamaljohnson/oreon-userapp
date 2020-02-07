@@ -54,7 +54,7 @@ class HomeViewModel : ViewModel() {
         handleInventoryUpdates()
     }
 
-    private fun handleInventoryUpdates() {
+    fun handleInventoryUpdates() {
         debugText.value = "handle shelf updates\n"
         //Checking if user shelf is updated in server
         val docRef = db.collection("Users").document(uid)

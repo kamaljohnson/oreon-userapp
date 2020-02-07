@@ -13,9 +13,9 @@ import retrofit2.converter.gson.GsonConverterFactory
 private const val BASE_URL = "https://us-central1-vendx-1f40e.cloudfunctions.net/webApi/v1/"
 
 private val okHttpClient = OkHttpClient().newBuilder()
-    .connectTimeout(10, TimeUnit.SECONDS)
-    .readTimeout(10, TimeUnit.SECONDS)
-    .writeTimeout(10, TimeUnit.SECONDS)
+    .connectTimeout(5, TimeUnit.SECONDS)
+    .readTimeout(5, TimeUnit.SECONDS)
+    .writeTimeout(5, TimeUnit.SECONDS)
     .build()
 
 private val retrofit = Retrofit.Builder()
