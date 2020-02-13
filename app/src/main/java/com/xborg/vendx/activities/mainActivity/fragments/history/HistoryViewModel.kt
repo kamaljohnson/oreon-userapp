@@ -4,15 +4,17 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.xborg.vendx.database.Transaction
 import com.xborg.vendx.network.VendxApi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import java.lang.reflect.Type
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.io.IOException
+import java.net.SocketTimeoutException
 
 
 private const val TAG = "HistoryViewModel"
@@ -24,31 +26,44 @@ class HistoryViewModel : ViewModel() {
 
     var transactions: MutableLiveData<List<Transaction>> = MutableLiveData()
 
-    private var viewModelJob = Job()
-    private var coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
-
     init {
         getTransactions()
     }
 
     //TODO: combine both items from machine and self to single get req
-    private fun getTransactions() {
+    fun getTransactions() {
 
-        coroutineScope.launch {
-            val getTransactionsDeferred = VendxApi.retrofitServices.getTransactionsAsync(uid)
-            try {
-                val listResult = getTransactionsDeferred.await()
-                Log.i(TAG, "Successful to get response: $listResult")
-
-                val transactionListType: Type =
-                    object : TypeToken<ArrayList<Transaction?>?>() {}.type
-
-                transactions.value = Gson().fromJson(listResult, transactionListType)
-
-            } catch (t: Throwable) {
-                Log.e(TAG, "Failed to get response: ${t.message}")
-                apiCallError.value = true
+        val transactionsCall = VendxApi.retrofitServices.getTransactionsAsync(uid)
+        transactionsCall.enqueue(object : Callback<List<Transaction>> {
+            override fun onResponse(call: Call<List<Transaction>>, response: Response<List<Transaction>>) {
+                if(response.code() == 200) {
+                    Log.i("Debug", "Successful Response code : 200 : items: " + response.body())
+                    transactions.value = response.body()
+                } else {
+                    Log.e("Debug", "Failed to get response")
+                    apiCallError.value = true
+                }
             }
-        }
+
+            override fun onFailure(call: Call<List<Transaction>>, error: Throwable) {
+                apiCallError.value = true
+                Log.e("Debug", "Failed to get response ${error.message}")
+                if(error is SocketTimeoutException) {
+                    //Connection Timeout
+                    Log.e("Debug", "error type : connectionTimeout")
+                } else if(error is IOException) {
+                    //Timeout
+                    Log.e("Debug", "error type : timeout")
+                } else {
+                    if(transactionsCall.isCanceled) {
+                        //Call cancelled forcefully
+                        Log.e("Debug", "error type : cancelledForcefully")
+                    } else {
+                        //generic error handling
+                        Log.e("Debug", "error type : genericError")
+                    }
+                }
+            }
+        })
     }
 }

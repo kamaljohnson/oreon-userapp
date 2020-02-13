@@ -12,17 +12,20 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.io.IOException
+import java.net.SocketTimeoutException
 import java.security.MessageDigest
 
 class PaymentStatusViewModel: ViewModel() {
 
     val order = MutableLiveData<Order>()
     val payment = MutableLiveData<Payment>()
-
     val paymentState = MutableLiveData<PaymentState>()
 
-    private var viewModelJob = Job()
-    private var coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
+    val apiCallError = MutableLiveData<Boolean>()
 
     init {
         paymentState.value = PaymentState.None
@@ -34,21 +37,41 @@ class PaymentStatusViewModel: ViewModel() {
 
         val paymentDataInJson = Gson().toJson(payment.value, Payment::class.java)
 
-        coroutineScope.launch {
-            val createOrderDeferred = VendxApi.retrofitServices
-                .sendPaymentDataAsync(paymentData = paymentDataInJson)
-            try {
-                val listResult = createOrderDeferred.await()
-                Log.i(TAG, "Successful to get response: $listResult")
-                paymentState.value = PaymentState.PaymentPosted
-                payment.value =
-                    Gson().fromJson(listResult, Payment::class.java)
-
-                paymentState.value = PaymentState.PaymentComplete
-            } catch (t: Throwable) {
-                Log.e(TAG, "Failed to get response: ${t.message}")
+        val paymentsCall = VendxApi.retrofitServices
+            .sendPaymentDataAsync(paymentData = paymentDataInJson)
+        paymentsCall.enqueue(object : Callback<Payment> {
+            override fun onResponse(call: Call<Payment>, response: Response<Payment>) {
+                Log.i("Debug", "checkApplicationVersion")
+                if(response.code() == 200) {
+                    Log.i("Debug", "Successful Response code : 200 : items: " + response.body())
+                    payment.value = response.body()
+                    paymentState.value = PaymentState.PaymentComplete
+                } else {
+                    Log.e("Debug", "Failed to get response")
+                    apiCallError.value = true
+                }
             }
-        }
+
+            override fun onFailure(call: Call<Payment>, error: Throwable) {
+                Log.e("Debug", "Failed to get response ${error.message}")
+                apiCallError.value = true
+                if(error is SocketTimeoutException) {
+                    //Connection Timeout
+                    Log.e("Debug", "error type : connectionTimeout")
+                } else if(error is IOException) {
+                    //Timeout
+                    Log.e("Debug", "error type : timeout")
+                } else {
+                    if(paymentsCall.isCanceled) {
+                        //Call cancelled forcefully
+                        Log.e("Debug", "error type : cancelledForcefully")
+                    } else {
+                        //generic error handling
+                        Log.e("Debug", "error type : genericError")
+                    }
+                }
+            }
+        })
     }
 
     private fun createPaymentSignature(){

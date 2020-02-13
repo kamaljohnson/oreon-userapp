@@ -15,7 +15,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.io.IOException
 import java.lang.reflect.Type
+import java.net.SocketTimeoutException
 
 private const val TAG = "HomeViewModel"
 
@@ -35,9 +40,6 @@ class HomeViewModel : ViewModel() {
 
     val allGroupItems: MutableLiveData<ArrayList<ItemGroup>>
 
-    private var viewModelJob = Job()
-    private var coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
-
     init {
         Log.i(TAG, "HomeViewModel created!")
         allGroupItems = MutableLiveData()
@@ -52,7 +54,7 @@ class HomeViewModel : ViewModel() {
         handleInventoryUpdates()
     }
 
-    private fun handleInventoryUpdates() {
+    fun handleInventoryUpdates() {
         debugText.value = "handle shelf updates\n"
         //Checking if user shelf is updated in server
         val docRef = db.collection("Users").document(uid)
@@ -100,46 +102,77 @@ class HomeViewModel : ViewModel() {
 
     //TODO: combine both items from machine and self to single get req
     private fun getItemsFromMachine(machineId: String) {
-        coroutineScope.launch {
-            val getMachineItemsDeferred = VendxApi.retrofitServices.getMachineItemsAsync(id = machineId)
-            try {
-                val listResult = getMachineItemsDeferred.await()
-                Log.i(TAG, "Successful to get response: $listResult")
-                debugText.value = "Successful to get response: $listResult\n\n"
-
-                val itemListType: Type = object : TypeToken<ArrayList<Item?>?>() {}.type
-                machineItems.value = Gson().fromJson(listResult, itemListType)!!
-                selectedMachineLoaded.value = true
-
-                updateItemGroupModel()
-            } catch (t: Throwable) {
-                Log.e(TAG, "Machine Items: Failed to get response: ${t.message}")
-                debugText.value = "Inventory Items: Failed to get response: ${t.message}\n\n"
-
-                apiCallError.value = true
+        val machineItemsCall = VendxApi.retrofitServices.getMachineItemsAsync(id = machineId)
+        machineItemsCall.enqueue(object : Callback<List<Item>> {
+            override fun onResponse(call: Call<List<Item>>, response: Response<List<Item>>) {
+                if(response.code() == 200) {
+                    Log.i("Debug", "Successful Response code : 200 : items: " + response.body())
+                    machineItems.value = response.body()
+                    selectedMachineLoaded.value = true
+                    updateItemGroupModel()
+                } else {
+                    Log.e("Debug", "Failed to get response")
+                    apiCallError.value = true
+                }
             }
-        }
+
+            override fun onFailure(call: Call<List<Item>>, error: Throwable) {
+                apiCallError.value = true
+                Log.e("Debug", "Failed to get response ${error.message}")
+                if(error is SocketTimeoutException) {
+                    //Connection Timeout
+                    Log.e("Debug", "error type : connectionTimeout")
+                } else if(error is IOException) {
+                    //Timeout
+                    Log.e("Debug", "error type : timeout")
+                } else {
+                    if(machineItemsCall.isCanceled) {
+                        //Call cancelled forcefully
+                        Log.e("Debug", "error type : cancelledForcefully")
+                    } else {
+                        //generic error handling
+                        Log.e("Debug", "error type : genericError")
+                    }
+                }
+            }
+        })
     }
 
     private fun getItemsInInventory(userId: String) {
         debugText.value = "get items from shelf\n\n"
-        coroutineScope.launch {
-            val getMachineItemsDeferred = VendxApi.retrofitServices.getInventoryItemsAsync(userId)
-            try {
-                val listResult = getMachineItemsDeferred.await()
-                Log.i(TAG, "Successful to get response: $listResult ")
-                debugText.value = "Successful to get response: $listResult\n\n"
-
-                val itemListType: Type = object : TypeToken<ArrayList<Item?>?>() {}.type
-                inventoryItems.value = Gson().fromJson(listResult, itemListType)!!
-                Log.i(TAG, "Inventory: " + inventoryItems.value.toString())
-                updateItemGroupModel()
-            } catch (t: Throwable) {
-                Log.i(TAG, "Inventory Items: Failed to get response: ${t.message}")
-                debugText.value = "Inventory Items: Failed to get response: ${t.message}\n\n"
-                apiCallError.value = true
+        val inventoryItemsCall = VendxApi.retrofitServices.getInventoryItemsAsync(userId)
+        inventoryItemsCall.enqueue(object : Callback<List<Item>> {
+            override fun onResponse(call: Call<List<Item>>, response: Response<List<Item>>) {
+                if(response.code() == 200) {
+                    Log.i("Debug", "Successful Response code : 200 : items: " + response.body())
+                    inventoryItems.value = response.body()
+                    updateItemGroupModel()
+                } else {
+                    Log.e("Debug", "Failed to get response")
+                    apiCallError.value = true
+                }
             }
-        }
+
+            override fun onFailure(call: Call<List<Item>>, error: Throwable) {
+                apiCallError.value = true
+                Log.e("Debug", "Failed to get response ${error.message}")
+                if(error is SocketTimeoutException) {
+                    //Connection Timeout
+                    Log.e("Debug", "error type : connectionTimeout")
+                } else if(error is IOException) {
+                    //Timeout
+                    Log.e("Debug", "error type : timeout")
+                } else {
+                    if(inventoryItemsCall.isCanceled) {
+                        //Call cancelled forcefully
+                        Log.e("Debug", "error type : cancelledForcefully")
+                    } else {
+                        //generic error handling
+                        Log.e("Debug", "error type : genericError")
+                    }
+                }
+            }
+        })
     }
 
     private fun updateItemGroupModel() {
@@ -229,6 +262,5 @@ class HomeViewModel : ViewModel() {
     override fun onCleared() {
         super.onCleared()
         Log.i(TAG, "destroyed!")
-        viewModelJob.cancel()
     }
 }

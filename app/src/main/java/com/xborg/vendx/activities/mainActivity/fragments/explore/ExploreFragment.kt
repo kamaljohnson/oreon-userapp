@@ -48,6 +48,16 @@ class ExploreFragment : Fragment(), MachineCardAdapter.OnMachineCardListener{
             }
         })
 
+        sharedViewModel.apiCallRetry.observe(viewLifecycleOwner, Observer { retry ->
+            if(retry) {
+                if(sharedViewModel.userLocationAccessed.value!!){
+                    scanForNearbyMachines()
+                } else {
+                    switchOffScanMode()
+                }
+            }
+        })
+
         viewModel.selectedMachine.observe(viewLifecycleOwner, Observer { selectedMachine->
             if(selectedMachine.Code == "Dummy") {
                 selected_machine_code.text = "Explore?"

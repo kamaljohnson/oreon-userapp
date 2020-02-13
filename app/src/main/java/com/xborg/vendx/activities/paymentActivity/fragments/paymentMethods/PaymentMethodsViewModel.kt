@@ -10,7 +10,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.io.IOException
 import java.lang.Exception
+import java.net.SocketTimeoutException
 
 private const val TAG = "PaymentMethodsViewModel"
 
@@ -20,11 +25,9 @@ class PaymentMethodsViewModel : ViewModel() {
 
     val order = MutableLiveData<Order>()
     val payment = MutableLiveData<Payment>()
-
     val paymentState = MutableLiveData<PaymentState>()
 
-    private var viewModelJob = Job()
-    private var coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
+    val apiCallError = MutableLiveData<Boolean>()
 
     init {
         paymentState.value = PaymentState.None
@@ -70,32 +73,52 @@ class PaymentMethodsViewModel : ViewModel() {
 
         val orderInJson = Gson().toJson(order.value, Order::class.java)
 
-        coroutineScope.launch {
-            val createOrderDeferred = VendxApi.retrofitServices
-                .createOrderAsync(order = orderInJson)
-            try {
-                val listResult = createOrderDeferred.await()
-                Log.i(TAG, "Successful to get response: $listResult")
+        val ordersCall = VendxApi.retrofitServices
+            .createOrderAsync(order = orderInJson)
+        ordersCall.enqueue(object : Callback<Payment> {
+            override fun onResponse(call: Call<Payment>, response: Response<Payment>) {
+                Log.i("Debug", "checkApplicationVersion")
+                if(response.code() == 200) {
+                    Log.i("Debug", "Successful Response code : 200 : items: " + response.body())
+                    val tempPayment: Payment? = response.body()
 
-                val tempPayment: Payment
-                tempPayment = Gson().fromJson(listResult, Payment::class.java)
-
-                updateOrder(
-                    payment = tempPayment
-                )
-                initPayment (
-                    payment = tempPayment,
-                    order = order.value!!
-                )
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to get response: $e")
+                    updateOrder(
+                        payment = tempPayment!!
+                    )
+                    initPayment (
+                        payment = tempPayment,
+                        order = order.value!!
+                    )
+                } else {
+                    Log.e("Debug", "Failed to get response")
+                    apiCallError.value = true
+                }
             }
-        }
+
+            override fun onFailure(call: Call<Payment>, error: Throwable) {
+                Log.e("Debug", "Failed to get response ${error.message}")
+                apiCallError.value = true
+                if(error is SocketTimeoutException) {
+                    //Connection Timeout
+                    Log.e("Debug", "error type : connectionTimeout")
+                } else if(error is IOException) {
+                    //Timeout
+                    Log.e("Debug", "error type : timeout")
+                } else {
+                    if(ordersCall.isCanceled) {
+                        //Call cancelled forcefully
+                        Log.e("Debug", "error type : cancelledForcefully")
+                    } else {
+                        //generic error handling
+                        Log.e("Debug", "error type : genericError")
+                    }
+                }
+            }
+        })
     }
 
     override fun onCleared() {
         super.onCleared()
         Log.i(TAG, "destroyed!")
-        viewModelJob.cancel()
     }
 }

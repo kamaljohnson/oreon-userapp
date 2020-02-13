@@ -73,6 +73,13 @@ class PaymentActivity : FragmentActivity(), PaymentResultWithDataListener {
                 }
             }
         })
+
+        sharedViewModel.apiCallError.observe(this, Observer { error ->
+            if(error) {
+                val oldCount = sharedViewModel.apiCallRetryCount.value!!
+                sharedViewModel.apiCallRetryCount.value = oldCount + 1
+            }
+        })
     }
 
     private fun getDataPassedByMainActivity() {

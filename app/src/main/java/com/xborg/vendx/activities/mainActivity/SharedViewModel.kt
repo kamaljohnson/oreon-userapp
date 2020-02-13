@@ -15,6 +15,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.io.IOException
+import java.net.SocketTimeoutException
 
 
 enum class PermissionStatus {
@@ -31,6 +36,7 @@ class SharedViewModel : ViewModel() {
 
     val isInternetAvailable = MutableLiveData<Boolean>()
     val apiCallError = MutableLiveData<Boolean>()
+    val apiCallRetry = MutableLiveData<Boolean>()
 
     var checkedUserLocationAccessed: MutableLiveData<Boolean> = MutableLiveData(false)
     var getUserLocation: MutableLiveData<Boolean> = MutableLiveData(false)
@@ -57,9 +63,6 @@ class SharedViewModel : ViewModel() {
         get() = _taggedCartItems
 
     private var _unTaggedCartItems = mutableMapOf<String, Int>()
-
-    private var viewModelJob = Job()
-    private var coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
     init {
         apiCallError.value = false
@@ -173,24 +176,38 @@ class SharedViewModel : ViewModel() {
     }
 
     private fun checkApplicationVersion() {
-        coroutineScope.launch {
-            Log.i(TAG, "checking application version")
-            val getApplicationDiffered = VendxApi.retrofitServices.getMinimumApplicationVersionAsync()
-            try {
-                val listResult = getApplicationDiffered.await()
-                Log.i(TAG, "Successful to get response: $listResult")
-                debugText.value = " Successful to get response: $listResult\n\n"
-                val applicationData = Gson().fromJson(listResult, Application::class.java)
-
-                applicationVersionDeprecated.value = versionCode != applicationData!!.Version
-                applicationAlertMessage.value = applicationData.AlertMessage
-                debugText.value = " application Data: $applicationData\n\n"
-
-            } catch (t: Throwable) {
-                Log.e(TAG, "Failed to get response: ${t.message}")
-                debugText.value = " Failed to get response: ${t.message}\n\n"
-                apiCallError.value = true
+        Log.i(TAG, "checking application version")
+        val applicationCall = VendxApi.retrofitServices.getMinimumApplicationVersionAsync()
+        applicationCall.enqueue(object : Callback<Application> {
+            override fun onResponse(call: Call<Application>, response: Response<Application>) {
+                if(response.code() == 200) {
+                    Log.i("Debug", "Successful Response code : 200")
+                    val applicationData = response.body()
+                    applicationVersionDeprecated.value = versionCode != applicationData!!.Version
+                    applicationAlertMessage.value = applicationData.AlertMessage
+                } else {
+                    Log.e("Debug", "Failed to get response")
+                }
             }
-        }
+
+            override fun onFailure(call: Call<Application>, error: Throwable) {
+                Log.e("Debug", "Failed to get response ${error.message}")
+                if(error is SocketTimeoutException) {
+                    //Connection Timeout
+                    Log.e("Debug", "error type : connectionTimeout")
+                } else if(error is IOException) {
+                    //Timeout
+                    Log.e("Debug", "error type : timeout")
+                } else {
+                    if(applicationCall.isCanceled) {
+                        //Call cancelled forcefully
+                        Log.e("Debug", "error type : cancelledForcefully")
+                    } else {
+                        //generic error handling
+                        Log.e("Debug", "error type : genericError")
+                    }
+                }
+            }
+        })
     }
 }
