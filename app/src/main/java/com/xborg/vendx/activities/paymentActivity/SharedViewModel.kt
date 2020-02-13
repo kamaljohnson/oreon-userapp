@@ -25,10 +25,13 @@ class SharedViewModel : ViewModel() {
 
     val order = MutableLiveData<Order>()
     val payment = MutableLiveData<Payment>()
-
     val paymentState = MutableLiveData<PaymentState>()
 
+    val apiCallError = MutableLiveData<Boolean>()
+    val apiCallRetryCount = MutableLiveData<Int>()
+
     init {
+        apiCallRetryCount.value = 0
         paymentState.value = PaymentState.None
         payment.value = Payment(Id = "", OrderId = "")
         order.value = Order(Id = "")

@@ -25,8 +25,9 @@ class PaymentMethodsViewModel : ViewModel() {
 
     val order = MutableLiveData<Order>()
     val payment = MutableLiveData<Payment>()
-
     val paymentState = MutableLiveData<PaymentState>()
+
+    val apiCallError = MutableLiveData<Boolean>()
 
     init {
         paymentState.value = PaymentState.None
@@ -90,11 +91,13 @@ class PaymentMethodsViewModel : ViewModel() {
                     )
                 } else {
                     Log.e("Debug", "Failed to get response")
+                    apiCallError.value = true
                 }
             }
 
             override fun onFailure(call: Call<Payment>, error: Throwable) {
                 Log.e("Debug", "Failed to get response ${error.message}")
+                apiCallError.value = true
                 if(error is SocketTimeoutException) {
                     //Connection Timeout
                     Log.e("Debug", "error type : connectionTimeout")
