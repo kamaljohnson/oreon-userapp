@@ -5,18 +5,18 @@
     <color name="colorAccent">#FF9800</color>
     <color name="statusBarColor">#313131</color>
     <color name="warning">#FF5722</color>
+
     <color name="blue">#007AFF</color>
     <color name="orange">#FF9800</color>
     <color name="green">#8BC34A</color>
     <color name="cyan">#24DDFF</color>
     <color name="white">#FFFFFF</color>
     <color name="gray">#DBDBDB</color>
+    <color name="black">#292929</color>
 
     <color name="colorRecieveText">#00FF00</color>
     <color name="colorSendText">#82CAFF</color>
     <color name="colorStatusText">#FFDB58</color>
     <color name="SearchTextColor">#353535</color>
     <color name="ItemCardBg">#FFFFFF</color>
-
-    <color name="black">#292929</color>
 </resources>

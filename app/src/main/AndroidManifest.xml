@@ -29,18 +29,19 @@
         <activity
             android:name=".activities.loginActivity.LoginActivity"
             android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".activities.mainActivity.MainActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.vendingActivity.VendingActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".database.ItemGroup"
             android:screenOrientation="portrait" /> <!-- region Razorpay -->
@@ -54,7 +55,6 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" /> <!-- endregion -->
-        <service android:name=".activities.vendingActivity.fragments.deviceCommunicator.SerialService" />
     </application>
 
 </manifest>
