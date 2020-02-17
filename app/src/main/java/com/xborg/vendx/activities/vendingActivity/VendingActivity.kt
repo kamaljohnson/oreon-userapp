@@ -32,8 +32,7 @@ class VendingActivity : FragmentActivity() {
             val bitmap: Bitmap = barcodeEncoder.createBitmap(bitMatrix);
             qr_code_view.setImageBitmap(bitmap)
         } catch (e: WriterException) {
-            e.printStackTrace();
+            e.printStackTrace()
         }
     }
-
 }
