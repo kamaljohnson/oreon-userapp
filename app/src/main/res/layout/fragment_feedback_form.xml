@@ -46,7 +46,7 @@
             android:layout_height="wrap_content">
 
             <Spinner
-                android:background="@color/gray"
+                android:background="@color/gray_light"
                 android:layout_marginHorizontal="20dp"
                 android:id="@+id/feedback_topic_spinner"
                 android:layout_width="match_parent"
