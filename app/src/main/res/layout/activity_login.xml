@@ -12,7 +12,6 @@ tools:context=".activities.loginActivity.LoginActivity">
         android:layout_height="match_parent">
 
         <ImageView
-            android:src="@drawable/vendx"
             android:layout_marginTop="100dp"
             android:layout_centerHorizontal="true"
             android:layout_width="wrap_content"
