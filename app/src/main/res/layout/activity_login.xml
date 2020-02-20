@@ -28,6 +28,7 @@ tools:context=".activities.loginActivity.LoginActivity">
         <Button
             android:paddingLeft="10dp"
             android:drawablePadding="10dp"
+            style="?android:attr/borderlessButtonStyle"
             android:layout_above="@id/google_login_button"
             android:textAlignment="textStart"
             android:textAllCaps="false"
@@ -42,6 +43,7 @@ tools:context=".activities.loginActivity.LoginActivity">
         <Button
             android:paddingLeft="10dp"
             android:drawablePadding="10dp"
+            style="?android:attr/borderlessButtonStyle"
             android:layout_above="@id/email_login_button"
             android:textAlignment="textStart"
             android:textAllCaps="false"
@@ -56,6 +58,7 @@ tools:context=".activities.loginActivity.LoginActivity">
         <Button
             android:layout_alignParentBottom="true"
             android:paddingLeft="10dp"
+            style="?android:attr/borderlessButtonStyle"
             android:drawablePadding="10dp"
             android:textAlignment="textStart"
             android:textAllCaps="false"

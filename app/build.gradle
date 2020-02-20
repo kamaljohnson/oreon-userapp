@@ -130,6 +130,9 @@ dependencies {
     implementation 'com.google.zxing:core:3.3.3'
     implementation 'com.journeyapps:zxing-android-embedded:3.6.0@aar'
 
-    //Facebook
+    //Facebook Auth
     implementation 'com.facebook.android:facebook-login:5.15.3'
+
+    //Google Auth
+    implementation 'com.google.android.gms:play-services-auth:17.0.0'
 }

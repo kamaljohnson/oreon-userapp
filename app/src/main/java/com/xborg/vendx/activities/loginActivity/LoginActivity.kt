@@ -3,7 +3,6 @@ package com.xborg.vendx.activities.loginActivity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.facebook.AccessToken
 import com.facebook.CallbackManager
@@ -11,11 +10,11 @@ import com.facebook.FacebookCallback
 import com.facebook.FacebookException
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.firestore.FirebaseFirestore
 import com.xborg.vendx.R
 import com.xborg.vendx.activities.mainActivity.MainActivity
 import kotlinx.android.synthetic.main.activity_login.*
-import java.util.*
 
 
 val db = FirebaseFirestore.getInstance()
@@ -33,10 +32,10 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
+        // Facebook Login
         facebook_login_button.setOnClickListener {
             Log.i(TAG, "facebook login button clicked")
 
-            // Login
             callbackManager = CallbackManager.Factory.create()
             LoginManager.getInstance().logInWithReadPermissions(this, listOf("public_profile", "email"))
             LoginManager.getInstance().registerCallback(callbackManager,
@@ -56,6 +55,11 @@ class LoginActivity : AppCompatActivity() {
 
                     }
                 })
+        }
+
+        // Google Login
+        google_login_button.setOnClickListener {
+
         }
     }
 
