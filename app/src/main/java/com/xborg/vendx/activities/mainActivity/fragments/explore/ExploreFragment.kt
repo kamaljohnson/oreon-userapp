@@ -64,6 +64,11 @@ class ExploreFragment : Fragment(), MachineCardAdapter.OnMachineCardListener {
             }
         })
 
+        sharedViewModel.machineNearby.observe(viewLifecycleOwner, Observer { machines ->
+            viewModel.machineNearby.value = machines
+            viewModel.selectNearestMachineToUser()
+        })
+
         viewModel.selectedMachine.observe(viewLifecycleOwner, Observer { selectedMachine->
             if(selectedMachine.Code == "Dummy") {
                 selected_machine_code.text = "Explore?"
@@ -77,10 +82,6 @@ class ExploreFragment : Fragment(), MachineCardAdapter.OnMachineCardListener {
         viewModel.machinesInZone.observe(viewLifecycleOwner, Observer { machines ->
             sharedViewModel.machinesInZone.value = machines
             displayMachinesInZone()
-        })
-
-        viewModel.machineNearby.observe(viewLifecycleOwner, Observer {
-
         })
 
         viewModel.apiCallError.observe(viewLifecycleOwner, Observer { error ->

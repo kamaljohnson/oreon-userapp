@@ -346,6 +346,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun scanForNearbyMachines() {
+        sharedViewModel.machineNearby.value = ArrayList()
+        val listOfMachinesNearBy: ArrayList<Machine> = ArrayList()
         intentFilter = IntentFilter(BluetoothDevice.ACTION_FOUND)
         broadcastReceiver = object: BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
@@ -355,13 +357,14 @@ class MainActivity : AppCompatActivity() {
                     Log.i(TAG, "found : " + device!!.address + ", required " + sharedViewModel.machinesInZone.value)
                     val machine = sharedViewModel.machinesInZone.value!!.find{ it.Mac.toUpperCase() == device.address.toUpperCase() }
                     if(machine != null) {
-                        Toast.makeText(context, "machine found : " + machine.Code, Toast.LENGTH_SHORT).show()
+                        listOfMachinesNearBy.add(machine)
+                        sharedViewModel.machineNearby.value = listOfMachinesNearBy
+                        Log.i(TAG, "machines : $listOfMachinesNearBy")
                     } else {
                         Log.i(TAG, "other bluetooth device")
                     }
                 }
             }
-
         }
         registerReceiver(broadcastReceiver, intentFilter)
 

@@ -46,7 +46,7 @@ class ExploreViewModel : ViewModel() {
                     Log.i("Debug", "Successful Response code : 200 : items: " + response.body())
                     machinesInZone.value = response.body()
                     if(machinesInZone.value!!.isNotEmpty()) {
-                        selectNearestMachineToUser()
+
                     } else {    //adding a dummy machine
                         selectedMachine.value = Machine()   //a empty machine constructor creates a dummy machine
                     }
@@ -78,9 +78,10 @@ class ExploreViewModel : ViewModel() {
         })
     }
 
-    private fun selectNearestMachineToUser() {
-        if(machinesInZone.value!![0].Distance <= 0.1) {
-            selectedMachine.value = machinesInZone.value!![0]
+    fun selectNearestMachineToUser() {
+        if(machineNearby.value!!.isNotEmpty()) {
+            Log.e("Debug", "machine selected")
+            selectedMachine.value = machineNearby.value!![0]
         } else {
             selectedMachine.value = Machine(Code = "Dummy")
         }
