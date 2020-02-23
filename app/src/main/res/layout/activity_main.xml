@@ -39,7 +39,7 @@
                     android:id="@+id/bottom_sliding_layer"
                     android:background="@color/white"
                     android:layout_width="match_parent"
-                    android:layout_height="80pt">
+                    android:layout_height="300pt">
 
                     <FrameLayout
                         android:id="@+id/explore_fragment_container"
