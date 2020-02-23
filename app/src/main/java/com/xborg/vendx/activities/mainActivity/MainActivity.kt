@@ -43,6 +43,10 @@ import com.xborg.vendx.activities.mainActivity.fragments.shop.ShopFragment
 import com.xborg.vendx.activities.paymentActivity.PaymentActivity
 import com.xborg.vendx.database.Machine
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.withTimeout
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.concurrent.schedule
 
 private const val REQUEST_ENABLE_BT = 2
 private const val REQUEST_ENABLE_LOC = 3
@@ -348,23 +352,25 @@ class MainActivity : AppCompatActivity() {
     private fun scanForNearbyMachines() {
         val listOfMachinesNearBy: ArrayList<Machine> = ArrayList()
         intentFilter = IntentFilter(BluetoothDevice.ACTION_FOUND)
+
         broadcastReceiver = object: BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
-                val action: String? = intent!!.action
-                if(BluetoothDevice.ACTION_FOUND == action) {
-                    val device: BluetoothDevice? = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
-                    Log.i(TAG, "found : " + device!!.address + ", required " + sharedViewModel.machinesInZone.value)
-                    val machine = sharedViewModel.machinesInZone.value!!.find{ it.Mac.toUpperCase() == device.address.toUpperCase() }
-                    if(machine != null) {
-                        if(listOfMachinesNearBy.find { it.Mac.toUpperCase() == machine.Mac.toUpperCase()} == null) {
-                            Log.i(TAG, "found added : " + device.address)
-                            listOfMachinesNearBy.add(machine)
-                            sharedViewModel.machineNearby.value = listOfMachinesNearBy
-                        } else {
-                            //already added to list
-                        }
-                    } else {
-                        Log.i(TAG, "other bluetooth device")
+                when(intent!!.action) {
+                    BluetoothDevice.ACTION_FOUND -> {
+                       val device: BluetoothDevice? = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
+                       Log.i(TAG, "found : " + device!!.address + ", required " + sharedViewModel.machinesInZone.value)
+                       val machine = sharedViewModel.machinesInZone.value!!.find{ it.Mac.toUpperCase() == device.address.toUpperCase() }
+                       if(machine != null) {
+                           if(listOfMachinesNearBy.find { it.Mac.toUpperCase() == machine.Mac.toUpperCase()} == null) {
+                               Log.i(TAG, "found added : " + device.address)
+                               listOfMachinesNearBy.add(machine)
+                               sharedViewModel.machineNearby.value = listOfMachinesNearBy
+                           } else {
+                               //already added to list
+                           }
+                       } else {
+                           Log.i(TAG, "other bluetooth device")
+                       }
                     }
                 }
             }
@@ -372,7 +378,18 @@ class MainActivity : AppCompatActivity() {
         registerReceiver(broadcastReceiver, intentFilter)
 
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+        if (bluetoothAdapter.isDiscovering) {
+            // Bluetooth is already in mode discovery mode, we cancel to restart it again
+            bluetoothAdapter.cancelDiscovery()
+        }
         bluetoothAdapter.startDiscovery()
+        Timer("discovery timer", false).schedule(10000) {
+            Log.i(TAG, "discovery finished")
+            bluetoothAdapter.cancelDiscovery()
+            if(listOfMachinesNearBy.isEmpty()) {
+                sharedViewModel.machineNearby.postValue(ArrayList())
+            }
+        }
     }
 
     @SuppressLint("MissingPermission")
