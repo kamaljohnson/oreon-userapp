@@ -30,9 +30,9 @@ class ExploreViewModel : ViewModel() {
 
     init {
         selectedMachine.value = Machine()
-        debugText.value = "init explorer\n\n"
     }
-    
+
+
     fun requestMachinesInZone() {
         Log.i(TAG, "request near by machines")
         val locationDataInJson = Gson().toJson(userLocation.value, Location::class.java)
@@ -45,11 +45,6 @@ class ExploreViewModel : ViewModel() {
                 if(response.code() == 200) {
                     Log.i("Debug", "Successful Response code : 200 : items: " + response.body())
                     machinesInZone.value = response.body()
-                    if(machinesInZone.value!!.isNotEmpty()) {
-
-                    } else {    //adding a dummy machine
-                        selectedMachine.value = Machine()   //a empty machine constructor creates a dummy machine
-                    }
                 } else {
                     Log.e("Debug", "Failed to get response")
                     apiCallError.value = true

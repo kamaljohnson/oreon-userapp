@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -67,9 +68,11 @@ class ExploreFragment : Fragment(), MachineCardAdapter.OnMachineCardListener {
         sharedViewModel.machineNearby.observe(viewLifecycleOwner, Observer { machines ->
             viewModel.machineNearby.value = machines
             viewModel.selectNearestMachineToUser()
+            Log.i(TAG, "here nearby machines" + viewModel.machineNearby.value)
         })
 
         viewModel.selectedMachine.observe(viewLifecycleOwner, Observer { selectedMachine->
+            Log.i(TAG, "here selected machine" + viewModel.machineNearby.value)
             if(selectedMachine.Code == "Dummy") {
                 selected_machine_code.text = "Explore?"
             } else {

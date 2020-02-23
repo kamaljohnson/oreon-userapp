@@ -346,7 +346,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun scanForNearbyMachines() {
-        sharedViewModel.machineNearby.value = ArrayList()
         val listOfMachinesNearBy: ArrayList<Machine> = ArrayList()
         intentFilter = IntentFilter(BluetoothDevice.ACTION_FOUND)
         broadcastReceiver = object: BroadcastReceiver() {
@@ -357,9 +356,13 @@ class MainActivity : AppCompatActivity() {
                     Log.i(TAG, "found : " + device!!.address + ", required " + sharedViewModel.machinesInZone.value)
                     val machine = sharedViewModel.machinesInZone.value!!.find{ it.Mac.toUpperCase() == device.address.toUpperCase() }
                     if(machine != null) {
-                        listOfMachinesNearBy.add(machine)
-                        sharedViewModel.machineNearby.value = listOfMachinesNearBy
-                        Log.i(TAG, "machines : $listOfMachinesNearBy")
+                        if(listOfMachinesNearBy.find { it.Mac.toUpperCase() == machine.Mac.toUpperCase()} == null) {
+                            Log.i(TAG, "found added : " + device.address)
+                            listOfMachinesNearBy.add(machine)
+                            sharedViewModel.machineNearby.value = listOfMachinesNearBy
+                        } else {
+                            //already added to list
+                        }
                     } else {
                         Log.i(TAG, "other bluetooth device")
                     }
