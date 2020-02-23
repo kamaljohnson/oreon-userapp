@@ -57,6 +57,8 @@ class SharedViewModel : ViewModel() {
     var applicationVersionDeprecated = MutableLiveData<Boolean>()
     var applicationAlertMessage = MutableLiveData<String>()
 
+    val machineNearby = MutableLiveData<List<Machine>>()    //machines in  vendable range
+
     // [itemId-from, count]     : from -> {Machine, Inventory}
     private var _taggedCartItems = MutableLiveData<MutableMap<String, Int>>()
     val taggedCartItem: LiveData<MutableMap<String, Int>>

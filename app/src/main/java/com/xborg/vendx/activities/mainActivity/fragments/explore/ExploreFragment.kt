@@ -1,5 +1,11 @@
 package com.xborg.vendx.activities.mainActivity.fragments.explore
 
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothDevice
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -17,7 +23,7 @@ import kotlinx.android.synthetic.main.fragment_explore.*
 
 const val TAG: String = "Explore"
 
-class ExploreFragment : Fragment(), MachineCardAdapter.OnMachineCardListener{
+class ExploreFragment : Fragment(), MachineCardAdapter.OnMachineCardListener {
 
     private lateinit var viewModel: ExploreViewModel
     private lateinit var sharedViewModel: SharedViewModel

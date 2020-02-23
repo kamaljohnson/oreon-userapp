@@ -4,8 +4,11 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothDevice
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.location.Location
@@ -59,6 +62,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var sharedViewModel: SharedViewModel
 
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
+
+    private lateinit var bluetoothAdapter: BluetoothAdapter
+    private lateinit var intentFilter: IntentFilter
+    private lateinit var broadcastReceiver: BroadcastReceiver
 
     companion object {
         var current_fragment  = MutableLiveData<Fragments>(Fragments.HOME)
@@ -162,6 +169,8 @@ class MainActivity : AppCompatActivity() {
         enableBluetooth()
 
         getCurrentLocation()
+
+        getNearbyMachines()
 
         checkout_button.setOnClickListener {
             // TODO: use navigation graphs instead
@@ -325,6 +334,21 @@ class MainActivity : AppCompatActivity() {
             }
             sharedViewModel.checkedUserLocationAccessed.value = true
         }
+    }
+
+    private fun getNearbyMachines() {
+        intentFilter = IntentFilter(BluetoothDevice.ACTION_FOUND)
+        broadcastReceiver = object: BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                val action: String? = intent!!.action
+                if(BluetoothDevice.ACTION_FOUND == action) {
+                    val device: BluetoothDevice? = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
+                    Toast.makeText(context, "device discovered : " + device!!.address, Toast.LENGTH_SHORT).show()
+                }
+            }
+
+        }
+        registerReceiver(broadcastReceiver, intentFilter)
     }
 
     @SuppressLint("MissingPermission")
