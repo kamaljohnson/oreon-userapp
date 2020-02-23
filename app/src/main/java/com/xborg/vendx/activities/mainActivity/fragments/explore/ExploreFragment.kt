@@ -42,7 +42,7 @@ class ExploreFragment : Fragment(), MachineCardAdapter.OnMachineCardListener{
 
         sharedViewModel.userLocationAccessed.observe(viewLifecycleOwner, Observer { accessed ->
             if(accessed) {
-                scanForNearbyMachines()
+                scanForMachinesInZone()
             } else {
                 switchOffScanMode()
             }
@@ -51,7 +51,7 @@ class ExploreFragment : Fragment(), MachineCardAdapter.OnMachineCardListener{
         sharedViewModel.apiCallRetry.observe(viewLifecycleOwner, Observer { retry ->
             if(retry) {
                 if(sharedViewModel.userLocationAccessed.value!!){
-                    scanForNearbyMachines()
+                    scanForMachinesInZone()
                 } else {
                     switchOffScanMode()
                 }
@@ -68,8 +68,12 @@ class ExploreFragment : Fragment(), MachineCardAdapter.OnMachineCardListener{
             setSelectedMachineMac(selectedMachine.Mac)
         })
 
-        viewModel.machinesNearby.observe(viewLifecycleOwner, Observer {
-            displayNearbyMachines()
+        viewModel.machinesInZone.observe(viewLifecycleOwner, Observer {
+            displayMachinesInZone()
+        })
+
+        viewModel.machineNearby.observe(viewLifecycleOwner, Observer {
+
         })
 
         viewModel.apiCallError.observe(viewLifecycleOwner, Observer { error ->
@@ -83,7 +87,7 @@ class ExploreFragment : Fragment(), MachineCardAdapter.OnMachineCardListener{
         })
     }
 
-    private fun scanForNearbyMachines() {
+    private fun scanForMachinesInZone() {
         viewModel.debugText.value = "init explorer\n\n"
 
         progress_bar.visibility = View.VISIBLE
@@ -92,14 +96,14 @@ class ExploreFragment : Fragment(), MachineCardAdapter.OnMachineCardListener{
         viewModel.userLocation.value = sharedViewModel.userLastLocation.value
         sharedViewModel.getUserLocation.value = false
 
-        viewModel.requestNearbyMachines()
+        viewModel.requestMachinesInZone()
     }
 
     private fun switchOffScanMode() {
         sharedViewModel.getUserLocation.value = false
     }
 
-    private fun displayNearbyMachines() {
+    private fun displayMachinesInZone() {
         progress_bar.visibility = View.GONE
         updateMachineCardRV()
         updateMapView()
@@ -108,7 +112,7 @@ class ExploreFragment : Fragment(), MachineCardAdapter.OnMachineCardListener{
     private fun updateMachineCardRV() {
         rv_machine_cards.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            adapter = MachineCardAdapter(viewModel.machinesNearby.value!!, context, this@ExploreFragment)
+            adapter = MachineCardAdapter(viewModel.machinesInZone.value!!, context, this@ExploreFragment)
         }
     }
     private fun updateMapView() {
