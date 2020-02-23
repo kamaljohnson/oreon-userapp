@@ -41,6 +41,7 @@ import com.xborg.vendx.activities.mainActivity.fragments.history.HistoryFragment
 import com.xborg.vendx.activities.mainActivity.fragments.home.HomeFragment
 import com.xborg.vendx.activities.mainActivity.fragments.shop.ShopFragment
 import com.xborg.vendx.activities.paymentActivity.PaymentActivity
+import com.xborg.vendx.database.Machine
 import kotlinx.android.synthetic.main.activity_main.*
 
 private const val REQUEST_ENABLE_BT = 2
@@ -164,13 +165,16 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
+        sharedViewModel.machinesInZone.observe(this, Observer {
+            Log.i(TAG, "starting to scanning...")
+            scanForNearbyMachines()
+        })
+
         initBottomNavigationView()
         initBottomSwipeUpView()
         enableBluetooth()
 
         getCurrentLocation()
-
-        getNearbyMachines()
 
         checkout_button.setOnClickListener {
             // TODO: use navigation graphs instead
@@ -197,6 +201,11 @@ class MainActivity : AppCompatActivity() {
             Log.i(TAG, "getLocation called from onResume")
             getCurrentLocation()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(broadcastReceiver)
     }
 
     // region Location and Bluetooth
@@ -336,19 +345,28 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun getNearbyMachines() {
+    private fun scanForNearbyMachines() {
         intentFilter = IntentFilter(BluetoothDevice.ACTION_FOUND)
         broadcastReceiver = object: BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
                 val action: String? = intent!!.action
                 if(BluetoothDevice.ACTION_FOUND == action) {
                     val device: BluetoothDevice? = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
-                    Toast.makeText(context, "device discovered : " + device!!.address, Toast.LENGTH_SHORT).show()
+                    Log.i(TAG, "found : " + device!!.address + ", required " + sharedViewModel.machinesInZone.value)
+                    val machine = sharedViewModel.machinesInZone.value!!.find{ it.Mac.toUpperCase() == device.address.toUpperCase() }
+                    if(machine != null) {
+                        Toast.makeText(context, "machine found : " + machine.Code, Toast.LENGTH_SHORT).show()
+                    } else {
+                        Log.i(TAG, "other bluetooth device")
+                    }
                 }
             }
 
         }
         registerReceiver(broadcastReceiver, intentFilter)
+
+        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+        bluetoothAdapter.startDiscovery()
     }
 
     @SuppressLint("MissingPermission")

@@ -74,7 +74,8 @@ class ExploreFragment : Fragment(), MachineCardAdapter.OnMachineCardListener {
             setSelectedMachineMac(selectedMachine.Mac)
         })
 
-        viewModel.machinesInZone.observe(viewLifecycleOwner, Observer {
+        viewModel.machinesInZone.observe(viewLifecycleOwner, Observer { machines ->
+            sharedViewModel.machinesInZone.value = machines
             displayMachinesInZone()
         })
 
