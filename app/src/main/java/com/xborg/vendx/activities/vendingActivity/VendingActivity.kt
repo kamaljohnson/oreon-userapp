@@ -40,6 +40,7 @@ class VendingActivity : FragmentActivity() {
                 scanForSelectedMachine()
             }
         })
+
         loadFragments()
     }
 
