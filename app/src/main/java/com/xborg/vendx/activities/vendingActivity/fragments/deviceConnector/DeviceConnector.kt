@@ -43,12 +43,23 @@ class DeviceConnector : Fragment() {
         viewModel.selectedMachine.observe(viewLifecycleOwner, Observer { machine ->
             if(machine != null) {
                 sharedViewModel.selectedMachine.value = machine
+                viewModel.deviceScanningMode.value = true
             }
+        })
+        viewModel.deviceScanningMode.observe(viewLifecycleOwner, Observer { enabled ->
+            sharedViewModel.deviceScanningMode.value = enabled
+            Log.i(TAG, "deviceScanningMode enabled : $enabled")
+        })
+        viewModel.selectedMachineConnected.observe(viewLifecycleOwner, Observer { connected ->
+            if(connected) {
+                viewModel.deviceScanningMode.value = false
+            }
+            Log.i(TAG, "selected Machine connected : $connected")
         })
 
         sharedViewModel.selectedMachineNearby.observe(viewLifecycleOwner, Observer { isNearby ->
             viewModel.selectedMachineNearby.value = isNearby
-            Log.i(TAG, "Selected Machine Is Nearby: $isNearby")
+            Log.i(TAG, "Selected Machine Is Nearby : $isNearby")
         })
 
         getSelectedMachineMac()

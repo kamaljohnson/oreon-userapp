@@ -35,10 +35,11 @@ class VendingActivity : FragmentActivity() {
 
         sharedViewModel = ViewModelProviders.of(this).get(SharedViewModel::class.java)
 
-        sharedViewModel.selectedMachine.observe(this, Observer { machine ->
-            scanForSelectedMachine()
+        sharedViewModel.deviceScanningMode.observe(this, Observer { enabled ->
+            if(enabled) {
+                scanForSelectedMachine()
+            }
         })
-
         loadFragments()
     }
 
