@@ -15,6 +15,7 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.xborg.vendx.R
+import com.xborg.vendx.activities.vendingActivity.fragments.deviceConnector.DeviceConnectionState
 import com.xborg.vendx.activities.vendingActivity.fragments.deviceConnector.DeviceConnector
 import java.util.*
 import kotlin.concurrent.schedule
@@ -35,9 +36,29 @@ class VendingActivity : FragmentActivity() {
 
         sharedViewModel = ViewModelProviders.of(this).get(SharedViewModel::class.java)
 
-        sharedViewModel.deviceScanningMode.observe(this, Observer { enabled ->
-            if(enabled) {
-                scanForSelectedMachine()
+        sharedViewModel.deviceConnectionState.observe(this, Observer { state ->
+            when(state) {
+                DeviceConnectionState.None -> {
+
+                }
+                DeviceConnectionState.DeviceInfo -> {
+
+                }
+                DeviceConnectionState.ScanMode -> {
+                    scanForSelectedMachine()
+                }
+                DeviceConnectionState.DeviceNearby -> {
+
+                }
+                DeviceConnectionState.DeviceIdle -> {
+
+                }
+                DeviceConnectionState.DeviceBusy -> {
+
+                }
+                DeviceConnectionState.DeviceConnected -> {
+
+                }
             }
         })
 
@@ -61,7 +82,7 @@ class VendingActivity : FragmentActivity() {
                             val device: BluetoothDevice? = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
                             Log.i(TAG, "found : " + device!!.address + ", required " + sharedViewModel.selectedMachine.value)
                             if(sharedViewModel.selectedMachine.value!!.Mac.toUpperCase() == device.address.toUpperCase()) {
-                                sharedViewModel.selectedMachineNearby.value = true
+                                sharedViewModel.deviceConnectionState.value = DeviceConnectionState.DeviceNearby
                                 selectedMachineFound = true
                             }
                         }
@@ -81,7 +102,7 @@ class VendingActivity : FragmentActivity() {
             Log.i(TAG, "discovery finished")
             bluetoothAdapter.cancelDiscovery()
             if(!selectedMachineFound) {
-                sharedViewModel.selectedMachineNearby.postValue(false)
+                sharedViewModel.deviceConnectionState.postValue(DeviceConnectionState.DeviceNotNearby)
             }
         }
     }

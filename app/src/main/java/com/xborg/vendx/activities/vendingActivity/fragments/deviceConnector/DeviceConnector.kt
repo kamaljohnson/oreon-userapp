@@ -73,27 +73,42 @@ class DeviceConnector : Fragment() {
             if(machine != null) {
                 sharedViewModel.selectedMachine.value = machine
                 viewModel.deviceScanningMode.value = true
-            }
-        })
-        viewModel.deviceScanningMode.observe(viewLifecycleOwner, Observer { enabled ->
-            sharedViewModel.deviceScanningMode.value = enabled
-            Log.i(TAG, "deviceScanningMode enabled : $enabled")
-        })
-        viewModel.selectedMachineConnected.observe(viewLifecycleOwner, Observer { connected ->
-            if(connected) {
-                viewModel.deviceScanningMode.value = false
-            }
-            Log.i(TAG, "selected Machine connected : $connected")
-        })
-
-        sharedViewModel.selectedMachineNearby.observe(viewLifecycleOwner, Observer { isNearby ->
-            viewModel.selectedMachineNearby.value = isNearby
-            Log.i(TAG, "Selected Machine Is Nearby : $isNearby")
-            if(isNearby) {
-                startLeScan()
+                sharedViewModel.deviceConnectionState.value = DeviceConnectionState.DeviceInfo
             }
         })
 
+        sharedViewModel.deviceConnectionState.observe(viewLifecycleOwner, Observer {state ->
+            viewModel.deviceConnectionState.value = state
+            when(state) {
+                DeviceConnectionState.DeviceInfo -> {
+                    val machine = viewModel.selectedMachine.value
+                    if(machine != null) {
+                        Log.i(TAG, "device info loaded")
+                        sharedViewModel.selectedMachine.value = machine
+                        sharedViewModel.deviceConnectionState.value = DeviceConnectionState.ScanMode
+                    }
+                }
+                DeviceConnectionState.ScanMode -> {
+                    Log.i(TAG, "device scanning mode")
+                }
+                DeviceConnectionState.DeviceNearby -> {
+                    Log.i(TAG, "selected device is nearby")
+                    startLeScan()
+                }
+                DeviceConnectionState.DeviceNotNearby -> {
+                    Log.i(TAG, "selected device is not nearby")
+                }
+                DeviceConnectionState.DeviceIdle -> {
+                    Log.i(TAG, "selected device is idle")
+                }
+                DeviceConnectionState.DeviceBusy -> {
+                    Log.i(TAG, "selected device is busy")
+                }
+                DeviceConnectionState.DeviceConnected -> {
+                    Log.i(TAG, "selected device connected")
+                }
+            }
+        })
         getSelectedMachineMac()
     }
 
@@ -137,6 +152,7 @@ class DeviceConnector : Fragment() {
         if (scanState == ScanState.NONE) return
         if(device.address.toUpperCase() == viewModel.selectedMachine.value!!.Mac.toUpperCase()) {
             Log.i(TAG, "device discovered using ble: " +  device.address)
+            sharedViewModel.deviceConnectionState.value = DeviceConnectionState.DeviceIdle
             stopLeScan()
         }
     }
@@ -148,10 +164,10 @@ class DeviceConnector : Fragment() {
                 leScanStopHandler.removeCallbacks { stopLeScan() }
                 bluetoothAdapter.stopLeScan(leScanCallback)
             }
-            ScanState.DISCOVERY -> bluetoothAdapter.cancelDiscovery()
-            else -> {
-            }
         }
-        scanState = ScanState.NONE
+        scanState = ScanState.DISCOVERY_FINISHED
+        if(sharedViewModel.deviceConnectionState.value!! < DeviceConnectionState.DeviceIdle) {
+            sharedViewModel.deviceConnectionState.value = DeviceConnectionState.DeviceBusy
+        }
     }
 }
