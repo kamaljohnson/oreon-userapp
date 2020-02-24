@@ -55,11 +55,13 @@ class VendingActivity : FragmentActivity() {
             override fun onReceive(context: Context?, intent: Intent?) {
                 when(intent!!.action) {
                     BluetoothDevice.ACTION_FOUND -> {
-                        val device: BluetoothDevice? = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
-                        Log.i(TAG, "found : " + device!!.address + ", required " + sharedViewModel.selectedMachine.value)
-                        if(sharedViewModel.selectedMachine.value!!.Mac.toUpperCase() == device.address.toUpperCase()) {
-                            sharedViewModel.selectedMachineNearby.value = true
-                            selectedMachineFound = true
+                        if(!selectedMachineFound) {
+                            val device: BluetoothDevice? = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
+                            Log.i(TAG, "found : " + device!!.address + ", required " + sharedViewModel.selectedMachine.value)
+                            if(sharedViewModel.selectedMachine.value!!.Mac.toUpperCase() == device.address.toUpperCase()) {
+                                sharedViewModel.selectedMachineNearby.value = true
+                                selectedMachineFound = true
+                            }
                         }
                     }
                 }
@@ -77,7 +79,7 @@ class VendingActivity : FragmentActivity() {
             Log.i(TAG, "discovery finished")
             bluetoothAdapter.cancelDiscovery()
             if(!selectedMachineFound) {
-                sharedViewModel.selectedMachineNearby.value = false
+                sharedViewModel.selectedMachineNearby.postValue(false)
             }
         }
     }
