@@ -1,4 +1,4 @@
-package com.xborg.vendx.activities.vendingActivity.fragments.deviceConnector
+package com.xborg.vendx.activities.vendingActivity.fragments.deviceScanner
 
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
@@ -23,9 +23,9 @@ import com.xborg.vendx.activities.vendingActivity.SharedViewModel
 import com.xborg.vendx.database.Machine
 import com.xborg.vendx.preferences.SharedPreference
 
-const val TAG: String = "DeviceConnector"
+const val TAG: String = "DeviceScanner"
 
-class DeviceConnector : Fragment() {
+class DeviceScanner : Fragment() {
 
     private enum class ScanState {
         NONE, LESCAN, DISCOVERY, DISCOVERY_FINISHED
@@ -36,7 +36,7 @@ class DeviceConnector : Fragment() {
     private var leScanCallback: LeScanCallback? = null
     lateinit var bluetoothAdapter: BluetoothAdapter
 
-    private lateinit var viewModel: DeviceConnectorViewModel
+    private lateinit var viewModel: DeviceScannerViewModel
     private lateinit var sharedViewModel: SharedViewModel
 
     init {
@@ -66,46 +66,43 @@ class DeviceConnector : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        viewModel = ViewModelProviders.of(activity!!).get(DeviceConnectorViewModel::class.java)
+        viewModel = ViewModelProviders.of(activity!!).get(DeviceScannerViewModel::class.java)
         sharedViewModel = ViewModelProviders.of(activity!!).get(SharedViewModel::class.java)
 
         viewModel.selectedMachine.observe(viewLifecycleOwner, Observer { machine ->
             if(machine != null) {
                 sharedViewModel.selectedMachine.value = machine
                 viewModel.deviceScanningMode.value = true
-                sharedViewModel.deviceConnectionState.value = DeviceConnectionState.DeviceInfo
+                sharedViewModel.deviceConnectionState.value = DeviceScannerState.DeviceInfo
             }
         })
 
         sharedViewModel.deviceConnectionState.observe(viewLifecycleOwner, Observer {state ->
             viewModel.deviceConnectionState.value = state
             when(state) {
-                DeviceConnectionState.DeviceInfo -> {
+                DeviceScannerState.DeviceInfo -> {
                     val machine = viewModel.selectedMachine.value
                     if(machine != null) {
                         Log.i(TAG, "device info loaded")
                         sharedViewModel.selectedMachine.value = machine
-                        sharedViewModel.deviceConnectionState.value = DeviceConnectionState.ScanMode
+                        sharedViewModel.deviceConnectionState.value = DeviceScannerState.ScanMode
                     }
                 }
-                DeviceConnectionState.ScanMode -> {
+                DeviceScannerState.ScanMode -> {
                     Log.i(TAG, "device scanning mode")
                 }
-                DeviceConnectionState.DeviceNearby -> {
+                DeviceScannerState.DeviceNearby -> {
                     Log.i(TAG, "selected device is nearby")
                     startLeScan()
                 }
-                DeviceConnectionState.DeviceNotNearby -> {
+                DeviceScannerState.DeviceNotNearby -> {
                     Log.i(TAG, "selected device is not nearby")
                 }
-                DeviceConnectionState.DeviceIdle -> {
+                DeviceScannerState.DeviceIdle -> {
                     Log.i(TAG, "selected device is idle")
                 }
-                DeviceConnectionState.DeviceBusy -> {
+                DeviceScannerState.DeviceBusy -> {
                     Log.i(TAG, "selected device is busy")
-                }
-                DeviceConnectionState.DeviceConnected -> {
-                    Log.i(TAG, "selected device connected")
                 }
             }
         })
@@ -152,7 +149,7 @@ class DeviceConnector : Fragment() {
         if (scanState == ScanState.NONE) return
         if(device.address.toUpperCase() == viewModel.selectedMachine.value!!.Mac.toUpperCase()) {
             Log.i(TAG, "device discovered using ble: " +  device.address)
-            sharedViewModel.deviceConnectionState.value = DeviceConnectionState.DeviceIdle
+            sharedViewModel.deviceConnectionState.value = DeviceScannerState.DeviceIdle
             stopLeScan()
         }
     }
@@ -166,8 +163,8 @@ class DeviceConnector : Fragment() {
             }
         }
         scanState = ScanState.DISCOVERY_FINISHED
-        if(sharedViewModel.deviceConnectionState.value!! < DeviceConnectionState.DeviceIdle) {
-            sharedViewModel.deviceConnectionState.value = DeviceConnectionState.DeviceBusy
+        if(sharedViewModel.deviceConnectionState.value!! < DeviceScannerState.DeviceIdle) {
+            sharedViewModel.deviceConnectionState.value = DeviceScannerState.DeviceBusy
         }
     }
 }

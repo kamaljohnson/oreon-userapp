@@ -1,32 +1,31 @@
-package com.xborg.vendx.activities.vendingActivity.fragments.deviceConnector
+package com.xborg.vendx.activities.vendingActivity.fragments.deviceScanner
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.xborg.vendx.database.Machine
 
-enum class DeviceConnectionState {
+enum class DeviceScannerState {
     None,
     DeviceInfo,
     ScanMode,
     DeviceNearby,
     DeviceNotNearby,
     DeviceBusy,
-    DeviceIdle,
-    DeviceConnected;
+    DeviceIdle;
 
     operator fun compareTo(i: Int): Int {
         return i
     }
 }
 
-class DeviceConnectorViewModel: ViewModel() {
+class DeviceScannerViewModel: ViewModel() {
 
-    val deviceConnectionState = MutableLiveData<DeviceConnectionState>()
+    val deviceConnectionState = MutableLiveData<DeviceScannerState>()
 
     val deviceScanningMode = MutableLiveData<Boolean>()
     val selectedMachine = MutableLiveData<Machine>()        //machine selected for vending
 
     init {
-        deviceConnectionState.value = DeviceConnectionState.None
+        deviceConnectionState.value = DeviceScannerState.None
     }
 }
