@@ -60,7 +60,7 @@ class DeviceScanner : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_device_connector, container, false)
+        return inflater.inflate(R.layout.fragment_device_scanner, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
