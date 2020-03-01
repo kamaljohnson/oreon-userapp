@@ -59,7 +59,7 @@ class VendingActivity : FragmentActivity() {
             }
         })
 
-        loadFragments()
+        loadScannerFragment()
     }
 
     override fun onDestroy() {
@@ -106,12 +106,12 @@ class VendingActivity : FragmentActivity() {
 
     //      region Fragment Loading
     @SuppressLint("ResourceType")
-    private fun loadFragments() {
+    private fun loadScannerFragment() {
         val fragmentManager: FragmentManager = supportFragmentManager
-        var fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
+        val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
 
         fragmentTransaction.add(
-            R.id.device_connector_fragment_container,
+            R.id.device_scanner_fragment_container,
             DeviceScanner(),
             "DeviceScanner"
         )

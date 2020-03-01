@@ -27,8 +27,8 @@ import java.util.Queue;
  */
 public class SerialService extends Service implements SerialListener {
 
-    class SerialBinder extends Binder {
-        SerialService getService() { return SerialService.this; }
+    public class SerialBinder extends Binder {
+        public SerialService getService() { return SerialService.this; }
     }
 
     private enum QueueType {Connect, ConnectError, Read, IoError}
@@ -157,7 +157,8 @@ public class SerialService extends Service implements SerialListener {
     }
 
     private void cancelNotification() {
-        stopForeground(true);
+        Intent serviceIntent = new Intent(this, SerialService.class);
+        super.stopService(serviceIntent);
     }
 
     /**

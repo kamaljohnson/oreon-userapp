@@ -30,8 +30,7 @@ public class SerialSocket extends BluetoothGattCallback {
 
     private static final UUID BLUETOOTH_LE_CC254X_SERVICE = UUID.fromString("000000FF-0000-1000-8000-00805F9B34FB");
     private static final UUID BLUETOOTH_LE_CCCD           = UUID.fromString("00002902-0000-1000-8000-00805F9B34FB");
-    private static final UUID BLUETOOTH_LE_CC254X_CHAR_RX = UUID.fromString("0000FF01-0000-1000-8000-00805F9B34FB");
-    private static final UUID BLUETOOTH_LE_CC254X_CHAR_TX = UUID.fromString("0000FF02-0000-1000-8000-00805F9B34FB");
+    private static final UUID BLUETOOTH_LE_CC254X_CHAR_WR = UUID.fromString("0000FF01-0000-1000-8000-00805F9B34FB");
 
     private static final int MAX_MTU = 512; // BLE standard does not limit, some BLE 4.2 devices support 251, various source say that Android has max 512
     private static final int DEFAULT_MTU = 23;
@@ -187,8 +186,8 @@ public class SerialSocket extends BluetoothGattCallback {
                 Log.d(TAG, "service cc254x uart");
                 //for(BluetoothGattCharacteristic characteristic : gattService.getCharacteristics())
                 //    Log.d(TAG, "characteristic "+characteristic.getUuid());
-                readCharacteristic = gattService.getCharacteristic(BLUETOOTH_LE_CC254X_CHAR_RX);
-                writeCharacteristic = gattService.getCharacteristic(BLUETOOTH_LE_CC254X_CHAR_TX);
+                readCharacteristic = gattService.getCharacteristic(BLUETOOTH_LE_CC254X_CHAR_WR);
+                writeCharacteristic = gattService.getCharacteristic(BLUETOOTH_LE_CC254X_CHAR_WR);
             }
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

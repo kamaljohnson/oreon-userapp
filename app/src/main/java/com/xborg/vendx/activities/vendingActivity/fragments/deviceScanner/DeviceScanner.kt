@@ -20,6 +20,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.xborg.vendx.R
 import com.xborg.vendx.activities.vendingActivity.SharedViewModel
+import com.xborg.vendx.activities.vendingActivity.fragments.deviceCommunicator.DeviceCommunicator
 import com.xborg.vendx.database.Machine
 import com.xborg.vendx.preferences.SharedPreference
 
@@ -165,6 +166,14 @@ class DeviceScanner : Fragment() {
         scanState = ScanState.DISCOVERY_FINISHED
         if(sharedViewModel.deviceConnectionState.value!! < DeviceScannerState.DeviceIdle) {
             sharedViewModel.deviceConnectionState.value = DeviceScannerState.DeviceBusy
+        } else {
+            val args = Bundle()
+            args.putString("device", viewModel.selectedMachine.value!!.Mac)
+            val fragment: Fragment =
+                DeviceCommunicator()
+            fragment.arguments = args
+            fragmentManager!!.beginTransaction().replace(R.id.device_connector_fragment_container, fragment, "DeviceCommunicator")
+                .addToBackStack(null).commit()
         }
     }
 }
