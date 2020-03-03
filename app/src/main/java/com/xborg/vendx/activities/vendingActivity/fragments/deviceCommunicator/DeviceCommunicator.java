@@ -204,5 +204,4 @@ public class DeviceCommunicator extends Fragment implements ServiceConnection, S
         status("connection lost: " + e.getMessage());
         disconnect();
     }
-
 }
