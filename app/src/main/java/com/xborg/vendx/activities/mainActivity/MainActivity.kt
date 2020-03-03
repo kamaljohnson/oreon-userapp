@@ -4,8 +4,11 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothDevice
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.location.Location
@@ -38,7 +41,12 @@ import com.xborg.vendx.activities.mainActivity.fragments.history.HistoryFragment
 import com.xborg.vendx.activities.mainActivity.fragments.home.HomeFragment
 import com.xborg.vendx.activities.mainActivity.fragments.shop.ShopFragment
 import com.xborg.vendx.activities.paymentActivity.PaymentActivity
+import com.xborg.vendx.database.Machine
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.withTimeout
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.concurrent.schedule
 
 private const val REQUEST_ENABLE_BT = 2
 private const val REQUEST_ENABLE_LOC = 3
@@ -59,6 +67,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var sharedViewModel: SharedViewModel
 
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
+
+    private lateinit var bluetoothAdapter: BluetoothAdapter
+    private lateinit var intentFilter: IntentFilter
+    private lateinit var broadcastReceiver: BroadcastReceiver
 
     companion object {
         var current_fragment  = MutableLiveData<Fragments>(Fragments.HOME)
@@ -157,6 +169,11 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
+        sharedViewModel.machinesInZone.observe(this, Observer {
+            Log.i(TAG, "starting to scanning...")
+            scanForNearbyMachines()
+        })
+
         initBottomNavigationView()
         initBottomSwipeUpView()
         enableBluetooth()
@@ -188,6 +205,17 @@ class MainActivity : AppCompatActivity() {
             Log.i(TAG, "getLocation called from onResume")
             getCurrentLocation()
         }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.i(TAG, "onStop")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.i(TAG, "onDestroy")
+        unregisterReceiver(broadcastReceiver)
     }
 
     // region Location and Bluetooth
@@ -324,6 +352,49 @@ class MainActivity : AppCompatActivity() {
                 requestLocationPermission()
             }
             sharedViewModel.checkedUserLocationAccessed.value = true
+        }
+    }
+
+    private fun scanForNearbyMachines() {
+        val listOfMachinesNearBy: ArrayList<Machine> = ArrayList()
+        intentFilter = IntentFilter(BluetoothDevice.ACTION_FOUND)
+
+        broadcastReceiver = object: BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                when(intent!!.action) {
+                    BluetoothDevice.ACTION_FOUND -> {
+                       val device: BluetoothDevice? = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
+                       Log.i(TAG, "found : " + device!!.address + ", required " + sharedViewModel.machinesInZone.value)
+                       val machine = sharedViewModel.machinesInZone.value!!.find{ it.Mac.toUpperCase() == device.address.toUpperCase() }
+                       if(machine != null) {
+                           if(listOfMachinesNearBy.find { it.Mac.toUpperCase() == machine.Mac.toUpperCase()} == null) {
+                               Log.i(TAG, "found added : " + device.address)
+                               listOfMachinesNearBy.add(machine)
+                               sharedViewModel.machineNearby.value = listOfMachinesNearBy
+                           } else {
+                               //already added to list
+                           }
+                       } else {
+                           Log.i(TAG, "other bluetooth device")
+                       }
+                    }
+                }
+            }
+        }
+        registerReceiver(broadcastReceiver, intentFilter)
+
+        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+        if (bluetoothAdapter.isDiscovering) {
+            // Bluetooth is already in mode discovery mode, we cancel to restart it again
+            bluetoothAdapter.cancelDiscovery()
+        }
+        bluetoothAdapter.startDiscovery()
+        Timer("discovery timer", false).schedule(10000) {
+            Log.i(TAG, "discovery finished")
+            bluetoothAdapter.cancelDiscovery()
+            if(listOfMachinesNearBy.isEmpty()) {
+                sharedViewModel.machineNearby.postValue(ArrayList())
+            }
         }
     }
 

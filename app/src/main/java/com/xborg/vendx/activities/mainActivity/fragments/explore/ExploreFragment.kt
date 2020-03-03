@@ -1,6 +1,13 @@
 package com.xborg.vendx.activities.mainActivity.fragments.explore
 
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothDevice
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -17,7 +24,7 @@ import kotlinx.android.synthetic.main.fragment_explore.*
 
 const val TAG: String = "Explore"
 
-class ExploreFragment : Fragment(), MachineCardAdapter.OnMachineCardListener{
+class ExploreFragment : Fragment(), MachineCardAdapter.OnMachineCardListener {
 
     private lateinit var viewModel: ExploreViewModel
     private lateinit var sharedViewModel: SharedViewModel
@@ -42,7 +49,7 @@ class ExploreFragment : Fragment(), MachineCardAdapter.OnMachineCardListener{
 
         sharedViewModel.userLocationAccessed.observe(viewLifecycleOwner, Observer { accessed ->
             if(accessed) {
-                scanForNearbyMachines()
+                scanForMachinesInZone()
             } else {
                 switchOffScanMode()
             }
@@ -51,14 +58,21 @@ class ExploreFragment : Fragment(), MachineCardAdapter.OnMachineCardListener{
         sharedViewModel.apiCallRetry.observe(viewLifecycleOwner, Observer { retry ->
             if(retry) {
                 if(sharedViewModel.userLocationAccessed.value!!){
-                    scanForNearbyMachines()
+                    scanForMachinesInZone()
                 } else {
                     switchOffScanMode()
                 }
             }
         })
 
+        sharedViewModel.machineNearby.observe(viewLifecycleOwner, Observer { machines ->
+            viewModel.machineNearby.value = machines
+            viewModel.selectNearestMachineToUser()
+            Log.i(TAG, "here nearby machines" + viewModel.machineNearby.value)
+        })
+
         viewModel.selectedMachine.observe(viewLifecycleOwner, Observer { selectedMachine->
+            Log.i(TAG, "here selected machine" + viewModel.machineNearby.value)
             if(selectedMachine.Code == "Dummy") {
                 selected_machine_code.text = "Explore?"
             } else {
@@ -68,8 +82,9 @@ class ExploreFragment : Fragment(), MachineCardAdapter.OnMachineCardListener{
             setSelectedMachineMac(selectedMachine.Mac)
         })
 
-        viewModel.machinesNearby.observe(viewLifecycleOwner, Observer {
-            displayNearbyMachines()
+        viewModel.machinesInZone.observe(viewLifecycleOwner, Observer { machines ->
+            sharedViewModel.machinesInZone.value = machines
+            displayMachinesInZone()
         })
 
         viewModel.apiCallError.observe(viewLifecycleOwner, Observer { error ->
@@ -83,7 +98,7 @@ class ExploreFragment : Fragment(), MachineCardAdapter.OnMachineCardListener{
         })
     }
 
-    private fun scanForNearbyMachines() {
+    private fun scanForMachinesInZone() {
         viewModel.debugText.value = "init explorer\n\n"
 
         progress_bar.visibility = View.VISIBLE
@@ -92,14 +107,14 @@ class ExploreFragment : Fragment(), MachineCardAdapter.OnMachineCardListener{
         viewModel.userLocation.value = sharedViewModel.userLastLocation.value
         sharedViewModel.getUserLocation.value = false
 
-        viewModel.requestNearbyMachines()
+        viewModel.requestMachinesInZone()
     }
 
     private fun switchOffScanMode() {
         sharedViewModel.getUserLocation.value = false
     }
 
-    private fun displayNearbyMachines() {
+    private fun displayMachinesInZone() {
         progress_bar.visibility = View.GONE
         updateMachineCardRV()
         updateMapView()
@@ -108,7 +123,7 @@ class ExploreFragment : Fragment(), MachineCardAdapter.OnMachineCardListener{
     private fun updateMachineCardRV() {
         rv_machine_cards.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            adapter = MachineCardAdapter(viewModel.machinesNearby.value!!, context, this@ExploreFragment)
+            adapter = MachineCardAdapter(viewModel.machinesInZone.value!!, context, this@ExploreFragment)
         }
     }
     private fun updateMapView() {
