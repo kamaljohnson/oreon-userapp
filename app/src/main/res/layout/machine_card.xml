@@ -16,8 +16,8 @@
 
         <RelativeLayout
             android:id="@+id/card_top"
-            android:layout_height="45pt"
-            android:layout_width="75pt">
+            android:layout_height="90dp"
+            android:layout_width="150dp">
 
             <TextView
                 android:textColor="@color/white"
