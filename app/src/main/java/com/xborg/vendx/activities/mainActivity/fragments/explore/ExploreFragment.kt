@@ -10,9 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.maps.*
-import com.google.android.gms.maps.model.CameraPosition
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
 import com.xborg.vendx.activities.mainActivity.SharedViewModel
 import com.xborg.vendx.adapters.MachineCardAdapter
 import com.xborg.vendx.preferences.SharedPreference
@@ -138,17 +136,6 @@ class ExploreFragment : Fragment(), MachineCardAdapter.OnMachineCardListener, On
         }
     }
 
-    private fun updateMachineMarkersOnMap() {
-        viewModel.machinesInZone.value!!.forEach { machine ->
-            val machineLocation = machine.Location
-            googleMap!!.addMarker(
-                MarkerOptions()
-                    .position(LatLng(machineLocation.Latitude, machineLocation.Longitude))
-                    .title(machine.Code)
-            )
-        }
-    }
-
     override fun onCardClicked(machineId: String) {
         viewModel.changeSelectedMachine(machineId)
     }
@@ -177,6 +164,22 @@ class ExploreFragment : Fragment(), MachineCardAdapter.OnMachineCardListener, On
             1000,
             null
         )
+        googleMap!!.addMarker(
+            MarkerOptions()
+                .position(LatLng(location.Latitude, location.Longitude))
+                .title("You are here")
+        )
+    }
+
+    private fun updateMachineMarkersOnMap() {
+        viewModel.machinesInZone.value!!.forEach { machine ->
+            val machineLocation = machine.Location
+            googleMap!!.addMarker(
+                MarkerOptions()
+                    .position(LatLng(machineLocation.Latitude, machineLocation.Longitude))
+                    .title(machine.Code)
+            )
+        }
     }
 
     override fun onMapReady(googleMap: GoogleMap?) {
