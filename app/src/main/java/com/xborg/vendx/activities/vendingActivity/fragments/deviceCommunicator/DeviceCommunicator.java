@@ -27,11 +27,18 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.xborg.vendx.R;
+import com.xborg.vendx.activities.vendingActivity.SharedViewModel;
+import com.xborg.vendx.activities.vendingActivity.VendingState;
 import com.xborg.vendx.activities.vendingActivity.helper.SerialListener;
 import com.xborg.vendx.activities.vendingActivity.helper.SerialService;
 import com.xborg.vendx.activities.vendingActivity.helper.SerialSocket;
+
+import java.util.Objects;
 
 
 public class DeviceCommunicator extends Fragment implements ServiceConnection, SerialListener {
@@ -46,6 +53,9 @@ public class DeviceCommunicator extends Fragment implements ServiceConnection, S
     private SerialService service;
     private static boolean initialStart = true;
     private Connected connected = Connected.False;
+
+    private SharedViewModel sharedViewModel;
+    private DeviceCommunicatorViewModel viewModel;
 
     /*
      * Lifecycle
@@ -97,11 +107,61 @@ public class DeviceCommunicator extends Fragment implements ServiceConnection, S
     @Override
     public void onResume() {
         super.onResume();
-        if(initialStart && service !=null) {
-            Log.i(TAG, "onResume: trying to connect");
-            initialStart = false;
-            getActivity().runOnUiThread(this::connect);
-        }
+
+        sharedViewModel = new ViewModelProvider(Objects.requireNonNull(getActivity())).get(SharedViewModel.class);
+        viewModel = new ViewModelProvider(getActivity()).get(DeviceCommunicatorViewModel.class);
+
+        sharedViewModel.getVendingState().observe(getViewLifecycleOwner(), new Observer<VendingState>() {
+            @Override
+            public void onChanged(VendingState vendingState) {
+
+                switch (vendingState) {
+
+                    case DeviceDiscovered:
+                        sharedViewModel.getVendingState().setValue(VendingState.ConnectionRequest);
+                        break;
+
+                    case ConnectionRequest:
+                        if(initialStart && service !=null) {
+                            initialStart = false;
+                            sharedViewModel.getVendingState().setValue(VendingState.Connecting);
+                            connect();
+                        }
+                        break;
+
+                    case Connecting:
+                        //Connecting...
+                        break;
+
+                    case Connected:
+                        break;
+
+                    case ReceivedOtp:
+                        break;
+
+                    case SendOtpWithCart:
+                        break;
+
+                    case Vending:
+                        break;
+
+                    case VendingDone:
+                        break;
+
+                    case VendingComplete:
+                        break;
+
+                    case ReceivedLog:
+                        break;
+
+                    case SendLogAck:
+                        break;
+
+                    case Error:
+                        break;
+                }
+            }
+        });
     }
 
     @Override
@@ -185,6 +245,7 @@ public class DeviceCommunicator extends Fragment implements ServiceConnection, S
     public void onSerialConnect() {
         status("connected");
         connected = Connected.True;
+        sharedViewModel.getVendingState().setValue(VendingState.Connected);
     }
 
     @Override

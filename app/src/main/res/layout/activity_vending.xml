@@ -7,14 +7,14 @@
     tools:context=".activities.vendingActivity.VendingActivity">
 
     <FrameLayout
+        android:layout_alignParentBottom="true"
         android:background="@color/gray"
         android:id="@+id/device_scanner_fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="25pt"
-        android:layout_alignParentTop="true"/>
+        android:layout_height="100pt"/>
 
     <FrameLayout
-        android:layout_below="@+id/device_scanner_fragment_container"
+        android:layout_above="@id/device_scanner_fragment_container"
         android:background="@color/gray"
         android:id="@+id/device_connector_fragment_container"
         android:layout_width="match_parent"

@@ -13,6 +13,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.xborg.vendx.R
 import com.xborg.vendx.activities.vendingActivity.fragments.deviceScanner.DeviceScannerState
@@ -34,9 +35,16 @@ class VendingActivity : FragmentActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_vending)
 
-        sharedViewModel = ViewModelProviders.of(this).get(SharedViewModel::class.java)
+        sharedViewModel = ViewModelProvider(this).get(SharedViewModel::class.java)
+
+        sharedViewModel.vendingState.observe(this, Observer { state ->
+            Log.i(TAG, "VendingState: $state")
+
+        })
 
         sharedViewModel.deviceConnectionState.observe(this, Observer { state ->
+            Log.i(TAG, "DeviceConnectionState: $state")
+
             when(state) {
                 DeviceScannerState.None -> {
 

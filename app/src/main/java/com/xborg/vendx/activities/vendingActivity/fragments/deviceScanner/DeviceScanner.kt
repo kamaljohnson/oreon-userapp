@@ -17,12 +17,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.xborg.vendx.R
 import com.xborg.vendx.activities.vendingActivity.SharedViewModel
+import com.xborg.vendx.activities.vendingActivity.VendingState
 import com.xborg.vendx.activities.vendingActivity.fragments.deviceCommunicator.DeviceCommunicator
 import com.xborg.vendx.database.Machine
 import com.xborg.vendx.preferences.SharedPreference
+import kotlinx.android.synthetic.main.fragment_device_scanner.*
 
 const val TAG: String = "DeviceScanner"
 
@@ -67,8 +70,8 @@ class DeviceScanner : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        viewModel = ViewModelProviders.of(activity!!).get(DeviceScannerViewModel::class.java)
-        sharedViewModel = ViewModelProviders.of(activity!!).get(SharedViewModel::class.java)
+        viewModel = ViewModelProvider(activity!!).get(DeviceScannerViewModel::class.java)
+        sharedViewModel = ViewModelProvider(activity!!).get(SharedViewModel::class.java)
 
         viewModel.selectedMachine.observe(viewLifecycleOwner, Observer { machine ->
             if(machine != null) {
@@ -97,17 +100,26 @@ class DeviceScanner : Fragment() {
                     startLeScan()
                 }
                 DeviceScannerState.DeviceNotNearby -> {
+                    retry_button.visibility = View.VISIBLE
                     Log.i(TAG, "selected device is not nearby")
                 }
                 DeviceScannerState.DeviceIdle -> {
+                    sharedViewModel.vendingState.value = VendingState.DeviceDiscovered
                     Log.i(TAG, "selected device is idle")
                 }
                 DeviceScannerState.DeviceBusy -> {
+                    retry_button.visibility = View.VISIBLE
                     Log.i(TAG, "selected device is busy")
                 }
             }
         })
         getSelectedMachineMac()
+
+        retry_button.setOnClickListener {
+
+            retry_button.visibility = View.INVISIBLE
+            sharedViewModel.deviceConnectionState.value = DeviceScannerState.ScanMode
+        }
     }
 
     private fun getSelectedMachineMac() {
