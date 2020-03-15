@@ -16,7 +16,7 @@ enum class VendingState {
 
     //vending states
     ReceivedOtp,
-    SendOtpWithCart,
+    SendOtpWithBag,
     Vending,
     VendingDone,
     VendingComplete,

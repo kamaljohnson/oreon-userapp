@@ -1,7 +1,6 @@
 package com.xborg.vendx.activities.vendingActivity.fragments.deviceCommunicator;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.ComponentName;
@@ -12,16 +11,11 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
-import android.text.method.ScrollingMovementMethod;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -29,7 +23,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 
 import com.xborg.vendx.R;
 import com.xborg.vendx.activities.vendingActivity.SharedViewModel;
@@ -38,6 +31,7 @@ import com.xborg.vendx.activities.vendingActivity.helper.SerialListener;
 import com.xborg.vendx.activities.vendingActivity.helper.SerialService;
 import com.xborg.vendx.activities.vendingActivity.helper.SerialSocket;
 
+import java.util.Arrays;
 import java.util.Objects;
 
 
@@ -134,12 +128,13 @@ public class DeviceCommunicator extends Fragment implements ServiceConnection, S
                         break;
 
                     case Connected:
+                        //Connected, check for OTP from device
                         break;
 
                     case ReceivedOtp:
                         break;
 
-                    case SendOtpWithCart:
+                    case SendOtpWithBag:
                         break;
 
                     case Vending:
@@ -230,6 +225,56 @@ public class DeviceCommunicator extends Fragment implements ServiceConnection, S
 
     private void receive(byte[] data) {
         Log.i(TAG, (new String(data)));
+
+        String dataString = Arrays.toString(data);
+        switch (Objects.requireNonNull(sharedViewModel.getVendingState().getValue())) {
+
+            case DeviceDiscovered:
+                //Device Discovered
+                break;
+
+            case ConnectionRequest:
+                //Requesting Connection
+                break;
+
+            case Connecting:
+                //Connecting...
+                break;
+
+            case Connected:
+                switch (dataString){
+                    //TODO: check other possibilities
+                    default:
+                        Log.i(TAG, "OTP: " + dataString);
+                        sharedViewModel.getVendingState().setValue(VendingState.ReceivedOtp);
+                        break;
+                }
+                break;
+
+            case ReceivedOtp:
+                break;
+
+            case SendOtpWithBag:
+                break;
+
+            case Vending:
+                break;
+
+            case VendingDone:
+                break;
+
+            case VendingComplete:
+                break;
+
+            case ReceivedLog:
+                break;
+
+            case SendLogAck:
+                break;
+
+            case Error:
+                break;
+        }
     }
 
     private void status(String str) {
