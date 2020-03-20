@@ -99,8 +99,8 @@ public class DeviceCommunicator extends Fragment implements ServiceConnection, S
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onActivityCreated(Bundle savedInstanceState ) {
+        super.onActivityCreated(savedInstanceState);
 
         sharedViewModel = new ViewModelProvider(Objects.requireNonNull(getActivity())).get(SharedViewModel.class);
         viewModel = new ViewModelProvider(getActivity()).get(DeviceCommunicatorViewModel.class);
