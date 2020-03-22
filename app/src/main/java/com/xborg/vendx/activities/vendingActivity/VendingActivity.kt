@@ -14,7 +14,6 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.xborg.vendx.R
 import com.xborg.vendx.activities.vendingActivity.fragments.deviceScanner.DeviceScannerState
 import com.xborg.vendx.activities.vendingActivity.fragments.deviceScanner.DeviceScanner
@@ -76,6 +75,7 @@ class VendingActivity : FragmentActivity() {
     }
 
     private fun scanForSelectedMachine() {
+        Log.i(TAG, "scan for selected machine")
         intentFilter = IntentFilter(BluetoothDevice.ACTION_FOUND)
         var selectedMachineFound = false
         broadcastReceiver = object: BroadcastReceiver() {

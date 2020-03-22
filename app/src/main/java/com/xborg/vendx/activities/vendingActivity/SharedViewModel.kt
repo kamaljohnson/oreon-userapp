@@ -35,6 +35,7 @@ class SharedViewModel : ViewModel() {
     val vendingState = MutableLiveData<VendingState>()
 
     init {
+        deviceConnectionState.value = DeviceScannerState.None
         vendingState.value = VendingState.Init
     }
 

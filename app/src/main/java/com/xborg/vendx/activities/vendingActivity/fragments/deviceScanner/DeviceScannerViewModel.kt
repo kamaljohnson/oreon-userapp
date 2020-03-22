@@ -20,10 +20,7 @@ enum class DeviceScannerState {
 
 class DeviceScannerViewModel: ViewModel() {
 
-    val deviceConnectionState = MutableLiveData<DeviceScannerState>()
-
-    val deviceScanningMode = MutableLiveData<Boolean>()
-    val selectedMachine = MutableLiveData<Machine>()        //machine selected for vending
+    private val deviceConnectionState = MutableLiveData<DeviceScannerState>()
 
     init {
         deviceConnectionState.value = DeviceScannerState.None

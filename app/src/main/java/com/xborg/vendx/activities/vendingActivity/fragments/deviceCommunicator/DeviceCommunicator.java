@@ -102,8 +102,10 @@ public class DeviceCommunicator extends Fragment implements ServiceConnection, S
     public void onActivityCreated(Bundle savedInstanceState ) {
         super.onActivityCreated(savedInstanceState);
 
-        sharedViewModel = new ViewModelProvider(Objects.requireNonNull(getActivity())).get(SharedViewModel.class);
-        viewModel = new ViewModelProvider(getActivity()).get(DeviceCommunicatorViewModel.class);
+        Log.e(TAG, "onActivityCreated");
+
+        sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(DeviceCommunicatorViewModel.class);
 
         sharedViewModel.getVendingState().observe(getViewLifecycleOwner(), new Observer<VendingState>() {
             @Override
@@ -188,6 +190,7 @@ public class DeviceCommunicator extends Fragment implements ServiceConnection, S
      */
     private void connect() {
         try {
+            Log.i(TAG, "deviceAddress : " + deviceAddress);
             BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
             BluetoothDevice device = bluetoothAdapter.getRemoteDevice(deviceAddress);
             String deviceName = device.getName() != null ? device.getName() : device.getAddress();
@@ -197,6 +200,7 @@ public class DeviceCommunicator extends Fragment implements ServiceConnection, S
             service.connect(this, "Connected to " + deviceName);
             socket.connect(getContext(), service, device);
         } catch (Exception e) {
+            Log.i(TAG, "Connection Error : " + e);
             onSerialConnectError(e);
         }
     }
@@ -226,7 +230,7 @@ public class DeviceCommunicator extends Fragment implements ServiceConnection, S
     private void receive(byte[] data) {
         Log.i(TAG, (new String(data)));
 
-        String dataString = Arrays.toString(data);
+        String dataString = data.toString();
         switch (Objects.requireNonNull(sharedViewModel.getVendingState().getValue())) {
 
             case DeviceDiscovered:
