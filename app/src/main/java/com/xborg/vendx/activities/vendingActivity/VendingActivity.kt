@@ -30,6 +30,8 @@ class VendingActivity : FragmentActivity() {
     private lateinit var intentFilter: IntentFilter
     private lateinit var broadcastReceiver: BroadcastReceiver
 
+    var selectedMachineFound = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_vending)
@@ -57,6 +59,9 @@ class VendingActivity : FragmentActivity() {
                 DeviceScannerState.DeviceNearby -> {
 
                 }
+                DeviceScannerState.DeviceNotNearby -> {
+
+                }
                 DeviceScannerState.DeviceIdle -> {
 
                 }
@@ -77,7 +82,6 @@ class VendingActivity : FragmentActivity() {
     private fun scanForSelectedMachine() {
         Log.i(TAG, "scan for selected machine")
         intentFilter = IntentFilter(BluetoothDevice.ACTION_FOUND)
-        var selectedMachineFound = false
         broadcastReceiver = object: BroadcastReceiver() {
             @SuppressLint("DefaultLocale")
             override fun onReceive(context: Context?, intent: Intent?) {
@@ -119,7 +123,7 @@ class VendingActivity : FragmentActivity() {
         val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
 
         fragmentTransaction.add(
-            R.id.device_scanner_fragment_container,
+            R.id.bluetooth_container,
             DeviceScanner(),
             "DeviceScanner"
         )

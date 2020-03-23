@@ -39,7 +39,7 @@ public class DeviceCommunicator extends Fragment implements ServiceConnection, S
 
     private String TAG = "DeviceCommunicator";
 
-    private enum Connected { False, Pending, True }
+    private enum Connected {False, Pending, True}
 
     private String deviceAddress;
 
@@ -49,7 +49,6 @@ public class DeviceCommunicator extends Fragment implements ServiceConnection, S
     private Connected connected = Connected.False;
 
     private SharedViewModel sharedViewModel;
-    private DeviceCommunicatorViewModel viewModel;
 
     /*
      * Lifecycle
@@ -58,7 +57,6 @@ public class DeviceCommunicator extends Fragment implements ServiceConnection, S
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        deviceAddress = getArguments().getString("device");
     }
 
     @Override
@@ -72,7 +70,7 @@ public class DeviceCommunicator extends Fragment implements ServiceConnection, S
     @Override
     public void onStart() {
         super.onStart();
-        if(service != null)
+        if (service != null)
             service.attach(this);
         else
             getActivity().startService(new Intent(getActivity(), SerialService.class)); // prevents service destroy on unbind from recreated activity caused by orientation change
@@ -80,12 +78,13 @@ public class DeviceCommunicator extends Fragment implements ServiceConnection, S
 
     @Override
     public void onStop() {
-        if(service != null && !getActivity().isChangingConfigurations())
+        if (service != null && !getActivity().isChangingConfigurations())
             service.detach();
         super.onStop();
     }
 
-    @SuppressWarnings("deprecation") // onAttach(context) was added with API 23. onAttach(activity) works for all API versions
+    @SuppressWarnings("deprecation")
+    // onAttach(context) was added with API 23. onAttach(activity) works for all API versions
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -94,18 +93,29 @@ public class DeviceCommunicator extends Fragment implements ServiceConnection, S
 
     @Override
     public void onDetach() {
-        try { getActivity().unbindService(this); } catch(Exception ignored) {}
+        try {
+            getActivity().unbindService(this);
+        } catch (Exception ignored) {
+        }
         super.onDetach();
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState ) {
+    public void onResume() {
+        super.onResume();
+        if(initialStart && service !=null) {
+            initialStart = false;
+            getActivity().runOnUiThread(this::connect);
+        }
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        Log.e(TAG, "onActivityCreated");
+        Log.i(TAG, "onActivityCreated");
 
         sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
-        viewModel = new ViewModelProvider(requireActivity()).get(DeviceCommunicatorViewModel.class);
 
         sharedViewModel.getVendingState().observe(getViewLifecycleOwner(), new Observer<VendingState>() {
             @Override
@@ -113,16 +123,8 @@ public class DeviceCommunicator extends Fragment implements ServiceConnection, S
 
                 switch (vendingState) {
 
-                    case DeviceDiscovered:
-                        sharedViewModel.getVendingState().setValue(VendingState.ConnectionRequest);
-                        break;
-
                     case ConnectionRequest:
-                        if(initialStart && service !=null) {
-                            initialStart = false;
-                            sharedViewModel.getVendingState().setValue(VendingState.Connecting);
-                            connect();
-                        }
+                        //ConnectionRequest
                         break;
 
                     case Connecting:
@@ -164,9 +166,7 @@ public class DeviceCommunicator extends Fragment implements ServiceConnection, S
     @Override
     public void onServiceConnected(ComponentName name, IBinder binder) {
         service = ((SerialService.SerialBinder) binder).getService();
-        Log.i(TAG, "onServiceConnected: initialStart: " + initialStart);
         if(initialStart && isResumed()) {
-            Log.i(TAG, "onServiceConnected: trying to connect");
             initialStart = false;
             getActivity().runOnUiThread(this::connect);
         }
@@ -190,6 +190,8 @@ public class DeviceCommunicator extends Fragment implements ServiceConnection, S
      */
     private void connect() {
         try {
+            sharedViewModel.getVendingState().setValue(VendingState.Connecting);
+            deviceAddress = sharedViewModel.getSelectedMachine().getValue().getMac();
             Log.i(TAG, "deviceAddress : " + deviceAddress);
             BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
             BluetoothDevice device = bluetoothAdapter.getRemoteDevice(deviceAddress);
@@ -213,12 +215,12 @@ public class DeviceCommunicator extends Fragment implements ServiceConnection, S
     }
 
     private void send(String str) {
-        if(connected != Connected.True) {
+        if (connected != Connected.True) {
             Toast.makeText(getActivity(), "not connected", Toast.LENGTH_SHORT).show();
             return;
         }
         try {
-            SpannableStringBuilder spn = new SpannableStringBuilder(str+'\n');
+            SpannableStringBuilder spn = new SpannableStringBuilder(str + '\n');
             spn.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorSendText)), 0, spn.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             byte[] data = (str).getBytes();
             socket.write(data);
@@ -233,20 +235,12 @@ public class DeviceCommunicator extends Fragment implements ServiceConnection, S
         String dataString = data.toString();
         switch (Objects.requireNonNull(sharedViewModel.getVendingState().getValue())) {
 
-            case DeviceDiscovered:
-                //Device Discovered
-                break;
-
-            case ConnectionRequest:
-                //Requesting Connection
-                break;
-
             case Connecting:
                 //Connecting...
                 break;
 
             case Connected:
-                switch (dataString){
+                switch (dataString) {
                     //TODO: check other possibilities
                     default:
                         Log.i(TAG, "OTP: " + dataString);
@@ -283,7 +277,7 @@ public class DeviceCommunicator extends Fragment implements ServiceConnection, S
 
     private void status(String str) {
         Log.i(TAG, str);
-        SpannableStringBuilder spn = new SpannableStringBuilder(str+'\n');
+        SpannableStringBuilder spn = new SpannableStringBuilder(str + '\n');
         spn.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorStatusText)), 0, spn.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
 

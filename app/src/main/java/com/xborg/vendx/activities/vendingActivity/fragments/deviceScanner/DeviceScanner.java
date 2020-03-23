@@ -52,13 +52,13 @@ public class DeviceScanner extends Fragment {
     private IntentFilter discoveryIntentFilter;
     private BluetoothAdapter bluetoothAdapter;
 
-    private DeviceScannerViewModel viewModel;
     private SharedViewModel sharedViewModel;
 
     public DeviceScanner() {
         leScanCallback = (device, rssi, scanRecord) -> {
-            if (device != null && getActivity() != null) {
+            if (device != null && getActivity() != null && scanState != ScanState.DISCOVERY_FINISHED) {
                 getActivity().runOnUiThread(() -> {
+                    Log.i(TAG, "updateScan DeviceScanner");
                     updateScan(device);
                 });
             }
@@ -100,7 +100,6 @@ public class DeviceScanner extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
-        viewModel = new ViewModelProvider(requireActivity()).get(DeviceScannerViewModel.class);
 
         sharedViewModel.getSelectedMachine().observe(getViewLifecycleOwner(), new Observer<Machine>() {
             @Override
@@ -131,13 +130,16 @@ public class DeviceScanner extends Fragment {
                         break;
                     case DeviceNotNearby:
                         Log.i(TAG, "selected device is not nearby");
+                        showRetryOption();
                         break;
                     case DeviceIdle:
                         Log.i(TAG, "selected device is idle");
+                        stopScan();
                         loadDeviceCommunicator();
                         break;
                     case DeviceBusy:
                         Log.i(TAG, "selected device is busy");
+                        showRetryOption();
                         break;
                 }
             }
@@ -235,21 +237,23 @@ public class DeviceScanner extends Fragment {
     private void updateScan(BluetoothDevice device) {
         Log.i("TEST", "LeScan On Track scanState: " + scanState + " discoveredDevice: " + device.getAddress());
 
-        if (scanState == ScanState.NONE)
+        if (scanState == ScanState.NONE || scanState == ScanState.DISCOVERY_FINISHED)
             return;
         if (device.getAddress().toUpperCase().equals(sharedViewModel.getSelectedMachine().getValue().getMac().toUpperCase())) {
             Log.i(TAG, "device discovered using ble: " + device.getAddress());
+            sharedViewModel.getVendingState().setValue(VendingState.DeviceDiscovered);
             sharedViewModel.getDeviceConnectionState().setValue(DeviceScannerState.DeviceIdle);
-            stopScan();
         }
     }
 
     private void stopScan() {
+        Log.i(TAG, "stopScan");
         if (scanState == ScanState.NONE)
             return;
         if (scanState == ScanState.LESCAN) {
             leScanStopHandler.removeCallbacks(this::stopScan);
             bluetoothAdapter.stopLeScan(leScanCallback);
+            Log.i(TAG, "leScanCallback Stopped");
         }
         scanState = ScanState.DISCOVERY_FINISHED;
         Log.i(TAG, "before comparision: " + sharedViewModel.getDeviceConnectionState().getValue());
@@ -259,13 +263,13 @@ public class DeviceScanner extends Fragment {
     }
 
     private void loadDeviceCommunicator() {
-        sharedViewModel.getVendingState().setValue(VendingState.DeviceDiscovered);
-        Log.i(TAG, "loading device communicator");
-        Bundle args = new Bundle();
-        args.putString("device", sharedViewModel.getSelectedMachine().getValue().getMac());
+        sharedViewModel.getVendingState().setValue(VendingState.ConnectionRequest);
         Fragment fragment = new DeviceCommunicator();
-        fragment.setArguments(args);
-        getFragmentManager().beginTransaction().replace(R.id.device_connector_fragment_container, fragment, "DeviceCommunicator")
+        getFragmentManager().beginTransaction().replace(R.id.bluetooth_container, fragment, "DeviceCommunicator")
                 .addToBackStack(null).commit();
+    }
+
+    private void showRetryOption() {
+        getView().findViewById(R.id.retry_button).setVisibility(View.VISIBLE);
     }
 }

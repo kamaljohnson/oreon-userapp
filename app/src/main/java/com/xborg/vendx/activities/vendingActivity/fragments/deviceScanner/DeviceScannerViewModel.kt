@@ -2,7 +2,6 @@ package com.xborg.vendx.activities.vendingActivity.fragments.deviceScanner
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.xborg.vendx.database.Machine
 
 enum class DeviceScannerState {
     None,
