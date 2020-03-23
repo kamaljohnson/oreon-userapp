@@ -17,10 +17,11 @@ import androidx.lifecycle.ViewModelProvider
 import com.xborg.vendx.R
 import com.xborg.vendx.activities.vendingActivity.fragments.deviceScanner.DeviceScannerState
 import com.xborg.vendx.activities.vendingActivity.fragments.deviceScanner.DeviceScanner
+import com.xborg.vendx.database.VendingState
 import java.util.*
 import kotlin.concurrent.schedule
 
-private var TAG = "VendingActivity"
+var TAG = "VendingActivity"
 
 class VendingActivity : FragmentActivity() {
 
@@ -40,7 +41,21 @@ class VendingActivity : FragmentActivity() {
 
         sharedViewModel.vendingState.observe(this, Observer { state ->
             Log.i(TAG, "VendingState: $state")
-
+            when(state) {
+//                VendingState.Init -> TODO()
+//                VendingState.DeviceDiscovered -> TODO()
+//                VendingState.ConnectionRequest -> TODO()
+//                VendingState.Connecting -> TODO()
+//                VendingState.Connected -> TODO()
+                VendingState.ReceivedOtp -> sharedViewModel.sendEncryptedOtpToServer()
+//                VendingState.ReceivedOtpWithBag -> TODO()
+//                VendingState.Vending -> TODO()
+//                VendingState.VendingDone -> TODO()
+//                VendingState.VendingComplete -> TODO()
+//                VendingState.ReceivedLog -> TODO()
+//                VendingState.SendLogAck -> TODO()
+//                VendingState.Error -> TODO()
+            }
         })
 
         sharedViewModel.deviceConnectionState.observe(this, Observer { state ->

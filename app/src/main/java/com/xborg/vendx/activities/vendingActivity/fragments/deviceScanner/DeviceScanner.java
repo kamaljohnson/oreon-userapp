@@ -17,7 +17,6 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -29,9 +28,9 @@ import android.view.ViewGroup;
 
 import com.xborg.vendx.R;
 import com.xborg.vendx.activities.vendingActivity.SharedViewModel;
-import com.xborg.vendx.activities.vendingActivity.VendingState;
 import com.xborg.vendx.activities.vendingActivity.fragments.deviceCommunicator.DeviceCommunicator;
 import com.xborg.vendx.database.Machine;
+import com.xborg.vendx.database.VendingState;
 import com.xborg.vendx.preferences.SharedPreference;
 
 
@@ -185,8 +184,9 @@ public class DeviceScanner extends Fragment {
         Log.i(TAG, "machine selection");
         Machine machine = new Machine();
         SharedPreference preference = new SharedPreference(getContext());
-        machine.setMac(preference.getSelectedMachineMac());
+        machine = preference.getSelectedMachine();
         sharedViewModel.getSelectedMachine().setValue(machine);
+        sharedViewModel.getBag().getValue().setMid(machine.getId());
     }
 
 
