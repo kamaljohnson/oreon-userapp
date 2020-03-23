@@ -9,15 +9,8 @@
     <FrameLayout
         android:layout_alignParentBottom="true"
         android:background="@color/gray"
-        android:id="@+id/device_scanner_fragment_container"
+        android:id="@+id/bluetooth_container"
         android:layout_width="match_parent"
         android:layout_height="100pt"/>
-
-    <FrameLayout
-        android:layout_above="@id/device_scanner_fragment_container"
-        android:background="@color/gray"
-        android:id="@+id/device_connector_fragment_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
 
 </RelativeLayout >
