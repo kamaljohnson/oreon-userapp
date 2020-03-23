@@ -26,13 +26,16 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.xborg.vendx.R;
 import com.xborg.vendx.activities.vendingActivity.SharedViewModel;
-import com.xborg.vendx.activities.vendingActivity.VendingState;
 import com.xborg.vendx.activities.vendingActivity.helper.SerialListener;
 import com.xborg.vendx.activities.vendingActivity.helper.SerialService;
 import com.xborg.vendx.activities.vendingActivity.helper.SerialSocket;
+import com.xborg.vendx.database.VendingState;
 
-import java.util.Arrays;
 import java.util.Objects;
+
+import static android.util.Base64.NO_WRAP;
+import static android.util.Base64.decode;
+import static android.util.Base64.encodeToString;
 
 
 public class DeviceCommunicator extends Fragment implements ServiceConnection, SerialListener {
@@ -138,7 +141,8 @@ public class DeviceCommunicator extends Fragment implements ServiceConnection, S
                     case ReceivedOtp:
                         break;
 
-                    case SendOtpWithBag:
+                    case ReceivedOtpWithBag:
+                        send(sharedViewModel.getBag().getValue().getEncryptedOtpPlusBag(), true);
                         break;
 
                     case Vending:
@@ -214,15 +218,19 @@ public class DeviceCommunicator extends Fragment implements ServiceConnection, S
         socket = null;
     }
 
-    private void send(String str) {
+    private void send(String str, Boolean isBase64) {
+        Log.i(TAG, "sending : " + str);
         if (connected != Connected.True) {
             Toast.makeText(getActivity(), "not connected", Toast.LENGTH_SHORT).show();
             return;
         }
         try {
-            SpannableStringBuilder spn = new SpannableStringBuilder(str + '\n');
-            spn.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorSendText)), 0, spn.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            byte[] data = (str).getBytes();
+            byte[] data;
+            if(isBase64) {
+                data = decode(str, NO_WRAP);
+            } else {
+                data = (str).getBytes();
+            }
             socket.write(data);
         } catch (Exception e) {
             onSerialIoError(e);
@@ -233,6 +241,8 @@ public class DeviceCommunicator extends Fragment implements ServiceConnection, S
         Log.i(TAG, (new String(data)));
 
         String dataString = data.toString();
+        String base64String = encodeToString(data, NO_WRAP);
+
         switch (Objects.requireNonNull(sharedViewModel.getVendingState().getValue())) {
 
             case Connecting:
@@ -244,6 +254,7 @@ public class DeviceCommunicator extends Fragment implements ServiceConnection, S
                     //TODO: check other possibilities
                     default:
                         Log.i(TAG, "OTP: " + dataString);
+                        sharedViewModel.getBag().getValue().setEncryptedOtp(base64String);
                         sharedViewModel.getVendingState().setValue(VendingState.ReceivedOtp);
                         break;
                 }
@@ -252,22 +263,30 @@ public class DeviceCommunicator extends Fragment implements ServiceConnection, S
             case ReceivedOtp:
                 break;
 
-            case SendOtpWithBag:
+            case ReceivedOtpWithBag:
                 break;
 
             case Vending:
                 break;
 
             case VendingDone:
-                break;
-
-            case VendingComplete:
+                switch (dataString) {
+                    //TODO: check other possibilities
+                    default:
+                        Log.i(TAG, "LOG: " + dataString);
+                        sharedViewModel.getBag().getValue().setEncryptedLog(base64String);
+                        sharedViewModel.getVendingState().setValue(VendingState.ReceivedLog);
+                        break;
+                }
                 break;
 
             case ReceivedLog:
                 break;
 
             case SendLogAck:
+                break;
+
+            case VendingComplete:
                 break;
 
             case Error:

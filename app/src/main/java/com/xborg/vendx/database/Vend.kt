@@ -3,17 +3,26 @@ package com.xborg.vendx.database
 import com.google.gson.annotations.SerializedName
 
 enum class VendingState {
-    Init,
-    DeviceConnected,
-    EncryptedOtpReceivedFromDevice,
-    EncryptedOtpPlusBagReceivedFromServer,
-    VendProgress,
-    VendDone,
-    EncryptedDeviceLogReceivedFromDevice,
-    EncryptedVendStatusReceivedFromServer,
-    VendingComplete
-}
 
+    //ble connection states
+    Init,
+    DeviceDiscovered,
+    ConnectionRequest,
+    Connecting,
+    Connected,
+
+    //vending states
+    ReceivedOtp,
+    ReceivedOtpWithBag,
+    Vending,
+    VendingDone,
+    ReceivedLog,
+    SendLogAck,
+    VendingComplete,
+
+    //error states
+    Error,
+}
 enum class VendingStatus {
     @SerializedName("Init")  Init,
     @SerializedName("Processing")  Processing,
