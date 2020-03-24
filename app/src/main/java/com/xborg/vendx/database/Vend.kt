@@ -17,7 +17,7 @@ enum class VendingState {
     Vending,
     VendingDone,
     ReceivedLog,
-    SendLogAck,
+    SentLogAck,
     VendingComplete,
 
     //error states

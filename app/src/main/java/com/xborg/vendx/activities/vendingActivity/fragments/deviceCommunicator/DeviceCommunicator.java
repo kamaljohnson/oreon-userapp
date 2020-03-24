@@ -157,7 +157,7 @@ public class DeviceCommunicator extends Fragment implements ServiceConnection, S
                     case ReceivedLog:
                         break;
 
-                    case SendLogAck:
+                    case SentLogAck:
                         break;
 
                     case Error:
@@ -283,7 +283,7 @@ public class DeviceCommunicator extends Fragment implements ServiceConnection, S
             case ReceivedLog:
                 break;
 
-            case SendLogAck:
+            case SentLogAck:
                 break;
 
             case VendingComplete:

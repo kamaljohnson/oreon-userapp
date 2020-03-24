@@ -53,7 +53,7 @@ class VendingActivity : FragmentActivity() {
 //                VendingState.VendingDone -> TODO()
 //                VendingState.VendingComplete -> TODO()
 //                VendingState.ReceivedLog -> TODO()
-//                VendingState.SendLogAck -> TODO()
+//                VendingState.SentLogAck -> TODO()
 //                VendingState.Error -> TODO()
             }
         })
@@ -65,7 +65,7 @@ class VendingActivity : FragmentActivity() {
                 DeviceScannerState.None -> {
 
                 }
-                DeviceScannerState.DeviceInfo -> {
+                DeviceScannerState.DeviceInfoSet -> {
 
                 }
                 DeviceScannerState.ScanMode -> {

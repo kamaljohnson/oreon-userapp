@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 
 enum class DeviceScannerState {
     None,
-    DeviceInfo,
+    DeviceInfoSet,
     ScanMode,
     DeviceNearby,
     DeviceNotNearby,

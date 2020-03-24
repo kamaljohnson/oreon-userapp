@@ -103,7 +103,7 @@ public class DeviceScanner extends Fragment {
         sharedViewModel.getSelectedMachine().observe(getViewLifecycleOwner(), new Observer<Machine>() {
             @Override
             public void onChanged(Machine machine) {
-                sharedViewModel.getDeviceConnectionState().setValue(DeviceScannerState.DeviceInfo);
+                sharedViewModel.getDeviceConnectionState().setValue(DeviceScannerState.DeviceInfoSet);
                 Log.i(TAG, "selected machine changed");
             }
         });
@@ -113,7 +113,7 @@ public class DeviceScanner extends Fragment {
             @Override
             public void onChanged(DeviceScannerState deviceScannerState) {
                 switch (deviceScannerState) {
-                    case DeviceInfo:
+                    case DeviceInfoSet:
                         Machine machine = sharedViewModel.getSelectedMachine().getValue();
                         if (machine != null) {
                             Log.i(TAG, "device info loaded");
@@ -143,7 +143,7 @@ public class DeviceScanner extends Fragment {
                 }
             }
         });
-        getSelectedMachineMac();
+        getSelectedMachine();
 
         getView().findViewById(R.id.retry_button).setOnClickListener(new View.OnClickListener() {
 
@@ -180,7 +180,7 @@ public class DeviceScanner extends Fragment {
         super.onDestroyView();
     }
 
-    private void getSelectedMachineMac() {
+    private void getSelectedMachine() {
         Log.i(TAG, "machine selection");
         Machine machine = new Machine();
         SharedPreference preference = new SharedPreference(getContext());
