@@ -6,6 +6,7 @@ enum class VendingState {
 
     //ble connection states
     Init,
+    Scanning,
     DeviceDiscovered,
     ConnectionRequest,
     Connecting,

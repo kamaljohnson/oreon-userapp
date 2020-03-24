@@ -104,6 +104,7 @@ public class DeviceScanner extends Fragment {
             @Override
             public void onChanged(Machine machine) {
                 sharedViewModel.getDeviceConnectionState().setValue(DeviceScannerState.DeviceInfoSet);
+                sharedViewModel.getVendingState().setValue(VendingState.Scanning);
                 Log.i(TAG, "selected machine changed");
             }
         });
