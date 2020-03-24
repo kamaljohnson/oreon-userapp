@@ -62,24 +62,6 @@ public class DeviceScanner extends Fragment {
                 });
             }
         };
-        discoveryBroadcastReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                if (intent.getAction().equals(BluetoothDevice.ACTION_FOUND)) {
-                    BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                    if (device.getType() != BluetoothDevice.DEVICE_TYPE_CLASSIC && getActivity() != null) {
-                        getActivity().runOnUiThread(() -> updateScan(device));
-                    }
-                }
-                if (intent.getAction().equals((BluetoothAdapter.ACTION_DISCOVERY_FINISHED))) {
-                    scanState = ScanState.DISCOVERY_FINISHED; // don't cancel again
-                    stopScan();
-                }
-            }
-        };
-        discoveryIntentFilter = new IntentFilter();
-        discoveryIntentFilter.addAction(BluetoothDevice.ACTION_FOUND);
-        discoveryIntentFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
     }
 
     @Override
@@ -159,7 +141,6 @@ public class DeviceScanner extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        getActivity().registerReceiver(discoveryBroadcastReceiver, discoveryIntentFilter);
         if (bluetoothAdapter == null) {
             Log.e(TAG, "Bluetooth BLE not supported");
         } else if (!bluetoothAdapter.isEnabled()) {
@@ -173,7 +154,6 @@ public class DeviceScanner extends Fragment {
     public void onPause() {
         super.onPause();
         stopScan();
-        getActivity().unregisterReceiver(discoveryBroadcastReceiver);
     }
 
     @Override
