@@ -47,8 +47,6 @@ public class DeviceScanner extends Fragment {
     private static final long LESCAN_PERIOD = 10000; // similar to bluetoothAdapter.startDiscovery
     private Handler leScanStopHandler = new Handler();
     private BluetoothAdapter.LeScanCallback leScanCallback;
-    private BroadcastReceiver discoveryBroadcastReceiver;
-    private IntentFilter discoveryIntentFilter;
     private BluetoothAdapter bluetoothAdapter;
 
     private SharedViewModel sharedViewModel;
@@ -105,6 +103,7 @@ public class DeviceScanner extends Fragment {
                         break;
                     case ScanMode:
                         Log.i(TAG, "device scanning mode");
+                        scanState = ScanState.NONE;
                         break;
                     case DeviceNearby:
                         Log.i(TAG, "selected device is nearby");
