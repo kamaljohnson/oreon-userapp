@@ -254,7 +254,12 @@ public class DeviceCommunicator extends Fragment implements ServiceConnection, S
 
             case Connected:
                 switch (dataString) {
-                    //TODO: check other possibilities
+                    case "OTP_INVALID":
+                    case "OTP_TIMEOUT":
+                    case "OTP_INCORRECT":
+                        //TODO: this block should not happen should be handled in the device side
+                        // create a error reporter which will handle this block if occurred
+                        break;
                     default:
                         Log.i(TAG, "OTP: " + dataString);
                         sharedViewModel.getBag().getValue().setEncryptedOtp(base64String);
