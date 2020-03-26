@@ -31,8 +31,8 @@ data class Item(
     // required for billing and display
     @SerializedName("from_inventory") var FromInventory: Boolean = false,                  // if the current item is referring to item in users inventory
     @SerializedName("from_machine") var FromMachine: Boolean = false,                      //                        ...                  machine inventory
-    @SerializedName("machine_stock") var MachineStock: Int = -1,                           // the number of this particular item in user-inventory
-    @SerializedName("inventory_stock") var InventoryStock: Int = -1,                       //                 ...                in the machine
+    @SerializedName("stock") var MachineStock: Int = -1,                                   // the number of items in the machine
+    @SerializedName("quantity") var InventoryStock: Int = -1,                              //          ...        in user-inventory
 
     // required for billing
     var CartCount: Int = 0
