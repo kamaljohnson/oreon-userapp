@@ -207,8 +207,14 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onStop() {
+        super.onStop()
+        Log.i(TAG, "onStop")
+    }
+
     override fun onDestroy() {
         super.onDestroy()
+        Log.i(TAG, "onDestroy")
         unregisterReceiver(broadcastReceiver)
     }
 
@@ -365,6 +371,7 @@ class MainActivity : AppCompatActivity() {
                                Log.i(TAG, "found added : " + device.address)
                                listOfMachinesNearBy.add(machine)
                                sharedViewModel.machineNearby.value = listOfMachinesNearBy
+                               Log.i(TAG, "listOfMachinesNearBy : $listOfMachinesNearBy")
                            } else {
                                //already added to list
                            }

@@ -6,10 +6,11 @@
     android:layout_height="match_parent"
     tools:context=".activities.vendingActivity.VendingActivity">
 
-    <ImageView
-        android:id="@+id/qr_code_view"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        />
+    <FrameLayout
+        android:layout_alignParentBottom="true"
+        android:background="@color/gray"
+        android:id="@+id/bluetooth_container"
+        android:layout_width="match_parent"
+        android:layout_height="100pt"/>
 
 </RelativeLayout >

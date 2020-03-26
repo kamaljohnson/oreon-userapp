@@ -11,6 +11,7 @@ import java.util.concurrent.TimeUnit
 import retrofit2.converter.gson.GsonConverterFactory
 
 private const val BASE_URL = "https://us-central1-vendx-1f40e.cloudfunctions.net/webApi/v1/"
+//private const val BASE_URL = "http://safe-badlands-08276.herokuapp.com/"
 
 private val okHttpClient = OkHttpClient().newBuilder()
     .connectTimeout(5, TimeUnit.SECONDS)
