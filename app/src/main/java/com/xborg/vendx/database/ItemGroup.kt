@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 data class ItemGroup (
     @SerializedName("Title")  val Title: String,
-    @SerializedName("Items")  val Items : List<Item> = listOf(),
+    @SerializedName("items")  val items : List<Item> = listOf(),
     @SerializedName("DrawLineBreaker")  var DrawLineBreaker: Boolean,
     @SerializedName("ShowNoMachinesNearbyMessage")  var ShowNoMachinesNearbyMessage: Boolean = false
 )

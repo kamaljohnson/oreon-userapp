@@ -3,23 +3,16 @@ package com.xborg.vendx.activities.mainActivity.fragments.home
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.google.common.reflect.TypeToken
 import com.google.firebase.auth.FirebaseAuth
-import com.google.gson.Gson
 import com.xborg.vendx.activities.loginActivity.db
 import com.xborg.vendx.database.Item
 import com.xborg.vendx.database.ItemGroup
 import com.xborg.vendx.database.Machine
 import com.xborg.vendx.network.VendxApi
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.IOException
-import java.lang.reflect.Type
 import java.net.SocketTimeoutException
 
 private const val TAG = "HomeViewModel"
@@ -181,9 +174,9 @@ class HomeViewModel : ViewModel() {
         for (i in machineItems.value!!.indices) {
             for (j in inventoryItems.value!!.indices) {
                 if (machineItems.value!![i].Id == inventoryItems.value!![j].Id) {
-                    inventoryItems.value!![j].InMachine = true
-                    inventoryItems.value!![j].RemainingInMachine =
-                        machineItems.value!![i].RemainingInMachine
+                    inventoryItems.value!![j].FromMachine = true
+                    inventoryItems.value!![j].MachineStock =
+                        machineItems.value!![i].MachineStock
                     shelfItemsInMachine.add(inventoryItems.value!![j])
                 }
             }
@@ -196,7 +189,7 @@ class HomeViewModel : ViewModel() {
             val shelfItemsInMachineGroupModel =
                 ItemGroup(
                     Title = "From Inventory",
-                    Items = shelfItemsInMachine,
+                    items = shelfItemsInMachine,
                     DrawLineBreaker = machineItems.value!!.isNotEmpty()
                 )
             temp.add(shelfItemsInMachineGroupModel)
@@ -209,7 +202,7 @@ class HomeViewModel : ViewModel() {
                 Log.i(TAG, "machine loaded")
                 val machineItemsGroupModel = ItemGroup(
                     Title = "In Machine",
-                    Items = machineItems.value!!,
+                    items = machineItems.value!!,
                     DrawLineBreaker = inventoryItems.value!!.isNotEmpty()
                 )
                 temp.add(machineItemsGroupModel)
@@ -251,7 +244,7 @@ class HomeViewModel : ViewModel() {
                 } else {
                     "Remaining Inventory"
                 },
-                Items = shelfItemsNotInMachine,
+                items = shelfItemsNotInMachine,
                 DrawLineBreaker = false
             )
             temp.add(shelfItemsNotInMachineGroupModel)

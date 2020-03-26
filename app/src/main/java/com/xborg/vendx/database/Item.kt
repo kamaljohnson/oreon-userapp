@@ -2,30 +2,42 @@ package com.xborg.vendx.database
 
 import com.google.gson.annotations.SerializedName
 
-enum class Category {
-    @SerializedName("Snack")  Snack,
-    @SerializedName("Beverage")  Beverage,
-    @SerializedName("FastFood")  FastFood,
-    @SerializedName("Other")  Other
-}
-
-data class Item(
-    @SerializedName("Id")  var Id: String,
-    @SerializedName("Name")  var Name: String,
-    @SerializedName("Cost")  var Cost: Long,
-    @SerializedName("Package")  var PackageImageUrl: String,
-    @SerializedName("Info")  var InfoImageUrl: String,
-    @SerializedName("Bg")  var BgImageUrl: String,
-    @SerializedName("Category")  var Category: Category,
-
-    @SerializedName("InInventory")  var InInventory: Boolean = false,
-    @SerializedName("InMachine")  var InMachine: Boolean = false,
-    @SerializedName("RemainingInMachine")  var RemainingInMachine: Int = -1,
-    @SerializedName("RemainingInInventory")  var RemainingInInventory: Int = -1,
-
-    @SerializedName("CartCount")  var cartCount: Int = 0
+data class Category(
+    @SerializedName("name") var Name: String
 ) {
     override fun toString(): String {
-        return "Item(id='$Id', name='$Name', inShelf=$InInventory, inMachine=$InMachine, remainingInMachine=$RemainingInMachine, remainingInShelf=$RemainingInInventory)"
+        return "category='$Name'"
+    }
+}
+
+/*
+*  This data class will store details of items in both user inventory and also
+*  in machine inventory.
+*  This is done to make the billing and item selection implementation simple
+* */
+data class Item(
+    // item details
+    @SerializedName("id") var Id: String,
+    @SerializedName("name") var Name: String,
+    @SerializedName("cost") var Cost: Long,
+    @SerializedName("discounted_cost") var DiscountedCost: Long,
+    @SerializedName("category") var Category: Category,
+
+    // listing assets
+    @SerializedName("foreground_asset") var ForegroundAsset: String,
+    @SerializedName("background_asset") var BackgroundAsset: String,
+    @SerializedName("content_asset") var ContentAsset: String,
+
+    // required for billing and display
+    @SerializedName("from_inventory") var FromInventory: Boolean = false,                  // if the current item is referring to item in users inventory
+    @SerializedName("from_machine") var FromMachine: Boolean = false,                      //                        ...                  machine inventory
+    @SerializedName("machine_stock") var MachineStock: Int = -1,                           // the number of this particular item in user-inventory
+    @SerializedName("inventory_stock") var InventoryStock: Int = -1,                       //                 ...                in the machine
+
+    // required for billing
+    var CartCount: Int = 0
+) {
+    override fun toString(): String {
+        return "Item(id='$Id', name='$Name', inShelf=$FromInventory, inMachine=$FromMachine, remainingInMachine=$MachineStock, remainingInShelf=$InventoryStock)"
     }
 }

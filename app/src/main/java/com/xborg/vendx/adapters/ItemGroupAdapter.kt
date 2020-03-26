@@ -37,7 +37,7 @@ class ItemGroupAdapter(
         } else {
             holder.groupItemsRV.apply {
                 layoutManager = GridLayoutManager(context, 3)
-                adapter = ItemCardAdapter(parent.Items, context, onItemListener)
+                adapter = ItemCardAdapter(parent.items, context, onItemListener)
 
                 if (!parent.DrawLineBreaker) {
                     holder.itemView.line_breaker.visibility = View.INVISIBLE
@@ -49,7 +49,7 @@ class ItemGroupAdapter(
         } else {
             View.INVISIBLE
         }
-        holder.progressBar.visibility = if(parent.Items.isEmpty() && !parent.ShowNoMachinesNearbyMessage){
+        holder.progressBar.visibility = if(parent.items.isEmpty() && !parent.ShowNoMachinesNearbyMessage){
             View.VISIBLE
         } else {
             View.GONE

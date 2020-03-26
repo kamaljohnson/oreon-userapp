@@ -32,26 +32,26 @@ class ItemCartSlipAdapter(
 
         holder.itemId.text = item.Id
         holder.name.text = item.Name
-        holder.cost.text =  "₹ " + (item.Cost * item.cartCount).toString()
+        holder.cost.text =  "₹ " + (item.Cost * item.CartCount).toString()
         Glide
             .with(context)
-            .load(item.PackageImageUrl)
+            .load(item.ForegroundAsset)
             .into(holder.image)
 
-        holder.itemLoc.text = if (item.InInventory) {
+        holder.itemLoc.text = if (item.FromInventory) {
             "Shelf"
         } else {
             "Machine"
         }
 
-        if(item.InInventory) {
+        if(item.FromInventory) {
             holder.itemsInInventory.visibility = View.VISIBLE
-            holder.itemsInInventory.text = item.cartCount.toString()
+            holder.itemsInInventory.text = item.CartCount.toString()
             holder.cost.visibility = View.INVISIBLE
             holder.paidIcon.visibility = View.VISIBLE
         } else {
             holder.itemsInMachine.visibility = View.VISIBLE
-            holder.itemsInMachine.text = item.cartCount.toString()
+            holder.itemsInMachine.text = item.CartCount.toString()
         }
     }
 

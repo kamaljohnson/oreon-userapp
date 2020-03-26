@@ -42,37 +42,37 @@ class ItemCardAdapter(
         holder.cost.text = "₹ " + item.Cost.toString()
         Glide
             .with(context)
-            .load(item.PackageImageUrl)
+            .load(item.ForegroundAsset)
             .into(holder.packageImage)
         Glide
             .with(context)
-            .load(item.BgImageUrl)
+            .load(item.BackgroundAsset)
             .into(holder.cardBg)
         Glide
             .with(context)
-            .load(item.InfoImageUrl)
+            .load(item.ContentAsset)
             .into(holder.infoImg)
 
-        holder.itemLoc.text = if (item.InInventory) {
+        holder.itemLoc.text = if (item.FromInventory) {
             "Inventory"
         } else {
             "Machine"
         }
 
-        if (item.InInventory) {
+        if (item.FromInventory) {
             holder.cost.visibility = View.GONE
         }
 
-        holder.itemsInMachine.text = item.RemainingInMachine.toString()
-        holder.itemsInInventory.text = item.RemainingInInventory.toString()
-        holder.itemsInInventory.visibility = if (item.InInventory) {
+        holder.itemsInMachine.text = item.MachineStock.toString()
+        holder.itemsInInventory.text = item.InventoryStock.toString()
+        holder.itemsInInventory.visibility = if (item.FromInventory) {
             View.VISIBLE
         } else {
             View.INVISIBLE
         }
-        holder.outOfStock.visibility = if (!item.InMachine) {
+        holder.outOfStock.visibility = if (!item.FromMachine) {
             View.INVISIBLE
-        } else if(item.RemainingInMachine == 0){
+        } else if(item.MachineStock == 0){
             View.VISIBLE
         } else {
             View.INVISIBLE

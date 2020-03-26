@@ -6,15 +6,10 @@ import androidx.lifecycle.ViewModel
 import com.google.gson.Gson
 import com.xborg.vendx.database.*
 import com.xborg.vendx.network.VendxApi
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.IOException
-import java.lang.Exception
 import java.net.SocketTimeoutException
 
 private const val TAG = "PaymentMethodsViewModel"
@@ -37,8 +32,8 @@ class PaymentMethodsViewModel : ViewModel() {
 
         var payableAmount = 0f
         cartItems.value!!.forEach { item ->
-            if (!item.InInventory) {
-                payableAmount += item.Cost * item.cartCount
+            if (!item.FromInventory) {
+                payableAmount += item.Cost * item.CartCount
             }
         }
         order.value!!.Amount = payableAmount

@@ -11,10 +11,6 @@ import com.xborg.vendx.database.Item
 import com.xborg.vendx.database.Location
 import com.xborg.vendx.database.Machine
 import com.xborg.vendx.network.VendxApi
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -110,7 +106,7 @@ class SharedViewModel : ViewModel() {
         //checking if item purchase limit reached if item in machine
         machineItems.value!!.forEach{item ->
             if(item.Id == itemId) {
-                return if(item.RemainingInMachine >= unTaggedCount) {
+                return if(item.MachineStock >= unTaggedCount) {
 
                     tempTaggedCart[sudoItemId] = taggedCount
                     tempUntaggedCart[itemId] = unTaggedCount
@@ -119,7 +115,7 @@ class SharedViewModel : ViewModel() {
                     _unTaggedCartItems = tempUntaggedCart
 
                     Log.i(TAG, "unTagged Cart: $_unTaggedCartItems")
-                    Log.i(TAG, "remaining in machine : " + (item.RemainingInMachine - unTaggedCount).toString())
+                    Log.i(TAG, "remaining in machine : " + (item.MachineStock - unTaggedCount).toString())
                     Log.i(TAG, "item can be added to cart")
                     true
                 } else {

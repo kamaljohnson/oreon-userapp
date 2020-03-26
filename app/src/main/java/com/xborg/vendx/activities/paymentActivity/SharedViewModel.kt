@@ -79,7 +79,7 @@ class SharedViewModel : ViewModel() {
                     machineItems.value!!.forEach { item ->
                         if (item.Id == id) {
                             Log.i(TAG, "from: $from id: $id")
-                            item.cartCount = count
+                            item.CartCount = count
                             tempCartList.add(item)
                             tempOrderBillingCartMap[id] = count
                         } else {
@@ -91,7 +91,7 @@ class SharedViewModel : ViewModel() {
                     inventoryItems.value!!.forEach { item ->
                         if (item.Id == id) {
                             Log.i(TAG, "from: $from id: $id")
-                            item.cartCount = count
+                            item.CartCount = count
                             tempCartList.add(item)
                         } else {
                             Log.i(TAG, item.Id)
