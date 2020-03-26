@@ -78,7 +78,7 @@ class ExploreViewModel : ViewModel() {
             Log.e("Debug", "machine selected")
             selectedMachine.value = machineNearby.value!![0]
         } else {
-            selectedMachine.value = Machine(Code = "Dummy")
+            selectedMachine.value = Machine(Name = "Dummy")
         }
     }
     fun changeSelectedMachine(machineId: String) {

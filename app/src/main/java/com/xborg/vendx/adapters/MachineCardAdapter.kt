@@ -35,7 +35,7 @@ class MachineCardAdapter(
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: MachineCardViewHolder, position: Int) {
         val machine = machineCards[position]
-        holder.machineCode.text = machine.Code
+        holder.machineCode.text = machine.Name
 
         val df = DecimalFormat("#.#")
         df.roundingMode = RoundingMode.CEILING

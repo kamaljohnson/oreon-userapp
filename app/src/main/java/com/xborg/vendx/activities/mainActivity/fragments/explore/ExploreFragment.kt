@@ -83,10 +83,10 @@ class ExploreFragment : Fragment(), MachineCardAdapter.OnMachineCardListener, On
 
         viewModel.selectedMachine.observe(viewLifecycleOwner, Observer { selectedMachine->
             Log.i(TAG, "here selected machine" + viewModel.machineNearby.value)
-            if(selectedMachine.Code == "Dummy") {
+            if(selectedMachine.Name == "Dummy") {
                 selected_machine_code.text = "Explore?"
             } else {
-                selected_machine_code.text = selectedMachine.Code
+                selected_machine_code.text = selectedMachine.Name
             }
             sharedViewModel.selectedMachine.value = selectedMachine
             setSelectedMachine(selectedMachine)

@@ -195,7 +195,7 @@ class HomeViewModel : ViewModel() {
             temp.add(shelfItemsInMachineGroupModel)
         }
 
-        Log.i(TAG, "code : " + selectedMachine.value!!.Code + " loaded : " + selectedMachineLoaded.value)
+        Log.i(TAG, "code : " + selectedMachine.value!!.Name + " loaded : " + selectedMachineLoaded.value)
 
         if(selectedMachineLoaded.value == true) {
             if (machineItems.value!!.isNotEmpty()) {
@@ -207,7 +207,7 @@ class HomeViewModel : ViewModel() {
                 )
                 temp.add(machineItemsGroupModel)
             }
-        } else if(selectedMachine.value!!.Code == "Dummy") {
+        } else if(selectedMachine.value!!.Name == "Dummy") {
             Log.i(TAG, "no machine near")
             val machineItemsGroupModel = ItemGroup(
                 Title = "Machine",
