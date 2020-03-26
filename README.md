@@ -18,8 +18,37 @@ in LE mode. We need to keep receiving advertisements even when another user is v
 so that users can still "see" the vending machine in app. Thus the device will
 keep sending advertisements in classic mode even when connected in LE mode.
 
-Here are the link to the example from which our code was "ported" for setting up bluetooth
-communication with the vending machine.
-project: [kai-morich/SimpleBluetoothLeTerminal](https://github.com/kai-morich/SimpleBluetoothLeTerminal)
- - [scanning](https://github.com/kai-morich/SimpleBluetoothLeTerminal/blob/master/app/src/main/java/de/kai_morich/simple_bluetooth_le_terminal/DevicesFragment.java) -> [deviceScanner](https://github.com/kamaljohnson/vendx-userapp/blob/ble-connect-plus-communicate/app/src/main/java/com/xborg/vendx/activities/vendingActivity/fragments/deviceScanner/DeviceScanner.java)
- - [communication](https://github.com/kai-morich/SimpleBluetoothLeTerminal/blob/master/app/src/main/java/de/kai_morich/simple_bluetooth_le_terminal/TerminalFragment.java) -> [deviceCommunicator](https://github.com/kamaljohnson/vendx-userapp/blob/ble-connect-plus-communicate/app/src/main/java/com/xborg/vendx/activities/vendingActivity/fragments/deviceCommunicator/DeviceCommunicator.java)
+there are two files dedicated for scanning and connection+communication respectively which was created referencing [SimpleBluetoothLeTerminal](https://github.com/kai-morich/SimpleBluetoothLeTerminal) 
+
+| project file                                                                                                                                                                                                            | referenced from                                                                                                                                                            |
+|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [DeviceScanner](https://github.com/kamaljohnson/vendx-userapp/blob/ble-connect-plus-communicate/app/src/main/java/com/xborg/vendx/activities/vendingActivity/fragments/deviceScanner/DeviceScanner.java)                | [DeviceFragment](https://github.com/kai-morich/SimpleBluetoothLeTerminal/blob/master/app/src/main/java/de/kai_morich/simple_bluetooth_le_terminal/DevicesFragment.java)    |
+| [DeviceCommunicator](https://github.com/kamaljohnson/vendx-userapp/blob/ble-connect-plus-communicate/app/src/main/java/com/xborg/vendx/activities/vendingActivity/fragments/deviceCommunicator/DeviceCommunicator.java) | [TerminalFragment](https://github.com/kai-morich/SimpleBluetoothLeTerminal/blob/master/app/src/main/java/de/kai_morich/simple_bluetooth_le_terminal/TerminalFragment.java) |
+
+The VendingActivity handles the Bluetooth classic scanning.
+
+## Device communication states
+There are multiple states which control the process flow and also used for better retry if required
+
+| Vending State      | DeviceScannerState | Description                                         |
+|--------------------|--------------------|-----------------------------------------------------|
+| Init               |                    | ...                                                 |
+| Scanning           |                    | Starts scanning                                     |
+|                    | None               | ...                                                 |
+|                    | DeviceInfoSet      | Device MAC address loaded                           |
+|                    | ScanMode           | Scan mode switch on                                 |
+|                    | DeviceNearby       | Device found nearby via classic Bluetooth scan      |
+|                    | DeviceNotNearby    | Device not found ...                                |
+|                    | DeviceBusy         | Device not found via BLE scan                       |
+|                    | DeviceIdle         | Device found via BLE scan                           |
+| DeviceDiscovered   |                    | ...                                   |
+| ConnectionRequest  |                    | Connection request created                          |
+| Connecting         |                    | Trying to connect to device                         |
+| Connected          |                    | ...                                                 |
+| ReceivedOtp        |                    | OTP received from device                            |
+| ReceivedOtpWithBag |                    | OTP + BAG receive from server                       |
+| Vending            |                    | The device starts vending..                         |
+| VendingDone        |                    | Device vending done **this state is skipped for now** |
+| ReceivedLog        |                    | LOG received from device                            |
+| ReceivedLogAck     |                    | LOG ACK received from server                        |
+| VendingComplete    |                    | ...                                                 |
