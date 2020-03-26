@@ -39,7 +39,7 @@ class FeedbackFormFragment : Fragment() {
             val body = feedback_body_edit_text.text.toString()
             val topic = feedback_topic_spinner.selectedItem.toString()
             if(body != "") {
-                sharedViewModel.userFeedback.value = Feedback(Body = body, Topic = topic)
+                sharedViewModel.userFeedback.value = Feedback(Message = body, Topic = topic)
                 sharedViewModel.postFeedback()
                 sharedViewModel.feedbackPosted.value = true
                 Toast.makeText(context, "Feedback uploaded", Toast.LENGTH_LONG).show()
