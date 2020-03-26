@@ -38,4 +38,5 @@
     </string-array>
     <string name="feedback_prompt">Select topic</string>
     <string name="feedback">Feedback</string>
+    <string name="pairing_request">Paring Request</string>
 </resources>

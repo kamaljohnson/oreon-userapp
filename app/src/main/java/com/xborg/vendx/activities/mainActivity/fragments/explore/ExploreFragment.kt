@@ -13,6 +13,7 @@ import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.*
 import com.xborg.vendx.activities.mainActivity.SharedViewModel
 import com.xborg.vendx.adapters.MachineCardAdapter
+import com.xborg.vendx.database.Machine
 import com.xborg.vendx.preferences.SharedPreference
 import kotlinx.android.synthetic.main.fragment_explore.*
 import com.xborg.vendx.R
@@ -88,7 +89,7 @@ class ExploreFragment : Fragment(), MachineCardAdapter.OnMachineCardListener, On
                 selected_machine_code.text = selectedMachine.Code
             }
             sharedViewModel.selectedMachine.value = selectedMachine
-            setSelectedMachineMac(selectedMachine.Mac)
+            setSelectedMachine(selectedMachine)
         })
 
         viewModel.machinesInZone.observe(viewLifecycleOwner, Observer { machines ->
@@ -140,9 +141,9 @@ class ExploreFragment : Fragment(), MachineCardAdapter.OnMachineCardListener, On
         viewModel.changeSelectedMachine(machineId)
     }
 
-    private fun setSelectedMachineMac(mac: String) {
+    private fun setSelectedMachine(machine: Machine) {
         val preference = SharedPreference(context!!)
-        preference.setSelectedMachineMac(mac)
+        preference.setSelectedMachine(machine)
     }
 
     private fun setupMap(view: View, savedInstanceState: Bundle?) {

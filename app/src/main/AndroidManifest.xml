@@ -61,6 +61,7 @@
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
+        <service android:name=".activities.vendingActivity.helper.SerialService" />
     </application>
 
 </manifest>

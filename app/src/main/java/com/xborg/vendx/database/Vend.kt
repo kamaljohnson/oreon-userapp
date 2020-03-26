@@ -3,17 +3,27 @@ package com.xborg.vendx.database
 import com.google.gson.annotations.SerializedName
 
 enum class VendingState {
-    Init,
-    DeviceConnected,
-    EncryptedOtpReceivedFromDevice,
-    EncryptedOtpPlusBagReceivedFromServer,
-    VendProgress,
-    VendDone,
-    EncryptedDeviceLogReceivedFromDevice,
-    EncryptedVendStatusReceivedFromServer,
-    VendingComplete
-}
 
+    //ble connection states
+    Init,
+    Scanning,
+    DeviceDiscovered,
+    ConnectionRequest,
+    Connecting,
+    Connected,
+
+    //vending states
+    ReceivedOtp,
+    ReceivedOtpWithBag,
+    Vending,
+    VendingDone,
+    ReceivedLog,
+    ReceivedLogAck,
+    VendingComplete,
+
+    //error states
+    Error,
+}
 enum class VendingStatus {
     @SerializedName("Init")  Init,
     @SerializedName("Processing")  Processing,
@@ -31,6 +41,6 @@ data class Vend(
     @SerializedName("EncryptedOtp")  var EncryptedOtp: String = "",
     @SerializedName("EncryptedOtpPlusBag")  var EncryptedOtpPlusBag: String = "",
     @SerializedName("EncryptedLog")  var EncryptedLog: String = "test log",
-    @SerializedName("EncryptedVendCompleteStatus")  var EncryptedVendCompleteStatus: String = "",
+    @SerializedName("EncryptedVendCompleteStatus")  var EncryptedServerAck: String = "",
     @SerializedName("TimeStamp")  var TimeStamp: String = ""
 )
