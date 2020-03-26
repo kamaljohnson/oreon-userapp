@@ -143,6 +143,7 @@ public class DeviceCommunicator extends Fragment implements ServiceConnection, S
 
                     case ReceivedOtpWithBag:
                         send(sharedViewModel.getBag().getValue().getEncryptedOtpPlusBag(), true);
+                        sharedViewModel.getVendingState().setValue(VendingState.Vending);
                         break;
 
                     case Vending:
@@ -157,7 +158,9 @@ public class DeviceCommunicator extends Fragment implements ServiceConnection, S
                     case ReceivedLog:
                         break;
 
-                    case SentLogAck:
+                    case ReceivedLogAck:
+                        send(sharedViewModel.getBag().getValue().getEncryptedServerAck(), true);
+                        sharedViewModel.getVendingState().setValue(VendingState.VendingComplete);
                         break;
 
                     case Error:
@@ -267,9 +270,6 @@ public class DeviceCommunicator extends Fragment implements ServiceConnection, S
                 break;
 
             case Vending:
-                break;
-
-            case VendingDone:
                 switch (dataString) {
                     //TODO: check other possibilities
                     default:
@@ -280,10 +280,13 @@ public class DeviceCommunicator extends Fragment implements ServiceConnection, S
                 }
                 break;
 
+            case VendingDone:
+                break;
+
             case ReceivedLog:
                 break;
 
-            case SentLogAck:
+            case ReceivedLogAck:
                 break;
 
             case VendingComplete:

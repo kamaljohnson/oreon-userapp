@@ -18,7 +18,7 @@ enum class VendingState {
     Vending,
     VendingDone,
     ReceivedLog,
-    SentLogAck,
+    ReceivedLogAck,
     VendingComplete,
 
     //error states
@@ -41,6 +41,6 @@ data class Vend(
     @SerializedName("EncryptedOtp")  var EncryptedOtp: String = "",
     @SerializedName("EncryptedOtpPlusBag")  var EncryptedOtpPlusBag: String = "",
     @SerializedName("EncryptedLog")  var EncryptedLog: String = "test log",
-    @SerializedName("EncryptedVendCompleteStatus")  var EncryptedVendCompleteStatus: String = "",
+    @SerializedName("EncryptedVendCompleteStatus")  var EncryptedServerAck: String = "",
     @SerializedName("TimeStamp")  var TimeStamp: String = ""
 )

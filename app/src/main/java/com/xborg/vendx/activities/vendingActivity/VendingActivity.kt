@@ -52,8 +52,8 @@ class VendingActivity : FragmentActivity() {
 //                VendingState.Vending -> TODO()
 //                VendingState.VendingDone -> TODO()
 //                VendingState.VendingComplete -> TODO()
-//                VendingState.ReceivedLog -> TODO()
-//                VendingState.SentLogAck -> TODO()
+                VendingState.ReceivedLog -> sharedViewModel.sendEncryptedDeviceLogToServer()
+//                VendingState.ReceivedLogAck -> TODO()
 //                VendingState.Error -> TODO()
             }
         })
