@@ -41,7 +41,7 @@ class VendingActivity : FragmentActivity() {
 
         sharedViewModel.vendingState.observe(this, Observer { state ->
             Log.i(TAG, "VendingState: $state")
-            when(state) {
+            when (state) {
 //                VendingState.Init -> TODO()
 //                VendingState.DeviceDiscovered -> TODO()
 //                VendingState.ConnectionRequest -> TODO()
@@ -59,9 +59,9 @@ class VendingActivity : FragmentActivity() {
         })
 
         sharedViewModel.deviceConnectionState.observe(this, Observer { state ->
-            Log.i(TAG, "DeviceConnectionState: $state")
+            Log.i(TAG, "deviceConnectionState: $state")
 
-            when(state) {
+            when (state) {
                 DeviceScannerState.None -> {
 
                 }
@@ -96,17 +96,20 @@ class VendingActivity : FragmentActivity() {
 
     private fun scanForSelectedMachine() {
         Log.i(TAG, "scan for selected machine")
+        selectedMachineFound = false
         intentFilter = IntentFilter(BluetoothDevice.ACTION_FOUND)
-        broadcastReceiver = object: BroadcastReceiver() {
+        broadcastReceiver = object : BroadcastReceiver() {
             @SuppressLint("DefaultLocale")
             override fun onReceive(context: Context?, intent: Intent?) {
-                when(intent!!.action) {
+                when (intent!!.action) {
                     BluetoothDevice.ACTION_FOUND -> {
-                        if(!selectedMachineFound) {
-                            val device: BluetoothDevice? = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
-                            Log.i(TAG, "found : " + device!!.address + ", required " + sharedViewModel.selectedMachine.value)
-                            if(sharedViewModel.selectedMachine.value!!.Mac.toUpperCase() == device.address.toUpperCase()) {
-                                sharedViewModel.deviceConnectionState.value = DeviceScannerState.DeviceNearby
+                        if (!selectedMachineFound) {
+                            val device: BluetoothDevice? =
+                                intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
+                            if (sharedViewModel.selectedMachine.value!!.Mac.toUpperCase() == device!!.address.toUpperCase()) {
+                                Log.i(TAG, "found selected machine : " + device.address)
+                                sharedViewModel.deviceConnectionState.value =
+                                    DeviceScannerState.DeviceNearby
                                 selectedMachineFound = true
                             }
                         }
@@ -125,7 +128,7 @@ class VendingActivity : FragmentActivity() {
         Timer("discovery timer", false).schedule(10000) {
             Log.i(TAG, "discovery finished")
             bluetoothAdapter.cancelDiscovery()
-            if(!selectedMachineFound) {
+            if (!selectedMachineFound) {
                 sharedViewModel.deviceConnectionState.postValue(DeviceScannerState.DeviceNotNearby)
             }
         }

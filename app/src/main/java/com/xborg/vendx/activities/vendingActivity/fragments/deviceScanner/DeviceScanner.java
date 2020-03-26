@@ -5,10 +5,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.os.AsyncTask;
@@ -44,12 +41,14 @@ public class DeviceScanner extends Fragment {
     private enum ScanState {NONE, LESCAN, DISCOVERY, DISCOVERY_FINISHED}
 
     private ScanState scanState = ScanState.NONE;
-    private static final long LESCAN_PERIOD = 10000; // similar to bluetoothAdapter.startDiscovery
+    private static final long LESCAN_PERIOD = 3000; // similar to bluetoothAdapter.startDiscovery
     private Handler leScanStopHandler = new Handler();
     private BluetoothAdapter.LeScanCallback leScanCallback;
     private BluetoothAdapter bluetoothAdapter;
 
     private SharedViewModel sharedViewModel;
+
+    private View retryButton;
 
     public DeviceScanner() {
         leScanCallback = (device, rssi, scanRecord) -> {
@@ -78,6 +77,8 @@ public class DeviceScanner extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        retryButton = getView().findViewById(R.id.retry_button);
+
         sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
 
         sharedViewModel.getSelectedMachine().observe(getViewLifecycleOwner(), new Observer<Machine>() {
@@ -98,12 +99,11 @@ public class DeviceScanner extends Fragment {
                         Machine machine = sharedViewModel.getSelectedMachine().getValue();
                         if (machine != null) {
                             Log.i(TAG, "device info loaded");
-                            sharedViewModel.getDeviceConnectionState().setValue(DeviceScannerState.ScanMode);
+                            startBleScan();
                         }
                         break;
                     case ScanMode:
                         Log.i(TAG, "device scanning mode");
-                        scanState = ScanState.NONE;
                         break;
                     case DeviceNearby:
                         Log.i(TAG, "selected device is nearby");
@@ -125,14 +125,14 @@ public class DeviceScanner extends Fragment {
                 }
             }
         });
+
         getSelectedMachine();
 
-        getView().findViewById(R.id.retry_button).setOnClickListener(new View.OnClickListener() {
+        retryButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                v.setVisibility(View.INVISIBLE);
-                sharedViewModel.getDeviceConnectionState().setValue(DeviceScannerState.ScanMode);
+                startBleScan();
             }
         });
     }
@@ -205,17 +205,16 @@ public class DeviceScanner extends Fragment {
             new AsyncTask<Void, Void, Void>() {
                 @Override
                 protected Void doInBackground(Void[] params) {
+                    Log.i(TAG, "starting leScan");
                     bluetoothAdapter.startLeScan(null, leScanCallback);
                     return null;
                 }
             }.execute(); // start async to prevent blocking UI, because startLeScan sometimes take some seconds
-        } else {
-            bluetoothAdapter.startDiscovery();
         }
     }
 
     private void updateScan(BluetoothDevice device) {
-        Log.i("TEST", "LeScan On Track scanState: " + scanState + " discoveredDevice: " + device.getAddress());
+        Log.i("TEST", "LeScan On Track : " + scanState + " discoveredDevice: " + device.getAddress());
 
         if (scanState == ScanState.NONE || scanState == ScanState.DISCOVERY_FINISHED)
             return;
@@ -252,4 +251,11 @@ public class DeviceScanner extends Fragment {
     private void showRetryOption() {
         getView().findViewById(R.id.retry_button).setVisibility(View.VISIBLE);
     }
+
+    private void startBleScan() {
+        retryButton.setVisibility(View.INVISIBLE);
+        scanState = ScanState.NONE;
+        sharedViewModel.getDeviceConnectionState().setValue(DeviceScannerState.ScanMode);
+    }
+
 }
