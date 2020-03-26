@@ -43,7 +43,6 @@ import com.xborg.vendx.activities.mainActivity.fragments.shop.ShopFragment
 import com.xborg.vendx.activities.paymentActivity.PaymentActivity
 import com.xborg.vendx.database.Machine
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.coroutines.withTimeout
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.concurrent.schedule
@@ -522,6 +521,7 @@ class MainActivity : AppCompatActivity() {
 
         mLayout = findViewById(bottom_slide_up_container.id)
         mLayout!!.coveredFadeColor = Color.TRANSPARENT
+        mLayout!!.anchorPoint = 0.3f
 
         mLayout!!.setFadeOnClickListener {
             mLayout!!.panelState = PanelState.COLLAPSED

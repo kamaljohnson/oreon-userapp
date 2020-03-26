@@ -31,11 +31,13 @@ class VendingActivity : FragmentActivity() {
     private lateinit var intentFilter: IntentFilter
     private lateinit var broadcastReceiver: BroadcastReceiver
 
+
     var selectedMachineFound = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_vending)
+
 
         sharedViewModel = ViewModelProvider(this).get(SharedViewModel::class.java)
 
@@ -86,6 +88,7 @@ class VendingActivity : FragmentActivity() {
             }
         })
 
+
         loadScannerFragment()
     }
 
@@ -95,6 +98,7 @@ class VendingActivity : FragmentActivity() {
     }
 
     private fun scanForSelectedMachine() {
+
         Log.i(TAG, "scan for selected machine")
         selectedMachineFound = false
         intentFilter = IntentFilter(BluetoothDevice.ACTION_FOUND)
@@ -116,6 +120,7 @@ class VendingActivity : FragmentActivity() {
                     }
                 }
             }
+
         }
         registerReceiver(broadcastReceiver, intentFilter)
 
@@ -128,6 +133,7 @@ class VendingActivity : FragmentActivity() {
         Timer("discovery timer", false).schedule(10000) {
             Log.i(TAG, "discovery finished")
             bluetoothAdapter.cancelDiscovery()
+
             if (!selectedMachineFound) {
                 sharedViewModel.deviceConnectionState.postValue(DeviceScannerState.DeviceNotNearby)
             }
