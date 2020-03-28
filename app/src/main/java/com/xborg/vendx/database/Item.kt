@@ -10,7 +10,6 @@ data class Category(
     }
 }
 
-
 data class ItemDetail(
     @SerializedName("id") var Id: String,
     @SerializedName("name") var Name: String,
@@ -25,3 +24,10 @@ data class ItemDetail(
         return "Item(id='$Id', name='$Name', cost='$Cost', discounted_cost='$DiscountedCost', category='$Category')"
     }
 }
+
+data class ItemCard(
+    var ItemDetail: ItemDetail,
+    var PurchaseLimit: Number,
+    var Quantity: Number,
+    var Paid: Boolean
+)

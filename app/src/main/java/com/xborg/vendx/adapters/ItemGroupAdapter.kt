@@ -9,7 +9,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.xborg.vendx.R
-import com.xborg.vendx.database.EMPTY_MSG
 import com.xborg.vendx.database.HomeItemGroup
 import kotlinx.android.synthetic.main.item_group_holder.view.*
 
@@ -31,7 +30,7 @@ class ItemGroupAdapter(
     override fun onBindViewHolder(holder: GroupViewHolder, position: Int) {
         val parent = homeItems[position]
         holder.title.text = parent.Title
-        if(parent.Message != EMPTY_MSG) {
+        if(parent.Message != "") {
             holder.message.visibility = View.VISIBLE
             holder.message.text = parent.Message
         } else {
@@ -40,7 +39,7 @@ class ItemGroupAdapter(
                 adapter = ItemCardAdapter(parent.Items, context, onItemListener)
             }
         }
-        holder.progressBar.visibility = if(parent.Items.isEmpty() && parent.Message != EMPTY_MSG){
+        holder.progressBar.visibility = if(parent.Items.isEmpty() && parent.Message != ""){
             View.VISIBLE
         } else {
             View.GONE

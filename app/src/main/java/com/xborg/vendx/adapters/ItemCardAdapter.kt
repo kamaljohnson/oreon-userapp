@@ -10,13 +10,15 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.xborg.vendx.R
+import com.xborg.vendx.database.CartItem
+import com.xborg.vendx.database.ItemCard
 import com.xborg.vendx.database.ItemDetail
 import kotlinx.android.synthetic.main.item_card.view.*
 
 private var TAG = "ItemCardAdapter"
 
 class ItemCardAdapter(
-    val items: List<ItemDetail>,
+    val items: List<ItemCard>,
     val context: Context,
     itemCardListener: OnItemListener
 ) : RecyclerView.Adapter<ItemCardAdapter.ItemViewHolder>() {
@@ -36,16 +38,16 @@ class ItemCardAdapter(
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val item = items[position]
 
-        holder.itemId.text = item.Id
-        holder.name.text = item.Name
-        holder.cost.text = "₹ " + item.Cost.toString()
+        holder.itemId.text = item.ItemDetail.Id
+        holder.name.text = item.ItemDetail.Name
+        holder.cost.text = "₹ " + item.ItemDetail.Cost.toString()
         Glide
             .with(context)
-            .load(item.ForegroundAsset)
+            .load(item.ItemDetail.ForegroundAsset)
             .into(holder.packageImage)
         Glide
             .with(context)
-            .load(item.BackgroundAsset)
+            .load(item.ItemDetail.BackgroundAsset)
             .into(holder.cardBg)
 
     }
