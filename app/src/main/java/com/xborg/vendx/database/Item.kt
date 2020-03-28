@@ -31,3 +31,8 @@ data class ItemCard(
     var Quantity: Number,
     var Paid: Boolean
 )
+
+data class InventoryItem(
+    @SerializedName("item_detail") var ItemDetailId: String,
+    @SerializedName("quantity") var Quantity: Number
+)
