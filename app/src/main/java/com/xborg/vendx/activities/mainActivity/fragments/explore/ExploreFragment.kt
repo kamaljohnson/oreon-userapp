@@ -178,7 +178,7 @@ class ExploreFragment : Fragment(), MachineCardAdapter.OnMachineCardListener, On
             googleMap!!.addMarker(
                 MarkerOptions()
                     .position(LatLng(machineLocation.Latitude, machineLocation.Longitude))
-                    .title(machine.Code)
+                    .title(machine.Name)
             )
         }
     }
