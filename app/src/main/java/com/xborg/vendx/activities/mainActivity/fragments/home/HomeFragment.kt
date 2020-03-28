@@ -48,24 +48,10 @@ class HomeFragment : Fragment(), ItemCardAdapter.OnItemListener {
             Log.i(TAG, "allGroupItems updated")
             updateItemGroupToRV()
         })
-        viewModel.machineItems.observe(viewLifecycleOwner, Observer {
-            Log.i(TAG, "machineItemList Updated")
-
-            sharedViewModel.setMachineItems(viewModel.machineItems.value!!)
-        })
-        viewModel.inventoryItems.observe(viewLifecycleOwner, Observer {
-            Log.i(TAG, "inventoryItemList Updated")
-
-            sharedViewModel.setInventoryItems(viewModel.inventoryItems.value!!)
-        })
         viewModel.selectedMachineLoaded.observe(viewLifecycleOwner, Observer {  loaded ->
             sharedViewModel.selectedMachineLoaded.value = loaded
         })
 
-        sharedViewModel.taggedCartItem.observe(viewLifecycleOwner, Observer { updatedCart ->
-            Log.i(TAG, "CartFragment updated : $updatedCart")
-
-        })
         sharedViewModel.selectedMachine.observe(viewLifecycleOwner, Observer { selectedMachine ->
             viewModel.selectedMachine.value = selectedMachine
             viewModel.changedSelectedMachine()
@@ -121,14 +107,12 @@ class HomeFragment : Fragment(), ItemCardAdapter.OnItemListener {
         progress_bar.visibility = View.GONE
     }
 
-    override fun onItemAddedToCart(itemId: String, itemLoc: String): Boolean {
-        Log.i(TAG, "item : $itemId from $itemLoc added to CartFragment")
-        return sharedViewModel.addItemToCart(itemId, itemLoc)
+    override fun onItemAddedToCart(itemId: String): Boolean {
+        return sharedViewModel.addItemToCart(itemId)
     }
 
-    override fun onItemRemovedFromCart(itemId: String, itemLoc: String): Boolean {
-        Log.i(TAG, "item : $itemId from $itemLoc removed from CartFragment")
-        return sharedViewModel.removeItemFromCart(itemId, itemLoc)
+    override fun onItemRemovedFromCart(itemId: String): Boolean {
+        return sharedViewModel.removeItemFromCart(itemId)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

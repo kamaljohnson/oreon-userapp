@@ -14,7 +14,6 @@ data class User(
 
 data class UserInventoryItem(
     @SerializedName("item_detail") var ItemDetailId: String,
-    @SerializedName("discounted_cost") var DiscountedCost: Float,
     @SerializedName("quantity") var Quantity: Number
 )
 
