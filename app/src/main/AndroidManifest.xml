@@ -47,7 +47,7 @@
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".database.ItemGroup"
+            android:name=".database.HomeItemGroup"
             android:screenOrientation="portrait" /> <!-- region Razorpay -->
         <meta-data
             android:name="com.razorpay.ApiKey"

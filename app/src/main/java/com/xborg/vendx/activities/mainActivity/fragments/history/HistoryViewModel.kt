@@ -30,14 +30,14 @@ class HistoryViewModel : ViewModel() {
         getTransactions()
     }
 
-    //TODO: combine both items from machine and self to single get req
+    //TODO: combine both homeItems from machine and self to single get req
     fun getTransactions() {
 
         val transactionsCall = VendxApi.retrofitServices.getTransactionsAsync(uid)
         transactionsCall.enqueue(object : Callback<List<Transaction>> {
             override fun onResponse(call: Call<List<Transaction>>, response: Response<List<Transaction>>) {
                 if(response.code() == 200) {
-                    Log.i("Debug", "Successful Response code : 200 : items: " + response.body())
+                    Log.i("Debug", "Successful Response code : 200 : homeItems: " + response.body())
                     transactions.value = response.body()
                 } else {
                     Log.e("Debug", "Failed to get response")

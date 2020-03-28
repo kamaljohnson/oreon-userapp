@@ -84,29 +84,6 @@ class MainActivity : AppCompatActivity() {
         sharedViewModel = ViewModelProviders.of(this).get(SharedViewModel::class.java)
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
-        sharedViewModel.machineItems.observe(this, Observer {
-            Log.i(TAG, "machineItem has begin changed")
-        })
-        sharedViewModel.inventoryItems.observe(this, Observer {
-            Log.i(TAG, "inventoryItems has begin changed")
-        })
-        sharedViewModel.taggedCartItem.observe(this, Observer { updatedCart ->
-            Log.i(TAG, "CartFragment updated: $updatedCart")
-
-            var cartItemCount = 0
-            updatedCart.forEach { item ->
-                var itemCount = item.value
-                cartItemCount += itemCount
-            }
-
-            cart_item_count.text = cartItemCount.toString()
-
-            if (cartItemCount > 0) {
-                showGetButton()
-            } else {
-                hideGetButton()
-            }
-        })
         sharedViewModel.getUserLocation.observe(this, Observer { scan ->
             if (scan) {
                 getCurrentLocation()
@@ -120,14 +97,11 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        //resets the items in cart when user changes the selected machine
+        //resets the homeItems in cart when user changes the selected machine
         sharedViewModel.selectedMachine.observe(this, Observer {
             sharedViewModel.resetCart()
         })
         sharedViewModel.selectedMachineLoaded.observe(this, Observer {
-            sharedViewModel.resetCart()
-        })
-        sharedViewModel.inventoryItems.observe(this, Observer {
             sharedViewModel.resetCart()
         })
 
@@ -182,9 +156,6 @@ class MainActivity : AppCompatActivity() {
         checkout_button.setOnClickListener {
             // TODO: use navigation graphs instead
             val intent = Intent(this, PaymentActivity::class.java)
-            intent.putExtra("cartItems", sharedViewModel.getCartItemsAsPassable())
-            intent.putExtra("machineItems", sharedViewModel.getMachineItemsAsJson())
-            intent.putExtra("inventoryItems", sharedViewModel.getInventoryItemsAsJson())
             startActivity(intent)
         }
 
@@ -532,9 +503,10 @@ class MainActivity : AppCompatActivity() {
                 if (slideOffset > 0.05f) {
                     hideGetButton()
                 } else if (current_fragment.value == Fragments.HOME) {
-                    if (sharedViewModel.taggedCartItem.value!!.isNotEmpty()) {
-                        showGetButton()
-                    }
+//                    TODO: use user cart instead
+//                    if (sharedViewModel.taggedCartItem.value!!.isNotEmpty()) {
+//                        showGetButton()
+//                    }
                 }
             }
 

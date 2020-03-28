@@ -44,8 +44,8 @@ class HomeFragment : Fragment(), ItemCardAdapter.OnItemListener {
         viewModel = ViewModelProviders.of(activity!!).get(HomeViewModel::class.java)
         sharedViewModel = ViewModelProviders.of(activity!!).get(SharedViewModel::class.java)
 
-        viewModel.allGroupItems.observe(viewLifecycleOwner, Observer {
-            Log.i(TAG, "allGroupItems updated")
+        viewModel.allHomeGroupItems.observe(viewLifecycleOwner, Observer {
+            Log.i(TAG, "allHomeGroupItems updated")
             updateItemGroupToRV()
         })
         viewModel.selectedMachineLoaded.observe(viewLifecycleOwner, Observer {  loaded ->
@@ -97,12 +97,12 @@ class HomeFragment : Fragment(), ItemCardAdapter.OnItemListener {
     private fun updateItemGroupToRV() {
         Log.i(
             TAG,
-            "allGroupItems : ${viewModel.allGroupItems.value?.size} " + rv_machine_items
+            "allHomeGroupItems : ${viewModel.allHomeGroupItems.value?.size} " + rv_machine_items
         )
 
         rv_machine_items.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-            adapter = ItemGroupAdapter(viewModel.allGroupItems.value!!, context, this@HomeFragment)
+            adapter = ItemGroupAdapter(viewModel.allHomeGroupItems.value!!, context, this@HomeFragment)
         }
         progress_bar.visibility = View.GONE
     }

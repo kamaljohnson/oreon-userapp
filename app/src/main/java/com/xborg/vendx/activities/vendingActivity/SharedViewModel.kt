@@ -46,7 +46,7 @@ class SharedViewModel : ViewModel() {
             override fun onResponse(call: Call<Vend>, response: Response<Vend>) {
                 Log.i("Debug", "checkApplicationVersion")
                 if(response.code() == 200) {
-                    Log.i("Debug", "Successful Response code : 200 : items: " + response.body())
+                    Log.i("Debug", "Successful Response code : 200 : homeItems: " + response.body())
                     val tempBag = response.body()
                     bag.value!!.EncryptedOtpPlusBag = tempBag!!.EncryptedOtpPlusBag
                     vendingState.value = VendingState.ReceivedOtpWithBag
@@ -84,7 +84,7 @@ class SharedViewModel : ViewModel() {
             override fun onResponse(call: Call<Vend>, response: Response<Vend>) {
                 Log.i("Debug", "checkApplicationVersion")
                 if(response.code() == 200) {
-                    Log.i("Debug", "Successful Response code : 200 : items: " + response.body())
+                    Log.i("Debug", "Successful Response code : 200 : homeItems: " + response.body())
                     val tempBag = response.body()
                     bag.value!!.EncryptedServerAck = tempBag!!.EncryptedServerAck
                     vendingState.value = VendingState.ReceivedLogAck

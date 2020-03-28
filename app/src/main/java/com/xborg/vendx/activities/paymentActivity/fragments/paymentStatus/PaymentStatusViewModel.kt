@@ -43,7 +43,7 @@ class PaymentStatusViewModel: ViewModel() {
             override fun onResponse(call: Call<Payment>, response: Response<Payment>) {
                 Log.i("Debug", "checkApplicationVersion")
                 if(response.code() == 200) {
-                    Log.i("Debug", "Successful Response code : 200 : items: " + response.body())
+                    Log.i("Debug", "Successful Response code : 200 : homeItems: " + response.body())
                     payment.value = response.body()
                     paymentState.value = PaymentState.PaymentComplete
                 } else {

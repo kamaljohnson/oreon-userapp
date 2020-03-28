@@ -43,7 +43,7 @@ class ExploreViewModel : ViewModel() {
             override fun onResponse(call: Call<List<Machine>>, response: Response<List<Machine>>) {
                 Log.i("Debug", "checkApplicationVersion")
                 if(response.code() == 200) {
-                    Log.i("Debug", "Successful Response code : 200 : items: " + response.body())
+                    Log.i("Debug", "Successful Response code : 200 : homeItems: " + response.body())
                     machinesInZone.value = response.body()
                 } else {
                     Log.e("Debug", "Failed to get response")

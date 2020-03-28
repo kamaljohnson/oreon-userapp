@@ -72,7 +72,7 @@ interface VendxAPIService {
     ): Call<AccessToken>
 
 
-    @GET("machine/{id}/items")
+    @GET("machine/{id}/homeItems")
     fun getMachineItemsAsync(
         @Path("id") id: String
     ): Call<List<Item>>

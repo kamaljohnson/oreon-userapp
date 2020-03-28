@@ -5,14 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.xborg.vendx.activities.loginActivity.db
-import com.xborg.vendx.database.ItemGroup
+import com.xborg.vendx.database.HomeItemGroup
 import com.xborg.vendx.database.Machine
-import com.xborg.vendx.network.VendxApi
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import java.io.IOException
-import java.net.SocketTimeoutException
 
 private const val TAG = "HomeViewModel"
 
@@ -28,11 +22,11 @@ class HomeViewModel : ViewModel() {
     val selectedMachineLoaded = MutableLiveData<Boolean>()
 
 
-    val allGroupItems: MutableLiveData<ArrayList<ItemGroup>>
+    val allHomeGroupItems: MutableLiveData<ArrayList<HomeItemGroup>>
 
     init {
         Log.i(TAG, "HomeViewModel created!")
-        allGroupItems = MutableLiveData()
+        allHomeGroupItems = MutableLiveData()
 
         selectedMachine.value = Machine()
         debugText.value = "init home\n\n"
@@ -91,7 +85,7 @@ class HomeViewModel : ViewModel() {
 //        machineItemsCall.enqueue(object : Callback<List<Item>> {
 //            override fun onResponse(call: Call<List<Item>>, response: Response<List<Item>>) {
 //                if(response.code() == 200) {
-//                    Log.i("Debug", "Successful Response code : 200 : items: " + response.body())
+//                    Log.i("Debug", "Successful Response code : 200 : homeItems: " + response.body())
 //                    machineItems.value = response.body()
 //                    selectedMachineLoaded.value = true
 //                    updateItemGroupModel()
@@ -129,7 +123,7 @@ class HomeViewModel : ViewModel() {
 //        inventoryItemsCall.enqueue(object : Callback<List<Item>> {
 //            override fun onResponse(call: Call<List<Item>>, response: Response<List<Item>>) {
 //                if(response.code() == 200) {
-//                    Log.i("Debug", "Successful Response code : 200 : items: " + response.body())
+//                    Log.i("Debug", "Successful Response code : 200 : homeItems: " + response.body())
 //                    inventoryItems.value = response.body()
 //                    updateItemGroupModel()
 //                } else {
@@ -175,13 +169,13 @@ class HomeViewModel : ViewModel() {
 //        }
 //
 //
-//        val temp = ArrayList<ItemGroup>()
+//        val temp = ArrayList<HomeItemGroup>()
 //
 //        if (shelfItemsInMachine.isNotEmpty()) {
 //            val shelfItemsInMachineGroupModel =
-//                ItemGroup(
+//                HomeItemGroup(
 //                    Title = "From Inventory",
-//                    items = shelfItemsInMachine,
+//                    homeItems = shelfItemsInMachine,
 //                    DrawLineBreaker = machineItems.value!!.isNotEmpty()
 //                )
 //            temp.add(shelfItemsInMachineGroupModel)
@@ -192,16 +186,16 @@ class HomeViewModel : ViewModel() {
 //        if(selectedMachineLoaded.value == true) {
 //            if (machineItems.value!!.isNotEmpty()) {
 //                Log.i(TAG, "machine loaded")
-//                val machineItemsGroupModel = ItemGroup(
+//                val machineItemsGroupModel = HomeItemGroup(
 //                    Title = "In Machine",
-//                    items = machineItems.value!!,
+//                    homeItems = machineItems.value!!,
 //                    DrawLineBreaker = inventoryItems.value!!.isNotEmpty()
 //                )
 //                temp.add(machineItemsGroupModel)
 //            }
 //        } else if(selectedMachine.value!!.Name == "Dummy") {
 //            Log.i(TAG, "no machine near")
-//            val machineItemsGroupModel = ItemGroup(
+//            val machineItemsGroupModel = HomeItemGroup(
 //                Title = "Machine",
 //                DrawLineBreaker = inventoryItems.value!!.isNotEmpty(),
 //                ShowNoMachinesNearbyMessage = true
@@ -209,7 +203,7 @@ class HomeViewModel : ViewModel() {
 //            temp.add(machineItemsGroupModel)
 //        } else {
 //            Log.i(TAG, "loading..")
-//            val machineItemsGroupModel = ItemGroup(
+//            val machineItemsGroupModel = HomeItemGroup(
 //                Title = "Machine",
 //                DrawLineBreaker = inventoryItems.value!!.isNotEmpty()
 //            )
@@ -230,18 +224,18 @@ class HomeViewModel : ViewModel() {
 //        }
 //
 //        if (shelfItemsNotInMachine.isNotEmpty()) {
-//            val shelfItemsNotInMachineGroupModel = ItemGroup(
+//            val shelfItemsNotInMachineGroupModel = HomeItemGroup(
 //                Title = if (machineItems.value!!.isEmpty()) {
 //                    "Inventory"
 //                } else {
 //                    "Remaining Inventory"
 //                },
-//                items = shelfItemsNotInMachine,
+//                homeItems = shelfItemsNotInMachine,
 //                DrawLineBreaker = false
 //            )
 //            temp.add(shelfItemsNotInMachineGroupModel)
 //        }
-//        allGroupItems.value = temp
+//        allHomeGroupItems.value = temp
 //    }
 
     override fun onCleared() {
