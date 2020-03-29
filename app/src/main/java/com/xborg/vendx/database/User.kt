@@ -7,7 +7,7 @@ data class User(
     @SerializedName("name") var Name: String = "",
     @SerializedName("email") var Email: String = "",
     @SerializedName("phone") var Phone: String = "",
-    @SerializedName("location") var Location: Location = Location(0.0, 0.0),
+    @SerializedName("location") var Location: Location,
     @SerializedName("inventory") var Inventory: List<InventoryItem> = ArrayList(),
     @SerializedName("cart") var Cart: List<CartItem> = ArrayList()
 )

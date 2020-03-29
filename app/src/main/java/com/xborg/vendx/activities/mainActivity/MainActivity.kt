@@ -30,6 +30,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.gms.location.*
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx
@@ -41,6 +42,8 @@ import com.xborg.vendx.activities.mainActivity.fragments.history.HistoryFragment
 import com.xborg.vendx.activities.mainActivity.fragments.home.HomeFragment
 import com.xborg.vendx.activities.mainActivity.fragments.shop.ShopFragment
 import com.xborg.vendx.activities.paymentActivity.PaymentActivity
+import com.xborg.vendx.database.ItemDetailDao
+import com.xborg.vendx.database.ItemDetailDatabase
 import com.xborg.vendx.database.Machine
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
@@ -81,7 +84,11 @@ class MainActivity : AppCompatActivity() {
 
         debug_text_view.movementMethod = ScrollingMovementMethod()
 
-        sharedViewModel = ViewModelProviders.of(this).get(SharedViewModel::class.java)
+        val application = requireNotNull(this).application
+        val itemDetailDataSource = ItemDetailDatabase.getInstance(application).itemDetailDatabaseDao
+        val viewModelFactory = SharedViewModelFactory(itemDetailDataSource, application)
+        sharedViewModel = ViewModelProvider(this, viewModelFactory).get(SharedViewModel::class.java)
+
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         sharedViewModel.getUserLocation.observe(this, Observer { scan ->

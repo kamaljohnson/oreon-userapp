@@ -1,10 +1,14 @@
 package com.xborg.vendx.activities.mainActivity
 
+import android.app.Application
 import android.util.Log
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.xborg.vendx.BuildConfig
 import com.xborg.vendx.database.AppInfo
+import com.xborg.vendx.database.ItemDetailDao
+import com.xborg.vendx.database.ItemDetailDatabase
 import com.xborg.vendx.database.Location
 import com.xborg.vendx.network.VendxApi
 import retrofit2.Call
@@ -20,7 +24,10 @@ enum class PermissionStatus {
     Denied
 }
 
-class SharedViewModel : ViewModel() {
+class SharedViewModel(
+    val itemDetailDatabase: ItemDetailDao,
+    application: Application
+) : AndroidViewModel(application) {
 
     var versionCode: Int = BuildConfig.VERSION_CODE
 
