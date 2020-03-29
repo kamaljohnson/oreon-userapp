@@ -44,67 +44,28 @@ class HomeFragment : Fragment(), ItemCardAdapter.OnItemListener {
         viewModel = ViewModelProviders.of(activity!!).get(HomeViewModel::class.java)
         sharedViewModel = ViewModelProviders.of(activity!!).get(SharedViewModel::class.java)
 
-        viewModel.allHomeGroupItems.observe(viewLifecycleOwner, Observer {
-            Log.i(TAG, "allHomeGroupItems updated")
-            updateItemGroupToRV()
-        })
-        viewModel.selectedMachineLoaded.observe(viewLifecycleOwner, Observer {  loaded ->
-            sharedViewModel.selectedMachineLoaded.value = loaded
-        })
-
-        sharedViewModel.selectedMachine.observe(viewLifecycleOwner, Observer { selectedMachine ->
-            viewModel.selectedMachine.value = selectedMachine
-            viewModel.changedSelectedMachine()
-            //TODO: display loading sign in group-holder(Machine)
-        })
-        sharedViewModel.checkedUserLocationAccessed.observe(viewLifecycleOwner, Observer { checked ->
-            if (checked) {
-                if (sharedViewModel.userLocationAccessed.value == false) {
-                    location_permission_access_dialog.visibility = View.VISIBLE
+        sharedViewModel.checkedUserLocationAccessed.observe(
+            viewLifecycleOwner,
+            Observer { checked ->
+                if (checked) {
+                    if (sharedViewModel.userLocationAccessed.value == false) {
+                        location_permission_access_dialog.visibility = View.VISIBLE
+                    } else {
+                        location_permission_access_dialog.visibility = View.GONE
+                    }
                 } else {
                     location_permission_access_dialog.visibility = View.GONE
                 }
-            } else {
-                location_permission_access_dialog.visibility = View.GONE
-            }
-        })
+            })
         sharedViewModel.userLocationAccessed.observe(viewLifecycleOwner, Observer { accessed ->
             if (accessed) {
                 location_permission_access_dialog.visibility = View.GONE
             }
         })
-        sharedViewModel.apiCallRetry.observe(viewLifecycleOwner, Observer { retry ->
-            if(retry) {
-                viewModel.handleInventoryUpdates()
-            }
-        })
-        viewModel.apiCallError.observe(viewLifecycleOwner, Observer { error ->
-            if(error) {
-                sharedViewModel.apiCallError.value = error
-            }
-        })
-
-        viewModel.debugText.observe(viewLifecycleOwner, Observer { text ->
-            sharedViewModel.debugText.value += TAG + text
-        })
 
         continue_location_permission.setOnClickListener {
-            viewModel.debugText.value = "continue location permission\n\n"
             sharedViewModel.getUserLocation.value = true
         }
-    }
-
-    private fun updateItemGroupToRV() {
-        Log.i(
-            TAG,
-            "allHomeGroupItems : ${viewModel.allHomeGroupItems.value?.size} " + rv_machine_items
-        )
-
-        rv_machine_items.apply {
-            layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-            adapter = ItemGroupAdapter(viewModel.allHomeGroupItems.value!!, context, this@HomeFragment)
-        }
-        progress_bar.visibility = View.GONE
     }
 
     override fun onItemAddedToCart(itemId: String): Boolean {
@@ -121,7 +82,7 @@ class HomeFragment : Fragment(), ItemCardAdapter.OnItemListener {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when(item.itemId) {
+        return when (item.itemId) {
             R.id.feedback -> {
                 showFeedback()
                 true

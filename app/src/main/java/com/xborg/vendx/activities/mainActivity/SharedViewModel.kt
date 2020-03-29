@@ -23,13 +23,9 @@ enum class PermissionStatus {
 
 class SharedViewModel : ViewModel() {
 
-    var debugText: MutableLiveData<String> = MutableLiveData()
-
     var versionCode: Int = BuildConfig.VERSION_CODE
 
     val isInternetAvailable = MutableLiveData<Boolean>()
-    val apiCallError = MutableLiveData<Boolean>()
-    val apiCallRetry = MutableLiveData<Boolean>()
 
     var checkedUserLocationAccessed: MutableLiveData<Boolean> = MutableLiveData(false)
     var getUserLocation: MutableLiveData<Boolean> = MutableLiveData(false)
@@ -41,21 +37,14 @@ class SharedViewModel : ViewModel() {
 
     val userLastLocation = MutableLiveData<Location>()
 
-    val selectedMachine = MutableLiveData<Machine>()
-    val selectedMachineLoaded = MutableLiveData<Boolean>()
-
     var applicationVersionDeprecated = MutableLiveData<Boolean>()
     var applicationAlertMessage = MutableLiveData<String>()
 
-    val machinesInZone = MutableLiveData<List<Machine>>()   //machines in 1Km range
-    val machineNearby = MutableLiveData<List<Machine>>()    //machines in  vendable range
 
     init {
-        apiCallError.value = false
         locationPermission.value = PermissionStatus.None
         bluetoothPermission.value = PermissionStatus.None
 
-        debugText.value = "init debugger\n\n"
         checkApplicationVersion()
     }
 

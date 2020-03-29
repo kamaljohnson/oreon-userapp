@@ -59,91 +59,19 @@ class ExploreFragment : Fragment(), MachineCardAdapter.OnMachineCardListener, On
             if(accessed) {
                 viewModel.userLocation.value = sharedViewModel.userLastLocation.value
                 updateUserLocationOnMap()
-                scanForMachinesInZone()
             } else {
                 switchOffScanMode()
             }
         })
 
-        sharedViewModel.apiCallRetry.observe(viewLifecycleOwner, Observer { retry ->
-            if(retry) {
-                if(sharedViewModel.userLocationAccessed.value!!){
-                    scanForMachinesInZone()
-                } else {
-                    switchOffScanMode()
-                }
-            }
-        })
-
-        sharedViewModel.machineNearby.observe(viewLifecycleOwner, Observer { machines ->
-            viewModel.machineNearby.value = machines
-            viewModel.selectNearestMachineToUser()
-            Log.i(TAG, "machines nearby" + viewModel.machineNearby.value)
-        })
-
-        viewModel.selectedMachine.observe(viewLifecycleOwner, Observer { selectedMachine->
-            Log.i(TAG, "here selected machine" + viewModel.machineNearby.value)
-            if(selectedMachine.Name == "Dummy") {
-                selected_machine_code.text = "Explore?"
-            } else {
-                selected_machine_code.text = selectedMachine.Name
-            }
-            sharedViewModel.selectedMachine.value = selectedMachine
-            setSelectedMachine(selectedMachine)
-        })
-
-        viewModel.machinesInZone.observe(viewLifecycleOwner, Observer { machines ->
-            sharedViewModel.machinesInZone.value = machines
-            displayMachinesInZone()
-        })
-
-        viewModel.apiCallError.observe(viewLifecycleOwner, Observer { error ->
-            if(error) {
-                sharedViewModel.apiCallError.value = error
-            }
-        })
-
-        viewModel.debugText.observe(viewLifecycleOwner, Observer { text ->
-            sharedViewModel.debugText.value += TAG + text
-        })
     }
 
-    private fun scanForMachinesInZone() {
-        viewModel.debugText.value = "init explorer\n\n"
-
-        progress_bar.visibility = View.VISIBLE
-        selected_machine_code.isClickable = false
-
-        viewModel.userLocation.value = sharedViewModel.userLastLocation.value
-        sharedViewModel.getUserLocation.value = false
-
-        viewModel.requestMachinesInZone()
-    }
 
     private fun switchOffScanMode() {
         sharedViewModel.getUserLocation.value = false
     }
 
-    private fun displayMachinesInZone() {
-        progress_bar.visibility = View.GONE
-        updateMachineCardRV()
-        updateMachineMarkersOnMap()
-    }
-
-    private fun updateMachineCardRV() {
-        rv_machine_cards.apply {
-            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            adapter = MachineCardAdapter(viewModel.machinesInZone.value!!, context, this@ExploreFragment)
-        }
-    }
-
     override fun onCardClicked(machineId: String) {
-        viewModel.changeSelectedMachine(machineId)
-    }
-
-    private fun setSelectedMachine(machine: Machine) {
-        val preference = SharedPreference(context!!)
-        preference.setSelectedMachine(machine)
     }
 
     private fun setupMap(view: View, savedInstanceState: Bundle?) {
@@ -173,14 +101,14 @@ class ExploreFragment : Fragment(), MachineCardAdapter.OnMachineCardListener, On
     }
 
     private fun updateMachineMarkersOnMap() {
-        viewModel.machinesInZone.value!!.forEach { machine ->
-            val machineLocation = machine.Location
-            googleMap!!.addMarker(
-                MarkerOptions()
-                    .position(LatLng(machineLocation.Latitude, machineLocation.Longitude))
-                    .title(machine.Name)
-            )
-        }
+//        viewModel.machinesInZone.value!!.forEach { machine ->
+//            val machineLocation = machine.Location
+//            googleMap!!.addMarker(
+//                MarkerOptions()
+//                    .position(LatLng(machineLocation.Latitude, machineLocation.Longitude))
+//                    .title(machine.Name)
+//            )
+//        }
     }
 
     override fun onMapReady(googleMap: GoogleMap?) {

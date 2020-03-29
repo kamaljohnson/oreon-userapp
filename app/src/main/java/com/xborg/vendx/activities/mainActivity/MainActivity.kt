@@ -90,21 +90,6 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        sharedViewModel.apiCallError.observe(this, Observer { error ->
-            if(error && sharedViewModel.isInternetAvailable.value!!) {
-                sharedViewModel.apiCallRetry.value = false
-                showConnectionErrorDialog()
-            }
-        })
-
-        //resets the homeItems in cart when user changes the selected machine
-        sharedViewModel.selectedMachine.observe(this, Observer {
-            sharedViewModel.resetCart()
-        })
-        sharedViewModel.selectedMachineLoaded.observe(this, Observer {
-            sharedViewModel.resetCart()
-        })
-
         sharedViewModel.userLocationAccessed.observe(this, Observer { accessed ->
             if(accessed && current_fragment.value == Fragments.HOME) {
                 showSwipeUpContainer()
@@ -132,19 +117,10 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        sharedViewModel.debugText.observe(this, Observer { text ->
-            debug_text_view.text = text
-        })
-
         sharedViewModel.isInternetAvailable.observe(this, Observer { available ->
             if(!available) {
                 showInternetNotAvailableError()
             }
-        })
-
-        sharedViewModel.machinesInZone.observe(this, Observer {
-            Log.i(TAG, "starting to scanning...")
-            scanForNearbyMachines()
         })
 
         initBottomNavigationView()
@@ -334,17 +310,17 @@ class MainActivity : AppCompatActivity() {
                 when(intent!!.action) {
                     BluetoothDevice.ACTION_FOUND -> {
                        val device: BluetoothDevice? = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
-                       Log.i(TAG, "found : " + device!!.address + ", required " + sharedViewModel.machinesInZone.value)
-                       val machine = sharedViewModel.machinesInZone.value!!.find{ it.Mac.toUpperCase() == device.address.toUpperCase() }
+                       var machine = Machine()
+//                       val machine = sharedViewModel.machinesInZone.value!!.find{ it.Mac.toUpperCase() == device.address.toUpperCase() }
                        if(machine != null) {
-                           if(listOfMachinesNearBy.find { it.Mac.toUpperCase() == machine.Mac.toUpperCase()} == null) {
-                               Log.i(TAG, "found added : " + device.address)
-                               listOfMachinesNearBy.add(machine)
-                               sharedViewModel.machineNearby.value = listOfMachinesNearBy
-                               Log.i(TAG, "listOfMachinesNearBy : $listOfMachinesNearBy")
-                           } else {
-                               //already added to list
-                           }
+//                           if(listOfMachinesNearBy.find { it.Mac.toUpperCase() == machine.Mac.toUpperCase()} == null) {
+//                               Log.i(TAG, "found added : " + device.address)
+//                               listOfMachinesNearBy.add(machine)
+//                               sharedViewModel.machineNearby.value = listOfMachinesNearBy
+//                               Log.i(TAG, "listOfMachinesNearBy : $listOfMachinesNearBy")
+//                           } else {
+//                               //already added to list
+//                           }
                        } else {
                            Log.i(TAG, "other bluetooth device")
                        }
@@ -364,7 +340,7 @@ class MainActivity : AppCompatActivity() {
             Log.i(TAG, "discovery finished")
             bluetoothAdapter.cancelDiscovery()
             if(listOfMachinesNearBy.isEmpty()) {
-                sharedViewModel.machineNearby.postValue(ArrayList())
+//                sharedViewModel.machineNearby.postValue(ArrayList())
             }
         }
     }
@@ -597,7 +573,6 @@ class MainActivity : AppCompatActivity() {
             builder.setTitle("Network Error")
             builder.setMessage("An error occurred while connecting to server, please check your internet connection and retry")
             builder.setPositiveButton("Retry"){ _, _ ->
-                sharedViewModel.apiCallRetry.value = true
                 retryDialogDisplayed = false
             }
             val dialog: AlertDialog = builder.create()
