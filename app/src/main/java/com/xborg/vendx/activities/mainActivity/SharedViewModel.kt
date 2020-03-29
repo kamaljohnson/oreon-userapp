@@ -4,9 +4,8 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.xborg.vendx.BuildConfig
-import com.xborg.vendx.database.Application
+import com.xborg.vendx.database.AppInfo
 import com.xborg.vendx.database.Location
-import com.xborg.vendx.database.Machine
 import com.xborg.vendx.network.VendxApi
 import retrofit2.Call
 import retrofit2.Callback
@@ -65,8 +64,8 @@ class SharedViewModel : ViewModel() {
     private fun checkApplicationVersion() {
         Log.i(TAG, "checking application version")
         val applicationCall = VendxApi.retrofitServices.getMinimumApplicationVersionAsync()
-        applicationCall.enqueue(object : Callback<Application> {
-            override fun onResponse(call: Call<Application>, response: Response<Application>) {
+        applicationCall.enqueue(object : Callback<AppInfo> {
+            override fun onResponse(call: Call<AppInfo>, response: Response<AppInfo>) {
                 if (response.code() == 200) {
                     Log.i("Debug", "Successful Response code : 200")
                     val applicationData = response.body()
@@ -77,7 +76,7 @@ class SharedViewModel : ViewModel() {
                 }
             }
 
-            override fun onFailure(call: Call<Application>, error: Throwable) {
+            override fun onFailure(call: Call<AppInfo>, error: Throwable) {
                 Log.e("Debug", "Failed to get response ${error.message}")
                 if (error is SocketTimeoutException) {
                     //Connection Timeout

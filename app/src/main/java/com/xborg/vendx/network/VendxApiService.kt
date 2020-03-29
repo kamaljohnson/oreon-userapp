@@ -48,6 +48,9 @@ interface VendxAPIService {
         @Field("client_id") client_id: String = "HRmOHx29EHd2Mx1RNgnwAEClAd4J2GcdWnLACvaF",
         @Field("client_secret") client_secret: String = "B8btMbUOM1LJWGStbyfgcg5fMnUPgmBEa1T8ysiAuEVicZOOsDXz6vjqtliSgGOgmRlpw3bgjKLGMmHbir4wekRgFNAGRZfjyoTK8zBCASlNDpmGeBxnBQDPcItbkRrR"
     ): Call<AccessToken>
+    @GET("app")
+    fun getMinimumApplicationVersionAsync(
+    ): Call<AppInfo>
 
     @FormUrlEncoded
     @POST("auth/email/")
