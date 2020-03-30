@@ -13,7 +13,8 @@ import com.xborg.vendx.database.HomeItemGroup
 import kotlinx.android.synthetic.main.item_group_holder.view.*
 
 class ItemGroupAdapter(
-    val homeItems: ArrayList<HomeItemGroup>,
+    private val homeItems: ArrayList<HomeItemGroup>,
+    private val paidItemGroup: Boolean,
     val context: Context,
     private val onItemListener: ItemCardAdapter.OnItemListener
 ) : RecyclerView.Adapter<ItemGroupAdapter.GroupViewHolder>() {
@@ -36,7 +37,7 @@ class ItemGroupAdapter(
         } else {
             holder.groupItemsRV.apply {
                 layoutManager = GridLayoutManager(context, 3)
-                adapter = ItemCardAdapter(parent.Items, context, onItemListener)
+                adapter = ItemCardAdapter(parent.Items, paidItemGroup, context, onItemListener)
             }
         }
         holder.progressBar.visibility = if(parent.Items.isEmpty() && parent.Message != ""){

@@ -10,15 +10,14 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.xborg.vendx.R
-import com.xborg.vendx.database.CartItem
 import com.xborg.vendx.database.ItemCard
-import com.xborg.vendx.database.ItemDetail
 import kotlinx.android.synthetic.main.item_card.view.*
 
 private var TAG = "ItemCardAdapter"
 
 class ItemCardAdapter(
-    val items: List<ItemCard>,
+    private val items: List<ItemCard>,
+    private val paidItemGroup: Boolean,
     val context: Context,
     itemCardListener: OnItemListener
 ) : RecyclerView.Adapter<ItemCardAdapter.ItemViewHolder>() {
@@ -41,6 +40,7 @@ class ItemCardAdapter(
         holder.itemId.text = item.ItemDetail.Id
         holder.name.text = item.ItemDetail.Name
         holder.cost.text = "₹ " + item.ItemDetail.Cost.toString()
+        holder.paid = paidItemGroup
         Glide
             .with(context)
             .load(item.ItemDetail.ForegroundAsset)
@@ -66,6 +66,8 @@ class ItemCardAdapter(
 
         private val onItemListener: OnItemListener = onItemListener
 
+        var paid: Boolean = false
+
         init {
             purchaseCount.visibility = View.INVISIBLE
             itemRemoveButton.visibility = View.INVISIBLE
@@ -81,18 +83,18 @@ class ItemCardAdapter(
         }
 
         private fun addItemToCart() {
-            onItemListener.onItemAddedToCart(itemId.text.toString())
+            onItemListener.onItemAddedToCart(itemId.text.toString(), paid)
         }
 
         private fun removeItemFromCart() {
-            onItemListener.onItemRemovedFromCart(itemId.text.toString())
+            onItemListener.onItemRemovedFromCart(itemId.text.toString(), paid)
         }
 
     }
 
     interface OnItemListener {
-        fun onItemAddedToCart(itemId: String): Boolean
-        fun onItemRemovedFromCart(itemId: String): Boolean
+        fun onItemAddedToCart(itemId: String, paid: Boolean): Boolean
+        fun onItemRemovedFromCart(itemId: String, paid: Boolean): Boolean
     }
 }
 

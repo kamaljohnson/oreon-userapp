@@ -50,12 +50,12 @@ class SharedViewModel(
         initializeItemDetailsDatabase()
     }
 
-    fun addItemToCart(itemId: String): Boolean {
+    fun addItemToCart(itemId: String, paid: Boolean): Boolean {
         // TODO: add cartItem to user cart
         return true
     }
 
-    fun removeItemFromCart(itemId: String): Boolean {
+    fun removeItemFromCart(itemId: String, paid: Boolean): Boolean {
         // TODO: remove cartItem from user cart
         return true
     }

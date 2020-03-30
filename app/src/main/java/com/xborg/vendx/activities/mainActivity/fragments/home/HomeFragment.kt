@@ -7,12 +7,10 @@ import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.xborg.vendx.R
 import com.xborg.vendx.activities.feedbackActivity.FeedbackActivity
 import com.xborg.vendx.activities.mainActivity.SharedViewModel
 import com.xborg.vendx.adapters.ItemCardAdapter
-import com.xborg.vendx.adapters.ItemGroupAdapter
 import kotlinx.android.synthetic.main.fragment_home.*
 
 private var TAG = "HomeFragment"
@@ -68,12 +66,12 @@ class HomeFragment : Fragment(), ItemCardAdapter.OnItemListener {
         }
     }
 
-    override fun onItemAddedToCart(itemId: String): Boolean {
-        return sharedViewModel.addItemToCart(itemId)
+    override fun onItemAddedToCart(itemId: String, paid: Boolean): Boolean {
+        return sharedViewModel.addItemToCart(itemId, paid)
     }
 
-    override fun onItemRemovedFromCart(itemId: String): Boolean {
-        return sharedViewModel.removeItemFromCart(itemId)
+    override fun onItemRemovedFromCart(itemId: String, paid: Boolean): Boolean {
+        return sharedViewModel.removeItemFromCart(itemId, paid)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
