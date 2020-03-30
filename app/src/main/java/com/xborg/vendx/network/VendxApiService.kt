@@ -138,6 +138,17 @@ interface VendxAPIService {
         @Path("id") id: String,
         @Field("feedback") feedback: String
     ): Call<Feedback>
+
+    @GET("users/{user_id}")
+    fun getUserInfoAsync(
+        @Path("user_id") user_id: String
+    ): Call<User>
+
+    @GET("machines_nearby/{user_id}")
+    fun getMachinesNearbyAsync(
+        @Path("user_id") user_id: String,
+        @Body user_location: Location
+    ): Call<List<Machine>>
 }
 
 object VendxApi {
