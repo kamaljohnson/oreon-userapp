@@ -41,6 +41,9 @@ interface ItemDetailDao {
     @Insert
     fun insert(itemDetail: ItemDetail)
 
+    @Insert
+    fun insert(itemDetails: List<ItemDetail>)
+
     @Query("SELECT * FROM item_details_table")
     fun get(): LiveData<List<ItemDetail>>
 
