@@ -102,17 +102,6 @@ class MainActivity : AppCompatActivity() {
                 showSwipeUpContainer()
             }
         })
-        sharedViewModel.applicationVersionDeprecated.observe(this, Observer { depricated ->
-            if(depricated) {
-                showVersionDeprecatedError()
-            }
-        })
-        sharedViewModel.applicationAlertMessage.observe(this, Observer { message ->
-            if(message != "") {
-                alert_message_layout.visibility = View.VISIBLE
-                alert_message_text.text = message
-            }
-        })
 
         current_fragment.observe(this, Observer { fragment ->
             if(fragment == Fragments.HOME) {

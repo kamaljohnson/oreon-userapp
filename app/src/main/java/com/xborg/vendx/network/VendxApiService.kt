@@ -51,6 +51,9 @@ interface VendxAPIService {
     @GET("app")
     fun getMinimumApplicationVersionAsync(
     ): Call<AppInfo>
+    @GET("item_details")
+    fun getItemDetailsAsync(
+    ): Call<List<ItemDetail>>
 
     @FormUrlEncoded
     @POST("auth/email/")
