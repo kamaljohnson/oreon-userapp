@@ -44,7 +44,7 @@ interface ItemDetailDao {
 
     @Insert
     fun insert(itemDetails: List<ItemDetail>) {
-        Log.i("Debug", "items inserted to database: $itemDetails")
+        Log.i("Database", "items inserted to database: $itemDetails")
     }
 
     @Query("SELECT * FROM item_details_table")
@@ -98,6 +98,12 @@ data class ItemCard(
 )
 
 data class InventoryItem(
+    @SerializedName("item_detail") var ItemDetailId: String,
+    @SerializedName("quantity") var Quantity: Number
+)
+
+data class CartItem(
+    @SerializedName("paid") var Paid: Boolean,
     @SerializedName("item_detail") var ItemDetailId: String,
     @SerializedName("quantity") var Quantity: Number
 )
