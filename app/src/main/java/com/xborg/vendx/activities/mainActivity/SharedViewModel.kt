@@ -4,13 +4,10 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.xborg.vendx.BuildConfig
-import com.xborg.vendx.database.AppInfo
-import com.xborg.vendx.database.ItemDetailDao
-import com.xborg.vendx.database.ItemDetailDatabase
-import com.xborg.vendx.database.Location
+import com.xborg.vendx.database.*
 import com.xborg.vendx.network.VendxApi
+import kotlinx.coroutines.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -29,6 +26,9 @@ class SharedViewModel(
     application: Application
 ) : AndroidViewModel(application) {
 
+    private var viewModelJob = Job()
+    private var uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
+
     var versionCode: Int = BuildConfig.VERSION_CODE
 
     val isInternetAvailable = MutableLiveData<Boolean>()
@@ -43,15 +43,11 @@ class SharedViewModel(
 
     val userLastLocation = MutableLiveData<Location>()
 
-    var applicationVersionDeprecated = MutableLiveData<Boolean>()
-    var applicationAlertMessage = MutableLiveData<String>()
-
-
     init {
         locationPermission.value = PermissionStatus.None
         bluetoothPermission.value = PermissionStatus.None
 
-        checkApplicationVersion()
+        initializeItemDetailsDatabase()
     }
 
     fun addItemToCart(itemId: String): Boolean {
@@ -68,39 +64,41 @@ class SharedViewModel(
         // TODO: set user cart to ArrayList()
     }
 
-    private fun checkApplicationVersion() {
-        Log.i(TAG, "checking application version")
-        val applicationCall = VendxApi.retrofitServices.getMinimumApplicationVersionAsync()
-        applicationCall.enqueue(object : Callback<AppInfo> {
-            override fun onResponse(call: Call<AppInfo>, response: Response<AppInfo>) {
-                if (response.code() == 200) {
-                    Log.i("Debug", "Successful Response code : 200")
-                    val applicationData = response.body()
-                    applicationVersionDeprecated.value = versionCode != applicationData!!.Version
-                    applicationAlertMessage.value = applicationData.AlertMessage
-                } else {
-                    Log.e("Debug", "Failed to get response")
-                }
-            }
+    private fun initializeItemDetailsDatabase() {
+        uiScope.launch {
+            getAllItemDetailsFromServer()
+        }
+    }
 
-            override fun onFailure(call: Call<AppInfo>, error: Throwable) {
-                Log.e("Debug", "Failed to get response ${error.message}")
-                if (error is SocketTimeoutException) {
-                    //Connection Timeout
-                    Log.e("Debug", "error type : connectionTimeout")
-                } else if (error is IOException) {
-                    //Timeout
-                    Log.e("Debug", "error type : timeout")
-                } else {
-                    if (applicationCall.isCanceled) {
-                        //Call cancelled forcefully
-                        Log.e("Debug", "error type : cancelledForcefully")
+    private suspend fun getAllItemDetailsFromServer() {
+        withContext(Dispatchers.IO) {
+            val itemDetailsCall = VendxApi.retrofitServices.getItemDetailsAsync()
+            itemDetailsCall.enqueue(object : Callback<List<ItemDetail>> {
+                override fun onResponse(call: Call<List<ItemDetail>>, response: Response<List<ItemDetail>>) {
+                    if (response.code() == 200) {
+                        Log.i("Debug", "Successful Response code : 200")
+                        val itemDetails = response.body()
+                        if (itemDetails != null) {
+                            itemDetailDatabase.clear()
+                            itemDetailDatabase.insert(itemDetails)
+                        } else {
+                            Log.e(TAG, "itemDetails received is null")
+                        }
                     } else {
-                        //generic error handling
-                        Log.e("Debug", "error type : genericError")
+                        Log.e("Debug", "Failed to get response")
                     }
                 }
-            }
-        })
+
+                override fun onFailure(call: Call<List<ItemDetail>>, error: Throwable) {
+                    Log.e("Debug", "Failed to get response ${error.message}")
+                }
+            })
+        }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+
+        viewModelJob.cancel()
     }
 }
