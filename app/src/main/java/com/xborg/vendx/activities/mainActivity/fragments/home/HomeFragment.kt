@@ -6,11 +6,15 @@ import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.xborg.vendx.R
 import com.xborg.vendx.activities.feedbackActivity.FeedbackActivity
 import com.xborg.vendx.activities.mainActivity.SharedViewModel
+import com.xborg.vendx.activities.mainActivity.SharedViewModelFactory
 import com.xborg.vendx.adapters.ItemCardAdapter
+import com.xborg.vendx.database.ItemDetailDatabase
+import com.xborg.vendx.database.UserDatabase
 import kotlinx.android.synthetic.main.fragment_home.*
 
 private var TAG = "HomeFragment"
@@ -39,8 +43,15 @@ class HomeFragment : Fragment(), ItemCardAdapter.OnItemListener {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        viewModel = ViewModelProviders.of(activity!!).get(HomeViewModel::class.java)
-        sharedViewModel = ViewModelProviders.of(activity!!).get(SharedViewModel::class.java)
+        val application = requireNotNull(this.activity).application
+
+        val userDataSource = UserDatabase.getInstance(application).userDatabaseDao
+        val homeViewModelFactory = HomeViewModelFactory(userDataSource, application)
+        viewModel = ViewModelProvider(this, homeViewModelFactory).get(HomeViewModel::class.java)
+
+        val itemDetailDataSource = ItemDetailDatabase.getInstance(application).itemDetailDatabaseDao
+        val sharedViewModelFactory = SharedViewModelFactory(itemDetailDataSource, application)
+        sharedViewModel = ViewModelProvider(this, sharedViewModelFactory).get(SharedViewModel::class.java)
 
         sharedViewModel.checkedUserLocationAccessed.observe(
             viewLifecycleOwner,
