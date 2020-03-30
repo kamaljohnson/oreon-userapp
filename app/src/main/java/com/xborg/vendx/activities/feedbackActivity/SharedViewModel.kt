@@ -27,38 +27,38 @@ class SharedViewModel : ViewModel() {
     var feedbackPosted = MutableLiveData<Boolean>()
 
     fun postFeedback() {
-        val userFeedbackJson = Gson().toJson(userFeedback.value, Feedback::class.java)
-        val feedbackCall = VendxApi.retrofitServices
-            .postFeedbackAsync(id = uid, feedback = userFeedbackJson)
-        feedbackCall.enqueue(object : Callback<Feedback> {
-            override fun onResponse(call: Call<Feedback>, response: Response<Feedback>) {
-                Log.i("Debug", "checkApplicationVersion")
-                if(response.code() == 200) {
-                    Log.i("Debug", "Successful Response code : 200")
-                } else {
-                    Log.e("Debug", "Failed to get response")
-                }
-            }
-
-            override fun onFailure(call: Call<Feedback>, error: Throwable) {
-                Log.e("Debug", "Failed to get response ${error.message}")
-                if(error is SocketTimeoutException) {
-                    //Connection Timeout
-                    Log.e("Debug", "error type : connectionTimeout")
-                } else if(error is IOException) {
-                    //Timeout
-                    Log.e("Debug", "error type : timeout")
-                } else {
-                    if(feedbackCall.isCanceled) {
-                        //Call cancelled forcefully
-                        Log.e("Debug", "error type : cancelledForcefully")
-                    } else {
-                        //generic error handling
-                        Log.e("Debug", "error type : genericError")
-                    }
-                }
-            }
-        })
+//        val userFeedbackJson = Gson().toJson(userFeedback.value, Feedback::class.java)
+//        val feedbackCall = VendxApi.retrofitServices
+//            .postFeedbackAsync(id = uid, feedback = userFeedbackJson)
+//        feedbackCall.enqueue(object : Callback<Feedback> {
+//            override fun onResponse(call: Call<Feedback>, response: Response<Feedback>) {
+//                Log.i("Debug", "checkApplicationVersion")
+//                if(response.code() == 200) {
+//                    Log.i("Debug", "Successful Response code : 200")
+//                } else {
+//                    Log.e("Debug", "Failed to get response")
+//                }
+//            }
+//
+//            override fun onFailure(call: Call<Feedback>, error: Throwable) {
+//                Log.e("Debug", "Failed to get response ${error.message}")
+//                if(error is SocketTimeoutException) {
+//                    //Connection Timeout
+//                    Log.e("Debug", "error type : connectionTimeout")
+//                } else if(error is IOException) {
+//                    //Timeout
+//                    Log.e("Debug", "error type : timeout")
+//                } else {
+//                    if(feedbackCall.isCanceled) {
+//                        //Call cancelled forcefully
+//                        Log.e("Debug", "error type : cancelledForcefully")
+//                    } else {
+//                        //generic error handling
+//                        Log.e("Debug", "error type : genericError")
+//                    }
+//                }
+//            }
+//        })
     }
 
 }

@@ -1,76 +1,68 @@
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:background="@drawable/drawable_group_holder_card"
+    android:id="@+id/card_view"
+    android:layout_marginHorizontal="10dp"
+    android:layout_marginVertical="15dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    card_view:cardBackgroundColor="#fff">
 
-    <data>
-        <variable
-            name="group_holder"
-            type="com.xborg.vendx.database.HomeItemGroup" />
-    </data>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-        <RelativeLayout
-            android:background="@drawable/drawable_group_holder_card"
-            android:id="@+id/card_view"
-            android:layout_marginHorizontal="10dp"
-            android:layout_marginVertical="15dp"
+        <TextView
+            android:gravity="center"
+            android:textAlignment="center"
+            android:textSize="16dp"
+            android:textColor="@color/white"
+            android:text="Title"
+            android:background="@drawable/drawable_group_holder_title"
+            android:id="@+id/title"
+            android:textStyle="bold"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            card_view:cardBackgroundColor="#fff">
+            android:layout_height="30dp"/>
+        <RelativeLayout
+            android:id="@+id/no_machines_near_message"
+            android:layout_marginVertical="50dp"
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:visibility="invisible"
+                android:id="@+id/message_text"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:gravity="center"
-                    android:textAlignment="center"
-                    android:textSize="16dp"
-                    android:textColor="@color/white"
-                    android:text="Title"
-                    android:background="@drawable/drawable_group_holder_title"
-                    android:id="@+id/title"
-                    android:textStyle="bold"
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp"/>
-                <RelativeLayout
-                    android:id="@+id/no_machines_near_message"
-                    android:layout_marginVertical="50dp"
-                    android:layout_centerInParent="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:visibility="invisible"
-                        android:id="@+id/message_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAlignment="center"
-                        android:text="No machines\nnear you"/>
-
-                </RelativeLayout>
-
-
-                <ProgressBar
-                    android:id="@+id/progress_bar"
-                    android:layout_centerInParent="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:layout_marginVertical="10dp"
-                    android:layout_marginHorizontal="5dp"
-                    android:layout_below="@id/title"
-                    android:layout_marginTop="2pt"
-                    android:id="@+id/rv_item_group"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:orientation="vertical" />
-
-            </RelativeLayout>
+                android:textAlignment="center"
+                android:text="No machines\nnear you"/>
 
         </RelativeLayout>
-</layout>
+
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_marginVertical="10dp"
+            android:layout_marginHorizontal="5dp"
+            android:layout_below="@id/title"
+            android:layout_marginTop="2pt"
+            android:id="@+id/rv_item_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:orientation="vertical" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

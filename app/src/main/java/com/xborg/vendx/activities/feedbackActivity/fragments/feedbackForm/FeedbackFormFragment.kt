@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.xborg.vendx.R
 import com.xborg.vendx.activities.feedbackActivity.SharedViewModel
 import com.xborg.vendx.database.Feedback
+import com.xborg.vendx.database.FeedbackTopic
 import kotlinx.android.synthetic.main.fragment_feedback_form.*
 
 class FeedbackFormFragment : Fragment() {
@@ -39,7 +40,7 @@ class FeedbackFormFragment : Fragment() {
             val body = feedback_body_edit_text.text.toString()
             val topic = feedback_topic_spinner.selectedItem.toString()
             if(body != "") {
-                sharedViewModel.userFeedback.value = Feedback(Message = body, Topic = topic)
+                sharedViewModel.userFeedback.value = Feedback(Message = body, Topic = FeedbackTopic.Other)
                 sharedViewModel.postFeedback()
                 sharedViewModel.feedbackPosted.value = true
                 Toast.makeText(context, "Feedback uploaded", Toast.LENGTH_LONG).show()

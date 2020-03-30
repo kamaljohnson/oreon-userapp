@@ -44,15 +44,15 @@ class PaymentActivity : FragmentActivity(), PaymentResultWithDataListener {
 
         sharedViewModel = ViewModelProviders.of(this).get(SharedViewModel::class.java)
 
-        sharedViewModel.cartItems.observe(this, Observer { updatedCart ->
-            Log.i(TAG, "cartItems updated: $updatedCart")
-        })
-        sharedViewModel.machineItems.observe(this, Observer { updatedMachineItems ->
-            Log.i(TAG, "machineItems updated: $updatedMachineItems")
-        })
-        sharedViewModel.inventoryItems.observe(this, Observer { updatedInventoryItems ->
-            Log.i(TAG, "inventoryItems updated: $updatedInventoryItems")
-        })
+//        sharedViewModel.cartItems.observe(this, Observer { updatedCart ->
+//            Log.i(TAG, "cartItems updated: $updatedCart")
+//        })
+//        sharedViewModel.machineItems.observe(this, Observer { updatedMachineItems ->
+//            Log.i(TAG, "machineItems updated: $updatedMachineItems")
+//        })
+//        sharedViewModel.inventoryItems.observe(this, Observer { updatedInventoryItems ->
+//            Log.i(TAG, "inventoryItems updated: $updatedInventoryItems")
+//        })
 
         sharedViewModel.paymentState.observe(this, Observer { currentPaymentState ->
             Log.i(TAG, "Payment State: $currentPaymentState")

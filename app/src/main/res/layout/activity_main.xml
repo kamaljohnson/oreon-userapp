@@ -1,204 +1,202 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
-    <RelativeLayout
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.mainActivity.MainActivity">
+
+<!--    region SwipeUpLayout-->
+    <com.sothree.slidinguppanel.SlidingUpPanelLayout
+        android:id="@+id/bottom_slide_up_container"
+        android:gravity="bottom"
+        app:umanoPanelHeight="20pt"
+        app:umanoParallaxOffset="100dp"
         android:layout_width="match_parent"
+        app:umanoOverlay="true"
         android:layout_height="match_parent"
-        tools:context=".activities.mainActivity.MainActivity">
+        app:umanoShadowHeight="5dp"
+        android:layout_above="@id/bottom_navigation_container"
+        app:umanoScrollableView="@+id/bottom_sliding_layer">
 
-    <!--    region SwipeUpLayout-->
-        <com.sothree.slidinguppanel.SlidingUpPanelLayout
-            android:id="@+id/bottom_slide_up_container"
-            android:gravity="bottom"
-            app:umanoPanelHeight="20pt"
-            app:umanoParallaxOffset="100dp"
-            android:layout_width="match_parent"
-            app:umanoOverlay="true"
-            android:layout_height="match_parent"
-            app:umanoShadowHeight="5dp"
-            android:layout_above="@id/bottom_navigation_container"
-            app:umanoScrollableView="@+id/bottom_sliding_layer">
-
-            <!-- region Main Fragments -->
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <FrameLayout
-                        android:id="@+id/fragment_container"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"/>
-
-                </RelativeLayout>
-            <!--    endregion-->
-
-            <!--    region swipe-up-->
-                <RelativeLayout
-                    android:id="@+id/bottom_sliding_layer"
-                    android:background="@color/white"
-                    android:layout_width="match_parent"
-                    android:layout_height="500dp">
-
-                    <FrameLayout
-                        android:id="@+id/explore_fragment_container"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"/>
-
-                </RelativeLayout>
-            <!--    endregion-->
-        </com.sothree.slidinguppanel.SlidingUpPanelLayout>
-    <!--    endregion-->
-
-    <!--    region Action Button-->
+        <!-- region Main Fragments -->
             <RelativeLayout
-                android:id="@+id/get_button_group"
-                android:layout_width="80dp"
-                android:layout_height="100dp"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentBottom="true"
-                android:layout_gravity="bottom|right"
-                android:layout_marginEnd="3dp"
-                android:layout_marginBottom="37pt">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-                <Button
-                    android:id="@+id/cart_item_count"
-                    style="?android:attr/borderlessButtonStyle"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:layout_above="@+id/checkout_button"
-                    android:layout_alignEnd="@id/checkout_button"
-                    android:layout_alignParentTop="true"
-                    android:layout_marginTop="0dp"
-                    android:layout_marginBottom="-3dp"
-                    android:background="@drawable/cart_item_count"
-                    android:text="0"
-                    android:textColor="@color/white"
-                    android:textStyle="bold"/>
-
-                <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/checkout_button"
-                    style="?android:attr/borderlessButtonStyle"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    app:backgroundTint="@color/colorPrimary"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
-                    android:src="@drawable/right_arrow_icon"/>
+                <FrameLayout
+                    android:id="@+id/fragment_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
 
             </RelativeLayout>
+        <!--    endregion-->
 
-    <!--    endregion-->
+        <!--    region swipe-up-->
+            <RelativeLayout
+                android:id="@+id/bottom_sliding_layer"
+                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="500dp">
 
-    <!-- region Bottom Navigation View -->
-            <androidx.coordinatorlayout.widget.CoordinatorLayout
-                android:id="@+id/bottom_navigation_container"
-                android:layout_width="wrap_content"
-                android:layout_gravity="bottom"
-                android:layout_alignParentBottom="true"
-                style="?android:attr/ambientShadowAlpha"
-                android:translationZ="4dp"
-                android:layout_height="20pt">
-
-                <com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx
-                    android:translationZ="5dp"
-                    android:id="@+id/bottom_navigation"
+                <FrameLayout
+                    android:id="@+id/explore_fragment_container"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bottom_navigation"
-                    app:itemIconTint="@color/black"
-                    app:itemTextColor="@color/black"
-                    app:menu="@menu/navigation" />
+                    android:layout_height="match_parent"/>
 
-            </androidx.coordinatorlayout.widget.CoordinatorLayout>
-    <!--    endregion-->
+            </RelativeLayout>
+        <!--    endregion-->
+    </com.sothree.slidinguppanel.SlidingUpPanelLayout>
+<!--    endregion-->
 
-        <!--region Alert Message-->
+<!--    region Action Button-->
         <RelativeLayout
-            android:clickable="true"
-            android:visibility="invisible"
-            android:id="@+id/alert_message_layout"
-            android:background="@drawable/drawable_alert_dialog_bg"
-            android:layout_centerInParent="true"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:id="@+id/alert_message_text"
-                android:textAlignment="center"
-                android:text="hello there"
-                android:layout_centerInParent="true"
-                android:layout_width="100pt"
-                android:layout_height="wrap_content"/>
+            android:id="@+id/get_button_group"
+            android:layout_width="80dp"
+            android:layout_height="100dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="bottom|right"
+            android:layout_marginEnd="3dp"
+            android:layout_marginBottom="37pt">
 
             <Button
-                android:layout_marginTop="100dp"
-                android:layout_centerHorizontal="true"
-                android:layout_below="@+id/alert_message_text"
-                android:textStyle="bold"
+                android:id="@+id/cart_item_count"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_above="@+id/checkout_button"
+                android:layout_alignEnd="@id/checkout_button"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="-3dp"
+                android:background="@drawable/cart_item_count"
+                android:text="0"
                 android:textColor="@color/white"
-                android:text="Ok"
-                android:background="@drawable/drawable_button"
-                android:id="@+id/alert_message_done_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:textStyle="bold"/>
 
-        </RelativeLayout>
-        <!--endregion-->
-
-        <!--region Alert Message-->
-        <RelativeLayout
-            android:clickable="true"
-            android:visibility="invisible"
-            android:id="@+id/jumpable_alert_message_layout"
-            android:background="@drawable/drawable_alert_dialog_bg"
-            android:layout_marginBottom="15pt"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <ImageView
-                android:visibility="invisible"
-                android:layout_marginBottom="20dp"
-                android:layout_centerInParent="true"
-                android:id="@+id/no_internet_connection_image"
-                android:src="@drawable/no_internet_connection"
-                android:layout_width="200dp"
-                android:layout_height="200dp"/>
-
-            <ImageView
-                android:visibility="invisible"
-                android:layout_marginBottom="20dp"
-                android:layout_centerInParent="true"
-                android:id="@+id/update_image_icon"
-                android:src="@drawable/update_icon"
-                android:layout_width="100dp"
-                android:layout_height="100dp"/>
-
-            <TextView
-                android:id="@+id/jumpable_alert_message_text"
-                android:textAlignment="center"
-                android:text=""
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/checkout_button"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                app:backgroundTint="@color/colorPrimary"
                 android:layout_centerHorizontal="true"
-                android:layout_below="@id/no_internet_connection_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_centerVertical="true"
+                android:src="@drawable/right_arrow_icon"/>
 
         </RelativeLayout>
-        <!--endregion-->
-        <!--        region debugger for release-->
-        <TextView
-            android:visibility="gone"
-            android:layout_marginBottom="50pt"
+
+<!--    endregion-->
+
+<!-- region Bottom Navigation View -->
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:id="@+id/bottom_navigation_container"
+            android:layout_width="wrap_content"
+            android:layout_gravity="bottom"
             android:layout_alignParentBottom="true"
-            android:scrollbars = "vertical"
-            android:textColor="@color/white"
+            style="?android:attr/ambientShadowAlpha"
+            android:translationZ="4dp"
+            android:layout_height="20pt">
+
+            <com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx
+                android:translationZ="5dp"
+                android:id="@+id/bottom_navigation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bottom_navigation"
+                app:itemIconTint="@color/black"
+                app:itemTextColor="@color/black"
+                app:menu="@menu/navigation" />
+
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+<!--    endregion-->
+
+    <!--region Alert Message-->
+    <RelativeLayout
+        android:clickable="true"
+        android:visibility="invisible"
+        android:id="@+id/alert_message_layout"
+        android:background="@drawable/drawable_alert_dialog_bg"
+        android:layout_centerInParent="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/alert_message_text"
+            android:textAlignment="center"
+            android:text="hello there"
+            android:layout_centerInParent="true"
+            android:layout_width="100pt"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:layout_marginTop="100dp"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/alert_message_text"
             android:textStyle="bold"
-            android:background="@color/black"
-            android:text="debug message view"
-            android:id="@+id/debug_text_view"
-            android:layout_width="match_parent"
-            android:layout_height="150dp"/>
-        <!--        endregion-->
+            android:textColor="@color/white"
+            android:text="Ok"
+            android:background="@drawable/drawable_button"
+            android:id="@+id/alert_message_done_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
     </RelativeLayout>
-</layout>
+    <!--endregion-->
+
+    <!--region Alert Message-->
+    <RelativeLayout
+        android:clickable="true"
+        android:visibility="invisible"
+        android:id="@+id/jumpable_alert_message_layout"
+        android:background="@drawable/drawable_alert_dialog_bg"
+        android:layout_marginBottom="15pt"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:visibility="invisible"
+            android:layout_marginBottom="20dp"
+            android:layout_centerInParent="true"
+            android:id="@+id/no_internet_connection_image"
+            android:src="@drawable/no_internet_connection"
+            android:layout_width="200dp"
+            android:layout_height="200dp"/>
+
+        <ImageView
+            android:visibility="invisible"
+            android:layout_marginBottom="20dp"
+            android:layout_centerInParent="true"
+            android:id="@+id/update_image_icon"
+            android:src="@drawable/update_icon"
+            android:layout_width="100dp"
+            android:layout_height="100dp"/>
+
+        <TextView
+            android:id="@+id/jumpable_alert_message_text"
+            android:textAlignment="center"
+            android:text=""
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/no_internet_connection_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </RelativeLayout>
+    <!--endregion-->
+    <!--        region debugger for release-->
+    <TextView
+        android:visibility="gone"
+        android:layout_marginBottom="50pt"
+        android:layout_alignParentBottom="true"
+        android:scrollbars = "vertical"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:background="@color/black"
+        android:text="debug message view"
+        android:id="@+id/debug_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"/>
+    <!--        endregion-->
+</RelativeLayout>

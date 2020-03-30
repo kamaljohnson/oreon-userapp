@@ -1,6 +1,7 @@
 package com.xborg.vendx.database
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.google.gson.annotations.SerializedName
@@ -42,7 +43,9 @@ interface ItemDetailDao {
     fun insert(itemDetail: ItemDetail)
 
     @Insert
-    fun insert(itemDetails: List<ItemDetail>)
+    fun insert(itemDetails: List<ItemDetail>) {
+        Log.i("Debug", "items inserted to database: $itemDetails")
+    }
 
     @Query("SELECT * FROM item_details_table")
     fun get(): LiveData<List<ItemDetail>>

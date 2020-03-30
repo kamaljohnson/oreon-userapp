@@ -11,8 +11,6 @@ import kotlinx.coroutines.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.io.IOException
-import java.net.SocketTimeoutException
 
 
 enum class PermissionStatus {
@@ -27,7 +25,7 @@ class SharedViewModel(
 ) : AndroidViewModel(application) {
 
     private var viewModelJob = Job()
-    private var uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
+    private var ioScope = CoroutineScope(Dispatchers.IO + viewModelJob)
 
     var versionCode: Int = BuildConfig.VERSION_CODE
 
@@ -65,35 +63,29 @@ class SharedViewModel(
     }
 
     private fun initializeItemDetailsDatabase() {
-        uiScope.launch {
-            getAllItemDetailsFromServer()
-        }
-    }
-
-    private suspend fun getAllItemDetailsFromServer() {
-        withContext(Dispatchers.IO) {
-            val itemDetailsCall = VendxApi.retrofitServices.getItemDetailsAsync()
-            itemDetailsCall.enqueue(object : Callback<List<ItemDetail>> {
-                override fun onResponse(call: Call<List<ItemDetail>>, response: Response<List<ItemDetail>>) {
-                    if (response.code() == 200) {
-                        Log.i("Debug", "Successful Response code : 200")
-                        val itemDetails = response.body()
-                        if (itemDetails != null) {
+        val itemDetailsCall = VendxApi.retrofitServices.getItemDetailsAsync()
+        itemDetailsCall.enqueue(object : Callback<List<ItemDetail>> {
+            override fun onResponse(call: Call<List<ItemDetail>>, response: Response<List<ItemDetail>>) {
+                if (response.code() == 200) {
+                    Log.i("Debug", "Successful Response code : 200")
+                    val itemDetails = response.body()
+                    if (itemDetails != null) {
+                        ioScope.launch {
                             itemDetailDatabase.clear()
                             itemDetailDatabase.insert(itemDetails)
-                        } else {
-                            Log.e(TAG, "itemDetails received is null")
                         }
                     } else {
-                        Log.e("Debug", "Failed to get response")
+                        Log.e(TAG, "itemDetails received is null")
                     }
+                } else {
+                    Log.e("Debug", "Failed to get response")
                 }
+            }
 
-                override fun onFailure(call: Call<List<ItemDetail>>, error: Throwable) {
-                    Log.e("Debug", "Failed to get response ${error.message}")
-                }
-            })
-        }
+            override fun onFailure(call: Call<List<ItemDetail>>, error: Throwable) {
+                Log.e("Debug", "Failed to get response ${error.message}")
+            }
+        })
     }
 
     override fun onCleared() {
