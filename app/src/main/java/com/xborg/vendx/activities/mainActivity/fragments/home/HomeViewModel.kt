@@ -30,35 +30,6 @@ class HomeViewModel(
 
     init {
 
-        initializeUserDatabase()
     }
 
-    private fun initializeUserDatabase() {
-        // TODO: pass the actual user id
-        val userCall = VendxApi.retrofitServices.getUserInfoAsync("1")
-        userCall.enqueue(object : Callback<User> {
-            override fun onResponse(call: Call<User>, response: Response<User>) {
-                if (response.code() == 200) {
-                    Log.i("Debug", "Successful Response code : 200")
-                    val user = response.body()
-                    if (user != null) {
-                        ioScope.launch {
-                            userInventory.value = user.Inventory
-
-                            userDatabase.clear()
-                            userDatabase.insert(user)
-                        }
-                    } else {
-                        Log.e(com.xborg.vendx.activities.mainActivity.TAG, "user info received is null")
-                    }
-                } else {
-                    Log.e("Debug", "Failed to get response")
-                }
-            }
-
-            override fun onFailure(call: Call<User>, error: Throwable) {
-                Log.e("Debug", "Failed to get response ${error.message}")
-            }
-        })
-    }
 }
