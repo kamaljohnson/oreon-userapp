@@ -17,7 +17,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.xborg.vendx.R
-import com.xborg.vendx.activities.mainActivity.MainActivity
+//import com.xborg.vendx.activities.mainActivity.MainActivity
 import kotlinx.android.synthetic.main.activity_login.*
 
 
@@ -48,7 +48,7 @@ class LoginActivity : AppCompatActivity() {
                 object : FacebookCallback<LoginResult> {
                     override fun onSuccess(loginResult: LoginResult) {
                         Log.d("MainActivity", "Facebook token: " + loginResult.accessToken.token)
-                        startActivity(Intent(applicationContext, MainActivity::class.java))
+//                        startActivity(Intent(applicationContext, MainActivity::class.java))
                     }
 
                     override fun onCancel() {
@@ -65,7 +65,7 @@ class LoginActivity : AppCompatActivity() {
 
         // Google Login
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken("YOUR_WEB_APPLICATION_CLIENT_ID")
+            .requestIdToken("510464295618-1sl81vuuellu04ef8ki11qlusp8m2p78.apps.googleusercontent.com")
             .requestEmail()
             .build()
 
@@ -115,33 +115,30 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
-        Log.i(TAG, "handle Sign In Result -- 1")
         try {
-            Log.i(TAG, "handle Sign In Result -- 2")
             val account = completedTask.getResult(
                 ApiException::class.java
             )
             // Signed in successfully
             val googleId = account?.id ?: ""
-            Log.i(TAG, "Google ID$googleId")
+            Log.i(TAG, "Google ID: $googleId")
 
             val googleFirstName = account?.givenName ?: ""
-            Log.i(TAG, "Google First Name$googleFirstName")
+            Log.i(TAG, "Google First Name: $googleFirstName")
 
             val googleLastName = account?.familyName ?: ""
-            Log.i(TAG, "Google Last Name$googleLastName")
+            Log.i(TAG, "Google Last Name: $googleLastName")
 
             val googleEmail = account?.email ?: ""
-            Log.i(TAG, "Google Email$googleEmail")
+            Log.i(TAG, "Google Email: $googleEmail")
 
             val googleProfilePicURL = account?.photoUrl.toString()
-            Log.i(TAG, "Google Profile Pic URL$googleProfilePicURL")
+            Log.i(TAG, "Google Profile Pic URL: $googleProfilePicURL")
 
             val googleIdToken = account?.idToken ?: ""
-            Log.i(TAG, "Google Id Token$googleIdToken")
+            Log.i(TAG, "Google Id Token: $googleIdToken")
 
         } catch (e: ApiException) {
-            Log.i(TAG, "handle Sign In Result -- 3")
             // Sign in was unsuccessful
             Log.i(TAG, "Error: $e")
         }
