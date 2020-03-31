@@ -43,7 +43,7 @@ interface UserDao {
 
     //TODO: use the user id in sharedPreference
     @Query("SELECT * from user_table WHERE id = :id")
-    fun get(id: Long): ItemDetail?
+    fun get(id: Long): User?
 
     @Query("DELETE FROM user_table")
     fun clear()

@@ -18,6 +18,7 @@ import android.net.NetworkInfo
 import android.os.Bundle
 import android.os.Looper
 import android.provider.Settings
+import android.service.autofill.UserData
 import android.text.method.ScrollingMovementMethod
 import android.util.Log
 import android.view.View
@@ -45,6 +46,7 @@ import com.xborg.vendx.activities.paymentActivity.PaymentActivity
 import com.xborg.vendx.database.ItemDetailDao
 import com.xborg.vendx.database.ItemDetailDatabase
 import com.xborg.vendx.database.Machine
+import com.xborg.vendx.database.UserDatabase
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 import kotlin.collections.ArrayList
@@ -86,7 +88,8 @@ class MainActivity : AppCompatActivity() {
 
         val application = requireNotNull(this).application
         val itemDetailDataSource = ItemDetailDatabase.getInstance(application).itemDetailDatabaseDao
-        val viewModelFactory = SharedViewModelFactory(itemDetailDataSource, application)
+        val userDataSource = UserDatabase.getInstance(application).userDatabaseDao
+        val viewModelFactory = SharedViewModelFactory(itemDetailDataSource, userDataSource, application)
         sharedViewModel = ViewModelProvider(this, viewModelFactory).get(SharedViewModel::class.java)
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)

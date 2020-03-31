@@ -149,6 +149,11 @@ interface VendxAPIService {
         @Path("user_id") user_id: String,
         @Body user_location: Location
     ): Call<List<Machine>>
+
+    @GET("machines/{machine_id}")
+    fun getMachineAsync(
+        @Path("machine_id") machine_id: String
+    ): Call<Machine>
 }
 
 object VendxApi {
