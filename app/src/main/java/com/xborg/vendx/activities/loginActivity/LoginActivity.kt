@@ -10,14 +10,17 @@ import com.facebook.FacebookCallback
 import com.facebook.FacebookException
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.firebase.firestore.FirebaseFirestore
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.tasks.Task
 import com.xborg.vendx.R
 import com.xborg.vendx.activities.mainActivity.MainActivity
 import kotlinx.android.synthetic.main.activity_login.*
 
 
-val db = FirebaseFirestore.getInstance()
 private var TAG = "LoginActivity"
 
 class LoginActivity : AppCompatActivity() {
@@ -27,6 +30,9 @@ class LoginActivity : AppCompatActivity() {
     private var facebookAccessToken = AccessToken.getCurrentAccessToken()
 
     var isLoggedIn = facebookAccessToken != null && !facebookAccessToken!!.isExpired
+
+    lateinit var mGoogleSignInClient: GoogleSignInClient
+    private val RC_SIGN_IN = 9001
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,9 +64,39 @@ class LoginActivity : AppCompatActivity() {
         }
 
         // Google Login
-        google_login_button.setOnClickListener {
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken("YOUR_WEB_APPLICATION_CLIENT_ID")
+            .requestEmail()
+            .build()
 
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
+
+        google_login_button.setOnClickListener {
+            Log.i(TAG, "google login button clicked")
+            googleSignIn()
         }
+    }
+
+    private fun googleSignIn() {
+        val signInIntent = mGoogleSignInClient.signInIntent
+        startActivityForResult(
+            signInIntent, RC_SIGN_IN
+        )
+    }
+
+    private fun googleSignOut() {
+        mGoogleSignInClient.signOut()
+            .addOnCompleteListener(this) {
+                // Update your UI here
+            }
+    }
+
+//This can be used when you have the ‘Delete my account’ option in the user’s profile)
+    private fun revokeGoogleAccess() {
+        mGoogleSignInClient.revokeAccess()
+            .addOnCompleteListener(this) {
+                // Update your UI here
+            }
     }
 
     override fun onActivityResult(
@@ -68,8 +104,47 @@ class LoginActivity : AppCompatActivity() {
         resultCode: Int,
         data: Intent?
     ) {
-        callbackManager.onActivityResult(requestCode, resultCode, data)
+//        callbackManager.onActivityResult(requestCode, resultCode, data)
         super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == RC_SIGN_IN) {
+            val task =
+                GoogleSignIn.getSignedInAccountFromIntent(data)
+            handleSignInResult(task)
+        }
+    }
+
+    private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
+        Log.i(TAG, "handle Sign In Result -- 1")
+        try {
+            Log.i(TAG, "handle Sign In Result -- 2")
+            val account = completedTask.getResult(
+                ApiException::class.java
+            )
+            // Signed in successfully
+            val googleId = account?.id ?: ""
+            Log.i(TAG, "Google ID$googleId")
+
+            val googleFirstName = account?.givenName ?: ""
+            Log.i(TAG, "Google First Name$googleFirstName")
+
+            val googleLastName = account?.familyName ?: ""
+            Log.i(TAG, "Google Last Name$googleLastName")
+
+            val googleEmail = account?.email ?: ""
+            Log.i(TAG, "Google Email$googleEmail")
+
+            val googleProfilePicURL = account?.photoUrl.toString()
+            Log.i(TAG, "Google Profile Pic URL$googleProfilePicURL")
+
+            val googleIdToken = account?.idToken ?: ""
+            Log.i(TAG, "Google Id Token$googleIdToken")
+
+        } catch (e: ApiException) {
+            Log.i(TAG, "handle Sign In Result -- 3")
+            // Sign in was unsuccessful
+            Log.i(TAG, "Error: $e")
+        }
     }
 
 }
