@@ -48,20 +48,21 @@ class LoginActivity : AppCompatActivity() {
 
 //        region Facebook Login
 
-        login_button.setReadPermissions(Arrays.asList(EMAIL))
+        login_button.setReadPermissions(listOf(EMAIL))
 
         // Callback registration
         login_button.registerCallback(callbackManager, object : FacebookCallback<LoginResult?> {
             override fun onSuccess(loginResult: LoginResult?) {
-                // App code
+                Log.i(TAG, "Access Token : " + loginResult!!.accessToken.token)
+                sharedViewModel.sendFacebookTokenId(loginResult.accessToken.token)
             }
 
             override fun onCancel() {
-                // App code
+                Log.i(TAG, "Login cancelled")
             }
 
             override fun onError(exception: FacebookException) {
-                // App code
+                Log.i(TAG, "Login Error: $exception")
             }
         })
 

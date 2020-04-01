@@ -1,7 +1,7 @@
 package com.xborg.vendx.network
 
-import com.firebase.ui.auth.data.model.User
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
+import com.xborg.vendx.R
 import com.xborg.vendx.database.*
 import kotlinx.coroutines.Deferred
 import okhttp3.OkHttpClient
@@ -29,15 +29,23 @@ private val retrofit = Retrofit.Builder()
 
 interface VendxAPIService {
 
-    @GET("grant_type=convert_token&client_id=<django-oauth-generated-client_id>&client_secret=<django-oauth-generated-client_secret>&backend=google-oauth2&token={token}")
+    @GET("domain/oath/convert-token")
     fun sendGoogleIdToken(
-        @Path("token") token: String
-    ): Call<User>
+        @Body token: String,
+        @Body backend: String = "google-oauth2",
+        @Body grant_type: String = "convert_token",
+        @Body client_id: String = "${R.string.django_oauth_generated_client_id_google}",
+        @Body client_secret: String = "${R.string.django_oauth_generated_client_secret_google}"
+    ): Call<String>
 
-    @GET("grant_type=convert_token&client_id=<client_id>&client_secret=<client_secret>&backend=facebook&token={token}")
+    @GET("domain/oath/convert-token")
     fun sendFacebookIdToken(
-        @Path("token") token: String
-    ): Call<User>
+        @Body token: String,
+        @Body backend: String = "facebook",
+        @Body grant_type: String = "convert_token",
+        @Body client_id: String = "${R.string.django_oauth_generated_client_id_facebook}",
+        @Body client_secret: String = "${R.string.django_oauth_generated_client_secret_facebook}"
+    ): Call<String>
 
     @GET("app")
     fun getMinimumApplicationVersionAsync(

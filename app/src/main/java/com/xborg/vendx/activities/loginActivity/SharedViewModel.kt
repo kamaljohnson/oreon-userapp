@@ -20,8 +20,8 @@ class SharedViewModel : ViewModel() {
 
     fun sendGoogleTokenId(token: String) {
         val userCall = VendxApi.retrofitServices.sendGoogleIdToken(token)
-        userCall.enqueue(object : Callback<User> {
-            override fun onResponse(call: Call<User>, response: Response<User>) {
+        userCall.enqueue(object : Callback<String> {
+            override fun onResponse(call: Call<String>, response: Response<String>) {
                 if (response.code() == 200) {
                     Log.i("Debug", "Successful Response code : 200")
                     val user = response.body()
@@ -37,7 +37,7 @@ class SharedViewModel : ViewModel() {
                 }
             }
 
-            override fun onFailure(call: Call<User>, error: Throwable) {
+            override fun onFailure(call: Call<String>, error: Throwable) {
                 Log.e("Debug", "Failed to get response ${error.message}")
             }
         })
@@ -45,9 +45,9 @@ class SharedViewModel : ViewModel() {
 
     fun sendFacebookTokenId(token: String) {
         val userCall = VendxApi.retrofitServices.sendFacebookIdToken(token)
-        userCall.enqueue(object : Callback<User> {
-            override fun onResponse(call: Call<User>, response: Response<User>) {
-                if (response.code() == 200) {
+        userCall.enqueue(object : Callback<String> {
+            override fun onResponse(call: Call<String>, response: Response<String>) {
+                if (response.isSuccessful) {
                     Log.i("Debug", "Successful Response code : 200")
                     val user = response.body()
                     if (user != null) {
@@ -62,7 +62,7 @@ class SharedViewModel : ViewModel() {
                 }
             }
 
-            override fun onFailure(call: Call<User>, error: Throwable) {
+            override fun onFailure(call: Call<String>, error: Throwable) {
                 Log.e("Debug", "Failed to get response ${error.message}")
             }
         })
