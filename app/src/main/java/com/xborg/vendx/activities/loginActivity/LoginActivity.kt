@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.facebook.AccessToken
 import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
@@ -25,6 +26,8 @@ private var TAG = "LoginActivity"
 
 class LoginActivity : AppCompatActivity() {
 
+    private lateinit var sharedViewModel: SharedViewModel
+
     private lateinit var callbackManager: CallbackManager
     private final var facebookEmail:String = "email"
     private var facebookAccessToken = AccessToken.getCurrentAccessToken()
@@ -32,13 +35,15 @@ class LoginActivity : AppCompatActivity() {
     var isLoggedIn = facebookAccessToken != null && !facebookAccessToken!!.isExpired
 
     lateinit var mGoogleSignInClient: GoogleSignInClient
-    private val RC_SIGN_IN = 9001
+    private val GOOGLE_SIGNIN = 9001
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        // Facebook Login
+        sharedViewModel = ViewModelProvider(this).get(SharedViewModel::class.java)
+
+//        region Facebook Login
         facebook_login_button.setOnClickListener {
             Log.i(TAG, "facebook login button clicked")
 
@@ -62,8 +67,8 @@ class LoginActivity : AppCompatActivity() {
                     }
                 })
         }
-
-        // Google Login
+//        endregion
+//        region Google Login
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken("510464295618-1sl81vuuellu04ef8ki11qlusp8m2p78.apps.googleusercontent.com")
             .requestEmail()
@@ -75,12 +80,13 @@ class LoginActivity : AppCompatActivity() {
             Log.i(TAG, "google login button clicked")
             googleSignIn()
         }
+//        endregion
     }
 
     private fun googleSignIn() {
         val signInIntent = mGoogleSignInClient.signInIntent
         startActivityForResult(
-            signInIntent, RC_SIGN_IN
+            signInIntent, GOOGLE_SIGNIN
         )
     }
 
@@ -107,7 +113,7 @@ class LoginActivity : AppCompatActivity() {
 //        callbackManager.onActivityResult(requestCode, resultCode, data)
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == RC_SIGN_IN) {
+        if (requestCode == GOOGLE_SIGNIN) {
             val task =
                 GoogleSignIn.getSignedInAccountFromIntent(data)
             handleSignInResult(task)
@@ -138,10 +144,11 @@ class LoginActivity : AppCompatActivity() {
             val googleIdToken = account?.idToken ?: ""
             Log.i(TAG, "Google Id Token: $googleIdToken")
 
+            sharedViewModel.sendGoogleTokenId(googleIdToken)
+
         } catch (e: ApiException) {
             // Sign in was unsuccessful
             Log.i(TAG, "Error: $e")
         }
     }
-
 }

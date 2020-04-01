@@ -1,5 +1,6 @@
 package com.xborg.vendx.network
 
+import com.firebase.ui.auth.data.model.User
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.xborg.vendx.database.*
 import kotlinx.coroutines.Deferred
@@ -27,6 +28,16 @@ private val retrofit = Retrofit.Builder()
     .build()
 
 interface VendxAPIService {
+
+    @GET("grant_type=convert_token&client_id=<django-oauth-generated-client_id>&client_secret=<django-oauth-generated-client_secret>&backend=google-oauth2&token={token}")
+    fun sendGoogleIdToken(
+        @Path("token") token: String
+    ): Call<User>
+
+    @GET("grant_type=convert_token&client_id=<client_id>&client_secret=<client_secret>&backend=facebook&token={token}")
+    fun sendFacebookIdToken(
+        @Path("token") token: String
+    ): Call<User>
 
     @GET("app")
     fun getMinimumApplicationVersionAsync(
