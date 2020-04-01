@@ -25,21 +25,15 @@ tools:context=".activities.loginActivity.LoginActivity">
         android:layout_width="match_parent"
         android:layout_height="200dp">
 
-        <Button
-            android:paddingLeft="10dp"
-            android:drawablePadding="10dp"
-            style="?android:attr/borderlessButtonStyle"
+        <com.facebook.login.widget.LoginButton
             android:layout_above="@id/google_login_button"
-            android:textAlignment="textStart"
-            android:textAllCaps="false"
-            android:text="Continue with Facebook"
-            android:layout_marginVertical="5dp"
-            android:background="@drawable/drawable_login_with_button"
-            android:layout_marginHorizontal="25dp"
-            android:drawableLeft="@drawable/ic_facebook"
-            android:id="@+id/facebook_login_button"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"/>
+            android:id="@+id/login_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="30dp" />
+
         <Button
             android:paddingLeft="10dp"
             android:drawablePadding="10dp"
