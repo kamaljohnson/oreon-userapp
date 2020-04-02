@@ -44,8 +44,6 @@
 
     <string name="pairing_request">Paring Request</string>
 
-    <string name="django_oauth_generated_client_secret_google">J0kR9nrzqow2wYq54FNskiye39hBCEpivn9vDokilIK2kuWaTkQlum34r3V5YxrcjGeei8x3poJZnv86cHxHKetNzGnC3fjiGUfkMZwDO6nSVcjG53psn63BV7hV2QRF</string>
-    <string name="django_oauth_generated_client_id_google">J1cSng29yH92Li7U8pjKVrnAIYHBCRhCI95ltYpd</string>
-    <string name="django_oauth_generated_client_id_facebook">J1cSng29yH92Li7U8pjKVrnAIYHBCRhCI95ltYpd</string>
-    <string name="django_oauth_generated_client_secret_facebook">J0kR9nrzqow2wYq54FNskiye39hBCEpivn9vDokilIK2kuWaTkQlum34r3V5YxrcjGeei8x3poJZnv86cHxHKetNzGnC3fjiGUfkMZwDO6nSVcjG53psn63BV7hV2QRF</string>
+    <string name="django_oauth_generated_client_secret">B8btMbUOM1LJWGStbyfgcg5fMnUPgmBEa1T8ysiAuEVicZOOsDXz6vjqtliSgGOgmRlpw3bgjKLGMmHbir4wekRgFNAGRZfjyoTK8zBCASlNDpmGeBxnBQDPcItbkRrR</string>
+    <string name="django_oauth_generated_client_id">HRmOHx29EHd2Mx1RNgnwAEClAd4J2GcdWnLACvaF</string>
 </resources>

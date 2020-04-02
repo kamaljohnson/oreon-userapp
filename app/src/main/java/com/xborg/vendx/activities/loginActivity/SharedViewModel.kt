@@ -2,12 +2,13 @@ package com.xborg.vendx.activities.loginActivity
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.firebase.ui.auth.data.model.User
+import com.xborg.vendx.database.AccessToken
 import com.xborg.vendx.network.VendxApi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -18,53 +19,74 @@ class SharedViewModel : ViewModel() {
     private var ioScope = CoroutineScope(Dispatchers.IO + viewModelJob)
 
 
-    fun sendGoogleTokenId(token: String) {
-        val userCall = VendxApi.retrofitServices.sendGoogleIdToken(token)
-        userCall.enqueue(object : Callback<String> {
-            override fun onResponse(call: Call<String>, response: Response<String>) {
-                if (response.code() == 200) {
-                    Log.i("Debug", "Successful Response code : 200")
-                    val user = response.body()
-                    if (user != null) {
-                        ioScope.launch {
-                            //TODO: add user data to user-database
-                        }
-                    } else {
-                        Log.e("Debug", "user received is null")
-                    }
-                } else {
-                    Log.e("Debug", "Failed to get response")
-                }
-            }
-
-            override fun onFailure(call: Call<String>, error: Throwable) {
-                Log.e("Debug", "Failed to get response ${error.message}")
-            }
-        })
-    }
-
     fun sendFacebookTokenId(token: String) {
-        val userCall = VendxApi.retrofitServices.sendFacebookIdToken(token)
-        userCall.enqueue(object : Callback<String> {
-            override fun onResponse(call: Call<String>, response: Response<String>) {
+        val accessTokenCall = VendxApi.retrofitServices.sendLoginIdToken(token, "facebook")
+        accessTokenCall.enqueue(object : Callback<AccessToken> {
+            override fun onResponse(call: Call<AccessToken>, response: Response<AccessToken>) {
                 if (response.isSuccessful) {
                     Log.i("Debug", "Successful Response code : 200")
-                    val user = response.body()
-                    if (user != null) {
+                    val accessToken = response.body()
+                    Log.i("Debug", "Access Token : $accessToken")
+                    if (accessToken != null) {
                         ioScope.launch {
-                            //TODO: add user data to user-database
+                            //TODO: add access token to cache
                         }
                     } else {
                         Log.e("Debug", "user received is null")
                     }
                 } else {
-                    Log.e("Debug", "Failed to get response")
+                    Log.e("Debug", "Failed to get response : $response")
                 }
             }
 
-            override fun onFailure(call: Call<String>, error: Throwable) {
+            override fun onFailure(call: Call<AccessToken>, error: Throwable) {
                 Log.e("Debug", "Failed to get response ${error.message}")
             }
         })
     }
+
+    fun sendNameAndEmail(name: String, email: String) {
+        val accessTokenCall = VendxApi.retrofitServices.sendLoginNameAndEmail(email)
+        accessTokenCall.enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                if (response.isSuccessful) {
+                    Log.i("Debug", "Successful Response code : 200")
+                } else {
+                    Log.e("Debug", "Failed to get response : $response")
+                }
+            }
+
+            override fun onFailure(call: Call<ResponseBody>, error: Throwable) {
+                Log.e("Debug", "Failed to get response ${error.message}")
+            }
+        })
+    }
+
+    fun sendEmailToken(email: String, token: String) {
+        val accessTokenCall = VendxApi.retrofitServices.sendEmailToken(email, token)
+        accessTokenCall.enqueue(object : Callback<AccessToken> {
+            override fun onResponse(call: Call<AccessToken>, response: Response<AccessToken>) {
+                if (response.isSuccessful) {
+                    Log.i("Debug", "Successful Response code : 200")
+                    val accessToken = response.body()
+                    Log.i("Debug", "Access Token : $accessToken")
+                    if (accessToken != null) {
+                        ioScope.launch {
+                            //TODO: add access token to cache
+                            Log.i("Debug", "accessToken : $accessToken")
+                        }
+                    } else {
+                        Log.e("Debug", "user received is null")
+                    }
+                } else {
+                    Log.e("Debug", "Failed to get response : $response")
+                }
+            }
+
+            override fun onFailure(call: Call<AccessToken>, error: Throwable) {
+                Log.e("Debug", "Failed to get response ${error.message}")
+            }
+        })
+    }
+
 }
