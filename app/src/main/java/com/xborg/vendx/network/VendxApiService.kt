@@ -62,6 +62,16 @@ interface VendxAPIService {
         @Field("token") token: String
     ): Call<AccessToken>
 
+    @FormUrlEncoded
+    @POST("oauth/token/")
+    fun refreshAccessToken(
+        @Field("refresh_token") refresh_token: String,
+        @Field("grant_type") grant_type: String = "refresh_token",
+        @Field("client_id") client_id: String = "HRmOHx29EHd2Mx1RNgnwAEClAd4J2GcdWnLACvaF",
+        @Field("client_secret") client_secret: String = "B8btMbUOM1LJWGStbyfgcg5fMnUPgmBEa1T8ysiAuEVicZOOsDXz6vjqtliSgGOgmRlpw3bgjKLGMmHbir4wekRgFNAGRZfjyoTK8zBCASlNDpmGeBxnBQDPcItbkRrR"
+    ): Call<AccessToken>
+
+
     @GET("machine/{id}/items")
     fun getMachineItemsAsync(
         @Path("id") id: String

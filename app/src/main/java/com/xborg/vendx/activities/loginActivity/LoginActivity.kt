@@ -7,6 +7,7 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
@@ -39,15 +40,22 @@ class LoginActivity : AppCompatActivity() {
         val viewModelFactory = SharedViewModelFactory(application)
         sharedViewModel = ViewModelProvider(this, viewModelFactory).get(SharedViewModel::class.java)
 
+        sharedViewModel.loadMainActivity.observe(this, Observer { load ->
+            if(load) {
+                loadMainActivity()
+            }
+        })
+
         //        region Check Cache
 
         ioScope.launch {
             if(sharedViewModel.isAccessTokenPresentInCache()) {
-                Log.i("Debug", "there is a cached access token")
+//                already has an accessToken in cache
 
-                //TODO: use the cached accessToken to refresh and authorize the session
+                sharedViewModel.refreshAccessToken()
             } else {
-                Log.i("Debug", "there is no cached access token")
+//                need to login, no access token in cache
+
                 showLogin()
             }
         }
@@ -128,6 +136,10 @@ class LoginActivity : AppCompatActivity() {
     ) {
         facebookCallbackManager.onActivityResult(requestCode, resultCode, data)
         super.onActivityResult(requestCode, resultCode, data)
+    }
+
+    private fun loadMainActivity() {
+        Log.i(TAG, "main activity is loading")
     }
 
 }

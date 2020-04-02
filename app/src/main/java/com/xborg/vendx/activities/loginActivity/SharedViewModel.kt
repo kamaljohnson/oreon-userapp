@@ -3,6 +3,7 @@ package com.xborg.vendx.activities.loginActivity
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.MutableLiveData
 import com.xborg.vendx.database.AccessToken
 import com.xborg.vendx.database.AccessTokenDatabase
 import com.xborg.vendx.network.VendxApi
@@ -21,12 +22,58 @@ class SharedViewModel(
 
     private val accessTokenDao = AccessTokenDatabase.getInstance(application).accessTokenDao()
 
+    val loadMainActivity = MutableLiveData<Boolean>()
+
+    init {
+        loadMainActivity.value = false
+    }
+
     suspend fun isAccessTokenPresentInCache(): Boolean {
         return withContext(Dispatchers.IO) {
             val cachedAccessToken = accessTokenDao.get()
-            Log.i("Debug", "cachedAccessToken: ${cachedAccessToken.size}")
-            false
+            cachedAccessToken != null
         }
+    }
+
+    suspend fun refreshAccessToken() {
+        return withContext(Dispatchers.IO) {
+            val cachedAccessToken = accessTokenDao.get()
+            val refreshToken = cachedAccessToken!!.refreshToken
+            val token = cachedAccessToken.token
+            if (token == null) {
+
+                _refreshAccessToken(refreshToken!!)
+            } else {
+                loadMainActivity()
+            }
+        }
+    }
+
+    private fun _refreshAccessToken(refresh_token: String) {
+        val accessTokenCall = VendxApi.retrofitServices.refreshAccessToken(refresh_token)
+        accessTokenCall.enqueue(object : Callback<AccessToken> {
+            override fun onResponse(call: Call<AccessToken>, response: Response<AccessToken>) {
+                if (response.isSuccessful) {
+                    Log.i("Debug", "Successful Response code : 200")
+                    val accessToken = response.body()
+                    Log.i("Debug", "Access Token : $accessToken")
+                    if (accessToken != null) {
+                        ioScope.launch {
+                            accessTokenDao.insert(accessToken)
+                            loadMainActivity()
+                        }
+                    } else {
+                        Log.e("Debug", "user received is null")
+                    }
+                } else {
+                    Log.e("Debug", "Failed to get response : $response")
+                }
+            }
+
+            override fun onFailure(call: Call<AccessToken>, error: Throwable) {
+                Log.e("Debug", "Failed to get response ${error.message}")
+            }
+        })
     }
 
     fun sendFacebookTokenId(token: String) {
@@ -99,4 +146,11 @@ class SharedViewModel(
             }
         })
     }
+
+    private fun loadMainActivity() {
+        //TODO: change this to better code
+
+        loadMainActivity.postValue(true)
+    }
+
 }

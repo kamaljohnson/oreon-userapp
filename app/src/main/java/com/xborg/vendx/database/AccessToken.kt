@@ -35,8 +35,8 @@ abstract class AccessTokenDatabase : RoomDatabase() {
 @Dao
 interface AccessTokenDao {
 
-    @Query("SELECT * FROM access_token")
-    suspend fun get(): Array<AccessToken>
+    @Query("SELECT * FROM access_token LIMIT 1")
+    suspend fun get(): AccessToken?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(accessToken: AccessToken)
