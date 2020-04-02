@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 
 import com.xborg.vendx.R
 import com.xborg.vendx.activities.loginActivity.SharedViewModel
+import com.xborg.vendx.activities.loginActivity.SharedViewModelFactory
 import kotlinx.android.synthetic.main.fragment_email_login.*
 
 class EmailLoginFragment : Fragment() {
@@ -35,7 +36,9 @@ class EmailLoginFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        sharedViewModel = ViewModelProvider(this.activity!!).get(SharedViewModel::class.java)
+        val application = requireNotNull(this).activity!!.application
+        val viewModelFactory = SharedViewModelFactory(application)
+        sharedViewModel = ViewModelProvider(this, viewModelFactory).get(SharedViewModel::class.java)
 
         submit_email_button.setOnClickListener {
             if(email_input.text.toString() != "" && name_input.text.toString() != "") {

@@ -16,24 +16,47 @@ import com.facebook.login.LoginResult
 import com.xborg.vendx.R
 import com.xborg.vendx.activities.loginActivity.fragments.EmailLoginFragment
 import kotlinx.android.synthetic.main.activity_login.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
-private var TAG = "LoginActivity"
+var TAG = "LoginActivity"
 
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var sharedViewModel: SharedViewModel
+    private var ioScope = CoroutineScope(Dispatchers.IO)
 
-    //Facebook Login
+    //Facebook
     private var facebookCallbackManager: CallbackManager = CallbackManager.Factory.create();
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        sharedViewModel = ViewModelProvider(this).get(SharedViewModel::class.java)
+        val application = requireNotNull(this).application
+        val viewModelFactory = SharedViewModelFactory(application)
+        sharedViewModel = ViewModelProvider(this, viewModelFactory).get(SharedViewModel::class.java)
 
-//        region Facebook Login
+        //        region Check Cache
+
+        ioScope.launch {
+            if(sharedViewModel.isAccessTokenPresentInCache()) {
+                Log.i("Debug", "there is a cached access token")
+
+                //TODO: use the cached accessToken to refresh and authorize the session
+            } else {
+                Log.i("Debug", "there is no cached access token")
+                showLogin()
+            }
+        }
+
+        //        endregion
+    }
+
+    private fun showLogin() {
+        //        region Facebook Login
 
         facebook_login_button.setReadPermissions(listOf("email"))
 
@@ -71,8 +94,8 @@ class LoginActivity : AppCompatActivity() {
                 }
             })
 
-//        endregion
-//        region Email Login
+        //        endregion
+        //        region Email Login
 
         email_login_button.setOnClickListener {
             Log.i(TAG, "email login button clicked")
@@ -80,10 +103,9 @@ class LoginActivity : AppCompatActivity() {
             loadEmailLoginFragment()
         }
 
-//        endregion
+        //        endregion
     }
 
-    //      region Fragment Loading
     @SuppressLint("ResourceType")
     private fun loadEmailLoginFragment() {
         val fragmentManager: FragmentManager = supportFragmentManager

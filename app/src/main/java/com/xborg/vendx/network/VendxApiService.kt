@@ -62,11 +62,6 @@ interface VendxAPIService {
         @Field("token") token: String
     ): Call<AccessToken>
 
-
-    @GET("app")
-    fun getMinimumApplicationVersionAsync(
-    ): Call<Application>
-
     @GET("machine/{id}/items")
     fun getMachineItemsAsync(
         @Path("id") id: String
