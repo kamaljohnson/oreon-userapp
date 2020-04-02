@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName
 data class AccessToken(
 //    this token will be populated when using email login
     @SerializedName("token") val token: String,
+    @SerializedName("email") val email: String,
 
 //    this fields will be populated when using oauth login
     @SerializedName("access_token") val accessToken: String,
