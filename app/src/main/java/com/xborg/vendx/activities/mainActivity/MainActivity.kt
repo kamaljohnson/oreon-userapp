@@ -18,7 +18,6 @@ import android.net.NetworkInfo
 import android.os.Bundle
 import android.os.Looper
 import android.provider.Settings
-import android.service.autofill.UserData
 import android.text.method.ScrollingMovementMethod
 import android.util.Log
 import android.view.View
@@ -32,7 +31,6 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.google.android.gms.location.*
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
@@ -43,10 +41,7 @@ import com.xborg.vendx.activities.mainActivity.fragments.history.HistoryFragment
 import com.xborg.vendx.activities.mainActivity.fragments.home.HomeFragment
 import com.xborg.vendx.activities.mainActivity.fragments.shop.ShopFragment
 import com.xborg.vendx.activities.paymentActivity.PaymentActivity
-import com.xborg.vendx.database.ItemDetailDao
-import com.xborg.vendx.database.ItemDetailDatabase
 import com.xborg.vendx.database.Machine
-import com.xborg.vendx.database.UserDatabase
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 import kotlin.collections.ArrayList

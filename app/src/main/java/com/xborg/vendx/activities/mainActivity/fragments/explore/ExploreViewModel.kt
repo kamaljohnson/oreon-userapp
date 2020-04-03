@@ -1,11 +1,14 @@
 package com.xborg.vendx.activities.mainActivity.fragments.explore
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.xborg.vendx.database.Location
 
 
-class ExploreViewModel : ViewModel() {
+class ExploreViewModel(
+    application: Application
+) : AndroidViewModel(application) {
 
     val userLocation = MutableLiveData<Location>()
 

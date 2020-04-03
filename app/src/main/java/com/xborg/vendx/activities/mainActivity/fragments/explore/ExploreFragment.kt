@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.maps.*
@@ -17,6 +18,7 @@ import com.xborg.vendx.database.Machine
 import com.xborg.vendx.preferences.SharedPreference
 import kotlinx.android.synthetic.main.fragment_explore.*
 import com.xborg.vendx.R
+import com.xborg.vendx.activities.mainActivity.SharedViewModelFactory
 
 
 const val TAG: String = "Explore"
@@ -52,8 +54,13 @@ class ExploreFragment : Fragment(), MachineCardAdapter.OnMachineCardListener, On
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        viewModel = ViewModelProviders.of(activity!!).get(ExploreViewModel::class.java)
-        sharedViewModel = ViewModelProviders.of(activity!!).get(SharedViewModel::class.java)
+        val application = requireNotNull(this.activity).application
+
+        val homeViewModelFactory = ExploreViewModelFactory(application)
+        viewModel = ViewModelProvider(activity!!, homeViewModelFactory).get(ExploreViewModel::class.java)
+
+        val sharedViewModelFactory = SharedViewModelFactory(application)
+        sharedViewModel = ViewModelProvider(activity!!, sharedViewModelFactory).get(SharedViewModel::class.java)
 
         sharedViewModel.userLocationAccessed.observe(viewLifecycleOwner, Observer { accessed ->
             if(accessed) {
