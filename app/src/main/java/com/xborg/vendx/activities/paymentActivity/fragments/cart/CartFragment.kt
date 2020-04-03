@@ -37,23 +37,12 @@ class CartFragment : Fragment() {
     }
 
     private fun observerSharedViewModel() {
-//        sharedViewModel.cartItems.observe(viewLifecycleOwner, Observer { updatedCart ->
-//            Log.i(TAG, "cartItems updated: $updatedCart")
-//        })
-//        sharedViewModel.machineItems.observe(viewLifecycleOwner, Observer { updatedMachineItems ->
-//            Log.i(TAG, "machineItems updated: $updatedMachineItems")
-//
-//            updateCartItemsToRV()
-//        })
-//        sharedViewModel.inventoryItems.observe(viewLifecycleOwner, Observer { updatedInventoryItems ->
-//            Log.i(TAG, "inventoryItems updated: $updatedInventoryItems")
-//        })
+
     }
 
     private fun updateCartItemsToRV() {
         rv_cart.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-//            adapter = ItemCartSlipAdapter(sharedViewModel.cartItems.value!!, context)
         }
     }
 }

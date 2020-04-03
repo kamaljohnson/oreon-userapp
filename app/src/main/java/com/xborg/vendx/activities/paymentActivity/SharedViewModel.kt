@@ -1,27 +1,11 @@
 package com.xborg.vendx.activities.paymentActivity
 
-import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.google.common.reflect.TypeToken
-import com.google.firebase.auth.FirebaseAuth
-import com.google.gson.Gson
 import com.xborg.vendx.database.*
 import java.io.Serializable
-import java.lang.reflect.Type
 
 class SharedViewModel : ViewModel() {
-
-    private val uid = FirebaseAuth.getInstance().uid.toString()
-
-//    var machineItems = MutableLiveData<List<Item>>()
-//    var inventoryItems = MutableLiveData<List<Item>>()
-//
-//    // [itemId-from, count]     : from -> {Machine, Inventory}
-//    private var _cartItems = MutableLiveData<List<Item>>()
-//    val cartItems: LiveData<List<Item>>
-//        get() = _cartItems
 
     val order = MutableLiveData<Order>()
     val payment = MutableLiveData<Payment>()
@@ -49,7 +33,7 @@ class SharedViewModel : ViewModel() {
     }
 
     private fun initOrder(cart: MutableMap<String, Int>, billingCart: MutableMap<String, Int>) {
-        order.value!!.Uid = uid
+//        order.value!!.Uid = uid
         order.value!!.Cart = cart
         order.value!!.BillingCart = billingCart
 
@@ -75,29 +59,7 @@ class SharedViewModel : ViewModel() {
             }
 
             when (from) {
-//                "Machine" -> {
-//                    machineItems.value!!.forEach { item ->
-//                        if (item.Id == id) {
-//                            Log.i(TAG, "from: $from id: $id")
-//                            item.CartCount = count
-//                            tempCartList.add(item)
-//                            tempOrderBillingCartMap[id] = count
-//                        } else {
-//                            Log.i(TAG, item.Id)
-//                        }
-//                    }
-//                }
-//                "Inventory" -> {
-//                    inventoryItems.value!!.forEach { item ->
-//                        if (item.Id == id) {
-//                            Log.i(TAG, "from: $from id: $id")
-//                            item.CartCount = count
-//                            tempCartList.add(item)
-//                        } else {
-//                            Log.i(TAG, item.Id)
-//                        }
-//                    }
-//                }
+
             }
         }
 
@@ -113,25 +75,4 @@ class SharedViewModel : ViewModel() {
 //        inventoryItems.value = convertJsonToItemList(inventoryItemsAsJson as String)
     }
 
-//    private fun convertJsonToItemList(json: String): List<Item> {
-//        val itemListType: Type = object : TypeToken<ArrayList<Item?>?>() {}.type
-//        return Gson().fromJson(json, itemListType)
-//    }
-//
-//    fun getCartItemsAsJson(): String {
-//        return getListItemsAsJson(_cartItems.value!!)
-//    }
-
-//    fun getMachineItemsAsJson(): String {
-//        return getListItemsAsJson(machineItems.value!!)
-//    }
-//
-//    fun getInventoryItemsAsJson(): String {
-//        return getListItemsAsJson(inventoryItems.value!!)
-//    }
-
-//    private fun getListItemsAsJson(items: List<Item>): String {
-//        val itemListType: Type = object : TypeToken<ArrayList<Item?>?>() {}.type
-//        return Gson().toJson(items, itemListType)
-//    }
 }

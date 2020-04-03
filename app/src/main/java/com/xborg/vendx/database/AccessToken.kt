@@ -1,10 +1,8 @@
 package com.xborg.vendx.database
 
 import android.content.Context
-import android.util.Log
 import androidx.room.*
 import com.google.gson.annotations.SerializedName
-import javax.annotation.Nullable
 
 @Database(entities = [AccessToken::class], version = 1)
 abstract class AccessTokenDatabase : RoomDatabase() {

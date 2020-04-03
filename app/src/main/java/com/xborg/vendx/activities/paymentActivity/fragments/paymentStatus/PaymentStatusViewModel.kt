@@ -32,46 +32,7 @@ class PaymentStatusViewModel: ViewModel() {
     }
 
     fun sendPaymentToken() {
-//
-//        createPaymentSignature()   //TODO: change this with actual signature
-//
-//        val paymentDataInJson = Gson().toJson(payment.value, Payment::class.java)
-//
-//        val paymentsCall = VendxApi.retrofitServices
-//            .sendPaymentDataAsync(paymentData = paymentDataInJson)
-//        paymentsCall.enqueue(object : Callback<Payment> {
-//            override fun onResponse(call: Call<Payment>, response: Response<Payment>) {
-//                Log.i("Debug", "checkApplicationVersion")
-//                if(response.code() == 200) {
-//                    Log.i("Debug", "Successful Response code : 200 : homeItems: " + response.body())
-//                    payment.value = response.body()
-//                    paymentState.value = PaymentState.PaymentComplete
-//                } else {
-//                    Log.e("Debug", "Failed to get response")
-//                    apiCallError.value = true
-//                }
-//            }
-//
-//            override fun onFailure(call: Call<Payment>, error: Throwable) {
-//                Log.e("Debug", "Failed to get response ${error.message}")
-//                apiCallError.value = true
-//                if(error is SocketTimeoutException) {
-//                    //Connection Timeout
-//                    Log.e("Debug", "error type : connectionTimeout")
-//                } else if(error is IOException) {
-//                    //Timeout
-//                    Log.e("Debug", "error type : timeout")
-//                } else {
-//                    if(paymentsCall.isCanceled) {
-//                        //Call cancelled forcefully
-//                        Log.e("Debug", "error type : cancelledForcefully")
-//                    } else {
-//                        //generic error handling
-//                        Log.e("Debug", "error type : genericError")
-//                    }
-//                }
-//            }
-//        })
+
     }
 
     private fun createPaymentSignature(){

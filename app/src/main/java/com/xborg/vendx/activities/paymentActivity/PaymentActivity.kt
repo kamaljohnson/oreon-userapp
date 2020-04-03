@@ -10,7 +10,6 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.google.firebase.auth.FirebaseAuth
 import com.razorpay.Checkout
 import com.razorpay.PaymentData
 import com.razorpay.PaymentResultWithDataListener
@@ -43,16 +42,6 @@ class PaymentActivity : FragmentActivity(), PaymentResultWithDataListener {
     private fun observerSharedViewModel() {
 
         sharedViewModel = ViewModelProviders.of(this).get(SharedViewModel::class.java)
-
-//        sharedViewModel.cartItems.observe(this, Observer { updatedCart ->
-//            Log.i(TAG, "cartItems updated: $updatedCart")
-//        })
-//        sharedViewModel.machineItems.observe(this, Observer { updatedMachineItems ->
-//            Log.i(TAG, "machineItems updated: $updatedMachineItems")
-//        })
-//        sharedViewModel.inventoryItems.observe(this, Observer { updatedInventoryItems ->
-//            Log.i(TAG, "inventoryItems updated: $updatedInventoryItems")
-//        })
 
         sharedViewModel.paymentState.observe(this, Observer { currentPaymentState ->
             Log.i(TAG, "Payment State: $currentPaymentState")
@@ -112,13 +101,13 @@ class PaymentActivity : FragmentActivity(), PaymentResultWithDataListener {
             options.put("currency", "INR")
             options.put("amount", amount.toInt().toString())
 
-            val phoneNumber = FirebaseAuth.getInstance().currentUser!!.phoneNumber
-            val email = FirebaseAuth.getInstance().currentUser!!.email
-
-            val preFill = JSONObject()
-            preFill.put("email", email)
-            preFill.put("contact", phoneNumber)
-            options.put("prefill", preFill)
+//            val phoneNumber = FirebaseAuth.getInstance().currentUser!!.phoneNumber
+//            val email = FirebaseAuth.getInstance().currentUser!!.email
+//
+//            val preFill = JSONObject()
+//            preFill.put("email", email)
+//            preFill.put("contact", phoneNumber)
+//            options.put("prefill", preFill)
 
             checkout.open(this, options)
         } catch (e: Exception) {
