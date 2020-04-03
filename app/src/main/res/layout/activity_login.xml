@@ -1,48 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 xmlns:app="http://schemas.android.com/apk/res-auto"
 xmlns:tools="http://schemas.android.com/tools"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
 tools:context=".activities.loginActivity.LoginActivity">
+
     <RelativeLayout
-        android:visibility="invisible"
-        android:id="@+id/user_email_request_layout"
+        android:layout_above="@+id/login_in_methods"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/email_id_text"
+        <ImageView
+            android:layout_marginTop="100dp"
+            android:layout_centerHorizontal="true"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
-            android:text="Email : " />
+            android:layout_height="50dp"/>
 
-        <EditText
-            android:id="@+id/email_id"
-            android:inputType="textEmailAddress"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"
-            android:layout_toRightOf="@id/email_id_text" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_above="@id/policies_layout"
+        android:id="@+id/login_in_methods"
+        android:layout_width="match_parent"
+        android:layout_height="200dp">
+
+        <com.facebook.login.widget.LoginButton
+            android:id="@+id/facebook_login_button"
+            android:layout_above="@id/email_login_button"
+            android:paddingLeft="10dp"
+            style="?android:attr/borderlessButtonStyle"
+            android:drawablePadding="10dp"
+            android:textAllCaps="false"
+            android:text="Continue with Email"
+            android:layout_marginVertical="5dp"
+            android:background="@drawable/drawable_login_with_button"
+            android:layout_marginHorizontal="25dp"
+            android:drawableLeft="@drawable/ic_email"
+            android:layout_width="match_parent"
+            android:layout_height="50dp" />
 
         <Button
-            android:text="Done"
-            android:textStyle="bold"
-            android:id="@+id/done_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/email_id"
-            android:layout_marginTop="100dp"
-            android:layout_centerHorizontal="true"/>
+            android:layout_alignParentBottom="true"
+            android:paddingLeft="10dp"
+            style="?android:attr/borderlessButtonStyle"
+            android:drawablePadding="10dp"
+            android:textAlignment="textStart"
+            android:textAllCaps="false"
+            android:text="Continue with Email"
+            android:layout_marginVertical="5dp"
+            android:background="@drawable/drawable_login_with_button"
+            android:layout_marginHorizontal="25dp"
+            android:drawableLeft="@drawable/ic_email"
+            android:id="@+id/email_login_button"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"/>
     </RelativeLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+    <RelativeLayout
+        android:layout_alignParentBottom="true"
+        android:id="@+id/policies_layout"
+        android:layout_width="match_parent"
+        android:layout_height="80dp">
+
+    </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/email_login_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"/>
+
+</RelativeLayout>
