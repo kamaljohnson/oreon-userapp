@@ -16,6 +16,7 @@ import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
 import com.xborg.vendx.R
 import com.xborg.vendx.activities.loginActivity.fragments.EmailLoginFragment
+import com.xborg.vendx.activities.mainActivity.MainActivity
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -140,6 +141,9 @@ class LoginActivity : AppCompatActivity() {
 
     private fun loadMainActivity() {
         Log.i(TAG, "main activity is loading")
+        val intent = Intent(this, MainActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
     }
 
 }
