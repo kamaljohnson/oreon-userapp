@@ -41,12 +41,6 @@ class LoginActivity : AppCompatActivity() {
         val viewModelFactory = SharedViewModelFactory(application)
         sharedViewModel = ViewModelProvider(this, viewModelFactory).get(SharedViewModel::class.java)
 
-        sharedViewModel.loadMainActivity.observe(this, Observer { load ->
-            if(load) {
-                loadMainActivity()
-            }
-        })
-
         //        region Check Cache
 
         ioScope.launch {
@@ -137,13 +131,6 @@ class LoginActivity : AppCompatActivity() {
     ) {
         facebookCallbackManager.onActivityResult(requestCode, resultCode, data)
         super.onActivityResult(requestCode, resultCode, data)
-    }
-
-    private fun loadMainActivity() {
-        Log.i(TAG, "main activity is loading")
-        val intent = Intent(this, MainActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
-        startActivity(intent)
     }
 
 }
