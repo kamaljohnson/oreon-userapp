@@ -101,7 +101,13 @@ data class InventoryItem(
 )
 
 data class CartItem(
+
+    @ColumnInfo(name = "paid")
     @SerializedName("paid") var Paid: Boolean,
+
+    @ColumnInfo(name = "item_detail_id")
     @SerializedName("item_detail") var ItemDetailId: String,
+
+    @ColumnInfo(name = "quantity")
     @SerializedName("quantity") var Quantity: Number
 )
