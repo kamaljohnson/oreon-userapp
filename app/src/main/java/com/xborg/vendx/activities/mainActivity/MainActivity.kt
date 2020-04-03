@@ -87,9 +87,8 @@ class MainActivity : AppCompatActivity() {
         debug_text_view.movementMethod = ScrollingMovementMethod()
 
         val application = requireNotNull(this).application
-        val itemDetailDataSource = ItemDetailDatabase.getInstance(application).itemDetailDatabaseDao
-        val userDataSource = UserDatabase.getInstance(application).userDatabaseDao
-        val viewModelFactory = SharedViewModelFactory(itemDetailDataSource, userDataSource, application)
+
+        val viewModelFactory = SharedViewModelFactory(application)
         sharedViewModel = ViewModelProvider(this, viewModelFactory).get(SharedViewModel::class.java)
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)

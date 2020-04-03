@@ -45,13 +45,10 @@ class HomeFragment : Fragment(), ItemCardAdapter.OnItemListener {
 
         val application = requireNotNull(this.activity).application
 
-        val userDataSource = UserDatabase.getInstance(application).userDatabaseDao
-
-        val homeViewModelFactory = HomeViewModelFactory(userDataSource, application)
+        val homeViewModelFactory = HomeViewModelFactory(application)
         viewModel = ViewModelProvider(this, homeViewModelFactory).get(HomeViewModel::class.java)
 
-        val itemDetailDataSource = ItemDetailDatabase.getInstance(application).itemDetailDatabaseDao
-        val sharedViewModelFactory = SharedViewModelFactory(itemDetailDataSource, userDataSource, application)
+        val sharedViewModelFactory = SharedViewModelFactory(application)
         sharedViewModel = ViewModelProvider(this, sharedViewModelFactory).get(SharedViewModel::class.java)
 
         sharedViewModel.checkedUserLocationAccessed.observe(

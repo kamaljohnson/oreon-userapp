@@ -20,8 +20,6 @@ enum class PermissionStatus {
 }
 
 class SharedViewModel(
-    val itemDetailDatabase: ItemDetailDao,
-    val userDatabase: UserDao,
     application: Application
 ) : AndroidViewModel(application) {
 
@@ -41,6 +39,9 @@ class SharedViewModel(
     val locationEnabled = MutableLiveData<Boolean>()
 
     val userLastLocation = MutableLiveData<Location>()
+
+    val itemDetailDao = ItemDetailDatabase.getInstance(application).itemDetailDatabaseDao
+    val userDao = UserDatabase.getInstance(application).userDao()
 
     init {
         locationPermission.value = PermissionStatus.None
@@ -73,8 +74,8 @@ class SharedViewModel(
                     val itemDetails = response.body()
                     if (itemDetails != null) {
                         ioScope.launch {
-                            itemDetailDatabase.clear()
-                            itemDetailDatabase.insert(itemDetails)
+                            itemDetailDao.clear()
+                            itemDetailDao.insert(itemDetails)
                         }
                     } else {
                         Log.e(TAG, "itemDetails received is null")
@@ -100,8 +101,8 @@ class SharedViewModel(
                     val user = response.body()
                     if (user != null) {
                         ioScope.launch {
-                            userDatabase.clear()
-                            userDatabase.insert(user)
+                            userDao.clear()
+                            userDao.insert(user)
                         }
                     } else {
                         Log.e("Debug", "user info received is null")

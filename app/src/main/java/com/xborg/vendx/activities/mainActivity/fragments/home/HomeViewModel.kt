@@ -17,7 +17,6 @@ import retrofit2.Response
 private const val TAG = "HomeViewModel"
 
 class HomeViewModel(
-    val userDatabase: UserDao,
     application: Application
 ) : AndroidViewModel(application) {
 
@@ -27,6 +26,8 @@ class HomeViewModel(
     var userInventory =  MutableLiveData<List<InventoryItem>>()
 
     var selectedMachine = MutableLiveData<Machine>()
+
+    private val userDao = UserDatabase.getInstance(application).userDao()
 
     init {
 
@@ -60,7 +61,7 @@ class HomeViewModel(
 
     private fun updateUserInventory() {
         ioScope.launch {
-            userInventory.value = userDatabase.get(1)!!.Inventory
+            userInventory.value = userDao.get(1)!!.Inventory
         }
     }
 

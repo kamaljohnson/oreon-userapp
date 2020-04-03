@@ -8,13 +8,11 @@ import com.xborg.vendx.database.UserDao
 import java.lang.IllegalArgumentException
 
 class SharedViewModelFactory (
-    private val itemDetailDataSource: ItemDetailDao,
-    private val userDataSource: UserDao,
     private val application: Application
 ): ViewModelProvider.Factory {
     override fun <T: ViewModel?> create(modelClass: Class<T>): T {
         if(modelClass.isAssignableFrom(SharedViewModel::class.java)) {
-            return SharedViewModel(itemDetailDataSource, userDataSource, application) as T
+            return SharedViewModel(application) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
