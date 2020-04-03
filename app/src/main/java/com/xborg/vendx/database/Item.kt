@@ -43,9 +43,7 @@ interface ItemDetailDao {
     fun insert(itemDetail: ItemDetail)
 
     @Insert
-    fun insert(itemDetails: List<ItemDetail>) {
-        Log.i("Database", "items inserted to database: $itemDetails")
-    }
+    fun insert(itemDetails: List<ItemDetail>)
 
     @Query("SELECT * FROM item_details_table")
     fun get(): LiveData<List<ItemDetail>>

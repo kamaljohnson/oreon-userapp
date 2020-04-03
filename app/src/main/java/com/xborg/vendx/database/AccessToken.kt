@@ -34,13 +34,13 @@ abstract class AccessTokenDatabase : RoomDatabase() {
 interface AccessTokenDao {
 
     @Query("SELECT * FROM access_token LIMIT 1")
-    suspend fun get(): AccessToken?
+    fun get(): AccessToken?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(accessToken: AccessToken)
+    fun insert(accessToken: AccessToken)
 
     @Query("DELETE FROM access_token")
-    suspend fun clear()
+    fun clear()
 
 }
 
