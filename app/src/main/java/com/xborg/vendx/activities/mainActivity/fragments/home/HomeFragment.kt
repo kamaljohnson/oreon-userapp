@@ -7,12 +7,16 @@ import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.GridLayoutManager
 import com.xborg.vendx.R
 import com.xborg.vendx.activities.feedbackActivity.FeedbackActivity
 import com.xborg.vendx.activities.mainActivity.SharedViewModel
 import com.xborg.vendx.activities.mainActivity.SharedViewModelFactory
 import com.xborg.vendx.adapters.ItemCardAdapter
+import com.xborg.vendx.adapters.ItemGroupAdapter
+import com.xborg.vendx.database.HomeItemGroup
 import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.android.synthetic.main.item_group_holder.*
 
 private var TAG = "HomeFragment"
 
@@ -71,6 +75,25 @@ class HomeFragment : Fragment(), ItemCardAdapter.OnItemListener {
         viewModel.userDao.get()!!.observe(viewLifecycleOwner, Observer { user ->
             viewModel.userInventory.value = user!!.Inventory
             Log.i(TAG, "user Inventory: " + viewModel.userInventory.value)
+            val homeItemGroup1 = HomeItemGroup(
+                Title = "User Inventory",
+                Inventory = user.Inventory,
+                Message = "",
+                PaidInventory = true
+            )
+            val homeItemGroup2 = HomeItemGroup(
+                Title = "Machine Inventory",
+                Inventory = user.Inventory,
+                Message = "",
+                PaidInventory = true
+            )
+
+            val listOfHomeItemGroup: ArrayList<HomeItemGroup> = ArrayList()
+            listOfHomeItemGroup.add(homeItemGroup1)
+            listOfHomeItemGroup.add(homeItemGroup2)
+            val adapter = ItemGroupAdapter(context!!, this)
+            adapter.submitList(listOfHomeItemGroup)
+            rv_machine_items.adapter = adapter
         })
     }
 

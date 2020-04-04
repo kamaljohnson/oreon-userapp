@@ -6,22 +6,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.xborg.vendx.R
 import com.xborg.vendx.database.HomeItemGroup
 import kotlinx.android.synthetic.main.item_group_holder.view.*
 
 class ItemGroupAdapter(
-    private val homeItems: ArrayList<HomeItemGroup>,
-    private val paidItemGroup: Boolean,
     val context: Context,
     private val onItemListener: ItemCardAdapter.OnItemListener
-) : RecyclerView.Adapter<ItemGroupAdapter.GroupViewHolder>() {
-
-    override fun getItemCount(): Int {
-        return homeItems.size
-    }
+) : ListAdapter<HomeItemGroup, ItemGroupAdapter.GroupViewHolder>(ItemGroupDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GroupViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.item_group_holder, parent, false)
@@ -29,15 +25,17 @@ class ItemGroupAdapter(
     }
 
     override fun onBindViewHolder(holder: GroupViewHolder, position: Int) {
-        val parent = homeItems[position]
+        val parent = getItem(position)
         holder.title.text = parent.Title
         if(parent.Message != "") {
             holder.message.visibility = View.VISIBLE
             holder.message.text = parent.Message
         } else {
+            val _adapter = ItemCardAdapter(parent.PaidInventory, context, onItemListener)
+            _adapter.submitList(parent.Inventory)
             holder.groupItemsRV.apply {
                 layoutManager = GridLayoutManager(context, 3)
-                adapter = ItemCardAdapter(parent.Inventory, paidItemGroup, context, onItemListener)
+                adapter = _adapter
             }
         }
         holder.progressBar.visibility = if(parent.Inventory.isEmpty() && parent.Message != ""){
@@ -59,6 +57,14 @@ class ItemGroupAdapter(
     interface OnItemListener {
         fun onRefreshRequest(itemId: String, itemLoc: String): Boolean
     }
+}
 
+class ItemGroupDiffCallback: DiffUtil.ItemCallback<HomeItemGroup>() {
+    override fun areItemsTheSame(oldItem: HomeItemGroup, newItem: HomeItemGroup): Boolean {
+        return oldItem.Title == newItem.Title
+    }
 
+    override fun areContentsTheSame(oldItem: HomeItemGroup, newItem: HomeItemGroup): Boolean {
+        return oldItem == newItem
+    }
 }

@@ -8,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.xborg.vendx.R
@@ -23,11 +25,10 @@ import kotlinx.coroutines.launch
 private var TAG = "ItemCardAdapter"
 
 class ItemCardAdapter(
-    private val inventoryItems: List<InventoryItem>,
     private val paidItemGroup: Boolean,
     val context: Context,
     itemCardListener: OnItemListener
-) : RecyclerView.Adapter<ItemCardAdapter.ItemViewHolder>() {
+) : ListAdapter<InventoryItem, ItemCardAdapter.ItemViewHolder>(ItemCardDiffCallback()) {
 
     private val _onCardItemListener: OnItemListener = itemCardListener
 
@@ -41,16 +42,13 @@ class ItemCardAdapter(
         return ItemViewHolder(view, _onCardItemListener)
     }
 
-    override fun getItemCount(): Int {
-        return inventoryItems.size
-    }
-
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
-        val inventoryItem = inventoryItems[position]
+        val inventoryItem = getItem(position)
 
         val viewModelJob = Job()
         val ioScope = CoroutineScope(Dispatchers.IO + viewModelJob)
+        val uiScope = CoroutineScope(Dispatchers.Main)
 
         ioScope.launch {
             Log.i(TAG, "loading itemDetail : $inventoryItem from room database")
@@ -61,14 +59,16 @@ class ItemCardAdapter(
             holder.name.text = itemDetail.Name
             holder.cost.text = "₹ " + itemDetail.Cost.toString()
 
-            Glide
-                .with(context)
-                .load(itemDetail.ForegroundAsset)
-                .into(holder.packageImage)
-            Glide
-                .with(context)
-                .load(itemDetail.BackgroundAsset)
-                .into(holder.cardBg)
+            uiScope.launch {
+                Glide
+                    .with(context)
+                    .load(itemDetail.ForegroundAsset)
+                    .into(holder.packageImage)
+                Glide
+                    .with(context)
+                    .load(itemDetail.BackgroundAsset)
+                    .into(holder.cardBg)
+            }
         }
 
         holder.paid = paidItemGroup
@@ -118,6 +118,16 @@ class ItemCardAdapter(
     interface OnItemListener {
         fun onItemAddedToCart(itemId: String, paid: Boolean): Boolean
         fun onItemRemovedFromCart(itemId: String, paid: Boolean): Boolean
+    }
+}
+
+class ItemCardDiffCallback: DiffUtil.ItemCallback<InventoryItem>() {
+    override fun areItemsTheSame(oldItem: InventoryItem, newItem: InventoryItem): Boolean {
+        return oldItem.ItemDetailId == newItem.ItemDetailId
+    }
+
+    override fun areContentsTheSame(oldItem: InventoryItem, newItem: InventoryItem): Boolean {
+        return oldItem == newItem
     }
 }
 
