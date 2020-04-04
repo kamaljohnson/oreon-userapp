@@ -3,6 +3,6 @@ package com.xborg.vendx.database
 
 data class HomeItemGroup(
     val Title: String,
-    val Items: List<ItemCard> = listOf(),
+    val Inventory: List<InventoryItem> = listOf(),
     var Message: String = ""
 )

@@ -37,10 +37,10 @@ class ItemGroupAdapter(
         } else {
             holder.groupItemsRV.apply {
                 layoutManager = GridLayoutManager(context, 3)
-                adapter = ItemCardAdapter(parent.Items, paidItemGroup, context, onItemListener)
+                adapter = ItemCardAdapter(parent.Inventory, paidItemGroup, context, onItemListener)
             }
         }
-        holder.progressBar.visibility = if(parent.Items.isEmpty() && parent.Message != ""){
+        holder.progressBar.visibility = if(parent.Inventory.isEmpty() && parent.Message != ""){
             View.VISIBLE
         } else {
             View.GONE

@@ -2,6 +2,7 @@ package com.xborg.vendx.adapters
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,13 +11,19 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.xborg.vendx.R
-import com.xborg.vendx.database.ItemCard
+import com.xborg.vendx.database.InventoryItem
+import com.xborg.vendx.database.ItemDetailDao
+import com.xborg.vendx.database.ItemDetailDatabase
 import kotlinx.android.synthetic.main.item_card.view.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 private var TAG = "ItemCardAdapter"
 
 class ItemCardAdapter(
-    private val items: List<ItemCard>,
+    private val inventoryItems: List<InventoryItem>,
     private val paidItemGroup: Boolean,
     val context: Context,
     itemCardListener: OnItemListener
@@ -24,31 +31,47 @@ class ItemCardAdapter(
 
     private val _onCardItemListener: OnItemListener = itemCardListener
 
+    private lateinit var itemDetailDao: ItemDetailDao
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.item_card, parent, false)
+
+        itemDetailDao = ItemDetailDatabase.getInstance(context).itemDetailDatabaseDao
+
         return ItemViewHolder(view, _onCardItemListener)
     }
 
     override fun getItemCount(): Int {
-        return items.size
+        return inventoryItems.size
     }
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
-        val item = items[position]
+        val inventoryItem = inventoryItems[position]
 
-        holder.itemId.text = item.ItemDetail.Id
-        holder.name.text = item.ItemDetail.Name
-        holder.cost.text = "₹ " + item.ItemDetail.Cost.toString()
+        val viewModelJob = Job()
+        val ioScope = CoroutineScope(Dispatchers.IO + viewModelJob)
+
+        ioScope.launch {
+            Log.i(TAG, "loading itemDetail : $inventoryItem from room database")
+
+            val itemDetail = itemDetailDao.get(inventoryItem.ItemDetailId)
+
+            holder.itemId.text = itemDetail!!.Id
+            holder.name.text = itemDetail.Name
+            holder.cost.text = "₹ " + itemDetail.Cost.toString()
+
+            Glide
+                .with(context)
+                .load(itemDetail.ForegroundAsset)
+                .into(holder.packageImage)
+            Glide
+                .with(context)
+                .load(itemDetail.BackgroundAsset)
+                .into(holder.cardBg)
+        }
+
         holder.paid = paidItemGroup
-        Glide
-            .with(context)
-            .load(item.ItemDetail.ForegroundAsset)
-            .into(holder.packageImage)
-        Glide
-            .with(context)
-            .load(item.ItemDetail.BackgroundAsset)
-            .into(holder.cardBg)
 
     }
 

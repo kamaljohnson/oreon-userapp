@@ -49,7 +49,7 @@ interface ItemDetailDao {
     fun get(): LiveData<List<ItemDetail>>
 
     @Query("SELECT * from item_details_table WHERE id = :id")
-    fun get(id: Long): ItemDetail?
+    fun get(id: String): ItemDetail?
 
     @Query("DELETE FROM item_details_table")
     fun clear()
@@ -87,13 +87,6 @@ data class ItemDetail(
 }
 
 // endregion
-
-data class ItemCard(
-    var ItemDetail: ItemDetail,
-    var PurchaseLimit: Number,
-    var Quantity: Number,
-    var Paid: Boolean
-)
 
 data class InventoryItem(
     @SerializedName("item_detail") var ItemDetailId: String,
