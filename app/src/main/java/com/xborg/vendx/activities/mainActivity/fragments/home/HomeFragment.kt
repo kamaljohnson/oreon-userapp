@@ -23,7 +23,6 @@ class HomeFragment : Fragment(), ItemCardAdapter.OnItemListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.i(TAG, "Home onCreate called!")
         setHasOptionsMenu(true)
     }
 
@@ -32,8 +31,6 @@ class HomeFragment : Fragment(), ItemCardAdapter.OnItemListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        Log.i(TAG, "onCreateView called!")
-
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
@@ -70,6 +67,11 @@ class HomeFragment : Fragment(), ItemCardAdapter.OnItemListener {
         continue_location_permission.setOnClickListener {
             sharedViewModel.getUserLocation.value = true
         }
+
+        viewModel.userDao.get()!!.observe(viewLifecycleOwner, Observer { user ->
+            viewModel.userInventory.value = user!!.Inventory
+            Log.i(TAG, "user Inventory: " + viewModel.userInventory.value)
+        })
     }
 
     override fun onItemAddedToCart(itemId: String, paid: Boolean): Boolean {

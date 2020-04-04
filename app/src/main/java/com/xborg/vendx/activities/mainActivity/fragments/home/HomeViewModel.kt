@@ -4,6 +4,7 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import com.xborg.vendx.database.*
 import com.xborg.vendx.network.VendxApi
 import kotlinx.coroutines.CoroutineScope
@@ -27,11 +28,7 @@ class HomeViewModel(
 
     var selectedMachine = MutableLiveData<Machine>()
 
-    private val userDao = UserDatabase.getInstance(application).userDao()
-
-    init {
-
-    }
+    val userDao = UserDatabase.getInstance(application).userDao()
 
     private fun getMachineData(machine_id: String) {
         val itemDetailsCall = VendxApi.retrofitServices.getMachineAsync(machine_id)
@@ -58,11 +55,4 @@ class HomeViewModel(
             }
         })
     }
-
-    private fun updateUserInventory() {
-        ioScope.launch {
-            userInventory.value = userDao.get(1)!!.Inventory
-        }
-    }
-
 }

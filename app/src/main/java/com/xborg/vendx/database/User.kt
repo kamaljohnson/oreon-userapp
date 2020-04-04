@@ -2,6 +2,7 @@ package com.xborg.vendx.database
 
 import android.content.Context
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
@@ -81,9 +82,8 @@ interface UserDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(user: User)
 
-    //TODO: use the user id in sharedPreference
-    @Query("SELECT * from user_table WHERE id = :id")
-    fun get(id: Long): User?
+    @Query("SELECT * from user_table LIMIT 1")
+    fun get(): LiveData<User?>?
 
     @Query("DELETE FROM user_table")
     fun clear()
