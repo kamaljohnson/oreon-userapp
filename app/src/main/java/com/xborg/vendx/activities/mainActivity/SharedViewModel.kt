@@ -42,13 +42,19 @@ class SharedViewModel(
 
     val itemDetailDao = ItemDetailDatabase.getInstance(application).itemDetailDatabaseDao
     val userDao = UserDatabase.getInstance(application).userDao()
+    val accessTokenDao = AccessTokenDatabase.getInstance(application).accessTokenDao()
+    private var accessToken: String = ""
 
     init {
         locationPermission.value = PermissionStatus.None
         bluetoothPermission.value = PermissionStatus.None
 
-        initializeItemDetailsDatabase()
-        initializeUserDatabase()
+        ioScope.launch {
+            accessToken = accessTokenDao.getToken()
+            initializeItemDetailsDatabase()
+            initializeUserDatabase()
+        }
+
     }
 
     fun addItemToCart(itemId: String, paid: Boolean): Boolean {
@@ -66,7 +72,7 @@ class SharedViewModel(
     }
 
     private fun initializeItemDetailsDatabase() {
-        val itemDetailsCall = VendxApi.retrofitServices.getItemDetailsAsync()
+        val itemDetailsCall = VendxApi.retrofitServices.getItemDetailsAsync("token $accessToken")
         itemDetailsCall.enqueue(object : Callback<List<ItemDetail>> {
             override fun onResponse(call: Call<List<ItemDetail>>, response: Response<List<ItemDetail>>) {
                 if (response.code() == 200) {
@@ -74,7 +80,6 @@ class SharedViewModel(
                     val itemDetails = response.body()
                     if (itemDetails != null) {
                         ioScope.launch {
-                            itemDetailDao.clear()
                             itemDetailDao.insert(itemDetails)
                         }
                     } else {
@@ -92,8 +97,7 @@ class SharedViewModel(
     }
 
     private fun initializeUserDatabase() {
-        // TODO: pass the actual user id
-        val userCall = VendxApi.retrofitServices.getUserInfoAsync("1")
+        val userCall = VendxApi.retrofitServices.getUserInfoAsync("token $accessToken")
         userCall.enqueue(object : Callback<User> {
             override fun onResponse(call: Call<User>, response: Response<User>) {
                 if (response.code() == 200) {
@@ -101,7 +105,7 @@ class SharedViewModel(
                     val user = response.body()
                     if (user != null) {
                         ioScope.launch {
-                            userDao.clear()
+                            Log.i("Debug", "user : $user")
                             userDao.insert(user)
                         }
                     } else {

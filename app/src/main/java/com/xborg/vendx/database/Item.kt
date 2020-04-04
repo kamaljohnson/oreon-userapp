@@ -42,7 +42,7 @@ interface ItemDetailDao {
     @Insert
     fun insert(itemDetail: ItemDetail)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(itemDetails: List<ItemDetail>)
 
     @Query("SELECT * FROM item_details_table")

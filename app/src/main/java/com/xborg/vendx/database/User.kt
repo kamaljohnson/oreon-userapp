@@ -10,13 +10,13 @@ import java.lang.reflect.Type
 
 class Converters {
     @TypeConverter
-    fun stringToLocation(value: String?): Location {
+    fun stringToLocation(value: String?): Location? {
         val locationType: Type = object : TypeToken<Location>() {}.type
         return Gson().fromJson(value, locationType)
     }
 
     @TypeConverter
-    fun locationToString(list: Location): String {
+    fun locationToString(list: Location?): String? {
         val gson = Gson()
         return gson.toJson(list)
     }
@@ -49,7 +49,7 @@ class Converters {
 
 }
 
-@Database(entities = [User::class], version = 1)
+@Database(entities = [User::class], version = 3)
 @TypeConverters(Converters::class)
 abstract class UserDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
@@ -78,7 +78,7 @@ abstract class UserDatabase : RoomDatabase() {
 
 @Dao
 interface UserDao {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(user: User)
 
     //TODO: use the user id in sharedPreference
@@ -95,21 +95,27 @@ data class User(
     @ColumnInfo(name = "id")
     @SerializedName("id") var Id: String,
 
-    @ColumnInfo(name = "name")
-    @SerializedName("name") var Name: String,
+    @ColumnInfo(name = "first_name")
+    @SerializedName("first_name") var FirstName: String?,
+
+    @ColumnInfo(name = "last_name")
+    @SerializedName("last_name") var LastName: String?,
 
     @ColumnInfo(name = "email")
     @SerializedName("email") var Email: String,
 
     @ColumnInfo(name = "phone")
-    @SerializedName("phone") var Phone: String,
+    @SerializedName("phone") var Phone: String?,
+
+    @ColumnInfo(name = "profile_pic")
+    @SerializedName("profile_pic") var ProfilePic: String?,
 
     @ColumnInfo(name = "location")
-    @SerializedName("location") var Location: Location,
+    @SerializedName("location") var Location: Location?,
 
     @ColumnInfo(name = "inventory")
     @SerializedName("inventory") var Inventory: List<InventoryItem> = ArrayList(),
 
     @ColumnInfo(name = "cart")
-    @SerializedName("cart") var Cart: List<CartItem> = ArrayList()
+    var Cart: List<CartItem>? = ArrayList()
 )

@@ -31,16 +31,22 @@ abstract class AccessTokenDatabase : RoomDatabase() {
 }
 
 @Dao
-interface AccessTokenDao {
+abstract class  AccessTokenDao {
 
     @Query("SELECT * FROM access_token LIMIT 1")
-    fun get(): AccessToken?
+    abstract fun get(): AccessToken?
+
+    fun getToken(): String {
+        val accessToken = get()!!.accessToken
+        val token = get()!!.token
+        return accessToken ?: token!!
+    }
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(accessToken: AccessToken)
+    abstract fun insert(accessToken: AccessToken)
 
     @Query("DELETE FROM access_token")
-    fun clear()
+    abstract fun clear()
 
 }
 
