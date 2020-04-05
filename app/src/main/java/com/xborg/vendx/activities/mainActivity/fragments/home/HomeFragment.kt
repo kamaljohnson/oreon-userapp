@@ -76,8 +76,10 @@ class HomeFragment : Fragment(), ItemCardAdapter.OnItemListener {
         }
 
         viewModel.userDao.get()!!.observe(viewLifecycleOwner, Observer { user ->
-            viewModel.userInventory.value = user!!.Inventory
-            viewModel.updateHomeInventoryGroups()
+            if(user!= null) {
+                viewModel.userInventory.value = user.Inventory
+                viewModel.updateHomeInventoryGroups()
+            }
         })
 
         viewModel.homeInventoryGroups.observe(viewLifecycleOwner, Observer { groups ->

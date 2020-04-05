@@ -45,6 +45,8 @@ class SharedViewModel(
     val accessTokenDao = AccessTokenDatabase.getInstance(application).accessTokenDao()
     private var accessToken: String = ""
 
+    private val cartItemDatabase = CartItemDatabase.getInstance(application).cartItemDao()
+
     init {
         locationPermission.value = PermissionStatus.None
         bluetoothPermission.value = PermissionStatus.None
@@ -58,17 +60,23 @@ class SharedViewModel(
     }
 
     fun addItemToCart(itemId: String, paid: Boolean): Boolean {
-        // TODO: add cartItem to user cart
+        ioScope.launch {
+            cartItemDatabase.addItem(itemId, paid)
+        }
         return true
     }
 
     fun removeItemFromCart(itemId: String, paid: Boolean): Boolean {
-        // TODO: remove cartItem from user cart
+        ioScope.launch {
+            cartItemDatabase.removeItem(itemId, paid)
+        }
         return true
     }
 
     fun resetCart() {
-        // TODO: set user cart to ArrayList()
+        ioScope.launch {
+            cartItemDatabase.clear()
+        }
     }
 
     private fun initializeItemDetailsDatabase() {

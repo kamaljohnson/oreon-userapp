@@ -93,7 +93,56 @@ data class InventoryItem(
     @SerializedName("quantity") var Quantity: Number
 )
 
+
+@Database(entities = [CartItem::class], version = 2)
+abstract class CartItemDatabase : RoomDatabase() {
+    abstract fun cartItemDao(): CartItemDao
+
+    companion object {
+
+        @Volatile
+        private var instence: CartItemDatabase? = null
+
+        fun getInstance(context: Context): CartItemDatabase {
+            return instence ?: synchronized(this) {
+                instence ?: buildDatabase(context).also { instence = it }
+            }
+        }
+
+        private fun buildDatabase(context: Context): CartItemDatabase {
+            return Room.databaseBuilder(
+                context, CartItemDatabase::class.java,
+                "cart_item"
+            )
+                .fallbackToDestructiveMigration()
+                .build()
+        }
+    }
+}
+
+@Dao
+abstract class CartItemDao {
+    fun addItem(itemId: String, paid: Boolean) {
+        Log.i("Debug", "added Item")
+    }
+
+    fun removeItem(itemId: String, paid: Boolean) {
+        Log.i("Debug", "removed Item")
+    }
+
+    @Query("SELECT * from cart_item_table")
+    abstract fun get(): LiveData<List<CartItem>>
+
+    @Query("DELETE FROM cart_item_table")
+    abstract fun clear()
+}
+
+
+@Entity(tableName = "cart_item_table")
 data class CartItem(
+    @PrimaryKey
+    @ColumnInfo(name = "id")
+    @SerializedName("id") var Id: String,
 
     @ColumnInfo(name = "paid")
     @SerializedName("paid") var Paid: Boolean,
@@ -102,5 +151,5 @@ data class CartItem(
     @SerializedName("item_detail") var ItemDetailId: String,
 
     @ColumnInfo(name = "quantity")
-    @SerializedName("quantity") var Quantity: Number
+    @SerializedName("quantity") var Quantity: Int
 )

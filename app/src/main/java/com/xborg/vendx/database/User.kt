@@ -50,7 +50,7 @@ class Converters {
 
 }
 
-@Database(entities = [User::class], version = 3)
+@Database(entities = [User::class], version = 4)
 @TypeConverters(Converters::class)
 abstract class UserDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
@@ -114,8 +114,5 @@ data class User(
     @SerializedName("location") var Location: Location?,
 
     @ColumnInfo(name = "inventory")
-    @SerializedName("inventory") var Inventory: List<InventoryItem> = ArrayList(),
-
-    @ColumnInfo(name = "cart")
-    var Cart: List<CartItem>? = ArrayList()
+    @SerializedName("inventory") var Inventory: List<InventoryItem> = ArrayList()
 )
