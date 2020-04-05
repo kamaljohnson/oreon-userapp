@@ -122,16 +122,48 @@ abstract class CartItemDatabase : RoomDatabase() {
 
 @Dao
 abstract class CartItemDao {
+
     fun addItem(itemId: String, paid: Boolean) {
         Log.i("Debug", "added Item")
+
+        val checkPreviousItem = get(itemId, paid)
+
+        if( checkPreviousItem != null) {
+
+            checkPreviousItem.Count += 1
+
+            update(checkPreviousItem)
+
+        } else {
+
+            val newCartItem: CartItem = CartItem(itemDetailId = itemId, paid = paid)
+
+            insert(newCartItem)
+
+        }
     }
 
     fun removeItem(itemId: String, paid: Boolean) {
         Log.i("Debug", "removed Item")
     }
 
+    fun reset() {
+        clear()
+        //TODO: reset the auto_increment id to 0
+    }
+
     @Query("SELECT * from cart_item_table")
     abstract fun get(): LiveData<List<CartItem>>
+
+    @Query("SELECT * from cart_item_table WHERE :itemId = item_detail_id AND :paid = paid")
+    abstract fun get(itemId: String, paid: Boolean): CartItem?
+
+    @Insert
+    abstract fun insert(cartItem: CartItem)
+
+    @Update
+    abstract fun update(cartItem: CartItem)
+
 
     @Query("DELETE FROM cart_item_table")
     abstract fun clear()
@@ -140,16 +172,19 @@ abstract class CartItemDao {
 
 @Entity(tableName = "cart_item_table")
 data class CartItem(
-    @PrimaryKey
-    @ColumnInfo(name = "id")
-    @SerializedName("id") var Id: String,
-
-    @ColumnInfo(name = "paid")
-    @SerializedName("paid") var Paid: Boolean,
+    @PrimaryKey(autoGenerate = true)
+    val Id: Long?,
 
     @ColumnInfo(name = "item_detail_id")
     @SerializedName("item_detail") var ItemDetailId: String,
 
+    @ColumnInfo(name = "paid")
+    @SerializedName("paid") var Paid: Boolean,
+
     @ColumnInfo(name = "quantity")
-    @SerializedName("quantity") var Quantity: Int
-)
+    @SerializedName("quantity") var Count: Int
+) {
+    @Ignore
+    constructor(itemDetailId: String, paid: Boolean, count:Int = 1) :
+            this (null, itemDetailId, paid, count)
+}

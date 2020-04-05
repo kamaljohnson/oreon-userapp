@@ -116,6 +116,13 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
+        sharedViewModel.cartDao.get().observe(this, Observer { cart ->
+            if(cart!= null) {
+               sharedViewModel.cart.value = cart
+                Log.i(TAG, "Cart: $cart")
+            }
+        })
+
         initBottomNavigationView()
         initBottomSwipeUpView()
         enableBluetooth()
