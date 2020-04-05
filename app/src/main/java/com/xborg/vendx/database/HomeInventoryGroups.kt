@@ -1,7 +1,7 @@
 package com.xborg.vendx.database
 
 
-data class HomeItemGroup(
+data class HomeInventoryGroups(
     val Title: String,
     val Inventory: List<InventoryItem> = listOf(),
     var Message: String = "",

@@ -4,7 +4,6 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import com.xborg.vendx.database.*
 import com.xborg.vendx.network.VendxApi
 import kotlinx.coroutines.CoroutineScope
@@ -26,9 +25,39 @@ class HomeViewModel(
 
     var userInventory =  MutableLiveData<List<InventoryItem>>()
 
+    var selectedMachineInventory = MutableLiveData<List<InventoryItem>>()
+
+    var homeInventoryGroups = MutableLiveData<List<HomeInventoryGroups>>()
+
     var selectedMachine = MutableLiveData<Machine>()
 
     val userDao = UserDatabase.getInstance(application).userDao()
+
+    fun updateHomeInventoryGroups() {
+        if(selectedMachineInventory.value == null || selectedMachineInventory.value!!.isEmpty()) {
+            val _selectedMachineInventoryGroup = HomeInventoryGroups(
+                Title = "Machine",
+                Message = "Could'nt find \nMachines near you",
+                PaidInventory = false
+            )
+
+            val _userInventoryGroup = HomeInventoryGroups(
+                Title = "Inventory",
+                Inventory = userInventory.value!!,
+                Message = "",
+                PaidInventory = true
+            )
+
+            val newHomeInventoryGroups: ArrayList<HomeInventoryGroups> = ArrayList()
+
+            newHomeInventoryGroups.add(_selectedMachineInventoryGroup)
+            newHomeInventoryGroups.add(_userInventoryGroup)
+
+            homeInventoryGroups.value = newHomeInventoryGroups
+
+            return
+        }
+    }
 
     private fun getMachineData(machine_id: String) {
         val itemDetailsCall = VendxApi.retrofitServices.getMachineAsync(machine_id)

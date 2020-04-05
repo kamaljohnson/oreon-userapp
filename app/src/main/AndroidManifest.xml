@@ -52,7 +52,7 @@
             tools:ignore="LockedOrientationActivity">
         </activity>
         <activity
-            android:name=".database.HomeItemGroup"
+            android:name=".database.HomeInventoryGroups"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" /> <!-- region Razorpay -->
         <meta-data

@@ -11,13 +11,13 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.xborg.vendx.R
-import com.xborg.vendx.database.HomeItemGroup
+import com.xborg.vendx.database.HomeInventoryGroups
 import kotlinx.android.synthetic.main.item_group_holder.view.*
 
 class ItemGroupAdapter(
     val context: Context,
     private val onItemListener: ItemCardAdapter.OnItemListener
-) : ListAdapter<HomeItemGroup, ItemGroupAdapter.GroupViewHolder>(ItemGroupDiffCallback()) {
+) : ListAdapter<HomeInventoryGroups, ItemGroupAdapter.GroupViewHolder>(ItemGroupDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GroupViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.item_group_holder, parent, false)
@@ -59,12 +59,12 @@ class ItemGroupAdapter(
     }
 }
 
-class ItemGroupDiffCallback: DiffUtil.ItemCallback<HomeItemGroup>() {
-    override fun areItemsTheSame(oldItem: HomeItemGroup, newItem: HomeItemGroup): Boolean {
+class ItemGroupDiffCallback: DiffUtil.ItemCallback<HomeInventoryGroups>() {
+    override fun areItemsTheSame(oldItem: HomeInventoryGroups, newItem: HomeInventoryGroups): Boolean {
         return oldItem.Title == newItem.Title
     }
 
-    override fun areContentsTheSame(oldItem: HomeItemGroup, newItem: HomeItemGroup): Boolean {
+    override fun areContentsTheSame(oldItem: HomeInventoryGroups, newItem: HomeInventoryGroups): Boolean {
         return oldItem == newItem
     }
 }
