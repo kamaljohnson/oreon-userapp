@@ -15,8 +15,7 @@ import com.xborg.vendx.database.HomeInventoryGroups
 import kotlinx.android.synthetic.main.item_group_holder.view.*
 
 class ItemGroupAdapter(
-    val context: Context,
-    private val onItemListener: ItemCardAdapter.OnItemListener
+    val context: Context
 ) : ListAdapter<HomeInventoryGroups, ItemGroupAdapter.GroupViewHolder>(ItemGroupDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GroupViewHolder {
@@ -31,7 +30,7 @@ class ItemGroupAdapter(
             holder.message.visibility = View.VISIBLE
             holder.message.text = parent.Message
         } else {
-            val _adapter = ItemCardAdapter(parent.PaidInventory, context, onItemListener)
+            val _adapter = ItemCardAdapter(parent.PaidInventory, context)
             _adapter.submitList(parent.Inventory)
             holder.groupItemsRV.apply {
                 layoutManager = GridLayoutManager(context, 3)

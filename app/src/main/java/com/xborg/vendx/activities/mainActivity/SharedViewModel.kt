@@ -62,20 +62,6 @@ class SharedViewModel(
 
     }
 
-    fun addItemToCart(itemId: String, paid: Boolean): Boolean {
-        ioScope.launch {
-            cartDao.addItem(itemId, paid)
-        }
-        return true
-    }
-
-    fun removeItemFromCart(itemId: String, paid: Boolean): Boolean {
-        ioScope.launch {
-            cartDao.removeItem(itemId, paid)
-        }
-        return true
-    }
-
     fun resetCart() {
         ioScope.launch {
             cartDao.reset()

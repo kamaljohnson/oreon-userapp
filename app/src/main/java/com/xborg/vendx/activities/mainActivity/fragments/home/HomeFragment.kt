@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.fragment_home.*
 
 private var TAG = "HomeFragment"
 
-class HomeFragment : Fragment(), ItemCardAdapter.OnItemListener {
+class HomeFragment : Fragment() {
 
     private lateinit var viewModel: HomeViewModel
     private lateinit var sharedViewModel: SharedViewModel
@@ -41,7 +41,7 @@ class HomeFragment : Fragment(), ItemCardAdapter.OnItemListener {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        adapter = ItemGroupAdapter(context!!, this)
+        adapter = ItemGroupAdapter(context!!)
         rv_machine_items.adapter = adapter
 
         val application = requireNotNull(this.activity).application
@@ -87,14 +87,6 @@ class HomeFragment : Fragment(), ItemCardAdapter.OnItemListener {
                 adapter.submitList(groups)
             }
         })
-    }
-
-    override fun onItemAddedToCart(itemId: String, paid: Boolean): Boolean {
-        return sharedViewModel.addItemToCart(itemId, paid)
-    }
-
-    override fun onItemRemovedFromCart(itemId: String, paid: Boolean): Boolean {
-        return sharedViewModel.removeItemFromCart(itemId, paid)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

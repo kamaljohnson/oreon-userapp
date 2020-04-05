@@ -13,9 +13,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.xborg.vendx.R
-import com.xborg.vendx.database.InventoryItem
-import com.xborg.vendx.database.ItemDetailDao
-import com.xborg.vendx.database.ItemDetailDatabase
+import com.xborg.vendx.database.*
 import kotlinx.android.synthetic.main.item_card.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -24,31 +22,30 @@ import kotlinx.coroutines.launch
 
 private var TAG = "ItemCardAdapter"
 
+private lateinit var itemDetailDao: ItemDetailDao
+private lateinit var cartItemDao: CartItemDao
+
+private val viewModelJob = Job()
+private val ioScope = CoroutineScope(Dispatchers.IO + viewModelJob)
+private val uiScope = CoroutineScope(Dispatchers.Main)
+
 class ItemCardAdapter(
     private val paidItemGroup: Boolean,
-    val context: Context,
-    itemCardListener: OnItemListener
+    val context: Context
 ) : ListAdapter<InventoryItem, ItemCardAdapter.ItemViewHolder>(ItemCardDiffCallback()) {
-
-    private val _onCardItemListener: OnItemListener = itemCardListener
-
-    private lateinit var itemDetailDao: ItemDetailDao
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.item_card, parent, false)
 
         itemDetailDao = ItemDetailDatabase.getInstance(context).itemDetailDatabaseDao
+        cartItemDao = CartItemDatabase.getInstance(context).cartItemDao()
 
-        return ItemViewHolder(view, _onCardItemListener)
+        return ItemViewHolder(view)
     }
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val inventoryItem = getItem(position)
-
-        val viewModelJob = Job()
-        val ioScope = CoroutineScope(Dispatchers.IO + viewModelJob)
-        val uiScope = CoroutineScope(Dispatchers.Main)
 
         ioScope.launch {
             Log.i(TAG, "loading itemDetail : $inventoryItem from room database")
@@ -76,7 +73,7 @@ class ItemCardAdapter(
     }
 
     @SuppressLint("SetTextI18n")
-    class ItemViewHolder(view: View, onItemListener: OnItemListener) :
+    class ItemViewHolder(view: View) :
         RecyclerView.ViewHolder(view), View.OnClickListener {
         val itemId: TextView = view.item_id
         val name: TextView = view.name
@@ -86,8 +83,6 @@ class ItemCardAdapter(
         private val purchaseCount: TextView = view.purchase_count
 
         private val itemRemoveButton: ImageView = view.remove_button
-
-        private val onItemListener: OnItemListener = onItemListener
 
         var paid: Boolean = false
 
@@ -106,18 +101,17 @@ class ItemCardAdapter(
         }
 
         private fun addItemToCart() {
-            onItemListener.onItemAddedToCart(itemId.text.toString(), paid)
+            ioScope.launch {
+                cartItemDao.addItem(itemId.text.toString(), paid)
+            }
         }
 
         private fun removeItemFromCart() {
-            onItemListener.onItemRemovedFromCart(itemId.text.toString(), paid)
+            ioScope.launch {
+                cartItemDao.removeItem(itemId.text.toString(), paid)
+            }
         }
 
-    }
-
-    interface OnItemListener {
-        fun onItemAddedToCart(itemId: String, paid: Boolean): Boolean
-        fun onItemRemovedFromCart(itemId: String, paid: Boolean): Boolean
     }
 }
 
