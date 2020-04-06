@@ -94,7 +94,7 @@ data class InventoryItem(
 )
 
 
-@Database(entities = [CartItem::class], version = 2)
+@Database(entities = [CartItem::class], version = 3)
 abstract class CartItemDatabase : RoomDatabase() {
     abstract fun cartItemDao(): CartItemDao
 
@@ -181,8 +181,8 @@ data class CartItem(
     @ColumnInfo(name = "paid")
     @SerializedName("paid") var Paid: Boolean,
 
-    @ColumnInfo(name = "quantity")
-    @SerializedName("quantity") var Count: Int
+    @ColumnInfo(name = "count")
+    @SerializedName("count") var Count: Int
 ) {
     @Ignore
     constructor(itemDetailId: String, paid: Boolean, count:Int = 1) :
