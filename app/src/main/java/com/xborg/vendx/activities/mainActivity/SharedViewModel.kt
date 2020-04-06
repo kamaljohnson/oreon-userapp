@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.xborg.vendx.BuildConfig
+import com.xborg.vendx.activities.mainActivity.fragments.home.HomeViewModel
 import com.xborg.vendx.database.*
 import com.xborg.vendx.network.VendxApi
 import kotlinx.coroutines.*
@@ -47,6 +48,7 @@ class SharedViewModel(
 
     val cartDao = CartItemDatabase.getInstance(application).cartItemDao()
     val cart = MutableLiveData<List<CartItem>>()
+    private var cartContext = CartContext.None
 
     init {
         locationPermission.value = PermissionStatus.None
@@ -56,8 +58,25 @@ class SharedViewModel(
             accessToken = accessTokenDao.getToken()
             initializeItemDetailsDatabase()
             initializeUserDatabase()
+        }
+    }
 
-            resetCart()
+    fun processCart() {
+        if(cartContext == CartContext.None) {
+            // TODO Check which is the current context
+            cartContext = CartContext.Machine
+        }
+
+        if(cart.value!!.isEmpty())
+            return
+
+        when(cartContext) {
+            CartContext.Machine -> {
+                HomeViewModel.cartProcessor(cartDao)
+            }
+            CartContext.Shop -> {
+                TODO()
+            }
         }
 
     }

@@ -116,10 +116,11 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        sharedViewModel.cartDao.get().observe(this, Observer { cart ->
+        sharedViewModel.cartDao.getLiveCartItems().observe(this, Observer { cart ->
             if(cart!= null) {
                sharedViewModel.cart.value = cart
                 Log.i(TAG, "Cart: $cart")
+                sharedViewModel.processCart()
             }
         })
 

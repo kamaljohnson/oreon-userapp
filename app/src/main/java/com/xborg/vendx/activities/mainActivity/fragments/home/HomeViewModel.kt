@@ -2,6 +2,7 @@ package com.xborg.vendx.activities.mainActivity.fragments.home
 
 import android.app.Application
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.xborg.vendx.database.*
@@ -20,28 +21,52 @@ class HomeViewModel(
     application: Application
 ) : AndroidViewModel(application) {
 
-    private var viewModelJob = Job()
-    private var ioScope = CoroutineScope(Dispatchers.IO + viewModelJob)
-
     var userInventory =  MutableLiveData<List<InventoryItem>>()
-
-    var selectedMachineInventory = MutableLiveData<List<InventoryItem>>()
 
     var homeInventoryGroups = MutableLiveData<List<HomeInventoryGroups>>()
 
-    var selectedMachine = MutableLiveData<Machine>()
-
     val userDao = UserDatabase.getInstance(application).userDao()
 
+    companion object {
+        private var viewModelJob = Job()
+        private var ioScope = CoroutineScope(Dispatchers.IO + viewModelJob)
+
+        var selectedMachine = MutableLiveData<Machine>()
+
+        lateinit var context: Application
+
+        fun cartProcessor(cartDao: CartItemDao) {
+            if(selectedMachine.value!!.Inventory.isEmpty()) {
+                Toast.makeText(context, "No machines selected", Toast.LENGTH_SHORT).show()
+                return
+            }
+
+            // TODO Recalculate purchase limits
+            selectedMachine.value!!.Inventory.forEach { item ->
+
+                val limit = item.Quantity
+
+                ioScope.launch {
+                    cartDao.updatePurchaseLimit(item.ItemDetailId, limit)
+                }
+            }
+        }
+    }
+
+    init {
+        context = application
+        selectedMachine.value = Machine()
+    }
+
     fun updateHomeInventoryGroups() {
-        if(selectedMachineInventory.value == null || selectedMachineInventory.value!!.isEmpty()) {
-            val _selectedMachineInventoryGroup = HomeInventoryGroups(
+        if(selectedMachine.value!!.Inventory.isEmpty()) {
+            val selectedMachineInventoryGroup = HomeInventoryGroups(
                 Title = "Machine",
                 Message = "Could'nt find \nMachines near you",
                 PaidInventory = false
             )
 
-            val _userInventoryGroup = HomeInventoryGroups(
+            val userInventoryGroup = HomeInventoryGroups(
                 Title = "Inventory",
                 Inventory = userInventory.value!!,
                 Message = "",
@@ -50,8 +75,8 @@ class HomeViewModel(
 
             val newHomeInventoryGroups: ArrayList<HomeInventoryGroups> = ArrayList()
 
-            newHomeInventoryGroups.add(_selectedMachineInventoryGroup)
-            newHomeInventoryGroups.add(_userInventoryGroup)
+            newHomeInventoryGroups.add(selectedMachineInventoryGroup)
+            newHomeInventoryGroups.add(userInventoryGroup)
 
             homeInventoryGroups.value = newHomeInventoryGroups
 

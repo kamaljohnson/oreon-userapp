@@ -2,7 +2,6 @@ package com.xborg.vendx.activities.mainActivity.fragments.home
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -11,9 +10,7 @@ import com.xborg.vendx.R
 import com.xborg.vendx.activities.feedbackActivity.FeedbackActivity
 import com.xborg.vendx.activities.mainActivity.SharedViewModel
 import com.xborg.vendx.activities.mainActivity.SharedViewModelFactory
-import com.xborg.vendx.adapters.ItemCardAdapter
 import com.xborg.vendx.adapters.ItemGroupAdapter
-import com.xborg.vendx.database.HomeInventoryGroups
 import kotlinx.android.synthetic.main.fragment_home.*
 
 private var TAG = "HomeFragment"

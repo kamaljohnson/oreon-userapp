@@ -8,6 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -29,6 +32,8 @@ private val viewModelJob = Job()
 private val ioScope = CoroutineScope(Dispatchers.IO + viewModelJob)
 private val uiScope = CoroutineScope(Dispatchers.Main)
 
+private val cart = MutableLiveData<List<CartItem>>()
+
 class ItemCardAdapter(
     private val paidItemGroup: Boolean,
     val context: Context
@@ -47,10 +52,10 @@ class ItemCardAdapter(
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val inventoryItem = getItem(position)
 
-        ioScope.launch {
-            Log.i(TAG, "loading itemDetail : $inventoryItem from room database")
+        val itemDetailId = inventoryItem.ItemDetailId
 
-            val itemDetail = itemDetailDao.get(inventoryItem.ItemDetailId)
+        ioScope.launch {
+            val itemDetail = itemDetailDao.get(itemDetailId)
 
             holder.itemId.text = itemDetail!!.Id
             holder.name.text = itemDetail.Name
@@ -70,6 +75,24 @@ class ItemCardAdapter(
 
         holder.paid = paidItemGroup
 
+        cartItemDao.getLiveCartItem(itemDetailId, paidItemGroup).observe(holder.itemView.context as LifecycleOwner, Observer { item ->
+            if(item != null) {
+                Log.i(TAG, "updated card item $item")
+
+                val count = item.Count
+
+                holder.purchaseCount.text = count.toString()
+
+                if(count > 0) {
+                    holder.purchaseCount.visibility = View.VISIBLE
+                    holder.itemRemoveButton.visibility = View.VISIBLE
+                } else {
+                    holder.purchaseCount.visibility = View.INVISIBLE
+                    holder.itemRemoveButton.visibility = View.INVISIBLE
+                }
+            }
+        })
+
     }
 
     @SuppressLint("SetTextI18n")
@@ -80,9 +103,10 @@ class ItemCardAdapter(
         val cost: TextView = view.cost
         val packageImage: ImageView = view.package_image
         val cardBg: ImageView = view.card_bg
-        private val purchaseCount: TextView = view.purchase_count
+        val purchaseCount: TextView = view.purchase_count
+//        val remaining: TextView =
 
-        private val itemRemoveButton: ImageView = view.remove_button
+        val itemRemoveButton: ImageView = view.remove_button
 
         var paid: Boolean = false
 

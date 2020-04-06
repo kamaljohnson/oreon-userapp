@@ -2,9 +2,12 @@ package com.xborg.vendx.database
 
 import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.google.gson.annotations.SerializedName
+import com.xborg.vendx.activities.mainActivity.fragments.home.HomeViewModel
+import com.xborg.vendx.activities.mainActivity.fragments.home.HomeViewModel.Companion.context
 
 // region ItemDetail
 @Database(entities = [ItemDetail::class], version = 1, exportSchema = false)
@@ -90,11 +93,11 @@ data class ItemDetail(
 
 data class InventoryItem(
     @SerializedName("item_detail") var ItemDetailId: String,
-    @SerializedName("quantity") var Quantity: Number
+    @SerializedName("quantity") var Quantity: Int
 )
 
 
-@Database(entities = [CartItem::class], version = 3)
+@Database(entities = [CartItem::class], version = 5)
 abstract class CartItemDatabase : RoomDatabase() {
     abstract fun cartItemDao(): CartItemDao
 
@@ -124,27 +127,58 @@ abstract class CartItemDatabase : RoomDatabase() {
 abstract class CartItemDao {
 
     fun addItem(itemId: String, paid: Boolean) {
-        Log.i("Debug", "added Item")
 
-        val checkPreviousItem = get(itemId, paid)
+        val previousItem = get(itemId, paid)
 
-        if( checkPreviousItem != null) {
+        if(previousItem != null) {
 
-            checkPreviousItem.Count += 1
+            val count = previousItem.Count
 
-            update(checkPreviousItem)
+            if(count < previousItem.Remaining!!) {
+
+                previousItem.Count += 1
+
+            }
+
+            update(previousItem)
 
         } else {
 
-            val newCartItem: CartItem = CartItem(itemDetailId = itemId, paid = paid)
+            var remaining = 0
 
-            insert(newCartItem)
+            HomeViewModel.selectedMachine.value!!.Inventory.forEach { item ->
+
+                if(item.ItemDetailId == itemId) {
+
+                    remaining = item.Quantity
+
+                    val newCartItem: CartItem = CartItem(itemDetailId = itemId, paid = paid, remaining = remaining)
+
+                    insert(newCartItem)
+
+                    return
+                }
+            }
+
 
         }
     }
 
     fun removeItem(itemId: String, paid: Boolean) {
-        Log.i("Debug", "removed Item")
+
+        val previousItem = get(itemId, paid)
+
+        var count = previousItem!!.Count
+
+        if (count > 0) {
+
+            count -= 1
+
+            previousItem.Count = count
+
+            update(previousItem)
+
+        }
     }
 
     fun reset() {
@@ -152,11 +186,41 @@ abstract class CartItemDao {
         //TODO: reset the auto_increment id to 0
     }
 
+    fun updatePurchaseLimit(itemId: String, limit: Int) {
+
+        val oldCartItemPaid = get(itemId, true)
+        val oldCartItem = get(itemId, false)
+
+        val oldRemaining = oldCartItem?.Remaining ?: oldCartItemPaid?.Remaining ?: 0
+
+        var updatedRemaining: Int = 0
+
+        updatedRemaining = limit - ((oldCartItem?.Count ?: 0) + (oldCartItemPaid?.Count ?: 0))
+
+        if(oldRemaining == updatedRemaining) {
+            return
+        }
+
+        if(oldCartItem != null) {
+            oldCartItem.Remaining = updatedRemaining
+            update(oldCartItem)
+        }
+
+        if(oldCartItemPaid != null) {
+            oldCartItemPaid.Remaining = updatedRemaining
+            update(oldCartItemPaid)
+        }
+    }
+
     @Query("SELECT * from cart_item_table")
-    abstract fun get(): LiveData<List<CartItem>>
+    abstract fun getLiveCartItems(): LiveData<List<CartItem>>
+
+    @Query("SELECT * from cart_item_table WHERE :itemId = item_detail_id AND :paid = paid")
+    abstract fun getLiveCartItem(itemId: String, paid: Boolean): LiveData<CartItem>
 
     @Query("SELECT * from cart_item_table WHERE :itemId = item_detail_id AND :paid = paid")
     abstract fun get(itemId: String, paid: Boolean): CartItem?
+
 
     @Insert
     abstract fun insert(cartItem: CartItem)
@@ -167,6 +231,9 @@ abstract class CartItemDao {
 
     @Query("DELETE FROM cart_item_table")
     abstract fun clear()
+
+    @Delete
+    abstract fun delete(cartItem: CartItem)
 }
 
 
@@ -182,9 +249,19 @@ data class CartItem(
     @SerializedName("paid") var Paid: Boolean,
 
     @ColumnInfo(name = "count")
-    @SerializedName("count") var Count: Int
+    @SerializedName("count") var Count: Int,
+
+    @ColumnInfo(name = "remaining")
+    @SerializedName("remaining") var Remaining: Int?
+
 ) {
     @Ignore
-    constructor(itemDetailId: String, paid: Boolean, count:Int = 1) :
-            this (null, itemDetailId, paid, count)
+    constructor(itemDetailId: String, paid: Boolean, count:Int = 1, remaining:Int? = 0) :
+            this (null, itemDetailId, paid, count, remaining)
+}
+
+enum class CartContext {
+    None,
+    Machine,
+    Shop
 }
