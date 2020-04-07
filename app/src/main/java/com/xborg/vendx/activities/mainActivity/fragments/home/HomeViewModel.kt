@@ -1,7 +1,7 @@
 package com.xborg.vendx.activities.mainActivity.fragments.home
 
 import android.app.Application
-import android.widget.Toast
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.xborg.vendx.database.*
@@ -36,18 +36,16 @@ class HomeViewModel(
         lateinit var context: Application
 
         fun cartProcessor(cartDao: CartItemDao) {
-            Toast.makeText(context, "No machines selected", Toast.LENGTH_SHORT).show()
             if(selectedMachine.value!!.Inventory.isEmpty()) {
                 return
             }
 
-            // TODO Recalculate purchase limits
             selectedMachine.value!!.Inventory.forEach { item ->
 
                 val limit = item.Quantity
 
                 ioScope.launch {
-                    cartDao.updatePurchaseLimit(item.ItemDetailId, limit)
+                    cartDao.processCart(item.ItemDetailId, limit)
                 }
             }
         }
@@ -60,65 +58,99 @@ class HomeViewModel(
 
     fun updateHomeInventoryGroups() {
 
-        var selectedMachineInventoryGroup: HomeInventoryGroups
-        var userInventoryGroup: HomeInventoryGroups
+        if(selectedMachine.value == null || userInventory.value == null)
+            return
 
-        if(selectedMachine.value!!.Inventory.isEmpty()) {
-            try {
+        val commonInventory = ArrayList<InventoryItem>()
+        var remainingUserInventory = ArrayList<InventoryItem>()
 
-                selectedMachineInventoryGroup = HomeInventoryGroups(
-                    Title = "Machine",
-                    Message = "Could'nt find \nMachines near you",
-                    PaidInventory = false
-                )
+        val commonInventoryGroup = HomeInventoryGroups(
+            Title = "From Inventory",
+            PaidInventory = true
+        )
+        val machineInventoryGroup = HomeInventoryGroups(
+            Title = "In Machine",
+            PaidInventory = false
+        )
+        val remainingUserInventoryGroup = HomeInventoryGroups(
+            Title = "Remaining Inventory",
+            PaidInventory = true
+        )
 
-                userInventoryGroup = HomeInventoryGroups(
-                    Title = "Inventory",
-                    Inventory = userInventory.value!!,
-                    Message = "",
-                    PaidInventory = true
-                )
+        val newHomeInventoryGroups: ArrayList<HomeInventoryGroups> = ArrayList()
 
-                val newHomeInventoryGroups: ArrayList<HomeInventoryGroups> = ArrayList()
+        if(selectedMachine.value!!.Inventory.isNotEmpty()) {
 
-                newHomeInventoryGroups.add(selectedMachineInventoryGroup)
-                newHomeInventoryGroups.add(userInventoryGroup)
+            machineInventoryGroup.Inventory = selectedMachine.value!!.Inventory
 
-                homeInventoryGroups.value = newHomeInventoryGroups
+            if(userInventory.value!!.isNotEmpty()) {
 
-            } catch (e: Error) {
+                userInventory.value!!.forEach { userItem ->
+
+                    var itemCommon = false
+
+                    selectedMachine.value!!.Inventory.forEach { machineItem ->
+
+                        if(machineItem.ItemDetailId == userItem.ItemDetailId) {
+                            itemCommon = true
+                            commonInventory.add(userItem)
+                        }
+
+                    }
+
+                    if(!itemCommon) {
+
+                        remainingUserInventory.add(userItem)
+
+                    }
+
+                }
+
+                commonInventoryGroup.Inventory = commonInventory
+                remainingUserInventoryGroup.Inventory = remainingUserInventory
+
+                if(commonInventory.isNotEmpty()) {
+
+                    newHomeInventoryGroups.add(commonInventoryGroup)
+
+                }
+
+                newHomeInventoryGroups.add(machineInventoryGroup)
+                newHomeInventoryGroups.add(remainingUserInventoryGroup)
+
+            } else {
+
+                remainingUserInventoryGroup.Message = "Its empty here"
+
+                newHomeInventoryGroups.add(machineInventoryGroup)
+                newHomeInventoryGroups.add(remainingUserInventoryGroup)
 
             }
 
         } else {
 
-            try {
+            machineInventoryGroup.Message = "No machines \nselected"
 
-                selectedMachineInventoryGroup = HomeInventoryGroups(
-                    Title = "Machine",
-                    Inventory = selectedMachine.value!!.Inventory,
-                    Message = "",
-                    PaidInventory = false
-                )
+            remainingUserInventoryGroup.Title = "Inventory"
 
-                userInventoryGroup = HomeInventoryGroups(
-                    Title = "Inventory",
-                    Inventory = userInventory.value!!,
-                    Message = "",
-                    PaidInventory = true
-                )
+            if(userInventory.value!!.isNotEmpty()) {
 
-                val newHomeInventoryGroups: ArrayList<HomeInventoryGroups> = ArrayList()
+                remainingUserInventoryGroup.Inventory = userInventory.value!!
 
-                newHomeInventoryGroups.add(selectedMachineInventoryGroup)
-                newHomeInventoryGroups.add(userInventoryGroup)
+            } else {
 
-                homeInventoryGroups.value = newHomeInventoryGroups
-
-            } catch(e: Error) {
+                remainingUserInventoryGroup.Message = "Its empty here"
 
             }
 
+            newHomeInventoryGroups.add(machineInventoryGroup)
+            newHomeInventoryGroups.add(remainingUserInventoryGroup)
         }
+
+        Log.i("HIG", "common: ${commonInventoryGroup.Title}")
+        Log.i("HIG", "machine: ${machineInventoryGroup.Title}")
+        Log.i("HIG", "inventory: ${remainingUserInventoryGroup.Title}")
+
+        homeInventoryGroups.value = newHomeInventoryGroups
     }
 }

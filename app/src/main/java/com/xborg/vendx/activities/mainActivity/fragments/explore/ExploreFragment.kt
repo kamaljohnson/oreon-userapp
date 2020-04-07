@@ -66,9 +66,7 @@ class ExploreFragment : Fragment(), MachineCardAdapter.OnMachineCardListener, On
                 switchOffScanMode()
             }
         })
-
     }
-
 
     private fun switchOffScanMode() {
         sharedViewModel.getUserLocation.value = false
