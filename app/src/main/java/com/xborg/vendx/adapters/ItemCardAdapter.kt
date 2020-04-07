@@ -76,6 +76,12 @@ class ItemCardAdapter(
 
         holder.paid = paidItemGroup
 
+        if(paidItemGroup) {
+            holder.cost.visibility = View.GONE
+        } else {
+            holder.cost.visibility = View.VISIBLE
+        }
+
         holder.quantity.text = inventoryItem.Quantity.toString()
 
         cartItemDao.getLiveCartItem(itemDetailId, paidItemGroup).observe(holder.itemView.context as LifecycleOwner, Observer { item ->

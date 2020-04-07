@@ -55,7 +55,7 @@ class ExploreFragment : Fragment(), OnMapReadyCallback {
         _adapter = MachineCardAdapter(context!!)
 
         rv_machine_cards.apply {
-            layoutManager = LinearLayoutManager(context)
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             adapter = _adapter
         }
 
@@ -79,7 +79,9 @@ class ExploreFragment : Fragment(), OnMapReadyCallback {
 
         viewModel.machineDao.get().observe(viewLifecycleOwner, Observer { machines ->
             if(machines != null) {
+                Log.i(TAG, "machines : $machines")
                 _adapter.submitList(machines)
+                HomeViewModel.selectedMachine.value = machines[0]
             }
         })
 
@@ -116,7 +118,7 @@ class ExploreFragment : Fragment(), OnMapReadyCallback {
             .tilt(0F)
             .build()
         googleMap!!.animateCamera(
-            CameraUpdateFactory.newCameraPosition(googleCamera),
+            CameraUpdateFactory.newCameraPosition (googleCamera),
             1000,
             null
         )

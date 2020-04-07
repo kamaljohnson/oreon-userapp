@@ -37,18 +37,12 @@ class ItemGroupAdapter(
                 adapter = _adapter
             }
         }
-        holder.progressBar.visibility = if(parent.Inventory.isEmpty() && parent.Message != ""){
-            View.VISIBLE
-        } else {
-            View.GONE
-        }
     }
 
     class GroupViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val groupItemsRV: RecyclerView = view.rv_item_group
         val title: TextView = view.title
         val message: TextView = view.message_text
-        val progressBar: ProgressBar = view.progress_bar
 
         val context: Context = itemView.context
     }

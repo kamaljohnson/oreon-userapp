@@ -19,7 +19,7 @@
 
         <TextView
             android:textColor="@color/white"
-            android:id="@+id/machine_code"
+            android:id="@+id/machine_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="RIT-BH1009"

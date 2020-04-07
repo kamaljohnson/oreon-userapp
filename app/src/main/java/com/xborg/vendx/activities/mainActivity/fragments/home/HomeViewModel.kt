@@ -57,7 +57,7 @@ class HomeViewModel(
 
     fun updateHomeInventoryGroups() {
 
-        if(selectedMachine.value == null || userInventory.value == null)
+        if(userInventory.value == null)
             return
 
         val commonInventory = ArrayList<InventoryItem>()
@@ -78,7 +78,14 @@ class HomeViewModel(
 
         val newHomeInventoryGroups: ArrayList<HomeInventoryGroups> = ArrayList()
 
-        if(selectedMachine.value!!.Inventory.isNotEmpty()) {
+        if(selectedMachine.value == null) {
+
+            machineInventoryGroup.Message = "No machines \nselected"
+            remainingUserInventory = userInventory.value as ArrayList<InventoryItem>
+            remainingUserInventoryGroup.Title = "Inventory"
+
+        }
+        else if(selectedMachine.value!!.Inventory.isNotEmpty()) {
 
             machineInventoryGroup.Inventory = selectedMachine.value!!.Inventory
 
@@ -116,9 +123,7 @@ class HomeViewModel(
 
         } else {
 
-            machineInventoryGroup.Message = "No machines \nselected"
-
-            remainingUserInventoryGroup.Title = "Inventory"
+            machineInventoryGroup.Message = "Machine Empty"
 
             if(userInventory.value!!.isNotEmpty()) {
 

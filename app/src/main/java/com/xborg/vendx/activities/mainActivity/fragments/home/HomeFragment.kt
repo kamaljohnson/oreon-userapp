@@ -80,13 +80,9 @@ class HomeFragment : Fragment() {
             }
         })
 
-        viewModel.machineDao.get().observe(viewLifecycleOwner, Observer { machines ->
-            if(machines != null) {
-                if(machines.isNotEmpty()) {
-                    Log.i(TAG, "machines : $machines")
-                    HomeViewModel.selectedMachine.value = machines[0]
-                    viewModel.updateHomeInventoryGroups()
-                }
+        HomeViewModel.selectedMachine.observe(viewLifecycleOwner, Observer { machine ->
+            if(machine != null) {
+                viewModel.updateHomeInventoryGroups()
             }
         })
 

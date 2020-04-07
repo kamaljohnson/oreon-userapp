@@ -11,12 +11,24 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.xborg.vendx.R
+import com.xborg.vendx.activities.mainActivity.fragments.home.HomeViewModel
 import com.xborg.vendx.database.machine.Machine
+import com.xborg.vendx.database.machine.MachineDao
+import com.xborg.vendx.database.machine.MachineDatabase
 import kotlinx.android.synthetic.main.machine_card.view.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import java.math.RoundingMode
 import java.text.DecimalFormat
 
 private var TAG = "MachineCard"
+
+private lateinit var machineDao: MachineDao
+
+private val viewModelJob = Job()
+private val ioScope = CoroutineScope(Dispatchers.IO + viewModelJob)
 
 class MachineCardAdapter(
     val context: Context
@@ -26,32 +38,43 @@ class MachineCardAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MachineCardViewHolder {
 
         val view = LayoutInflater.from(context).inflate(R.layout.machine_card, parent, false)
+        machineDao = MachineDatabase.getInstance(context).machineDao()
 
         return MachineCardViewHolder(view)
     }
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: MachineCardViewHolder, position: Int) {
-        Log.i(TAG, " here ")
 
         val machine = getItem(position)
-        holder.machineCode.text = machine.Name
+        holder.machineName.text = machine.Name
 
         val df = DecimalFormat("#.#")
         df.roundingMode = RoundingMode.CEILING
 //        holder.distance.text = "${df.format(machine.Distance)}Km"
 
-        holder.machineId = machine.Name.toString()
     }
 
     class MachineCardViewHolder(view: View ) :
         RecyclerView.ViewHolder(view), View.OnClickListener {
-        val machineCode: TextView = view.machine_code
+        val machineName: TextView = view.machine_name
         val distance: TextView = view.distance
 
-        var machineId: String = ""
+        init {
+
+            itemView.setOnClickListener(this)
+
+        }
 
         override fun onClick(v: View?) {
+
+            Log.i(TAG, "machine card clicked")
+
+            ioScope.launch {
+
+                HomeViewModel.selectedMachine.postValue(machineDao.get(machineName.text.toString()))
+
+            }
 
         }
     }
