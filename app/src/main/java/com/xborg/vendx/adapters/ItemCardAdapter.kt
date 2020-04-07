@@ -76,6 +76,8 @@ class ItemCardAdapter(
 
         holder.paid = paidItemGroup
 
+        holder.quantity.text = inventoryItem.Quantity.toString()
+
         cartItemDao.getLiveCartItem(itemDetailId, paidItemGroup).observe(holder.itemView.context as LifecycleOwner, Observer { item ->
             if(item != null) {
                 Log.i(TAG, "updated card item $item")
@@ -104,7 +106,7 @@ class ItemCardAdapter(
         val packageImage: ImageView = view.package_image
         val cardBg: ImageView = view.card_bg
         val purchaseCount: TextView = view.purchase_count
-//        val remaining: TextView =
+        val quantity: TextView = view.quantity
 
         val itemRemoveButton: ImageView = view.remove_button
 

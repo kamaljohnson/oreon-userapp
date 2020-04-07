@@ -143,7 +143,7 @@ abstract class CartItemDao {
 
             var count = previousItem.Count
 
-            if(previousItem.Remaining!! > 1) {
+            if(previousItem.Remaining!! >= 1) {
 
                 previousItem.Count += 1
 
