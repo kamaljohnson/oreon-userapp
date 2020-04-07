@@ -33,7 +33,7 @@ class ItemGroupAdapter(
             val _adapter = ItemCardAdapter(parent.PaidInventory, context)
             _adapter.submitList(parent.Inventory)
             holder.groupItemsRV.apply {
-                layoutManager = GridLayoutManager(context, 3)
+                layoutManager = GridLayoutManager(context, 4)
                 adapter = _adapter
             }
         }
