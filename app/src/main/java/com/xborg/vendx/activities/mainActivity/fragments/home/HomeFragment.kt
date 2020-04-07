@@ -2,6 +2,7 @@ package com.xborg.vendx.activities.mainActivity.fragments.home
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -75,6 +76,14 @@ class HomeFragment : Fragment() {
         viewModel.userDao.get()!!.observe(viewLifecycleOwner, Observer { user ->
             if(user!= null) {
                 viewModel.userInventory.value = user.Inventory
+                viewModel.updateHomeInventoryGroups()
+            }
+        })
+
+        viewModel.machineDao.get().observe(viewLifecycleOwner, Observer { machines ->
+            if(machines != null) {
+                Log.i(TAG, "machines : $machines")
+                HomeViewModel.selectedMachine.value = machines[0]
                 viewModel.updateHomeInventoryGroups()
             }
         })

@@ -7,6 +7,10 @@ import androidx.lifecycle.MutableLiveData
 import com.xborg.vendx.BuildConfig
 import com.xborg.vendx.activities.mainActivity.fragments.home.HomeViewModel
 import com.xborg.vendx.database.*
+import com.xborg.vendx.database.AccessTokenDatabase
+import com.xborg.vendx.database.user.User
+import com.xborg.vendx.database.user.UserDatabase
+import com.xborg.vendx.network.VendxAPIService
 import com.xborg.vendx.network.VendxApi
 import kotlinx.coroutines.*
 import retrofit2.Call
@@ -44,7 +48,6 @@ class SharedViewModel(
     val itemDetailDao = ItemDetailDatabase.getInstance(application).itemDetailDatabaseDao
     val userDao = UserDatabase.getInstance(application).userDao()
     val accessTokenDao = AccessTokenDatabase.getInstance(application).accessTokenDao()
-    private var accessToken: String = ""
 
     val cartDao = CartItemDatabase.getInstance(application).cartItemDao()
     val cart = MutableLiveData<List<CartItem>>()
@@ -55,9 +58,8 @@ class SharedViewModel(
         bluetoothPermission.value = PermissionStatus.None
 
         ioScope.launch {
-            accessToken = accessTokenDao.getToken()
+            VendxAPIService.accessToken = "token " + accessTokenDao.getToken()
             initializeItemDetailsDatabase()
-            initializeUserDatabase()
         }
     }
 
@@ -87,8 +89,13 @@ class SharedViewModel(
         }
     }
 
+    private fun initializePrerequisiteDatabase() {
+
+        initializeItemDetailsDatabase()
+    }
+
     private fun initializeItemDetailsDatabase() {
-        val itemDetailsCall = VendxApi.retrofitServices.getItemDetailsAsync("token $accessToken")
+        val itemDetailsCall = VendxApi.retrofitServices.getItemDetailsAsync()
         itemDetailsCall.enqueue(object : Callback<List<ItemDetail>> {
             override fun onResponse(call: Call<List<ItemDetail>>, response: Response<List<ItemDetail>>) {
                 if (response.code() == 200) {
@@ -97,6 +104,7 @@ class SharedViewModel(
                     if (itemDetails != null) {
                         ioScope.launch {
                             itemDetailDao.insert(itemDetails)
+                            initializeUserDatabase()
                         }
                     } else {
                         Log.e(TAG, "itemDetails received is null")
@@ -112,8 +120,8 @@ class SharedViewModel(
         })
     }
 
-    private fun initializeUserDatabase() {
-        val userCall = VendxApi.retrofitServices.getUserInfoAsync("token $accessToken")
+    fun initializeUserDatabase() {
+        val userCall = VendxApi.retrofitServices.getUserInfoAsync()
         userCall.enqueue(object : Callback<User> {
             override fun onResponse(call: Call<User>, response: Response<User>) {
                 if (response.code() == 200) {
@@ -123,6 +131,7 @@ class SharedViewModel(
                         ioScope.launch {
                             Log.i("Debug", "user : $user")
                             userDao.insert(user)
+                            getUserLocation.postValue(true)
                         }
                     } else {
                         Log.e("Debug", "user info received is null")

@@ -3,8 +3,6 @@ package com.xborg.vendx.activities.mainActivity
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.xborg.vendx.database.ItemDetailDao
-import com.xborg.vendx.database.UserDao
 import java.lang.IllegalArgumentException
 
 class SharedViewModelFactory (

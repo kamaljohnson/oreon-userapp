@@ -3,7 +3,7 @@ package com.xborg.vendx.preferences
 import android.content.Context
 import android.util.Log
 import com.google.gson.Gson
-import com.xborg.vendx.database.Machine
+import com.xborg.vendx.database.machine.Machine
 
 const val TAG = "SharedPreference"
 

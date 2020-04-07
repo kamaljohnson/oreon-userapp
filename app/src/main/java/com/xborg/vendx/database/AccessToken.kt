@@ -14,8 +14,13 @@ abstract class AccessTokenDatabase : RoomDatabase() {
         private var instence: AccessTokenDatabase? = null
 
         fun getInstance(context: Context): AccessTokenDatabase {
-            return instence ?: synchronized(this) {
-                instence ?: buildDatabase(context).also { instence = it }
+            return instence
+                ?: synchronized(this) {
+                instence
+                    ?: buildDatabase(
+                        context
+                    )
+                        .also { instence = it }
             }
         }
 

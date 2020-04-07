@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -83,13 +84,12 @@ class ItemCardAdapter(
 
                 holder.purchaseCount.text = count.toString()
 
-                if(count > 0) {
-                    holder.purchaseCount.visibility = View.VISIBLE
-                    holder.itemRemoveButton.visibility = View.VISIBLE
-                } else {
-                    holder.purchaseCount.visibility = View.INVISIBLE
-                    holder.itemRemoveButton.visibility = View.INVISIBLE
-                }
+                holder.purchaseCount.visibility = View.VISIBLE
+                holder.itemRemoveButton.visibility = View.VISIBLE
+
+            } else {
+                holder.purchaseCount.visibility = View.INVISIBLE
+                holder.itemRemoveButton.visibility = View.INVISIBLE
             }
         })
 
@@ -126,7 +126,36 @@ class ItemCardAdapter(
 
         private fun addItemToCart() {
             ioScope.launch {
-                cartItemDao.addItem(itemId.text.toString(), paid)
+
+                val status = cartItemDao.addItem(itemId.text.toString(), paid)
+
+                uiScope.launch {
+                    when(status) {
+
+                        CartStatusCode.ItemNotInMachine -> {
+
+                            Toast.makeText(itemView.context, "Item not in machine", Toast.LENGTH_SHORT).show()
+                        }
+
+                        CartStatusCode.MachineNotSelected -> {
+
+                            Toast.makeText(itemView.context, "No machine selected", Toast.LENGTH_SHORT).show()
+
+                        }
+
+                        CartStatusCode.ItemNotRemainingInMachine -> {
+
+                            Toast.makeText(itemView.context, "Item not remaining in machine", Toast.LENGTH_SHORT).show()
+
+                        }
+
+                        CartStatusCode.ItemAddedSuccessfully -> {
+
+
+
+                        }
+                    }
+                }
             }
         }
 

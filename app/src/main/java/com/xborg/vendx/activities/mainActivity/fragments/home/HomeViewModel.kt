@@ -1,19 +1,17 @@
 package com.xborg.vendx.activities.mainActivity.fragments.home
 
 import android.app.Application
-import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.xborg.vendx.database.*
-import com.xborg.vendx.network.VendxApi
+import com.xborg.vendx.database.machine.Machine
+import com.xborg.vendx.database.machine.MachineDatabase
+import com.xborg.vendx.database.user.UserDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 private const val TAG = "HomeViewModel"
 
@@ -27,6 +25,8 @@ class HomeViewModel(
 
     val userDao = UserDatabase.getInstance(application).userDao()
 
+    val machineDao = MachineDatabase.getInstance(application).machineDao()
+
     companion object {
         private var viewModelJob = Job()
         private var ioScope = CoroutineScope(Dispatchers.IO + viewModelJob)
@@ -36,8 +36,8 @@ class HomeViewModel(
         lateinit var context: Application
 
         fun cartProcessor(cartDao: CartItemDao) {
+            Toast.makeText(context, "No machines selected", Toast.LENGTH_SHORT).show()
             if(selectedMachine.value!!.Inventory.isEmpty()) {
-                Toast.makeText(context, "No machines selected", Toast.LENGTH_SHORT).show()
                 return
             }
 
@@ -59,54 +59,66 @@ class HomeViewModel(
     }
 
     fun updateHomeInventoryGroups() {
+
+        var selectedMachineInventoryGroup: HomeInventoryGroups
+        var userInventoryGroup: HomeInventoryGroups
+
         if(selectedMachine.value!!.Inventory.isEmpty()) {
-            val selectedMachineInventoryGroup = HomeInventoryGroups(
-                Title = "Machine",
-                Message = "Could'nt find \nMachines near you",
-                PaidInventory = false
-            )
+            try {
 
-            val userInventoryGroup = HomeInventoryGroups(
-                Title = "Inventory",
-                Inventory = userInventory.value!!,
-                Message = "",
-                PaidInventory = true
-            )
+                selectedMachineInventoryGroup = HomeInventoryGroups(
+                    Title = "Machine",
+                    Message = "Could'nt find \nMachines near you",
+                    PaidInventory = false
+                )
 
-            val newHomeInventoryGroups: ArrayList<HomeInventoryGroups> = ArrayList()
+                userInventoryGroup = HomeInventoryGroups(
+                    Title = "Inventory",
+                    Inventory = userInventory.value!!,
+                    Message = "",
+                    PaidInventory = true
+                )
 
-            newHomeInventoryGroups.add(selectedMachineInventoryGroup)
-            newHomeInventoryGroups.add(userInventoryGroup)
+                val newHomeInventoryGroups: ArrayList<HomeInventoryGroups> = ArrayList()
 
-            homeInventoryGroups.value = newHomeInventoryGroups
+                newHomeInventoryGroups.add(selectedMachineInventoryGroup)
+                newHomeInventoryGroups.add(userInventoryGroup)
 
-            return
+                homeInventoryGroups.value = newHomeInventoryGroups
+
+            } catch (e: Error) {
+
+            }
+
+        } else {
+
+            try {
+
+                selectedMachineInventoryGroup = HomeInventoryGroups(
+                    Title = "Machine",
+                    Inventory = selectedMachine.value!!.Inventory,
+                    Message = "",
+                    PaidInventory = false
+                )
+
+                userInventoryGroup = HomeInventoryGroups(
+                    Title = "Inventory",
+                    Inventory = userInventory.value!!,
+                    Message = "",
+                    PaidInventory = true
+                )
+
+                val newHomeInventoryGroups: ArrayList<HomeInventoryGroups> = ArrayList()
+
+                newHomeInventoryGroups.add(selectedMachineInventoryGroup)
+                newHomeInventoryGroups.add(userInventoryGroup)
+
+                homeInventoryGroups.value = newHomeInventoryGroups
+
+            } catch(e: Error) {
+
+            }
+
         }
-    }
-
-    private fun getMachineData(machine_id: String) {
-        val itemDetailsCall = VendxApi.retrofitServices.getMachineAsync(machine_id)
-        itemDetailsCall.enqueue(object : Callback<Machine> {
-            override fun onResponse(call: Call<Machine>, response: Response<Machine>) {
-                if (response.code() == 200) {
-                    Log.i("Debug", "Successful Response code : 200")
-                    val machine = response.body()
-                    if (machine != null) {
-                        selectedMachine.value = machine
-                        ioScope.launch {
-
-                        }
-                    } else {
-                        Log.e("Debug", "machine received is null")
-                    }
-                } else {
-                    Log.e("Debug", "Failed to get response")
-                }
-            }
-
-            override fun onFailure(call: Call<Machine>, error: Throwable) {
-                Log.e("Debug", "Failed to get response ${error.message}")
-            }
-        })
     }
 }

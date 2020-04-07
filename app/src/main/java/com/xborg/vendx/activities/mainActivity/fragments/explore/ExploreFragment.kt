@@ -8,15 +8,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.*
 import com.xborg.vendx.activities.mainActivity.SharedViewModel
 import com.xborg.vendx.adapters.MachineCardAdapter
-import com.xborg.vendx.database.Machine
-import com.xborg.vendx.preferences.SharedPreference
-import kotlinx.android.synthetic.main.fragment_explore.*
 import com.xborg.vendx.R
 import com.xborg.vendx.activities.mainActivity.SharedViewModelFactory
 
@@ -66,6 +61,7 @@ class ExploreFragment : Fragment(), MachineCardAdapter.OnMachineCardListener, On
             if(accessed) {
                 viewModel.userLocation.value = sharedViewModel.userLastLocation.value
                 updateUserLocationOnMap()
+                viewModel.getNearbyMachines()
             } else {
                 switchOffScanMode()
             }

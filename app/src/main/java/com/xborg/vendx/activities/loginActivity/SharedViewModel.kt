@@ -7,7 +7,6 @@ import android.util.Log
 import androidx.annotation.UiThread
 import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.MutableLiveData
 import com.xborg.vendx.activities.mainActivity.MainActivity
 import com.xborg.vendx.database.AccessToken
 import com.xborg.vendx.database.AccessTokenDatabase

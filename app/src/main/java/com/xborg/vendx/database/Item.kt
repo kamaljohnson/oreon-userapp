@@ -10,7 +10,7 @@ import com.xborg.vendx.activities.mainActivity.fragments.home.HomeViewModel
 import com.xborg.vendx.activities.mainActivity.fragments.home.HomeViewModel.Companion.context
 
 // region ItemDetail
-@Database(entities = [ItemDetail::class], version = 1, exportSchema = false)
+@Database(entities = [ItemDetail::class], version = 1)
 abstract class ItemDetailDatabase : RoomDatabase() {
 
     abstract val itemDetailDatabaseDao: ItemDetailDao
@@ -97,7 +97,7 @@ data class InventoryItem(
 )
 
 
-@Database(entities = [CartItem::class], version = 5)
+@Database(entities = [CartItem::class], version = 1)
 abstract class CartItemDatabase : RoomDatabase() {
     abstract fun cartItemDao(): CartItemDao
 
@@ -123,24 +123,36 @@ abstract class CartItemDatabase : RoomDatabase() {
     }
 }
 
+enum class CartStatusCode {
+
+    ItemNotInMachine,
+    MachineNotSelected,
+    ItemNotRemainingInMachine,
+    ItemAddedSuccessfully,
+
+}
+
 @Dao
 abstract class CartItemDao {
 
-    fun addItem(itemId: String, paid: Boolean) {
+    fun addItem(itemId: String, paid: Boolean): CartStatusCode {
 
         val previousItem = get(itemId, paid)
 
         if(previousItem != null) {
 
-            val count = previousItem.Count
+            var count = previousItem.Count
 
-            if(count < previousItem.Remaining!!) {
+            if(previousItem.Remaining!! > 1) {
 
                 previousItem.Count += 1
 
+                update(previousItem)
+
+                return CartStatusCode.ItemAddedSuccessfully
             }
 
-            update(previousItem)
+            return CartStatusCode.ItemNotRemainingInMachine
 
         } else {
 
@@ -156,11 +168,11 @@ abstract class CartItemDao {
 
                     insert(newCartItem)
 
-                    return
+                    return CartStatusCode.ItemAddedSuccessfully
                 }
             }
 
-
+            return CartStatusCode.ItemNotInMachine
         }
     }
 
@@ -170,14 +182,16 @@ abstract class CartItemDao {
 
         var count = previousItem!!.Count
 
-        if (count > 0) {
+        if (count > 1) {
 
             count -= 1
 
             previousItem.Count = count
 
             update(previousItem)
+        } else {
 
+            delete(previousItem)
         }
     }
 
@@ -186,7 +200,7 @@ abstract class CartItemDao {
         //TODO: reset the auto_increment id to 0
     }
 
-    fun updatePurchaseLimit(itemId: String, limit: Int) {
+    fun processCart(itemId: String, limit: Int) {
 
         val oldCartItemPaid = get(itemId, true)
         val oldCartItem = get(itemId, false)
@@ -202,13 +216,17 @@ abstract class CartItemDao {
         }
 
         if(oldCartItem != null) {
+
             oldCartItem.Remaining = updatedRemaining
             update(oldCartItem)
+
         }
 
         if(oldCartItemPaid != null) {
+
             oldCartItemPaid.Remaining = updatedRemaining
             update(oldCartItemPaid)
+
         }
     }
 

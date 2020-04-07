@@ -110,7 +110,7 @@ class VendingActivity : FragmentActivity() {
                         if (!selectedMachineFound) {
                             val device: BluetoothDevice? =
                                 intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
-                            if (sharedViewModel.selectedMachine.value!!.Mac.toUpperCase() == device!!.address.toUpperCase()) {
+                            if (sharedViewModel.selectedMachine.value!!.Mac!!.toUpperCase() == device!!.address.toUpperCase()) {
                                 Log.i(TAG, "found selected machine : " + device.address)
                                 sharedViewModel.deviceConnectionState.value =
                                     DeviceScannerState.DeviceNearby

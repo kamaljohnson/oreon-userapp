@@ -1,15 +1,17 @@
-package com.xborg.vendx.database
+package com.xborg.vendx.database.user
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
 import com.google.gson.reflect.TypeToken
+import com.xborg.vendx.database.CartItem
+import com.xborg.vendx.database.InventoryItem
+import com.xborg.vendx.database.Location
 import java.lang.reflect.Type
 
-class Converters {
+private class Converters {
     @TypeConverter
     fun stringToLocation(value: String?): Location? {
         val locationType: Type = object : TypeToken<Location>() {}.type
@@ -50,7 +52,7 @@ class Converters {
 
 }
 
-@Database(entities = [User::class], version = 4)
+@Database(entities = [User::class], version = 1)
 @TypeConverters(Converters::class)
 abstract class UserDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
@@ -61,8 +63,13 @@ abstract class UserDatabase : RoomDatabase() {
         private var instence: UserDatabase? = null
 
         fun getInstance(context: Context): UserDatabase {
-            return instence ?: synchronized(this) {
-                instence ?: buildDatabase(context).also { instence = it }
+            return instence
+                ?: synchronized(this) {
+                instence
+                    ?: buildDatabase(
+                        context
+                    )
+                        .also { instence = it }
             }
         }
 

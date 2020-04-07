@@ -26,9 +26,11 @@ import android.view.ViewGroup;
 import com.xborg.vendx.R;
 import com.xborg.vendx.activities.vendingActivity.SharedViewModel;
 import com.xborg.vendx.activities.vendingActivity.fragments.deviceCommunicator.DeviceCommunicator;
-import com.xborg.vendx.database.Machine;
+import com.xborg.vendx.database.machine.Machine;
 import com.xborg.vendx.database.VendingState;
 import com.xborg.vendx.preferences.SharedPreference;
+
+import java.util.Objects;
 
 
 /**
@@ -163,10 +165,11 @@ public class DeviceScanner extends Fragment {
     private void getSelectedMachine() {
         Log.i(TAG, "machine selection");
         Machine machine = new Machine();
-        SharedPreference preference = new SharedPreference(getContext());
+        SharedPreference preference = new SharedPreference(Objects.requireNonNull(getContext()));
         machine = preference.getSelectedMachine();
         sharedViewModel.getSelectedMachine().setValue(machine);
-        sharedViewModel.getBag().getValue().setMid(machine.getId());
+        assert machine != null;
+        Objects.requireNonNull(sharedViewModel.getBag().getValue()).setMid(Objects.requireNonNull(machine.getName()));
     }
 
 

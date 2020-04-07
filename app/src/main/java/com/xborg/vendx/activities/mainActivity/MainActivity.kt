@@ -41,7 +41,7 @@ import com.xborg.vendx.activities.mainActivity.fragments.history.HistoryFragment
 import com.xborg.vendx.activities.mainActivity.fragments.home.HomeFragment
 import com.xborg.vendx.activities.mainActivity.fragments.shop.ShopFragment
 import com.xborg.vendx.activities.paymentActivity.PaymentActivity
-import com.xborg.vendx.database.Machine
+import com.xborg.vendx.database.machine.Machine
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 import kotlin.collections.ArrayList
@@ -121,14 +121,26 @@ class MainActivity : AppCompatActivity() {
                sharedViewModel.cart.value = cart
                 Log.i(TAG, "Cart: $cart")
                 sharedViewModel.processCart()
+
+                cart_item_count.text = cart.size.toString()
+
+                if(cart.isEmpty()) {
+                    hideGetButton()
+                } else {
+                    showGetButton()
+                }
+            }
+        })
+
+        sharedViewModel.itemDetailDao.get().observe(this, Observer { items ->
+            if(items.isNotEmpty()) {
+
             }
         })
 
         initBottomNavigationView()
         initBottomSwipeUpView()
         enableBluetooth()
-
-        getCurrentLocation()
 
         checkout_button.setOnClickListener {
             // TODO: use navigation graphs instead
@@ -480,10 +492,7 @@ class MainActivity : AppCompatActivity() {
                 if (slideOffset > 0.05f) {
                     hideGetButton()
                 } else if (current_fragment.value == Fragments.HOME) {
-//                    TODO: use user cart instead
-//                    if (sharedViewModel.taggedCartItem.value!!.isNotEmpty()) {
-//                        showGetButton()
-//                    }
+                    showGetButton()
                 }
             }
 

@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.xborg.vendx.R
-import com.xborg.vendx.database.Machine
+import com.xborg.vendx.database.machine.Machine
 import kotlinx.android.synthetic.main.machine_card.view.*
 import java.math.RoundingMode
 import java.text.DecimalFormat
@@ -41,7 +41,7 @@ class MachineCardAdapter(
         df.roundingMode = RoundingMode.CEILING
         holder.distance.text = "${df.format(machine.Distance)}Km"
 
-        holder.machineId = machine.Id
+        holder.machineId = machine.Name.toString()
     }
 
     class MachineCardViewHolder(view: View, cardListener: OnMachineCardListener) :
