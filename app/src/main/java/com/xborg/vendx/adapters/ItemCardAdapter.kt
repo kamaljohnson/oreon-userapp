@@ -127,6 +127,20 @@ class ItemCardAdapter(
         }
 
         private fun addItemToCart() {
+
+            Log.i(TAG, "paid : $paid")
+
+            if(paid) {
+
+                val purchaseCountInt = purchaseCount.text.toString().toInt()
+                val quantityInt = quantity.text.toString().toInt()
+
+                if( purchaseCountInt == quantityInt ){
+                    return
+                }
+
+            }
+
             ioScope.launch {
 
                 val status = cartItemDao.addItem(itemId.text.toString(), paid)

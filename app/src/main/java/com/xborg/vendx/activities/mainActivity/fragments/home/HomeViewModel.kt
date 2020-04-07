@@ -1,7 +1,6 @@
 package com.xborg.vendx.activities.mainActivity.fragments.home
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.xborg.vendx.database.*
@@ -109,22 +108,10 @@ class HomeViewModel(
                 commonInventoryGroup.Inventory = commonInventory
                 remainingUserInventoryGroup.Inventory = remainingUserInventory
 
-                if(commonInventory.isNotEmpty()) {
-
-                    newHomeInventoryGroups.add(commonInventoryGroup)
-
-                }
-
-                newHomeInventoryGroups.add(machineInventoryGroup)
-                newHomeInventoryGroups.add(remainingUserInventoryGroup)
 
             } else {
 
                 remainingUserInventoryGroup.Message = "Its empty here"
-
-                newHomeInventoryGroups.add(machineInventoryGroup)
-                newHomeInventoryGroups.add(remainingUserInventoryGroup)
-
             }
 
         } else {
@@ -143,13 +130,21 @@ class HomeViewModel(
 
             }
 
-            newHomeInventoryGroups.add(machineInventoryGroup)
-            newHomeInventoryGroups.add(remainingUserInventoryGroup)
         }
 
-        Log.i("HIG", "common: ${commonInventoryGroup.Title}")
-        Log.i("HIG", "machine: ${machineInventoryGroup.Title}")
-        Log.i("HIG", "inventory: ${remainingUserInventoryGroup.Title}")
+        if(commonInventory.isNotEmpty()) {
+
+            newHomeInventoryGroups.add(commonInventoryGroup)
+
+        }
+
+        newHomeInventoryGroups.add(machineInventoryGroup)
+
+        if(remainingUserInventory.isNotEmpty() || commonInventory.isEmpty()) {
+
+            newHomeInventoryGroups.add(remainingUserInventoryGroup)
+
+        }
 
         homeInventoryGroups.value = newHomeInventoryGroups
     }

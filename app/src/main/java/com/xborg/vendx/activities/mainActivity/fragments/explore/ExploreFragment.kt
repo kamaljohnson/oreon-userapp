@@ -1,5 +1,6 @@
 package com.xborg.vendx.activities.mainActivity.fragments.explore
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -15,6 +16,7 @@ import com.xborg.vendx.activities.mainActivity.SharedViewModel
 import com.xborg.vendx.adapters.MachineCardAdapter
 import com.xborg.vendx.R
 import com.xborg.vendx.activities.mainActivity.SharedViewModelFactory
+import com.xborg.vendx.activities.mainActivity.fragments.home.HomeViewModel
 import kotlinx.android.synthetic.main.fragment_explore.*
 
 
@@ -46,6 +48,7 @@ class ExploreFragment : Fragment(), OnMapReadyCallback {
         mapView!!.onResume()
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
@@ -76,9 +79,21 @@ class ExploreFragment : Fragment(), OnMapReadyCallback {
 
         viewModel.machineDao.get().observe(viewLifecycleOwner, Observer { machines ->
             if(machines != null) {
-                Log.i(TAG, "machines ===> $machines")
                 _adapter.submitList(machines)
             }
+        })
+
+        HomeViewModel.selectedMachine.observe(viewLifecycleOwner, Observer { machine ->
+            if(machine != null) {
+
+                selected_machine_code.text = machine.Name
+
+            } else {
+
+                selected_machine_code.text = "Explore?"
+
+            }
+
         })
     }
 

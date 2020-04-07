@@ -93,6 +93,7 @@ class HomeFragment : Fragment() {
         viewModel.homeInventoryGroups.observe(viewLifecycleOwner, Observer { groups ->
             if(groups != null) {
                 adapter.submitList(groups)
+                progress_bar.visibility = View.GONE
             }
         })
     }
