@@ -41,7 +41,6 @@ class ExploreViewModel(
                         Log.i("Debug", "machine : $machines")
 
                         machineDao.insert(machines!!)
-
                     }
 
                 } else {

@@ -8,28 +8,28 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.*
 import com.xborg.vendx.activities.mainActivity.SharedViewModel
 import com.xborg.vendx.adapters.MachineCardAdapter
 import com.xborg.vendx.R
 import com.xborg.vendx.activities.mainActivity.SharedViewModelFactory
+import kotlinx.android.synthetic.main.fragment_explore.*
 
 
 const val TAG: String = "Explore"
 
-class ExploreFragment : Fragment(), MachineCardAdapter.OnMachineCardListener, OnMapReadyCallback {
+class ExploreFragment : Fragment(), OnMapReadyCallback {
 
     private lateinit var viewModel: ExploreViewModel
     private lateinit var sharedViewModel: SharedViewModel
 
+    private lateinit var _adapter: MachineCardAdapter
+
+
     private var googleMap: GoogleMap? = null
     private var mapView: MapView? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,6 +49,13 @@ class ExploreFragment : Fragment(), MachineCardAdapter.OnMachineCardListener, On
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        _adapter = MachineCardAdapter(context!!)
+
+        rv_machine_cards.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = _adapter
+        }
+
         val application = requireNotNull(this.activity).application
 
         val homeViewModelFactory = ExploreViewModelFactory(application)
@@ -66,13 +73,17 @@ class ExploreFragment : Fragment(), MachineCardAdapter.OnMachineCardListener, On
                 switchOffScanMode()
             }
         })
+
+        viewModel.machineDao.get().observe(viewLifecycleOwner, Observer { machines ->
+            if(machines != null) {
+                Log.i(TAG, "machines ===> $machines")
+                _adapter.submitList(machines)
+            }
+        })
     }
 
     private fun switchOffScanMode() {
         sharedViewModel.getUserLocation.value = false
-    }
-
-    override fun onCardClicked(machineId: String) {
     }
 
     private fun setupMap(view: View, savedInstanceState: Bundle?) {
