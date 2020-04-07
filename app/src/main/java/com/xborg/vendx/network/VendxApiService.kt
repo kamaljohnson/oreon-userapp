@@ -1,9 +1,10 @@
 package com.xborg.vendx.network
 
-import android.util.Log
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
-import com.xborg.vendx.R
 import com.xborg.vendx.database.*
+import com.xborg.vendx.database.machine.Machine
+import com.xborg.vendx.database.AccessToken
+import com.xborg.vendx.database.user.User
 import kotlinx.coroutines.Deferred
 import okhttp3.OkHttpClient
 import okhttp3.ResponseBody
@@ -25,9 +26,9 @@ private val okHttpClient = OkHttpClient().newBuilder()
     .apply {
         this.addInterceptor(interceptor)
     }
-    .connectTimeout(5, TimeUnit.SECONDS)
-    .readTimeout(5, TimeUnit.SECONDS)
-    .writeTimeout(5, TimeUnit.SECONDS)
+    .connectTimeout(10, TimeUnit.SECONDS)
+    .readTimeout(10, TimeUnit.SECONDS)
+    .writeTimeout(10, TimeUnit.SECONDS)
     .build()
 
 private val retrofit = Retrofit.Builder()
@@ -39,6 +40,10 @@ private val retrofit = Retrofit.Builder()
 
 interface VendxAPIService {
 
+    companion object {
+        var accessToken: String = ""
+    }
+
     @FormUrlEncoded
     @POST("oauth/convert-token/")
     fun sendLoginIdToken(
@@ -48,6 +53,15 @@ interface VendxAPIService {
         @Field("client_id") client_id: String = "HRmOHx29EHd2Mx1RNgnwAEClAd4J2GcdWnLACvaF",
         @Field("client_secret") client_secret: String = "B8btMbUOM1LJWGStbyfgcg5fMnUPgmBEa1T8ysiAuEVicZOOsDXz6vjqtliSgGOgmRlpw3bgjKLGMmHbir4wekRgFNAGRZfjyoTK8zBCASlNDpmGeBxnBQDPcItbkRrR"
     ): Call<AccessToken>
+
+    @GET("app")
+    fun getMinimumApplicationVersionAsync(
+    ): Call<AppInfo>
+
+    @GET("item_details")
+    fun getItemDetailsAsync(
+        @Header("Authorization") token: String? = accessToken
+    ): Call<List<ItemDetail>>
 
     @FormUrlEncoded
     @POST("auth/email/")
@@ -71,16 +85,11 @@ interface VendxAPIService {
         @Field("client_secret") client_secret: String = "B8btMbUOM1LJWGStbyfgcg5fMnUPgmBEa1T8ysiAuEVicZOOsDXz6vjqtliSgGOgmRlpw3bgjKLGMmHbir4wekRgFNAGRZfjyoTK8zBCASlNDpmGeBxnBQDPcItbkRrR"
     ): Call<AccessToken>
 
+    @GET("machines")
+    fun getMachinesNearbyAsync(
+        @Header("Authorization") token:String? = accessToken
+    ): Call<List<Machine>>
 
-    @GET("machine/{id}/items")
-    fun getMachineItemsAsync(
-        @Path("id") id: String
-    ): Call<List<Item>>
-
-    @GET("user/{id}/inventory")
-    fun getInventoryItemsAsync(
-        @Path("id") id: String
-    ): Call<List<Item>>
 
     @GET("user/{id}/transactions")
     fun getTransactionsAsync(
@@ -132,6 +141,22 @@ interface VendxAPIService {
         @Path("id") id: String,
         @Field("feedback") feedback: String
     ): Call<Feedback>
+
+    @GET("users/current/")
+    fun getUserInfoAsync(
+        @Header("Authorization") token: String? = accessToken
+    ): Call<User>
+
+    @GET("machines_nearby/{user_id}")
+    fun getMachinesNearbyAsync(
+        @Path("user_id") user_id: String,
+        @Body user_location: Location
+    ): Call<List<Machine>>
+
+    @GET("machines/{machine_id}")
+    fun getMachineAsync(
+        @Path("machine_id") machine_id: String
+    ): Call<Machine>
 }
 
 object VendxApi {

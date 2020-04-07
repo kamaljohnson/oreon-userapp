@@ -1,266 +1,156 @@
 package com.xborg.vendx.activities.mainActivity.fragments.home
 
-import android.util.Log
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.google.common.reflect.TypeToken
-import com.google.firebase.auth.FirebaseAuth
-import com.google.gson.Gson
-import com.xborg.vendx.activities.loginActivity.db
-import com.xborg.vendx.database.Item
-import com.xborg.vendx.database.ItemGroup
-import com.xborg.vendx.database.Machine
-import com.xborg.vendx.network.VendxApi
+import com.xborg.vendx.database.*
+import com.xborg.vendx.database.machine.Machine
+import com.xborg.vendx.database.machine.MachineDatabase
+import com.xborg.vendx.database.user.UserDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import java.io.IOException
-import java.lang.reflect.Type
-import java.net.SocketTimeoutException
 
 private const val TAG = "HomeViewModel"
 
-class HomeViewModel : ViewModel() {
+class HomeViewModel(
+    application: Application
+) : AndroidViewModel(application) {
 
-    var debugText: MutableLiveData<String> = MutableLiveData()
+    var userInventory =  MutableLiveData<List<InventoryItem>>()
 
-    val uid = FirebaseAuth.getInstance().uid.toString()
+    var homeInventoryGroups = MutableLiveData<List<HomeInventoryGroups>>()
 
-    val apiCallError = MutableLiveData<Boolean>()
+    val userDao = UserDatabase.getInstance(application).userDao()
 
-    val selectedMachine = MutableLiveData<Machine>()
-    val selectedMachineLoaded = MutableLiveData<Boolean>()
+    val machineDao = MachineDatabase.getInstance(application).machineDao()
 
-    var machineItems: MutableLiveData<List<Item>>
-    var inventoryItems: MutableLiveData<List<Item>>
+    companion object {
+        private var viewModelJob = Job()
+        private var ioScope = CoroutineScope(Dispatchers.IO + viewModelJob)
 
-    val allGroupItems: MutableLiveData<ArrayList<ItemGroup>>
+        var selectedMachine = MutableLiveData<Machine>()
+
+        lateinit var context: Application
+
+        fun cartProcessor(cartDao: CartItemDao) {
+            if(selectedMachine.value!!.Inventory.isEmpty()) {
+                return
+            }
+
+            selectedMachine.value!!.Inventory.forEach { item ->
+
+                val limit = item.Quantity
+
+                ioScope.launch {
+                    cartDao.processCart(item.ItemDetailId, limit)
+                }
+            }
+        }
+    }
 
     init {
-        Log.i(TAG, "HomeViewModel created!")
-        allGroupItems = MutableLiveData()
-        machineItems = MutableLiveData()
-        inventoryItems = MutableLiveData()
-
-        machineItems.value = ArrayList()
-        inventoryItems.value = ArrayList()
-
+        context = application
         selectedMachine.value = Machine()
-        debugText.value = "init home\n\n"
-        handleInventoryUpdates()
     }
 
-    fun handleInventoryUpdates() {
-        debugText.value = "handle shelf updates\n"
-        //Checking if user shelf is updated in server
-        val docRef = db.collection("Users").document(uid)
-        docRef.addSnapshotListener { snapshot, e ->
-            if (e != null) {
-                Log.w(TAG, "Listen failed.", e)
-                return@addSnapshotListener
-            }
+    fun updateHomeInventoryGroups() {
 
-            if (snapshot != null && snapshot.metadata.hasPendingWrites())
-                Log.i(TAG, "no changes in server")
-            else
-                getItemsInInventory(uid)
+        if(userInventory.value == null)
+            return
+
+        val commonInventory = ArrayList<InventoryItem>()
+        var remainingUserInventory = ArrayList<InventoryItem>()
+
+        val commonInventoryGroup = HomeInventoryGroups(
+            Title = "From Inventory",
+            PaidInventory = true
+        )
+        val machineInventoryGroup = HomeInventoryGroups(
+            Title = "In Machine",
+            PaidInventory = false
+        )
+        val remainingUserInventoryGroup = HomeInventoryGroups(
+            Title = "Remaining Inventory",
+            PaidInventory = true
+        )
+
+        val newHomeInventoryGroups: ArrayList<HomeInventoryGroups> = ArrayList()
+
+        if(selectedMachine.value == null) {
+
+            machineInventoryGroup.Message = "No machines \nselected"
+            remainingUserInventory = userInventory.value as ArrayList<InventoryItem>
+            remainingUserInventoryGroup.Title = "Inventory"
+
         }
-    }
+        else if(selectedMachine.value!!.Inventory.isNotEmpty()) {
 
-    fun changedSelectedMachine() {
-        selectedMachineLoaded.value = false
-        machineItems.value = ArrayList()
-        if (selectedMachine.value != null) {
-            updateItemGroupModel()
-            if(selectedMachine.value!!.Id != "") {
-                Log.i(TAG, "machine Id : " + selectedMachine.value!!.Id)
-                getItemsFromMachine(selectedMachine.value!!.Id)
+            machineInventoryGroup.Inventory = selectedMachine.value!!.Inventory
+
+            if(userInventory.value!!.isNotEmpty()) {
+
+                userInventory.value!!.forEach { userItem ->
+
+                    var itemCommon = false
+
+                    selectedMachine.value!!.Inventory.forEach { machineItem ->
+
+                        if(machineItem.ItemDetailId == userItem.ItemDetailId) {
+                            itemCommon = true
+                            commonInventory.add(userItem)
+                        }
+
+                    }
+
+                    if(!itemCommon) {
+
+                        remainingUserInventory.add(userItem)
+
+                    }
+
+                }
+
+                commonInventoryGroup.Inventory = commonInventory
+                remainingUserInventoryGroup.Inventory = remainingUserInventory
+
+
             } else {
-                updateItemGroupModel()
-            }
-        }
 
-        //Checking if current selected machine is updated in server
-        if (selectedMachine.value!!.Id == "") return
-        val docRef = db.collection("Machines").document(selectedMachine.value!!.Id)
-        docRef.addSnapshotListener { snapshot, e ->
-            if (e != null) {
-                Log.w(TAG, "Listen failed.", e)
-                return@addSnapshotListener
+                remainingUserInventoryGroup.Message = "Its empty here"
             }
 
-            if (snapshot != null && snapshot.metadata.hasPendingWrites())
-                Log.i(TAG, "no changes in server")
-            else
-                getItemsFromMachine(selectedMachine.value!!.Id)
-        }
-    }
-
-    //TODO: combine both items from machine and self to single get req
-    private fun getItemsFromMachine(machineId: String) {
-        val machineItemsCall = VendxApi.retrofitServices.getMachineItemsAsync(id = machineId)
-        machineItemsCall.enqueue(object : Callback<List<Item>> {
-            override fun onResponse(call: Call<List<Item>>, response: Response<List<Item>>) {
-                if(response.code() == 200) {
-                    Log.i("Debug", "Successful Response code : 200 : items: " + response.body())
-                    machineItems.value = response.body()
-                    selectedMachineLoaded.value = true
-                    updateItemGroupModel()
-                } else {
-                    Log.e("Debug", "Failed to get response")
-                    apiCallError.value = true
-                }
-            }
-
-            override fun onFailure(call: Call<List<Item>>, error: Throwable) {
-                apiCallError.value = true
-                Log.e("Debug", "Failed to get response ${error.message}")
-                if(error is SocketTimeoutException) {
-                    //Connection Timeout
-                    Log.e("Debug", "error type : connectionTimeout")
-                } else if(error is IOException) {
-                    //Timeout
-                    Log.e("Debug", "error type : timeout")
-                } else {
-                    if(machineItemsCall.isCanceled) {
-                        //Call cancelled forcefully
-                        Log.e("Debug", "error type : cancelledForcefully")
-                    } else {
-                        //generic error handling
-                        Log.e("Debug", "error type : genericError")
-                    }
-                }
-            }
-        })
-    }
-
-    private fun getItemsInInventory(userId: String) {
-        debugText.value = "get items from shelf\n\n"
-        val inventoryItemsCall = VendxApi.retrofitServices.getInventoryItemsAsync(userId)
-        inventoryItemsCall.enqueue(object : Callback<List<Item>> {
-            override fun onResponse(call: Call<List<Item>>, response: Response<List<Item>>) {
-                if(response.code() == 200) {
-                    Log.i("Debug", "Successful Response code : 200 : items: " + response.body())
-                    inventoryItems.value = response.body()
-                    updateItemGroupModel()
-                } else {
-                    Log.e("Debug", "Failed to get response")
-                    apiCallError.value = true
-                }
-            }
-
-            override fun onFailure(call: Call<List<Item>>, error: Throwable) {
-                apiCallError.value = true
-                Log.e("Debug", "Failed to get response ${error.message}")
-                if(error is SocketTimeoutException) {
-                    //Connection Timeout
-                    Log.e("Debug", "error type : connectionTimeout")
-                } else if(error is IOException) {
-                    //Timeout
-                    Log.e("Debug", "error type : timeout")
-                } else {
-                    if(inventoryItemsCall.isCanceled) {
-                        //Call cancelled forcefully
-                        Log.e("Debug", "error type : cancelledForcefully")
-                    } else {
-                        //generic error handling
-                        Log.e("Debug", "error type : genericError")
-                    }
-                }
-            }
-        })
-    }
-
-    private fun updateItemGroupModel() {
-        val shelfItemsInMachine: ArrayList<Item> = ArrayList()
-
-        for (i in machineItems.value!!.indices) {
-            for (j in inventoryItems.value!!.indices) {
-                if (machineItems.value!![i].Id == inventoryItems.value!![j].Id) {
-                    inventoryItems.value!![j].InMachine = true
-                    inventoryItems.value!![j].RemainingInMachine =
-                        machineItems.value!![i].RemainingInMachine
-                    shelfItemsInMachine.add(inventoryItems.value!![j])
-                }
-            }
-        }
-
-
-        val temp = ArrayList<ItemGroup>()
-
-        if (shelfItemsInMachine.isNotEmpty()) {
-            val shelfItemsInMachineGroupModel =
-                ItemGroup(
-                    Title = "From Inventory",
-                    Items = shelfItemsInMachine,
-                    DrawLineBreaker = machineItems.value!!.isNotEmpty()
-                )
-            temp.add(shelfItemsInMachineGroupModel)
-        }
-
-        Log.i(TAG, "code : " + selectedMachine.value!!.Code + " loaded : " + selectedMachineLoaded.value)
-
-        if(selectedMachineLoaded.value == true) {
-            if (machineItems.value!!.isNotEmpty()) {
-                Log.i(TAG, "machine loaded")
-                val machineItemsGroupModel = ItemGroup(
-                    Title = "In Machine",
-                    Items = machineItems.value!!,
-                    DrawLineBreaker = inventoryItems.value!!.isNotEmpty()
-                )
-                temp.add(machineItemsGroupModel)
-            }
-        } else if(selectedMachine.value!!.Code == "Dummy") {
-            Log.i(TAG, "no machine near")
-            val machineItemsGroupModel = ItemGroup(
-                Title = "Machine",
-                DrawLineBreaker = inventoryItems.value!!.isNotEmpty(),
-                ShowNoMachinesNearbyMessage = true
-            )
-            temp.add(machineItemsGroupModel)
         } else {
-            Log.i(TAG, "loading..")
-            val machineItemsGroupModel = ItemGroup(
-                Title = "Machine",
-                DrawLineBreaker = inventoryItems.value!!.isNotEmpty()
-            )
-            temp.add(machineItemsGroupModel)
-        }
 
-        val shelfItemsNotInMachine: ArrayList<Item> = ArrayList()
-        inventoryItems.value!!.forEach { s_item ->
-            var flag = true
-            machineItems.value!!.forEach { m_item ->
-                if (s_item.Id == m_item.Id) {
-                    flag = false
-                }
+            machineInventoryGroup.Message = "Machine Empty"
+
+            if(userInventory.value!!.isNotEmpty()) {
+
+                remainingUserInventoryGroup.Inventory = userInventory.value!!
+
+            } else {
+
+                remainingUserInventoryGroup.Message = "Its empty here"
+
             }
-            if (flag) {
-                shelfItemsNotInMachine.add(s_item)
-            }
+
         }
 
-        if (shelfItemsNotInMachine.isNotEmpty()) {
-            val shelfItemsNotInMachineGroupModel = ItemGroup(
-                Title = if (machineItems.value!!.isEmpty()) {
-                    "Inventory"
-                } else {
-                    "Remaining Inventory"
-                },
-                Items = shelfItemsNotInMachine,
-                DrawLineBreaker = false
-            )
-            temp.add(shelfItemsNotInMachineGroupModel)
-        }
-        allGroupItems.value = temp
-    }
+        if(commonInventory.isNotEmpty()) {
 
-    override fun onCleared() {
-        super.onCleared()
-        Log.i(TAG, "destroyed!")
+            newHomeInventoryGroups.add(commonInventoryGroup)
+
+        }
+
+        newHomeInventoryGroups.add(machineInventoryGroup)
+
+        if(remainingUserInventory.isNotEmpty() || commonInventory.isEmpty()) {
+
+            newHomeInventoryGroups.add(remainingUserInventoryGroup)
+
+        }
+
+        homeInventoryGroups.value = newHomeInventoryGroups
     }
 }

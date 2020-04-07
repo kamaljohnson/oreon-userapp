@@ -1,25 +1,21 @@
 package com.xborg.vendx.activities.mainActivity
 
+import android.app.Application
 import android.util.Log
-import androidx.lifecycle.LiveData
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.google.gson.Gson
 import com.xborg.vendx.BuildConfig
-import com.xborg.vendx.database.Application
-import com.xborg.vendx.database.Item
-import com.xborg.vendx.database.Location
-import com.xborg.vendx.database.Machine
+import com.xborg.vendx.activities.mainActivity.fragments.home.HomeViewModel
+import com.xborg.vendx.database.*
+import com.xborg.vendx.database.AccessTokenDatabase
+import com.xborg.vendx.database.user.User
+import com.xborg.vendx.database.user.UserDatabase
+import com.xborg.vendx.network.VendxAPIService
 import com.xborg.vendx.network.VendxApi
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.io.IOException
-import java.net.SocketTimeoutException
 
 
 enum class PermissionStatus {
@@ -28,15 +24,16 @@ enum class PermissionStatus {
     Denied
 }
 
-class SharedViewModel : ViewModel() {
+class SharedViewModel(
+    application: Application
+) : AndroidViewModel(application) {
 
-    var debugText: MutableLiveData<String> = MutableLiveData()
+    private var viewModelJob = Job()
+    private var ioScope = CoroutineScope(Dispatchers.IO + viewModelJob)
 
     var versionCode: Int = BuildConfig.VERSION_CODE
 
     val isInternetAvailable = MutableLiveData<Boolean>()
-    val apiCallError = MutableLiveData<Boolean>()
-    val apiCallRetry = MutableLiveData<Boolean>()
 
     var checkedUserLocationAccessed: MutableLiveData<Boolean> = MutableLiveData(false)
     var getUserLocation: MutableLiveData<Boolean> = MutableLiveData(false)
@@ -48,169 +45,111 @@ class SharedViewModel : ViewModel() {
 
     val userLastLocation = MutableLiveData<Location>()
 
-    val selectedMachine = MutableLiveData<Machine>()
-    val selectedMachineLoaded = MutableLiveData<Boolean>()
+    val itemDetailDao = ItemDetailDatabase.getInstance(application).itemDetailDatabaseDao
+    val userDao = UserDatabase.getInstance(application).userDao()
+    val accessTokenDao = AccessTokenDatabase.getInstance(application).accessTokenDao()
 
-    var machineItems = MutableLiveData<List<Item>>()
-    var inventoryItems = MutableLiveData<List<Item>>()
-
-    var applicationVersionDeprecated = MutableLiveData<Boolean>()
-    var applicationAlertMessage = MutableLiveData<String>()
-
-    val machinesInZone = MutableLiveData<List<Machine>>()   //machines in 1Km range
-    val machineNearby = MutableLiveData<List<Machine>>()    //machines in  vendable range
-
-    // [itemId-from, count]     : from -> {Machine, Inventory}
-    private var _taggedCartItems = MutableLiveData<MutableMap<String, Int>>()
-    val taggedCartItem: LiveData<MutableMap<String, Int>>
-        get() = _taggedCartItems
-
-    private var _unTaggedCartItems = mutableMapOf<String, Int>()
+    val cartDao = CartItemDatabase.getInstance(application).cartItemDao()
+    val cart = MutableLiveData<List<CartItem>>()
+    private var cartContext = CartContext.None
 
     init {
-        apiCallError.value = false
         locationPermission.value = PermissionStatus.None
         bluetoothPermission.value = PermissionStatus.None
 
-        _taggedCartItems.value = mutableMapOf()
-        debugText.value = "init debugger\n\n"
-        checkApplicationVersion()
+        ioScope.launch {
+            VendxAPIService.accessToken = "token " + accessTokenDao.getToken()
+            initializeItemDetailsDatabase()
+        }
     }
 
-    fun setMachineItems(machineItems: List<Item>) {
-        this.machineItems.value = machineItems
-    }
-
-    fun setInventoryItems(inventoryItems: List<Item>) {
-        this.inventoryItems.value = inventoryItems
-    }
-
-    fun addItemToCart(itemId: String, itemLoc: String): Boolean {
-        val sudoItemId = "$itemLoc/$itemId" //eg Machine/2 , Inventory/5 etc..
-
-        val tempTaggedCart = _taggedCartItems.value
-        val tempUntaggedCart = _unTaggedCartItems
-
-        val taggedCount: Int
-        val unTaggedCount: Int
-
-        taggedCount = if (tempTaggedCart!!.containsKey(sudoItemId)) {
-            tempTaggedCart[sudoItemId]!! + 1
-        } else {
-            1
+    fun processCart() {
+        if(cartContext == CartContext.None) {
+            // TODO Check which is the current context
+            cartContext = CartContext.Machine
         }
 
-        unTaggedCount = if(tempUntaggedCart!!.containsKey(itemId)) {
-            tempUntaggedCart[itemId]!! + 1
-        } else {
-            1
-        }
+        if(cart.value!!.isEmpty())
+            return
 
-        //TODO: change code while handling cart from shop
-        //checking if item purchase limit reached if item in machine
-        machineItems.value!!.forEach{item ->
-            if(item.Id == itemId) {
-                return if(item.RemainingInMachine >= unTaggedCount) {
-
-                    tempTaggedCart[sudoItemId] = taggedCount
-                    tempUntaggedCart[itemId] = unTaggedCount
-
-                    _taggedCartItems.value = tempTaggedCart
-                    _unTaggedCartItems = tempUntaggedCart
-
-                    Log.i(TAG, "unTagged Cart: $_unTaggedCartItems")
-                    Log.i(TAG, "remaining in machine : " + (item.RemainingInMachine - unTaggedCount).toString())
-                    Log.i(TAG, "item can be added to cart")
-                    true
-                } else {
-                    Log.i(TAG, "item can'nt be added to cart")
-                    false
-                }
+        when(cartContext) {
+            CartContext.Machine -> {
+                HomeViewModel.cartProcessor(cartDao)
+            }
+            CartContext.Shop -> {
+                TODO()
             }
         }
-        Log.i(TAG, "item can'nt be added to cart")
-        return false
-    }
 
-    fun removeItemFromCart(itemId: String, itemLoc: String) : Boolean{
-        val sudoItemId = "$itemLoc/$itemId" //eg Machine/2 , Inventory/5 etc..
-
-        val tempTaggedCart = _taggedCartItems.value
-        val tempUnTaggedCart = _unTaggedCartItems
-
-        if (tempTaggedCart!!.containsKey(sudoItemId) && tempUnTaggedCart.containsKey(itemId)) {
-            val taggedCount = tempTaggedCart[sudoItemId]!! - 1
-            val unTaggedCount = tempUnTaggedCart[itemId]!! - 1
-            tempTaggedCart[sudoItemId] = taggedCount
-            tempUnTaggedCart[itemId] = unTaggedCount
-            if (tempTaggedCart[sudoItemId] == 0) {
-                tempTaggedCart.remove(sudoItemId)
-            }
-            if (tempUnTaggedCart[itemId] == 0) {
-                tempUnTaggedCart.remove(itemId)
-            }
-        } else {
-            // this block should not be called
-        }
-
-        _taggedCartItems.value = tempTaggedCart
-        return true
-    }
-
-    fun getCartItemsAsPassable(): HashMap<String, Int> {
-        return taggedCartItem.value as HashMap<String, Int>
-    }
-
-    fun getMachineItemsAsJson(): String {
-        return getListItemsAsJson(machineItems.value!!)
-    }
-
-    fun getInventoryItemsAsJson(): String {
-        return getListItemsAsJson(inventoryItems.value!!)
-    }
-
-    private fun getListItemsAsJson(items: List<Item>): String {
-        return Gson().toJson(items)
     }
 
     fun resetCart() {
-        _taggedCartItems.value = mutableMapOf()
-        _unTaggedCartItems = mutableMapOf()
+        ioScope.launch {
+            cartDao.reset()
+        }
     }
 
-    private fun checkApplicationVersion() {
-        Log.i(TAG, "checking application version")
-        val applicationCall = VendxApi.retrofitServices.getMinimumApplicationVersionAsync()
-        applicationCall.enqueue(object : Callback<Application> {
-            override fun onResponse(call: Call<Application>, response: Response<Application>) {
-                if(response.code() == 200) {
+    private fun initializePrerequisiteDatabase() {
+
+        initializeItemDetailsDatabase()
+    }
+
+    private fun initializeItemDetailsDatabase() {
+        val itemDetailsCall = VendxApi.retrofitServices.getItemDetailsAsync()
+        itemDetailsCall.enqueue(object : Callback<List<ItemDetail>> {
+            override fun onResponse(call: Call<List<ItemDetail>>, response: Response<List<ItemDetail>>) {
+                if (response.code() == 200) {
                     Log.i("Debug", "Successful Response code : 200")
-                    val applicationData = response.body()
-                    applicationVersionDeprecated.value = versionCode != applicationData!!.Version
-                    applicationAlertMessage.value = applicationData.AlertMessage
+                    val itemDetails = response.body()
+                    if (itemDetails != null) {
+                        ioScope.launch {
+                            itemDetailDao.insert(itemDetails)
+                            initializeUserDatabase()
+                        }
+                    } else {
+                        Log.e(TAG, "itemDetails received is null")
+                    }
                 } else {
                     Log.e("Debug", "Failed to get response")
                 }
             }
 
-            override fun onFailure(call: Call<Application>, error: Throwable) {
+            override fun onFailure(call: Call<List<ItemDetail>>, error: Throwable) {
                 Log.e("Debug", "Failed to get response ${error.message}")
-                if(error is SocketTimeoutException) {
-                    //Connection Timeout
-                    Log.e("Debug", "error type : connectionTimeout")
-                } else if(error is IOException) {
-                    //Timeout
-                    Log.e("Debug", "error type : timeout")
-                } else {
-                    if(applicationCall.isCanceled) {
-                        //Call cancelled forcefully
-                        Log.e("Debug", "error type : cancelledForcefully")
-                    } else {
-                        //generic error handling
-                        Log.e("Debug", "error type : genericError")
-                    }
-                }
             }
         })
+    }
+
+    fun initializeUserDatabase() {
+        val userCall = VendxApi.retrofitServices.getUserInfoAsync()
+        userCall.enqueue(object : Callback<User> {
+            override fun onResponse(call: Call<User>, response: Response<User>) {
+                if (response.code() == 200) {
+                    Log.i("Debug", "Successful Response code : 200")
+                    val user = response.body()
+                    if (user != null) {
+                        ioScope.launch {
+                            Log.i("Debug", "user : $user")
+                            userDao.insert(user)
+                            getUserLocation.postValue(true)
+                        }
+                    } else {
+                        Log.e("Debug", "user info received is null")
+                    }
+                } else {
+                    Log.e("Debug", "Failed to get response")
+                }
+            }
+
+            override fun onFailure(call: Call<User>, error: Throwable) {
+                Log.e("Debug", "Failed to get response ${error.message}")
+            }
+        })
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+
+        viewModelJob.cancel()
     }
 }

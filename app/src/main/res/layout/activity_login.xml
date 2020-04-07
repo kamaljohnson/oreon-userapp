@@ -26,6 +26,7 @@ tools:context=".activities.loginActivity.LoginActivity">
         android:layout_height="200dp">
 
         <com.facebook.login.widget.LoginButton
+            android:visibility="invisible"
             android:id="@+id/facebook_login_button"
             android:layout_above="@id/email_login_button"
             android:paddingLeft="10dp"

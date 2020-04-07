@@ -25,15 +25,18 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".activities.feedbackActivity.FeedbackActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity">
 
         </activity>
         <activity
             android:name=".activities.paymentActivity.PaymentActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".activities.loginActivity.LoginActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -41,21 +44,24 @@
         </activity>
         <activity
             android:name=".activities.mainActivity.MainActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".activities.vendingActivity.VendingActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity">
         </activity>
         <activity
-            android:name=".database.ItemGroup"
-            android:screenOrientation="portrait" /> <!-- region Razorpay -->
+            android:name=".database.HomeInventoryGroups"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" /> <!-- region Razorpay -->
         <meta-data
             android:name="com.razorpay.ApiKey"
             android:value="rzp_live_NyPdkxve0E0k3c" /> <!-- endregion -->
         <!-- region Google Map -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBmyvFOOGd0rIJpcD2tJJrZIbjHj_PHQcg" />
+            android:value="AIzaSyD99kR2p8-1P1-g3cpdlp9cqkvIWtNdino" />
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" /> <!-- endregion -->

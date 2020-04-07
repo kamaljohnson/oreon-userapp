@@ -16,6 +16,7 @@ import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
 import com.xborg.vendx.R
 import com.xborg.vendx.activities.loginActivity.fragments.EmailLoginFragment
+import com.xborg.vendx.activities.mainActivity.MainActivity
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -39,12 +40,6 @@ class LoginActivity : AppCompatActivity() {
         val application = requireNotNull(this).application
         val viewModelFactory = SharedViewModelFactory(application)
         sharedViewModel = ViewModelProvider(this, viewModelFactory).get(SharedViewModel::class.java)
-
-        sharedViewModel.loadMainActivity.observe(this, Observer { load ->
-            if(load) {
-                loadMainActivity()
-            }
-        })
 
         //        region Check Cache
 
@@ -136,10 +131,6 @@ class LoginActivity : AppCompatActivity() {
     ) {
         facebookCallbackManager.onActivityResult(requestCode, resultCode, data)
         super.onActivityResult(requestCode, resultCode, data)
-    }
-
-    private fun loadMainActivity() {
-        Log.i(TAG, "main activity is loading")
     }
 
 }

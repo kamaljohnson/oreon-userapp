@@ -91,8 +91,8 @@ public class SerialService extends Service implements SerialListener {
         if(Looper.getMainLooper().getThread() != Thread.currentThread())
             throw new IllegalArgumentException("not in main thread");
         cancelNotification();
-        // use synchronized() to prevent new items in queue2
-        // new items will not be added to queue1 because mainLooper.post and attach() run in main thread
+        // use synchronized() to prevent new homeItems in queue2
+        // new homeItems will not be added to queue1 because mainLooper.post and attach() run in main thread
         if(connected) {
             synchronized (this) {
                 this.listener = listener;
@@ -121,9 +121,9 @@ public class SerialService extends Service implements SerialListener {
     public void detach() {
         if(connected)
             createNotification();
-        // items already in event queue (posted before detach() to mainLooper) will end up in queue1
-        // items occurring later, will be moved directly to queue2
-        // detach() and mainLooper.post run in the main thread, so all items are caught
+        // homeItems already in event queue (posted before detach() to mainLooper) will end up in queue1
+        // homeItems occurring later, will be moved directly to queue2
+        // detach() and mainLooper.post run in the main thread, so all homeItems are caught
         listener = null;
     }
 

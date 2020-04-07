@@ -1,10 +1,8 @@
 package com.xborg.vendx.database
 
 import android.content.Context
-import android.util.Log
 import androidx.room.*
 import com.google.gson.annotations.SerializedName
-import javax.annotation.Nullable
 
 @Database(entities = [AccessToken::class], version = 1)
 abstract class AccessTokenDatabase : RoomDatabase() {
@@ -16,8 +14,13 @@ abstract class AccessTokenDatabase : RoomDatabase() {
         private var instence: AccessTokenDatabase? = null
 
         fun getInstance(context: Context): AccessTokenDatabase {
-            return instence ?: synchronized(this) {
-                instence ?: buildDatabase(context).also { instence = it }
+            return instence
+                ?: synchronized(this) {
+                instence
+                    ?: buildDatabase(
+                        context
+                    )
+                        .also { instence = it }
             }
         }
 
@@ -33,16 +36,22 @@ abstract class AccessTokenDatabase : RoomDatabase() {
 }
 
 @Dao
-interface AccessTokenDao {
+abstract class  AccessTokenDao {
 
     @Query("SELECT * FROM access_token LIMIT 1")
-    suspend fun get(): AccessToken?
+    abstract fun get(): AccessToken?
+
+    fun getToken(): String {
+        val accessToken = get()!!.accessToken
+        val token = get()!!.token
+        return accessToken ?: token!!
+    }
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(accessToken: AccessToken)
+    abstract fun insert(accessToken: AccessToken)
 
     @Query("DELETE FROM access_token")
-    suspend fun clear()
+    abstract fun clear()
 
 }
 

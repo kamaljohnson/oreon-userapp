@@ -1,9 +1,13 @@
 package com.xborg.vendx.activities.loginActivity
 
 import android.app.Application
+import android.content.Intent
+import android.os.Bundle
 import android.util.Log
+import androidx.annotation.UiThread
+import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.MutableLiveData
+import com.xborg.vendx.activities.mainActivity.MainActivity
 import com.xborg.vendx.database.AccessToken
 import com.xborg.vendx.database.AccessTokenDatabase
 import com.xborg.vendx.network.VendxApi
@@ -22,12 +26,6 @@ class SharedViewModel(
 
     private val accessTokenDao = AccessTokenDatabase.getInstance(application).accessTokenDao()
 
-    val loadMainActivity = MutableLiveData<Boolean>()
-
-    init {
-        loadMainActivity.value = false
-    }
-
     suspend fun isAccessTokenPresentInCache(): Boolean {
         return withContext(Dispatchers.IO) {
             val cachedAccessToken = accessTokenDao.get()
@@ -36,7 +34,7 @@ class SharedViewModel(
     }
 
     suspend fun refreshAccessToken() {
-        return withContext(Dispatchers.IO) {
+        withContext(Dispatchers.IO) {
             val cachedAccessToken = accessTokenDao.get()
             val refreshToken = cachedAccessToken!!.refreshToken
             val token = cachedAccessToken.token
@@ -87,7 +85,7 @@ class SharedViewModel(
                     if (accessToken != null) {
                         ioScope.launch {
                             accessTokenDao.insert(accessToken)
-                            isAccessTokenPresentInCache()
+                            loadMainActivity()
                         }
                     } else {
                         Log.e("Debug", "user received is null")
@@ -131,7 +129,8 @@ class SharedViewModel(
                     Log.i("Debug", "Access Token : $accessToken")
                     if (accessToken != null) {
                         ioScope.launch {
-                            accessTokenDao.insert(accessToken!!)
+                            accessTokenDao.insert(accessToken)
+                            loadMainActivity()
                         }
                     } else {
                         Log.e("Debug", "user received is null")
@@ -147,10 +146,11 @@ class SharedViewModel(
         })
     }
 
+    @UiThread
     private fun loadMainActivity() {
-        //TODO: change this to better code
-
-        loadMainActivity.postValue(true)
+        val intent = Intent(getApplication(), MainActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(getApplication(), intent, Bundle())
     }
 
 }

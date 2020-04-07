@@ -1,95 +1,57 @@
 package com.xborg.vendx.activities.mainActivity.fragments.explore
 
+import android.app.Application
 import android.util.Log
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.google.firebase.auth.FirebaseAuth
-import com.google.gson.Gson
 import com.xborg.vendx.database.Location
-import com.xborg.vendx.database.Machine
+import com.xborg.vendx.database.machine.Machine
+import com.xborg.vendx.database.machine.MachineDatabase
 import com.xborg.vendx.network.VendxApi
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.io.IOException
-import java.net.SocketTimeoutException
 
 
-class ExploreViewModel : ViewModel() {
+class ExploreViewModel(
+    application: Application
+) : AndroidViewModel(application) {
 
-    var debugText: MutableLiveData<String> = MutableLiveData()
-
-    val uid = FirebaseAuth.getInstance().uid.toString()
-
-    val apiCallError = MutableLiveData<Boolean>()
+    private var viewModelJob = Job()
+    private var ioScope = CoroutineScope(Dispatchers.IO + viewModelJob)
 
     val userLocation = MutableLiveData<Location>()
-    val machinesInZone = MutableLiveData<List<Machine>>()   //machines in 1Km range
-    val machineNearby = MutableLiveData<List<Machine>>()    //machines in  vendable range
-    val selectedMachine = MutableLiveData<Machine>()        //machine selected for vending
 
-    init {
-        selectedMachine.value = Machine()
-    }
+    val machineDao = MachineDatabase.getInstance(application).machineDao()
 
-
-    fun requestMachinesInZone() {
-        Log.i(TAG, "request near by machines")
-        val locationDataInJson = Gson().toJson(userLocation.value, Location::class.java)
-
-        val nearbyMachinesCall = VendxApi.retrofitServices
-            .requestNearbyMachinesAsync(location = locationDataInJson, uid = uid)
-        nearbyMachinesCall.enqueue(object : Callback<List<Machine>> {
+    fun getNearbyMachines() {
+        val machinesNearbyCall = VendxApi.retrofitServices.getMachinesNearbyAsync()
+        machinesNearbyCall.enqueue(object : Callback<List<Machine>> {
             override fun onResponse(call: Call<List<Machine>>, response: Response<List<Machine>>) {
-                Log.i("Debug", "checkApplicationVersion")
-                if(response.code() == 200) {
-                    Log.i("Debug", "Successful Response code : 200 : items: " + response.body())
-                    machinesInZone.value = response.body()
+                if (response.code() == 200) {
+
+                    val machines = response.body()
+
+                    ioScope.launch {
+
+                        Log.i("Debug", "machine : $machines")
+
+                        machineDao.insert(machines!!)
+                    }
+
                 } else {
                     Log.e("Debug", "Failed to get response")
-                    apiCallError.value = true
                 }
             }
 
             override fun onFailure(call: Call<List<Machine>>, error: Throwable) {
-                apiCallError.value = true
                 Log.e("Debug", "Failed to get response ${error.message}")
-                if(error is SocketTimeoutException) {
-                    //Connection Timeout
-                    Log.e("Debug", "error type : connectionTimeout")
-                } else if(error is IOException) {
-                    //Timeout
-                    Log.e("Debug", "error type : timeout")
-                } else {
-                    if(nearbyMachinesCall.isCanceled) {
-                        //Call cancelled forcefully
-                        Log.e("Debug", "error type : cancelledForcefully")
-                    } else {
-                        //generic error handling
-                        Log.e("Debug", "error type : genericError")
-                    }
-                }
             }
         })
     }
 
-    fun selectNearestMachineToUser() {
-        if(machineNearby.value!!.isNotEmpty()) {
-            Log.e("Debug", "machine selected")
-            selectedMachine.value = machineNearby.value!![0]
-        } else {
-            selectedMachine.value = Machine(Code = "Dummy")
-        }
-    }
-    fun changeSelectedMachine(machineId: String) {
-        if(selectedMachine.value!!.Id != machineId) {
-            machinesInZone.value!!.forEach { machine ->
-                if(machine.Id == machineId) {
-                    Log.i(TAG, "selected machine changed")
-                    selectedMachine.value = machine
-                    return
-                }
-            }
-        }
-    }
 }

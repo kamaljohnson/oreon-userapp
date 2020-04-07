@@ -30,7 +30,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.location.*
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
@@ -41,7 +41,7 @@ import com.xborg.vendx.activities.mainActivity.fragments.history.HistoryFragment
 import com.xborg.vendx.activities.mainActivity.fragments.home.HomeFragment
 import com.xborg.vendx.activities.mainActivity.fragments.shop.ShopFragment
 import com.xborg.vendx.activities.paymentActivity.PaymentActivity
-import com.xborg.vendx.database.Machine
+import com.xborg.vendx.database.machine.Machine
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 import kotlin.collections.ArrayList
@@ -81,70 +81,22 @@ class MainActivity : AppCompatActivity() {
 
         debug_text_view.movementMethod = ScrollingMovementMethod()
 
-        sharedViewModel = ViewModelProviders.of(this).get(SharedViewModel::class.java)
+        val application = requireNotNull(this).application
+
+        val viewModelFactory = SharedViewModelFactory(application)
+        sharedViewModel = ViewModelProvider(this, viewModelFactory).get(SharedViewModel::class.java)
+
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
-        sharedViewModel.machineItems.observe(this, Observer {
-            Log.i(TAG, "machineItem has begin changed")
-        })
-        sharedViewModel.inventoryItems.observe(this, Observer {
-            Log.i(TAG, "inventoryItems has begin changed")
-        })
-        sharedViewModel.taggedCartItem.observe(this, Observer { updatedCart ->
-            Log.i(TAG, "CartFragment updated: $updatedCart")
-
-            var cartItemCount = 0
-            updatedCart.forEach { item ->
-                var itemCount = item.value
-                cartItemCount += itemCount
-            }
-
-            cart_item_count.text = cartItemCount.toString()
-
-            if (cartItemCount > 0) {
-                showGetButton()
-            } else {
-                hideGetButton()
-            }
-        })
         sharedViewModel.getUserLocation.observe(this, Observer { scan ->
             if (scan) {
                 getCurrentLocation()
             }
         })
 
-        sharedViewModel.apiCallError.observe(this, Observer { error ->
-            if(error && sharedViewModel.isInternetAvailable.value!!) {
-                sharedViewModel.apiCallRetry.value = false
-                showConnectionErrorDialog()
-            }
-        })
-
-        //resets the items in cart when user changes the selected machine
-        sharedViewModel.selectedMachine.observe(this, Observer {
-            sharedViewModel.resetCart()
-        })
-        sharedViewModel.selectedMachineLoaded.observe(this, Observer {
-            sharedViewModel.resetCart()
-        })
-        sharedViewModel.inventoryItems.observe(this, Observer {
-            sharedViewModel.resetCart()
-        })
-
         sharedViewModel.userLocationAccessed.observe(this, Observer { accessed ->
             if(accessed && current_fragment.value == Fragments.HOME) {
                 showSwipeUpContainer()
-            }
-        })
-        sharedViewModel.applicationVersionDeprecated.observe(this, Observer { depricated ->
-            if(depricated) {
-                showVersionDeprecatedError()
-            }
-        })
-        sharedViewModel.applicationAlertMessage.observe(this, Observer { message ->
-            if(message != "") {
-                alert_message_layout.visibility = View.VISIBLE
-                alert_message_text.text = message
             }
         })
 
@@ -158,33 +110,41 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        sharedViewModel.debugText.observe(this, Observer { text ->
-            debug_text_view.text = text
-        })
-
         sharedViewModel.isInternetAvailable.observe(this, Observer { available ->
             if(!available) {
                 showInternetNotAvailableError()
             }
         })
 
-        sharedViewModel.machinesInZone.observe(this, Observer {
-            Log.i(TAG, "starting to scanning...")
-            scanForNearbyMachines()
+        sharedViewModel.cartDao.getLiveCartItems().observe(this, Observer { cart ->
+            if(cart!= null) {
+               sharedViewModel.cart.value = cart
+                Log.i(TAG, "Cart: $cart")
+                sharedViewModel.processCart()
+
+                cart_item_count.text = cart.size.toString()
+
+                if(cart.isEmpty()) {
+                    hideGetButton()
+                } else {
+                    showGetButton()
+                }
+            }
+        })
+
+        sharedViewModel.itemDetailDao.get().observe(this, Observer { items ->
+            if(items.isNotEmpty()) {
+
+            }
         })
 
         initBottomNavigationView()
         initBottomSwipeUpView()
         enableBluetooth()
 
-        getCurrentLocation()
-
         checkout_button.setOnClickListener {
             // TODO: use navigation graphs instead
             val intent = Intent(this, PaymentActivity::class.java)
-            intent.putExtra("cartItems", sharedViewModel.getCartItemsAsPassable())
-            intent.putExtra("machineItems", sharedViewModel.getMachineItemsAsJson())
-            intent.putExtra("inventoryItems", sharedViewModel.getInventoryItemsAsJson())
             startActivity(intent)
         }
 
@@ -363,17 +323,17 @@ class MainActivity : AppCompatActivity() {
                 when(intent!!.action) {
                     BluetoothDevice.ACTION_FOUND -> {
                        val device: BluetoothDevice? = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
-                       Log.i(TAG, "found : " + device!!.address + ", required " + sharedViewModel.machinesInZone.value)
-                       val machine = sharedViewModel.machinesInZone.value!!.find{ it.Mac.toUpperCase() == device.address.toUpperCase() }
+                       var machine = Machine()
+//                       val machine = sharedViewModel.machinesInZone.value!!.find{ it.Mac.toUpperCase() == device.address.toUpperCase() }
                        if(machine != null) {
-                           if(listOfMachinesNearBy.find { it.Mac.toUpperCase() == machine.Mac.toUpperCase()} == null) {
-                               Log.i(TAG, "found added : " + device.address)
-                               listOfMachinesNearBy.add(machine)
-                               sharedViewModel.machineNearby.value = listOfMachinesNearBy
-                               Log.i(TAG, "listOfMachinesNearBy : $listOfMachinesNearBy")
-                           } else {
-                               //already added to list
-                           }
+//                           if(listOfMachinesNearBy.find { it.Mac.toUpperCase() == machine.Mac.toUpperCase()} == null) {
+//                               Log.i(TAG, "found added : " + device.address)
+//                               listOfMachinesNearBy.add(machine)
+//                               sharedViewModel.machineNearby.value = listOfMachinesNearBy
+//                               Log.i(TAG, "listOfMachinesNearBy : $listOfMachinesNearBy")
+//                           } else {
+//                               //already added to list
+//                           }
                        } else {
                            Log.i(TAG, "other bluetooth device")
                        }
@@ -393,7 +353,7 @@ class MainActivity : AppCompatActivity() {
             Log.i(TAG, "discovery finished")
             bluetoothAdapter.cancelDiscovery()
             if(listOfMachinesNearBy.isEmpty()) {
-                sharedViewModel.machineNearby.postValue(ArrayList())
+//                sharedViewModel.machineNearby.postValue(ArrayList())
             }
         }
     }
@@ -532,9 +492,7 @@ class MainActivity : AppCompatActivity() {
                 if (slideOffset > 0.05f) {
                     hideGetButton()
                 } else if (current_fragment.value == Fragments.HOME) {
-                    if (sharedViewModel.taggedCartItem.value!!.isNotEmpty()) {
-                        showGetButton()
-                    }
+                    showGetButton()
                 }
             }
 
@@ -625,7 +583,6 @@ class MainActivity : AppCompatActivity() {
             builder.setTitle("Network Error")
             builder.setMessage("An error occurred while connecting to server, please check your internet connection and retry")
             builder.setPositiveButton("Retry"){ _, _ ->
-                sharedViewModel.apiCallRetry.value = true
                 retryDialogDisplayed = false
             }
             val dialog: AlertDialog = builder.create()

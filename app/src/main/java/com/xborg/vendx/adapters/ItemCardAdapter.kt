@@ -9,99 +9,118 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.xborg.vendx.R
-import com.xborg.vendx.database.Item
+import com.xborg.vendx.database.*
 import kotlinx.android.synthetic.main.item_card.view.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 private var TAG = "ItemCardAdapter"
 
-class ItemCardAdapter(
-    val items: List<Item>,
-    val context: Context,
-    itemCardListener: OnItemListener
-) : RecyclerView.Adapter<ItemCardAdapter.ItemViewHolder>() {
+private lateinit var itemDetailDao: ItemDetailDao
+private lateinit var cartItemDao: CartItemDao
 
-    private val _onCardItemListener: OnItemListener = itemCardListener
+private val viewModelJob = Job()
+private val ioScope = CoroutineScope(Dispatchers.IO + viewModelJob)
+private val uiScope = CoroutineScope(Dispatchers.Main)
+
+private val cart = MutableLiveData<List<CartItem>>()
+
+class ItemCardAdapter(
+    private val paidItemGroup: Boolean,
+    val context: Context
+) : ListAdapter<InventoryItem, ItemCardAdapter.ItemViewHolder>(ItemCardDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.item_card, parent, false)
-        return ItemViewHolder(view, _onCardItemListener)
-    }
 
-    override fun getItemCount(): Int {
-        return items.size
-    }
+        itemDetailDao = ItemDetailDatabase.getInstance(context).itemDetailDatabaseDao
+        cartItemDao = CartItemDatabase.getInstance(context).cartItemDao()
 
-    override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
-        val item = items[position]
-
-        holder.itemId.text = item.Id
-        holder.name.text = item.Name
-        holder.cost.text = "₹ " + item.Cost.toString()
-        Glide
-            .with(context)
-            .load(item.PackageImageUrl)
-            .into(holder.packageImage)
-        Glide
-            .with(context)
-            .load(item.BgImageUrl)
-            .into(holder.cardBg)
-        Glide
-            .with(context)
-            .load(item.InfoImageUrl)
-            .into(holder.infoImg)
-
-        holder.itemLoc.text = if (item.InInventory) {
-            "Inventory"
-        } else {
-            "Machine"
-        }
-
-        if (item.InInventory) {
-            holder.cost.visibility = View.GONE
-        }
-
-        holder.itemsInMachine.text = item.RemainingInMachine.toString()
-        holder.itemsInInventory.text = item.RemainingInInventory.toString()
-        holder.itemsInInventory.visibility = if (item.InInventory) {
-            View.VISIBLE
-        } else {
-            View.INVISIBLE
-        }
-        holder.outOfStock.visibility = if (!item.InMachine) {
-            View.INVISIBLE
-        } else if(item.RemainingInMachine == 0){
-            View.VISIBLE
-        } else {
-            View.INVISIBLE
-        }
+        return ItemViewHolder(view)
     }
 
     @SuppressLint("SetTextI18n")
-    class ItemViewHolder(view: View, onItemListener: OnItemListener) :
+    override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
+        val inventoryItem = getItem(position)
+
+        val itemDetailId = inventoryItem.ItemDetailId
+
+        ioScope.launch {
+            val itemDetail = itemDetailDao.get(itemDetailId)
+
+            holder.itemId.text = itemDetail!!.Id
+            holder.name.text = itemDetail.Name
+            holder.cost.text = "₹ " + itemDetail.Cost.toString()
+
+            uiScope.launch {
+                Glide
+                    .with(context)
+                    .load(itemDetail.ForegroundAsset)
+                    .into(holder.packageImage)
+                Glide
+                    .with(context)
+                    .load(itemDetail.BackgroundAsset)
+                    .into(holder.cardBg)
+            }
+        }
+
+        holder.paid = paidItemGroup
+
+        if(paidItemGroup) {
+            holder.cost.visibility = View.GONE
+        } else {
+            holder.cost.visibility = View.VISIBLE
+        }
+
+        holder.quantity.text = inventoryItem.Quantity.toString()
+
+        cartItemDao.getLiveCartItem(itemDetailId, paidItemGroup).observe(holder.itemView.context as LifecycleOwner, Observer { item ->
+            if(item != null) {
+                Log.i(TAG, "updated card item $item")
+
+                val count = item.Count
+
+                holder.purchaseCount.text = count.toString()
+
+                holder.purchaseCount.visibility = View.VISIBLE
+                holder.itemRemoveButton.visibility = View.VISIBLE
+
+            } else {
+                holder.purchaseCount.visibility = View.INVISIBLE
+                holder.itemRemoveButton.visibility = View.INVISIBLE
+            }
+        })
+
+    }
+
+    @SuppressLint("SetTextI18n")
+    class ItemViewHolder(view: View) :
         RecyclerView.ViewHolder(view), View.OnClickListener {
         val itemId: TextView = view.item_id
         val name: TextView = view.name
         val cost: TextView = view.cost
         val packageImage: ImageView = view.package_image
         val cardBg: ImageView = view.card_bg
-        val infoImg: ImageView = view.info_img
-        private val purchaseCount: TextView = view.purchase_count
-        val itemLoc: TextView = view.item_loc
-        val itemsInInventory: TextView = view.items_in_inventory
-        var itemsInMachine: TextView = view.items_in_machine
-        var outOfStock: ImageView = view.out_of_stock_icon
+        val purchaseCount: TextView = view.purchase_count
+        val quantity: TextView = view.quantity
 
-        private val itemRemoveButton: ImageView = view.remove_button
+        val itemRemoveButton: ImageView = view.remove_button
 
-        private val onItemListener: OnItemListener = onItemListener
+        var paid: Boolean = false
 
         init {
             purchaseCount.visibility = View.INVISIBLE
             itemRemoveButton.visibility = View.INVISIBLE
-            itemsInInventory.visibility = View.INVISIBLE
 
             itemView.setOnClickListener(this)
             itemRemoveButton.setOnClickListener {
@@ -114,71 +133,70 @@ class ItemCardAdapter(
         }
 
         private fun addItemToCart() {
-            var purchaseCount = this.purchaseCount.text.toString().split("/")[0].toInt()
-            var purchaseLimitCount = this.purchaseCount.text.toString().split("/")[1].toInt()
 
-            val itemsInInventoryInt = itemsInInventory.text.toString().toInt()
-            val itemsInMachineInt = itemsInMachine.text.toString().toInt()
+            Log.i(TAG, "paid : $paid")
 
-            Log.i(TAG, "item state:  in machine : $itemsInMachineInt from inventory : $itemsInInventoryInt")
+            if(paid) {
 
-            when (itemLoc.text) {
-                "Inventory" -> {
-                    purchaseLimitCount = if (itemsInMachineInt < itemsInInventoryInt) {
-                        itemsInMachineInt
-                    } else {
-                        itemsInInventoryInt
+                val purchaseCountInt = purchaseCount.text.toString().toInt()
+                val quantityInt = quantity.text.toString().toInt()
+
+                if( purchaseCountInt == quantityInt ){
+                    return
+                }
+
+            }
+
+            ioScope.launch {
+
+                val status = cartItemDao.addItem(itemId.text.toString(), paid)
+
+                uiScope.launch {
+                    when(status) {
+
+                        CartStatusCode.ItemNotInMachine -> {
+
+                            Toast.makeText(itemView.context, "Item not in machine", Toast.LENGTH_SHORT).show()
+                        }
+
+                        CartStatusCode.MachineNotSelected -> {
+
+                            Toast.makeText(itemView.context, "No machine selected", Toast.LENGTH_SHORT).show()
+
+                        }
+
+                        CartStatusCode.ItemNotRemainingInMachine -> {
+
+                            Toast.makeText(itemView.context, "Item not remaining in machine", Toast.LENGTH_SHORT).show()
+
+                        }
+
+                        CartStatusCode.ItemAddedSuccessfully -> {
+
+
+
+                        }
                     }
                 }
-                "Machine" -> {
-                    purchaseLimitCount = itemsInMachineInt
-                }
             }
-
-            if (purchaseLimitCount == purchaseCount) {
-                displayItemLimitReached(itemView.context)
-                return
-            }
-
-            if (onItemListener.onItemAddedToCart(itemId.text.toString(), itemLoc.text.toString())) {
-                if (purchaseCount == 0) {
-                    this.purchaseCount.visibility = View.VISIBLE
-                    itemRemoveButton.visibility = View.VISIBLE
-                }
-                purchaseCount += 1
-            } else {
-                displayItemLimitReached(itemView.context)
-            }
-            this.purchaseCount.text = "$purchaseCount/$purchaseLimitCount"
         }
 
         private fun removeItemFromCart() {
-            var purchaseCount = this.purchaseCount.text.toString().split("/")[0].toInt()
-            val purchaseLimitCount = this.purchaseCount.text.toString().split("/")[1].toInt()
-
-            if (onItemListener.onItemRemovedFromCart(
-                    itemId.text.toString(),
-                    itemLoc.text.toString()
-                )
-            ) {
-                purchaseCount -= 1
+            ioScope.launch {
+                cartItemDao.removeItem(itemId.text.toString(), paid)
             }
-            this.purchaseCount.text = "$purchaseCount/$purchaseLimitCount"
-            if (purchaseCount == 0) {
-                this.purchaseCount.visibility = View.INVISIBLE
-                itemRemoveButton.visibility = View.INVISIBLE
-            }
-        }
-
-        private fun displayItemLimitReached(context: Context) {
-            Toast.makeText(context, "item not remaining in machine", Toast.LENGTH_SHORT).show()
         }
 
     }
+}
 
-    interface OnItemListener {
-        fun onItemAddedToCart(itemId: String, itemLoc: String): Boolean
-        fun onItemRemovedFromCart(itemId: String, itemLoc: String): Boolean
+class ItemCardDiffCallback: DiffUtil.ItemCallback<InventoryItem>() {
+    override fun areItemsTheSame(oldItem: InventoryItem, newItem: InventoryItem): Boolean {
+        return oldItem.ItemDetailId == newItem.ItemDetailId
+    }
+
+    override fun areContentsTheSame(oldItem: InventoryItem, newItem: InventoryItem): Boolean {
+        return oldItem == newItem
     }
 }
 

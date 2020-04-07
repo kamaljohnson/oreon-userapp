@@ -1,73 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.mainActivity.fragments.home.HomeFragment"
+    android:overScrollMode="always"
+    android:isScrollContainer="true"
+    android:layout_marginBottom="20pt">
+
+<!--    region  Info Bar-->
+    <RelativeLayout
+        android:id="@+id/location_permission_access_dialog"
+        android:paddingHorizontal="20dp"
+        android:layout_width="250dp"
+        android:layout_centerInParent="true"
+        android:layout_height="130dp"
+        android:background="@drawable/home_fragment_info_board"
+        android:translationZ="6dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:textAlignment="center"
+            android:text="To find outlets near you, allow access to your location"
+            android:textSize="15dp">
+
+        </TextView>
+
+        <Button
+            android:id="@+id/continue_location_permission"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginBottom="10dp"
+            android:padding="5dp"
+            android:text="Continue"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textSize="@dimen/button_text_size"
+            android:background="@drawable/drawable_button"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"/>
+
+    </RelativeLayout>
+<!--    endregion-->
+
+<!--    region homeItems RV-->
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".activities.mainActivity.fragments.home.HomeFragment"
-        android:overScrollMode="always"
-        android:isScrollContainer="true"
-        android:layout_marginBottom="20pt">
+        android:layout_height="match_parent">
 
-    <!--    region  Info Bar-->
-        <RelativeLayout
-            android:id="@+id/location_permission_access_dialog"
-            android:paddingHorizontal="20dp"
-            android:layout_width="250dp"
+        <ProgressBar
+            android:paddingTop="25pt"
+            android:id="@+id/progress_bar"
             android:layout_centerInParent="true"
-            android:layout_height="130dp"
-            android:background="@drawable/home_fragment_info_board"
-            android:translationZ="6dp">
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:textAlignment="center"
-                android:text="To find outlets near you, allow access to your location"
-                android:textSize="15dp">
-
-            </TextView>
-
-            <Button
-                android:id="@+id/continue_location_permission"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:layout_marginBottom="10dp"
-                android:padding="5dp"
-                android:text="Continue"
-                android:textColor="@color/white"
-                android:textStyle="bold"
-                android:textSize="@dimen/button_text_size"
-                android:background="@drawable/drawable_button"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"/>
-
-        </RelativeLayout>
-    <!--    endregion-->
-
-    <!--    region Items RV-->
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <ProgressBar
-                android:paddingTop="25pt"
-                android:id="@+id/progress_bar"
-                android:layout_centerInParent="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_machine_items"
-                android:layout_centerHorizontal="true"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                android:orientation="vertical"
-                android:overScrollMode="never"/>
-        </RelativeLayout>
-    <!--    endregion-->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_machine_items"
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:orientation="vertical"
+            android:overScrollMode="never"/>
     </RelativeLayout>
-</layout>
+<!--    endregion-->
+</RelativeLayout>

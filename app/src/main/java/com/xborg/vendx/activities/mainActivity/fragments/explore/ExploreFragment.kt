@@ -1,5 +1,6 @@
 package com.xborg.vendx.activities.mainActivity.fragments.explore
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -7,32 +8,30 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.*
 import com.xborg.vendx.activities.mainActivity.SharedViewModel
 import com.xborg.vendx.adapters.MachineCardAdapter
-import com.xborg.vendx.database.Machine
-import com.xborg.vendx.preferences.SharedPreference
-import kotlinx.android.synthetic.main.fragment_explore.*
 import com.xborg.vendx.R
+import com.xborg.vendx.activities.mainActivity.SharedViewModelFactory
+import com.xborg.vendx.activities.mainActivity.fragments.home.HomeViewModel
+import kotlinx.android.synthetic.main.fragment_explore.*
 
 
 const val TAG: String = "Explore"
 
-class ExploreFragment : Fragment(), MachineCardAdapter.OnMachineCardListener, OnMapReadyCallback {
+class ExploreFragment : Fragment(), OnMapReadyCallback {
 
     private lateinit var viewModel: ExploreViewModel
     private lateinit var sharedViewModel: SharedViewModel
 
+    private lateinit var _adapter: MachineCardAdapter
+
+
     private var googleMap: GoogleMap? = null
     private var mapView: MapView? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,101 +48,59 @@ class ExploreFragment : Fragment(), MachineCardAdapter.OnMachineCardListener, On
         mapView!!.onResume()
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        viewModel = ViewModelProviders.of(activity!!).get(ExploreViewModel::class.java)
-        sharedViewModel = ViewModelProviders.of(activity!!).get(SharedViewModel::class.java)
+        _adapter = MachineCardAdapter(context!!)
+
+        rv_machine_cards.apply {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            adapter = _adapter
+        }
+
+        val application = requireNotNull(this.activity).application
+
+        val homeViewModelFactory = ExploreViewModelFactory(application)
+        viewModel = ViewModelProvider(activity!!, homeViewModelFactory).get(ExploreViewModel::class.java)
+
+        val sharedViewModelFactory = SharedViewModelFactory(application)
+        sharedViewModel = ViewModelProvider(activity!!, sharedViewModelFactory).get(SharedViewModel::class.java)
 
         sharedViewModel.userLocationAccessed.observe(viewLifecycleOwner, Observer { accessed ->
             if(accessed) {
                 viewModel.userLocation.value = sharedViewModel.userLastLocation.value
                 updateUserLocationOnMap()
-                scanForMachinesInZone()
+                viewModel.getNearbyMachines()
             } else {
                 switchOffScanMode()
             }
         })
 
-        sharedViewModel.apiCallRetry.observe(viewLifecycleOwner, Observer { retry ->
-            if(retry) {
-                if(sharedViewModel.userLocationAccessed.value!!){
-                    scanForMachinesInZone()
-                } else {
-                    switchOffScanMode()
-                }
+        viewModel.machineDao.get().observe(viewLifecycleOwner, Observer { machines ->
+            if(machines != null) {
+                Log.i(TAG, "machines : $machines")
+                _adapter.submitList(machines)
+                HomeViewModel.selectedMachine.value = machines[0]
             }
         })
 
-        sharedViewModel.machineNearby.observe(viewLifecycleOwner, Observer { machines ->
-            viewModel.machineNearby.value = machines
-            viewModel.selectNearestMachineToUser()
-            Log.i(TAG, "machines nearby" + viewModel.machineNearby.value)
-        })
+        HomeViewModel.selectedMachine.observe(viewLifecycleOwner, Observer { machine ->
+            if(machine != null) {
 
-        viewModel.selectedMachine.observe(viewLifecycleOwner, Observer { selectedMachine->
-            Log.i(TAG, "here selected machine" + viewModel.machineNearby.value)
-            if(selectedMachine.Code == "Dummy") {
-                selected_machine_code.text = "Explore?"
+                selected_machine_code.text = machine.Name
+
             } else {
-                selected_machine_code.text = selectedMachine.Code
+
+                selected_machine_code.text = "Explore?"
+
             }
-            sharedViewModel.selectedMachine.value = selectedMachine
-            setSelectedMachine(selectedMachine)
+
         })
-
-        viewModel.machinesInZone.observe(viewLifecycleOwner, Observer { machines ->
-            sharedViewModel.machinesInZone.value = machines
-            displayMachinesInZone()
-        })
-
-        viewModel.apiCallError.observe(viewLifecycleOwner, Observer { error ->
-            if(error) {
-                sharedViewModel.apiCallError.value = error
-            }
-        })
-
-        viewModel.debugText.observe(viewLifecycleOwner, Observer { text ->
-            sharedViewModel.debugText.value += TAG + text
-        })
-    }
-
-    private fun scanForMachinesInZone() {
-        viewModel.debugText.value = "init explorer\n\n"
-
-        progress_bar.visibility = View.VISIBLE
-        selected_machine_code.isClickable = false
-
-        viewModel.userLocation.value = sharedViewModel.userLastLocation.value
-        sharedViewModel.getUserLocation.value = false
-
-        viewModel.requestMachinesInZone()
     }
 
     private fun switchOffScanMode() {
         sharedViewModel.getUserLocation.value = false
-    }
-
-    private fun displayMachinesInZone() {
-        progress_bar.visibility = View.GONE
-        updateMachineCardRV()
-        updateMachineMarkersOnMap()
-    }
-
-    private fun updateMachineCardRV() {
-        rv_machine_cards.apply {
-            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            adapter = MachineCardAdapter(viewModel.machinesInZone.value!!, context, this@ExploreFragment)
-        }
-    }
-
-    override fun onCardClicked(machineId: String) {
-        viewModel.changeSelectedMachine(machineId)
-    }
-
-    private fun setSelectedMachine(machine: Machine) {
-        val preference = SharedPreference(context!!)
-        preference.setSelectedMachine(machine)
     }
 
     private fun setupMap(view: View, savedInstanceState: Bundle?) {
@@ -161,7 +118,7 @@ class ExploreFragment : Fragment(), MachineCardAdapter.OnMachineCardListener, On
             .tilt(0F)
             .build()
         googleMap!!.animateCamera(
-            CameraUpdateFactory.newCameraPosition(googleCamera),
+            CameraUpdateFactory.newCameraPosition (googleCamera),
             1000,
             null
         )
@@ -173,14 +130,14 @@ class ExploreFragment : Fragment(), MachineCardAdapter.OnMachineCardListener, On
     }
 
     private fun updateMachineMarkersOnMap() {
-        viewModel.machinesInZone.value!!.forEach { machine ->
-            val machineLocation = machine.Location
-            googleMap!!.addMarker(
-                MarkerOptions()
-                    .position(LatLng(machineLocation.Latitude, machineLocation.Longitude))
-                    .title(machine.Code)
-            )
-        }
+//        viewModel.machinesInZone.value!!.forEach { machine ->
+//            val machineLocation = machine.Location
+//            googleMap!!.addMarker(
+//                MarkerOptions()
+//                    .position(LatLng(machineLocation.Latitude, machineLocation.Longitude))
+//                    .title(machine.Name)
+//            )
+//        }
     }
 
     override fun onMapReady(googleMap: GoogleMap?) {
