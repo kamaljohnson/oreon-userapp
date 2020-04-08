@@ -78,9 +78,37 @@ class ItemCardAdapter(
         holder.paid = paidItemGroup
 
         if(paidItemGroup) {
+
+            holder.limitLevels.visibility = View.GONE
             holder.cost.visibility = View.GONE
+
         } else {
+
             holder.cost.visibility = View.VISIBLE
+            holder.quantity.visibility = View.GONE
+
+            when {
+                inventoryItem.Quantity == 0 -> {
+
+                    holder.limitLevels.visibility = View.GONE
+                    holder.outOfStockIcon.visibility = View.VISIBLE
+                }
+                inventoryItem.Quantity < 5 -> {
+
+                    holder.limitLevel0.setImageResource(R.drawable.drawable_item_limit_2);
+                    holder.limitLevel2.visibility = View.INVISIBLE
+                    holder.limitLevel1.visibility = View.INVISIBLE
+
+                }
+                inventoryItem.Quantity < 10 -> {
+
+                    holder.limitLevel0.setImageResource(R.drawable.drawable_item_limit_1);
+                    holder.limitLevel1.setImageResource(R.drawable.drawable_item_limit_1);
+                    holder.limitLevel2.visibility = View.INVISIBLE
+
+                }
+            }
+
         }
 
         holder.quantity.text = inventoryItem.Quantity.toString()
@@ -116,6 +144,14 @@ class ItemCardAdapter(
         val quantity: TextView = view.count
 
         val itemRemoveButton: ImageView = view.remove_button
+
+        val limitLevel0: ImageView = view.limit_level_0
+        val limitLevel1: ImageView = view.limit_level_1
+        val limitLevel2: ImageView = view.limit_level_2
+
+        val limitLevels: View = view.limit_levels
+
+        val outOfStockIcon: ImageView = view.out_of_stock_icon
 
         var paid: Boolean = false
 
