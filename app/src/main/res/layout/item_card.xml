@@ -49,6 +49,58 @@
             android:textSize="5pt" />
 
 
+        <TableLayout
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="10dp">
+
+            <TableRow
+                android:layout_weight="1"
+                android:id="@+id/limit_levels"
+                android:layout_height="match_parent"
+                android:layout_width="match_parent">
+
+                <ImageView
+                    android:id="@+id/limit_level-0"
+                    android:layout_marginHorizontal="1pt"
+                    android:background="@drawable/drawable_item_limit_0"
+                    android:layout_column="1"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"/>
+
+                <ImageView
+                    android:id="@+id/limit_level-1"
+                    android:layout_marginHorizontal="1pt"
+                    android:background="@drawable/drawable_item_limit_0"
+                    android:layout_column="2"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"/>
+
+                <ImageView
+                    android:id="@+id/limit_level-2"
+                    android:layout_marginHorizontal="1pt"
+                    android:background="@drawable/drawable_item_limit_0"
+                    android:layout_column="3"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"/>
+
+            </TableRow>
+
+        </TableLayout>
+
+
+        <ImageView
+            android:id="@+id/out_of_stock_icon"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginHorizontal="5dp"
+            android:src="@drawable/ic_sold_out_icon"
+            android:visibility="invisible"/>
+
         <TextView
             android:id="@+id/purchase_count"
             android:layout_width="wrap_content"
@@ -64,14 +116,6 @@
 
             android:textStyle="bold" />
 
-        <ImageView
-            android:id="@+id/out_of_stock_icon"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_marginHorizontal="20dp"
-            android:src="@drawable/ic_sold_out_icon"
-            android:visibility="invisible" />
 
     </RelativeLayout>
 
