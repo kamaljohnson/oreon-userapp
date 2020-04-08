@@ -104,8 +104,6 @@ class MainActivity : AppCompatActivity() {
             if(fragment == Fragments.HOME) {
                 if(sharedViewModel.userLocationAccessed.value == true) {
                     showSwipeUpContainer()
-                } else {
-                    hideSwipeUpContainer()
                 }
             }
         })
@@ -502,6 +500,8 @@ class MainActivity : AppCompatActivity() {
 
             }
         })
+
+        showSwipeUpContainer()
     }
 
     private fun loadBottomSwipeUpFragment() {
