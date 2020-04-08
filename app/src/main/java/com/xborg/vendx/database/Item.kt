@@ -230,7 +230,7 @@ abstract class CartItemDao {
         }
     }
 
-    @Query("SELECT * from cart_item_table")
+    @Query("SELECT * from cart_item_table ORDER BY paid")
     abstract fun getLiveCartItems(): LiveData<List<CartItem>>
 
     @Query("SELECT * from cart_item_table WHERE :itemId = item_detail_id AND :paid = paid")

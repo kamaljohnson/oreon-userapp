@@ -17,33 +17,15 @@
             android:layout_alignParentLeft="true"
             android:src="@drawable/common_google_signin_btn_icon_dark"/>
 
-        <TextView
-            android:layout_toLeftOf="@id/items_in_machine"
-            android:layout_centerVertical="true"
-            android:text="Qty: "
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
 
         <TextView
-            android:id="@+id/quantity"
+            android:id="@+id/count"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:text="0"
             android:textSize="18dp"
             android:textStyle="bold"
             android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginBottom="10dp"
-            android:gravity="center"/>
-
-        <TextView
-            android:layout_centerVertical="true"
-            android:id="@+id/items_in_machine"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:text="0"
-            android:textSize="18dp"
-            android:textStyle="bold"
             android:layout_alignParentRight="true"
             android:layout_marginBottom="10dp"
             android:gravity="center"/>
@@ -57,21 +39,6 @@
             android:layout_height="25dp"
             android:layout_alignParentRight="true"
             android:textSize="15dp"/>
-
-        <TextView
-            android:id="@+id/item_id"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"/>
-
-        <TextView
-            android:id="@+id/item_loc"
-            android:layout_width="0dp"
-            android:layout_height="0dp"/>
-
-        <TextView
-            android:id="@+id/purchase_count"
-            android:layout_width="0dp"
-            android:layout_height="0dp"/>
 
         <ImageView
             android:id="@+id/paid_icon"

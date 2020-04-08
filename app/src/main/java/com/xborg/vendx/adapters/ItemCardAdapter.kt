@@ -58,11 +58,12 @@ class ItemCardAdapter(
         ioScope.launch {
             val itemDetail = itemDetailDao.get(itemDetailId)
 
+            uiScope.launch {
+
             holder.itemId.text = itemDetail!!.Id
             holder.name.text = itemDetail.Name
             holder.cost.text = "₹ " + itemDetail.Cost.toString()
 
-            uiScope.launch {
                 Glide
                     .with(context)
                     .load(itemDetail.ForegroundAsset)
@@ -112,7 +113,7 @@ class ItemCardAdapter(
         val packageImage: ImageView = view.package_image
         val cardBg: ImageView = view.card_bg
         val purchaseCount: TextView = view.purchase_count
-        val quantity: TextView = view.quantity
+        val quantity: TextView = view.count
 
         val itemRemoveButton: ImageView = view.remove_button
 
