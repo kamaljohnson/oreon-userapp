@@ -23,6 +23,7 @@ allprojects {
         jcenter()
         maven { url "https://jitpack.io" }
         maven { url "https://maven.google.com" }
+        maven { url 'https://zendesk.jfrog.io/zendesk/repo' }
         mavenCentral()
         flatDir {
             dirs 'libs'
