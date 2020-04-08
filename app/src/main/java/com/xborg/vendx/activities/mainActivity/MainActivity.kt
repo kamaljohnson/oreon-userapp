@@ -542,8 +542,31 @@ class MainActivity : AppCompatActivity() {
         ) {
             mLayout!!.panelState = PanelState.COLLAPSED
         } else {
-            super.onBackPressed()
+
+            if(sharedViewModel.cart.value!!.isNotEmpty()) {
+
+                showRemoveCartMessage()
+
+            } else {
+
+                super.onBackPressed()
+            }
+
         }
+    }
+
+    private fun showRemoveCartMessage() {
+        val builder = AlertDialog.Builder(this@MainActivity)
+        builder.setTitle("Warning")
+        builder.setMessage("Do you want to clear your cart?")
+        builder.setNegativeButton("Yes") { _, _ ->
+            sharedViewModel.resetCart()
+        }
+        builder.setPositiveButton("No") { _, _ ->
+
+        }
+        val dialog: AlertDialog = builder.create()
+        dialog.show()
     }
 
     private fun showInternetNotAvailableError() {
