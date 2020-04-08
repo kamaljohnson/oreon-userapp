@@ -1,19 +1,21 @@
 {
   "project_info": {
-    "project_number": "510464295618",
-    "project_id": "kraker"
+    "project_number": "345653269310",
+    "firebase_url": "https://project-kraker.firebaseio.com",
+    "project_id": "project-kraker",
+    "storage_bucket": "project-kraker.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:510464295618:android:e4c77df2b4c1401551315b",
+        "mobilesdk_app_id": "1:345653269310:android:60b071e0ff6578834f926f",
         "android_client_info": {
           "package_name": "com.xborg.vendx"
         }
       },
       "oauth_client": [
         {
-          "client_id": "510464295618-ongkmtjv7lronh1mmh39h9ob3a12i00q.apps.googleusercontent.com",
+          "client_id": "345653269310-3ortacprtks2gfm37r2971qinh3agqnm.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.xborg.vendx",
@@ -21,17 +23,24 @@
           }
         },
         {
-          "client_id": "510464295618-0npaegpe5jmkbksbtmbf8tggea48u1ff.apps.googleusercontent.com",
+          "client_id": "345653269310-81lq76fgknf1qc0itv56fqqkifq81vim.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyD99kR2p8-1P1-g3cpdlp9cqkvIWtNdino"
+          "current_key": "AIzaSyCRNHzTUjcecI1s9qPbn4C9BMy6WQgNPjA"
         }
       ],
       "services": {
-
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "345653269310-81lq76fgknf1qc0itv56fqqkifq81vim.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
       }
     }
   ],

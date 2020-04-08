@@ -61,7 +61,7 @@
         <!-- region Google Map -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyD99kR2p8-1P1-g3cpdlp9cqkvIWtNdino" />
+            android:value="AIzaSyCRNHzTUjcecI1s9qPbn4C9BMy6WQgNPjA" />
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" /> <!-- endregion -->
