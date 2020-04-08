@@ -141,8 +141,6 @@ abstract class CartItemDao {
 
         if(previousItem != null) {
 
-            var count = previousItem.Count
-
             if(previousItem.Remaining!! >= 1) {
 
                 previousItem.Count += 1
@@ -164,11 +162,20 @@ abstract class CartItemDao {
 
                     remaining = item.Quantity
 
-                    val newCartItem: CartItem = CartItem(itemDetailId = itemId, paid = paid, remaining = remaining)
+                    if(remaining >= 1) {
 
-                    insert(newCartItem)
+                        val newCartItem: CartItem = CartItem(itemDetailId = itemId, paid = paid, remaining = remaining)
 
-                    return CartStatusCode.ItemAddedSuccessfully
+                        insert(newCartItem)
+
+                        return CartStatusCode.ItemAddedSuccessfully
+
+                    } else {
+
+                        return CartStatusCode.ItemNotRemainingInMachine
+
+                    }
+
                 }
             }
 
