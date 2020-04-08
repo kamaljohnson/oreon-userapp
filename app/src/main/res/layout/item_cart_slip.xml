@@ -2,8 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
+    android:background="@drawable/drawable_group_holder_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginHorizontal="10dp"
+    android:layout_marginVertical="5dp"
     android:padding="10dp">
 
     <RelativeLayout
@@ -17,36 +20,18 @@
             android:layout_alignParentLeft="true"
             android:src="@drawable/common_google_signin_btn_icon_dark"/>
 
-        <TextView
-            android:layout_toLeftOf="@id/items_in_machine"
-            android:layout_centerVertical="true"
-            android:text="Qty: "
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
 
         <TextView
-            android:id="@+id/quantity"
-            android:layout_width="30dp"
+            android:id="@+id/count"
+            android:layout_width="50dp"
             android:layout_height="30dp"
             android:text="0"
-            android:textSize="18dp"
+            android:textAlignment="center"
+            android:textSize="25dp"
             android:textStyle="bold"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
-            android:layout_marginBottom="10dp"
-            android:gravity="center"/>
-
-        <TextView
-            android:layout_centerVertical="true"
-            android:id="@+id/items_in_machine"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:text="0"
-            android:textSize="18dp"
-            android:textStyle="bold"
-            android:layout_alignParentRight="true"
-            android:layout_marginBottom="10dp"
-            android:gravity="center"/>
+            android:layout_marginBottom="10dp"/>
 
         <TextView
             android:layout_toRightOf="@id/package_image"
@@ -57,21 +42,6 @@
             android:layout_height="25dp"
             android:layout_alignParentRight="true"
             android:textSize="15dp"/>
-
-        <TextView
-            android:id="@+id/item_id"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"/>
-
-        <TextView
-            android:id="@+id/item_loc"
-            android:layout_width="0dp"
-            android:layout_height="0dp"/>
-
-        <TextView
-            android:id="@+id/purchase_count"
-            android:layout_width="0dp"
-            android:layout_height="0dp"/>
 
         <ImageView
             android:id="@+id/paid_icon"
@@ -91,14 +61,5 @@
             android:id="@+id/cost"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
-
-        <ImageView
-            android:id="@+id/line_breaker"
-            android:layout_width="match_parent"
-            android:layout_height="2pt"
-            android:layout_marginTop="7pt"
-            android:layout_centerHorizontal="true"
-            android:background="@drawable/dotted"
-            android:layout_alignParentBottom="true"/>
     </RelativeLayout>
 </LinearLayout>

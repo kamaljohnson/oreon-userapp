@@ -35,7 +35,6 @@ class PaymentActivity : FragmentActivity(), PaymentResultWithDataListener {
         setContentView(R.layout.activity_payment)
 
         observerSharedViewModel()
-        getDataPassedByMainActivity()
         loadFragments()
     }
 
@@ -69,12 +68,6 @@ class PaymentActivity : FragmentActivity(), PaymentResultWithDataListener {
                 sharedViewModel.apiCallRetryCount.value = oldCount + 1
             }
         })
-    }
-
-    private fun getDataPassedByMainActivity() {
-        sharedViewModel.setMachineItemsFromSerializable(intent.getSerializableExtra("machineItems")!!)
-        sharedViewModel.setInventoryItemsFromSerializable(intent.getSerializableExtra("inventoryItems")!!)
-        sharedViewModel.setCartItemsFromSerializableHashMap(intent.getSerializableExtra("cartItems")!!)
     }
 
     //      region Payment Processing

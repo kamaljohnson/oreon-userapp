@@ -7,8 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.xborg.vendx.R
 import com.xborg.vendx.activities.paymentActivity.SharedViewModel
 import com.xborg.vendx.adapters.ItemCartSlipAdapter
@@ -19,6 +21,7 @@ private var TAG = "CartFragment"
 class CartFragment : Fragment() {
 
     private lateinit var sharedViewModel: SharedViewModel
+    private lateinit var viewModel: CartViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,18 +34,21 @@ class CartFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        sharedViewModel = ViewModelProviders.of(activity!!).get(SharedViewModel::class.java)
+        sharedViewModel = ViewModelProvider(activity!!).get(SharedViewModel::class.java)
+        viewModel = ViewModelProvider(activity!!).get(CartViewModel::class.java)
 
-        observerSharedViewModel()
+        viewModel.cartDao.getLiveCartItems().observe(viewLifecycleOwner, Observer { cart ->
+
+            rv_cart.apply {
+                layoutManager = LinearLayoutManager(context)
+                adapter = ItemCartSlipAdapter(cart, context)
+            }
+
+        })
+
     }
 
     private fun observerSharedViewModel() {
 
-    }
-
-    private fun updateCartItemsToRV() {
-        rv_cart.apply {
-            layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        }
     }
 }
