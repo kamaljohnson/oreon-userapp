@@ -61,6 +61,13 @@ class SharedViewModel(
             VendxAPIService.accessToken = "token " + accessTokenDao.getToken()
             initializeItemDetailsDatabase()
         }
+
+        //TODO: change this once cart transfer from machine to machine is fixed
+        ioScope.launch {
+
+            cartDao.reset()
+
+        }
     }
 
     fun processCart() {

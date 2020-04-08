@@ -24,7 +24,7 @@ class HomeViewModel(
 
     val userDao = UserDatabase.getInstance(application).userDao()
 
-    val machineDao = MachineDatabase.getInstance(application).machineDao()
+    private val cartDao = CartItemDatabase.getInstance(application).cartItemDao()
 
     companion object {
         private var viewModelJob = Job()
@@ -57,6 +57,12 @@ class HomeViewModel(
 
     fun updateHomeInventoryGroups() {
 
+        //TODO: change this once cart transfer from machine to machine is fixed
+        ioScope.launch {
+
+            cartDao.reset()
+
+        }
         if(userInventory.value == null)
             return
 
