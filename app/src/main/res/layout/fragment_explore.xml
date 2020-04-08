@@ -23,7 +23,7 @@
             android:layout_centerHorizontal="true"
             android:textAlignment="center"
             android:textSize="20dp"
-            android:text="Explore?"/>
+            android:text="Loading . . ."/>
 
     </RelativeLayout>
 

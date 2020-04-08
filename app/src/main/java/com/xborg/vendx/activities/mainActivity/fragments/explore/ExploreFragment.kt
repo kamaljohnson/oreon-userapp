@@ -87,7 +87,7 @@ class ExploreFragment : Fragment(), OnMapReadyCallback {
 
         HomeViewModel.selectedMachine.observe(viewLifecycleOwner, Observer { machine ->
             if(machine != null) {
-
+ 
                 selected_machine_code.text = machine.Name
 
             } else {
