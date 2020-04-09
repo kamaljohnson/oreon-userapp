@@ -24,8 +24,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:targetApi="n"
-        android:fullBackupContent="">
+        tools:targetApi="n">
         <activity android:name=".activities.customerSupportActivity.CustomerSupportActivity" />
         <activity
             android:name=".activities.feedbackActivity.FeedbackActivity"

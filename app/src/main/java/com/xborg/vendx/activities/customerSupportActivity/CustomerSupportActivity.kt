@@ -16,4 +16,8 @@ class CustomerSupportActivity : AppCompatActivity() {
                 .commitNow()
         }
     }
+
+    private fun goBack() {
+        finish()
+    }
 }

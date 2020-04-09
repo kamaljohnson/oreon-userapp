@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.xborg.vendx.R
+import com.xborg.vendx.activities.customerSupportActivity.CustomerSupportActivity
 import com.xborg.vendx.activities.feedbackActivity.FeedbackActivity
 import com.xborg.vendx.activities.mainActivity.SharedViewModel
 import com.xborg.vendx.adapters.TransactionSlipAdapter
@@ -74,12 +75,21 @@ class HistoryFragment : Fragment() {
                 showFeedback()
                 true
             }
+            R.id.customer_support -> {
+                showCustomerSupport()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
 
     private fun showFeedback() {
         val intent = Intent(context, FeedbackActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun showCustomerSupport() {
+        val intent = Intent(context, CustomerSupportActivity::class.java)
         startActivity(intent)
     }
 }
