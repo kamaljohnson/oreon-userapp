@@ -15,7 +15,7 @@ class CustomerSupportActivity : AppCompatActivity() {
         setContentView(R.layout.customer_support_activity)
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
-                .replace(R.id.container, HomeFragment.newInstance())
+                .replace(R.id.container, ChatFragment.newInstance())
                 .commitNow()
         }
     }

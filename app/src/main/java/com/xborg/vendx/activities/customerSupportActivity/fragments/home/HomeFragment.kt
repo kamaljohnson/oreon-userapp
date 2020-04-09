@@ -36,18 +36,6 @@ class HomeFragment : Fragment() {
 
         viewModel = ViewModelProvider(activity!!).get(HomeViewModel::class.java)
 
-        val _adapter = RoomSlipAdapter(context!!)
-
-        rv_rooms.apply {
-            layoutManager = LinearLayoutManager(context)
-            adapter = _adapter
-        }
-
-        viewModel.rooms.observe(viewLifecycleOwner, Observer { rooms ->
-            if(rooms != null) {
-                _adapter.submitList(rooms)
-            }
-        })
     }
 
 }

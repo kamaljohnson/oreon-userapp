@@ -4,11 +4,13 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.xborg.vendx.R
 import com.xborg.vendx.database.*
+import kotlinx.android.synthetic.main.chat_message.view.*
 
 private var TAG = "ChatMessageAdapter"
 
@@ -25,10 +27,15 @@ class ChatMessageAdapter(
     override fun onBindViewHolder(holder: ChatMessageViewHolder, position: Int) {
         val chatMessage = getItem(position)
 
+        holder.text.text = chatMessage.text
+        holder.name.text = chatMessage.id
+
     }
 
     class ChatMessageViewHolder(view: View) :
         RecyclerView.ViewHolder(view), View.OnClickListener {
+        val name: TextView = view.person_name
+        val text: TextView = view.message_text
 
         init {
             itemView.setOnClickListener(this)
