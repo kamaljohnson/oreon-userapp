@@ -1,8 +1,8 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-apply plugin: 'com.google.gms.google-services'  // Google Play services Gradle plugin
 apply plugin: 'kotlin-kapt'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 29
@@ -49,6 +49,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.1.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0'
+    implementation 'com.google.firebase:firebase-firestore:21.4.2'
     testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
@@ -134,9 +135,6 @@ dependencies {
 
     //Zendesk CRM Chat
     implementation group: 'com.zopim.android', name: 'sdk', version: '1.4.4'
-
-    //Firebase
-    implementation 'com.google.firebase:firebase-analytics:17.3.0'
 
     //Circle Image
     implementation 'de.hdodenhof:circleimageview:3.1.0'

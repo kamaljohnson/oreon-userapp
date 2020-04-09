@@ -1,42 +1,34 @@
 {
   "project_info": {
-    "project_number": "345653269310",
-    "firebase_url": "https://project-kraker.firebaseio.com",
-    "project_id": "project-kraker",
-    "storage_bucket": "project-kraker.appspot.com"
+    "project_number": "916373683617",
+    "firebase_url": "https://vendx-project.firebaseio.com",
+    "project_id": "vendx-project",
+    "storage_bucket": "vendx-project.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:345653269310:android:60b071e0ff6578834f926f",
+        "mobilesdk_app_id": "1:916373683617:android:d1040cc3020d85e0a75fe0",
         "android_client_info": {
           "package_name": "com.xborg.vendx"
         }
       },
       "oauth_client": [
         {
-          "client_id": "345653269310-3ortacprtks2gfm37r2971qinh3agqnm.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.xborg.vendx",
-            "certificate_hash": "654643fac0154bae7664be8be9d28c84f548e0cd"
-          }
-        },
-        {
-          "client_id": "345653269310-81lq76fgknf1qc0itv56fqqkifq81vim.apps.googleusercontent.com",
+          "client_id": "916373683617-2e3ji779btjgfrn2kj1t83r843esmk9g.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCRNHzTUjcecI1s9qPbn4C9BMy6WQgNPjA"
+          "current_key": "AIzaSyAqgutxjUW6guv5Cy0Qo6dptPzPOXmtkS0"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "345653269310-81lq76fgknf1qc0itv56fqqkifq81vim.apps.googleusercontent.com",
+              "client_id": "916373683617-2e3ji779btjgfrn2kj1t83r843esmk9g.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
