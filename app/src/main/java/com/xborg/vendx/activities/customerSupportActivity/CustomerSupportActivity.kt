@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.xborg.vendx.R
 import com.xborg.vendx.activities.customerSupportActivity.fragments.chat.ChatFragment
+import com.xborg.vendx.activities.customerSupportActivity.fragments.home.HomeFragment
 
 class CustomerSupportActivity : AppCompatActivity() {
 
@@ -12,7 +13,7 @@ class CustomerSupportActivity : AppCompatActivity() {
         setContentView(R.layout.customer_support_activity)
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
-                .replace(R.id.container, ChatFragment.newInstance())
+                .replace(R.id.container, HomeFragment.newInstance())
                 .commitNow()
         }
     }
