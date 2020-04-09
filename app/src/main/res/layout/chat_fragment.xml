@@ -47,7 +47,6 @@
             android:textStyle="bold"
             android:textColor="@color/white"
             android:background="@color/blue"
-            android:enabled="false"
             android:text="SEND"/>
 
     </LinearLayout>

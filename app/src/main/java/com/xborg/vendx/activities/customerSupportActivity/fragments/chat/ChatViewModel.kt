@@ -14,6 +14,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
+
 class ChatViewModel (
     application: Application
 ): AndroidViewModel(application) {
@@ -66,7 +67,22 @@ class ChatViewModel (
         }
     }
 
-    fun sendMessageToChat(message: ChatMessage) {
+    fun sendMessageToChat(message: String) {
+
+        val chatMessage = ChatMessage(
+            text = message,
+            time = Timestamp.now()
+        )
+
+
+        db.collection("rooms")
+            .document("1")
+            .collection("messages")
+            .add(chatMessage)
+            .addOnSuccessListener { documentReference ->
+                Log.d("Debug","DocumentSnapshot added with ID: " + documentReference.id)
+            }
+            .addOnFailureListener { e -> Log.w("Debug", "Error adding document", e) }
 
     }
 }

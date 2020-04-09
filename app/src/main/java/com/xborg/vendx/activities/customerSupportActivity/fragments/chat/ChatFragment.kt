@@ -45,9 +45,21 @@ class ChatFragment : Fragment() {
             if(chats != null) {
                 chatMessageAdapter.submitList(chats)
                 progressBar.visibility = View.GONE
+                messageRecyclerView.smoothScrollToPosition(chats.count())
             }
         })
 
+        sendButton.setOnClickListener {
+
+            val message = messageEditText.text.toString()
+            if(message != "") {
+                viewModel.sendMessageToChat(message)
+
+                messageEditText.setText("")
+                messageRecyclerView.smoothScrollToPosition(viewModel.chats.value!!.count())
+            }
+
+        }
 
     }
 
