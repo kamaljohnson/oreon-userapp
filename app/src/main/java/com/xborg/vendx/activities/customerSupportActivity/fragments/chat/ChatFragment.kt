@@ -41,12 +41,11 @@ class ChatFragment : Fragment() {
             adapter = chatMessageAdapter
         }
 
-        viewModel.initChatLoaded.observe(viewLifecycleOwner, Observer { loaded ->
-            if(loaded) {
-                chatMessageAdapter.submitList(viewModel.chats.value)
+        viewModel.chats.observe(viewLifecycleOwner, Observer { chats ->
+            if(chats != null) {
+                chatMessageAdapter.submitList(chats)
                 progressBar.visibility = View.GONE
             }
-
         })
 
 

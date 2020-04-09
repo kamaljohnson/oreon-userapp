@@ -4,7 +4,9 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.xborg.vendx.database.ChatMessage
 import com.xborg.vendx.database.user.UserDatabase
 import kotlinx.coroutines.CoroutineScope
@@ -23,10 +25,8 @@ class ChatViewModel (
     private val ioScope = CoroutineScope(Dispatchers.IO + viewModelJob)
 
     val chats = MutableLiveData<ArrayList<ChatMessage>>()
-    var initChatLoaded = MutableLiveData<Boolean>()
 
     init {
-        initChatLoaded.value = false
         loadPreviousChats()
     }
 
@@ -45,21 +45,23 @@ class ChatViewModel (
             db.collection("rooms")
                 .document("1")
                 .collection("messages")
-                .get()
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        for (document in task.result!!) {
-                            Log.i("Debug", "message: ${document.data}")
-                            val message = ChatMessage(
-                                id = document.id,
-                                text = document.data["text"] as String
-                            )
-                            chats.value!!.add(message)
-                        }
-                        initChatLoaded.value = true
-                    } else {
-                        Log.i("Debug", "Error getting documents.", task.exception)
+                .orderBy("time", Query.Direction.ASCENDING)
+                .addSnapshotListener { documents, e ->
+                    if (e != null) {
+                        Log.w("Debug", "Listen failed.", e)
+                        return@addSnapshotListener
                     }
+
+                    val _chats = ArrayList<ChatMessage>()
+                    for (document in documents!!) {
+                        _chats.add(
+                            ChatMessage(
+                                text = document["text"] as String,
+                                time = document["time"] as Timestamp
+                            )
+                        )
+                    }
+                    chats.value = _chats
                 }
         }
     }
