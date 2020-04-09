@@ -19,14 +19,14 @@
 
             <TextView
                 android:text="here is an example of a sample message send by the customer"
-                android:id="@+id/messageTextView"
+                android:id="@+id/message_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
                 android:textAppearance="?android:attr/textAppearanceLarge"/>
 
             <ImageView
-                android:id="@+id/messageImageView"
+                android:id="@+id/message_image"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
@@ -35,7 +35,7 @@
 
             <TextView
                 android:text="person name"
-                android:id="@+id/messengerTextView"
+                android:id="@+id/person_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0"

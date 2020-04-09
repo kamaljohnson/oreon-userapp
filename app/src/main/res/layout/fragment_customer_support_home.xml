@@ -20,7 +20,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_centerHorizontal="true"
-        android:id="@+id/rv_transactions"
+        android:id="@+id/rv_rooms"
         android:visibility="visible"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
@@ -28,7 +28,7 @@
         android:overScrollMode="never"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/checkout_button"
+        android:id="@+id/create_room_button"
         android:layout_marginEnd="3dp"
         android:layout_marginBottom="20pt"
         android:layout_alignParentEnd="true"
