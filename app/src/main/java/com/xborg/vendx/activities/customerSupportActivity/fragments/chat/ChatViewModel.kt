@@ -56,6 +56,7 @@ class ChatViewModel (
 
                     _chats.add(
                         ChatMessage(
+                            id = document.id,
                             userId = document["userId"] as String,
                             text = document["text"] as String,
                             time = document["time"] as Timestamp
@@ -68,11 +69,10 @@ class ChatViewModel (
 
     fun sendMessageToChat(message: String) {
 
-        val chatMessage = ChatMessage(
-            userId = userId,
-            text = message,
-            time = Timestamp.now()
-        )
+        val chatMessage: MutableMap<String, Any> = HashMap()
+        chatMessage["userId"] = userId
+        chatMessage["text"] = message
+        chatMessage["time"] = Timestamp.now()
 
 
         db.collection("rooms")
