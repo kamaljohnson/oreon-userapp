@@ -90,6 +90,11 @@ interface VendxAPIService {
         @Header("Authorization") token:String? = accessToken
     ): Call<List<Machine>>
 
+    @POST("orders")
+    fun createOrder(
+        @Header("Authorization") token: String? = accessToken,
+        @Body cart: List<CartItem>
+        ): Call<ResponseBody>
 
     @GET("user/{id}/transactions")
     fun getTransactionsAsync(
