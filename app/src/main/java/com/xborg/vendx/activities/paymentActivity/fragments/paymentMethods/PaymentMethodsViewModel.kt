@@ -21,7 +21,7 @@ class PaymentMethodsViewModel(
     val cartDao = CartItemDatabase.getInstance(application).cartItemDao()
     val cart = MutableLiveData<List<CartItem>>()
 
-    val itemDetailDao = ItemDetailDatabase.getInstance(application).itemDetailDatabaseDao
+    private val itemDetailDao = ItemDetailDatabase.getInstance(application).itemDetailDatabaseDao
 
     val paymentAmount = MutableLiveData<Float>()
 
@@ -35,7 +35,11 @@ class PaymentMethodsViewModel(
 
                 val itemDetail = itemDetailDao.get(cartItem.ItemDetailId)!!
 
-                amount += (itemDetail.Cost - itemDetail.DiscountedCost)
+                if(!cartItem.Paid) {
+
+                    amount += itemDetail.DiscountedCost * cartItem.Count
+
+                }
 
             }
 
