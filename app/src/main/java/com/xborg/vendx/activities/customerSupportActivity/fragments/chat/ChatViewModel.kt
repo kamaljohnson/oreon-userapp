@@ -8,6 +8,7 @@ import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.xborg.vendx.database.ChatMessage
+import com.xborg.vendx.database.user.UserDao
 import com.xborg.vendx.database.user.UserDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -20,31 +21,23 @@ class ChatViewModel (
 ): AndroidViewModel(application) {
 
     val db = FirebaseFirestore.getInstance()
-    private val userDao = UserDatabase.getInstance(application).userDao()
+
+    val userDao: UserDao = UserDatabase.getInstance(application).userDao()
 
     private val viewModelJob = Job()
     private val ioScope = CoroutineScope(Dispatchers.IO + viewModelJob)
 
     val chats = MutableLiveData<ArrayList<ChatMessage>>()
+    var userId: String = ""
 
-    init {
-        loadPreviousChats()
-    }
-
-    private fun loadPreviousChats() {
+    fun autoLoadChats() {
 
         chats.value = ArrayList()
 
-        var userId: String
-
         ioScope.launch {
 
-//            Log.i("Debug", userDao.get()!!.value.toString())
-//
-//            userId = userDao.get()!!.value!!.Id
-
             db.collection("rooms")
-                .document("1")
+                .document(userId)
                 .collection("messages")
                 .orderBy("time", Query.Direction.ASCENDING)
                 .addSnapshotListener { documents, e ->
@@ -76,7 +69,7 @@ class ChatViewModel (
 
 
         db.collection("rooms")
-            .document("1")
+            .document(userId)
             .collection("messages")
             .add(chatMessage)
             .addOnSuccessListener { documentReference ->
