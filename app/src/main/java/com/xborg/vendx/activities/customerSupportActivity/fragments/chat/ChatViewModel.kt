@@ -76,6 +76,17 @@ class ChatViewModel (
         chatMessage["time"] = Timestamp.now()
 
 
+        val room: MutableMap<String, Any> = HashMap()
+        room["lastActiveTime"] = Timestamp.now()
+
+        db.collection("rooms")
+            .document(userId)
+            .set(room)
+            .addOnSuccessListener { documentReference ->
+                Log.d("Debug", "DocumentSnapshot added with ID: $documentReference")
+            }
+            .addOnFailureListener { e -> Log.w("Debug", "Error adding document", e) }
+
 
         db.collection("rooms")
             .document(userId)
