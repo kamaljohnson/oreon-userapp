@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.xborg.vendx.R
+import com.xborg.vendx.activities.customerSupportActivity.CustomerSupportActivity
 import com.xborg.vendx.activities.feedbackActivity.FeedbackActivity
 import com.xborg.vendx.activities.mainActivity.SharedViewModel
 import com.xborg.vendx.activities.mainActivity.SharedViewModelFactory
@@ -73,7 +74,7 @@ class HomeFragment : Fragment() {
             sharedViewModel.getUserLocation.value = true
         }
 
-        viewModel.userDao.get()!!.observe(viewLifecycleOwner, Observer { user ->
+        viewModel.userDao.getLiveData()!!.observe(viewLifecycleOwner, Observer { user ->
             if(user!= null) {
                 viewModel.userInventory.value = user.Inventory
                 viewModel.updateHomeInventoryGroups()
@@ -105,12 +106,21 @@ class HomeFragment : Fragment() {
                 showFeedback()
                 true
             }
+            R.id.customer_support -> {
+                showCustomerSupport()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
 
     private fun showFeedback() {
         val intent = Intent(context, FeedbackActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun showCustomerSupport() {
+        val intent = Intent(context, CustomerSupportActivity::class.java)
         startActivity(intent)
     }
 }

@@ -46,10 +46,10 @@ class TransactionSlipAdapter(
 
     class TransactionSlipViewHolder(view: View) :
         RecyclerView.ViewHolder(view), View.OnClickListener {
-        val id: TextView = view.transaction_id
+        val id: TextView = view.ticket_id
         val status: TextView = view.status
         val timeStamp: TextView = view.time_stamp
-        val orderIcon: ImageView = view.transaction_icon
+        val orderIcon: ImageView = view.issue_category_icon
 
         init {
             itemView.setOnClickListener(this)

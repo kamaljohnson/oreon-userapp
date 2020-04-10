@@ -7,6 +7,7 @@ import android.view.*
 import androidx.fragment.app.Fragment
 
 import com.xborg.vendx.R
+import com.xborg.vendx.activities.customerSupportActivity.CustomerSupportActivity
 import com.xborg.vendx.activities.feedbackActivity.FeedbackActivity
 
 // TODO: Rename parameter arguments, choose names that match
@@ -44,12 +45,21 @@ class ShopFragment : Fragment() {
                 showFeedback()
                 true
             }
+            R.id.customer_support -> {
+                showCustomerSupport()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
 
     private fun showFeedback() {
         val intent = Intent(context, FeedbackActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun showCustomerSupport() {
+        val intent = Intent(context, CustomerSupportActivity::class.java)
         startActivity(intent)
     }
 }

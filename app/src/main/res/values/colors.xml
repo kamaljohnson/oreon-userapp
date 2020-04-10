@@ -16,6 +16,8 @@
     <color name="gray">#8D8D8D</color>
     <color name="black">#292929</color>
 
+    <color name="light_blue">#EE7BBAFF</color>
+
     <color name="colorRecieveText">#00FF00</color>
     <color name="colorSendText">#82CAFF</color>
     <color name="colorStatusText">#FFDB58</color>

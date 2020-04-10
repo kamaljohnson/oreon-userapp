@@ -39,6 +39,8 @@
     <string name="feedback_prompt">Select topic</string>
     <string name="feedback">Feedback</string>
 
+    <string name="support">Customer Support</string>
+
     <string name="facebook_app_id">499973460680214</string>
     <string name="fb_login_protocol_scheme">fb499973460680214</string>
 

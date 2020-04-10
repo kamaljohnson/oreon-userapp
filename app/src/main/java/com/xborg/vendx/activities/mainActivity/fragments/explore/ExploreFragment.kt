@@ -79,9 +79,11 @@ class ExploreFragment : Fragment(), OnMapReadyCallback {
 
         viewModel.machineDao.get().observe(viewLifecycleOwner, Observer { machines ->
             if(machines != null) {
-                Log.i(TAG, "machines : $machines")
-                _adapter.submitList(machines)
-                HomeViewModel.selectedMachine.value = machines[0]
+                if(machines.isNotEmpty()) {
+                    Log.i(TAG, "machines : $machines")
+                    _adapter.submitList(machines)
+                    HomeViewModel.selectedMachine.value = machines[0]
+                }
             }
         })
 
