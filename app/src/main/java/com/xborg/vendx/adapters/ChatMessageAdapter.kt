@@ -34,6 +34,7 @@ class ChatMessageAdapter(
 
     private val viewModelJob = Job()
     private val ioScope = CoroutineScope(Dispatchers.IO + viewModelJob)
+    private val uiScope = CoroutineScope(Dispatchers.Main)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatMessageViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.chat_message, parent, false)
@@ -54,13 +55,14 @@ class ChatMessageAdapter(
 
             val userId = userDao.get().Id
 
-            if(chatMessage.userId != userId) {
-
-                holder.messageBackground.setBackgroundResource(R.drawable.drawable_message_box_received);
-                val params = holder.messageBackground.layoutParams as RelativeLayout.LayoutParams
-                params.removeRule(RelativeLayout.ALIGN_PARENT_END);
-                params.addRule(RelativeLayout.ALIGN_PARENT_LEFT)
-                holder.messageBackground.layoutParams = params
+            uiScope.launch {
+                if(chatMessage.userId != userId) {
+                    holder.messageBackground.setBackgroundResource(R.drawable.drawable_message_box_received);
+                    val params = holder.messageBackground.layoutParams as RelativeLayout.LayoutParams
+                    params.removeRule(RelativeLayout.ALIGN_PARENT_END);
+                    params.addRule(RelativeLayout.ALIGN_PARENT_LEFT)
+                    holder.messageBackground.layoutParams = params
+                }
             }
         }
     }

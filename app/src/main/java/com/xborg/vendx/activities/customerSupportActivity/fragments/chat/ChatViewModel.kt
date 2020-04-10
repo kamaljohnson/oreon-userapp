@@ -30,36 +30,40 @@ class ChatViewModel (
     val chats = MutableLiveData<ArrayList<ChatMessage>>()
     var userId: String = ""
 
+    init {
+        ioScope.launch {
+            userId = userDao.get().Id
+            autoLoadChats()
+        }
+    }
+
     fun autoLoadChats() {
 
-        chats.value = ArrayList()
+        chats.postValue(ArrayList())
 
-        ioScope.launch {
-
-            db.collection("rooms")
-                .document(userId)
-                .collection("messages")
-                .orderBy("time", Query.Direction.ASCENDING)
-                .addSnapshotListener { documents, e ->
-                    if (e != null) {
-                        Log.w("Debug", "Listen failed.", e)
-                        return@addSnapshotListener
-                    }
-
-                    val _chats = ArrayList<ChatMessage>()
-                    for (document in documents!!) {
-
-                        _chats.add(
-                            ChatMessage(
-                                userId = document["userId"] as String,
-                                text = document["text"] as String,
-                                time = document["time"] as Timestamp
-                            )
-                        )
-                    }
-                    chats.value = _chats
+        db.collection("rooms")
+            .document(userId)
+            .collection("messages")
+            .orderBy("time", Query.Direction.ASCENDING)
+            .addSnapshotListener { documents, e ->
+                if (e != null) {
+                    Log.w("Debug", "Listen failed.", e)
+                    return@addSnapshotListener
                 }
-        }
+
+                val _chats = ArrayList<ChatMessage>()
+                for (document in documents!!) {
+
+                    _chats.add(
+                        ChatMessage(
+                            userId = document["userId"] as String,
+                            text = document["text"] as String,
+                            time = document["time"] as Timestamp
+                        )
+                    )
+                }
+                chats.postValue(_chats)
+            }
     }
 
     fun sendMessageToChat(message: String) {
