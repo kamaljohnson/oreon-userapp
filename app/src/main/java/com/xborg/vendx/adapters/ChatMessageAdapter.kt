@@ -48,7 +48,7 @@ class ChatMessageAdapter(
 
         holder.text.text = chatMessage.text
 
-        val sfd = SimpleDateFormat("HH:mm")
+        val sfd = SimpleDateFormat("h:mm a")
         holder.time.text = sfd.format(chatMessage.time.toDate());
 
         ioScope.launch {

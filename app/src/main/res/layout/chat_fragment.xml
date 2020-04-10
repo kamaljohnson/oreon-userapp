@@ -32,7 +32,7 @@
 <!--            ads:srcCompat="@drawable/ic_add_black_24dp"/>-->
 
         <EditText
-            android:background="@drawable/drawable_message_box_send"
+            android:background="@drawable/drawable_message_box"
             android:id="@+id/messageEditText"
             android:layout_width="0dp"
             android:paddingVertical="5dp"
