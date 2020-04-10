@@ -41,13 +41,6 @@ class ChatFragment : Fragment() {
             adapter = chatMessageAdapter
         }
 
-        viewModel.userDao.getLiveData()!!.observe(viewLifecycleOwner, Observer { user ->
-            if(user!= null) {
-                viewModel.userId = user.Id
-                viewModel.autoLoadChats()
-            }
-        })
-
         viewModel.chats.observe(viewLifecycleOwner, Observer { chats ->
             if(chats != null) {
                 chatMessageAdapter.submitList(chats)

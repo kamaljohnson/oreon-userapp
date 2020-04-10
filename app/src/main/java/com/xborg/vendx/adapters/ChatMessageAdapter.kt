@@ -34,6 +34,7 @@ class ChatMessageAdapter(
 
     private val viewModelJob = Job()
     private val ioScope = CoroutineScope(Dispatchers.IO + viewModelJob)
+    private val uiScope = CoroutineScope(Dispatchers.Main)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatMessageViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.chat_message, parent, false)
@@ -54,13 +55,24 @@ class ChatMessageAdapter(
 
             val userId = userDao.get().Id
 
-            if(chatMessage.userId != userId) {
+            uiScope.launch {
+                if(chatMessage.userId != userId) {
 
-                holder.messageBackground.setBackgroundResource(R.drawable.drawable_message_box_received);
-                val params = holder.messageBackground.layoutParams as RelativeLayout.LayoutParams
-                params.removeRule(RelativeLayout.ALIGN_PARENT_END);
-                params.addRule(RelativeLayout.ALIGN_PARENT_LEFT)
-                holder.messageBackground.layoutParams = params
+                    holder.messageBackground.setBackgroundResource(R.drawable.drawable_message_box_received);
+                    val params = holder.messageBackground.layoutParams as RelativeLayout.LayoutParams
+                    params.removeRule(RelativeLayout.ALIGN_PARENT_END);
+                    params.addRule(RelativeLayout.ALIGN_PARENT_LEFT)
+                    holder.messageBackground.layoutParams = params
+
+                } else {
+
+                    holder.messageBackground.setBackgroundResource(R.drawable.drawable_message_box_send);
+                    val params = holder.messageBackground.layoutParams as RelativeLayout.LayoutParams
+                    params.removeRule(RelativeLayout.ALIGN_PARENT_LEFT);
+                    params.addRule(RelativeLayout.ALIGN_PARENT_END)
+                    holder.messageBackground.layoutParams = params
+
+                }
             }
         }
     }
@@ -84,7 +96,7 @@ class ChatMessageAdapter(
 
 class ChatMessageDiffCallback: DiffUtil.ItemCallback<ChatMessage>() {
     override fun areItemsTheSame(oldItem: ChatMessage, newItem: ChatMessage): Boolean {
-        return oldItem.time == newItem.time
+        return oldItem.id == newItem.id
     }
 
     override fun areContentsTheSame(oldItem: ChatMessage, newItem: ChatMessage): Boolean {
