@@ -65,6 +65,7 @@ class ChatViewModel (
                 }
                 chats.postValue(_chats)
             }
+
     }
 
     fun sendMessageToChat(message: String) {
@@ -73,6 +74,7 @@ class ChatViewModel (
         chatMessage["userId"] = userId
         chatMessage["text"] = message
         chatMessage["time"] = Timestamp.now()
+
 
 
         db.collection("rooms")
