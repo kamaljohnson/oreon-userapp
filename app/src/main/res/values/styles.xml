@@ -10,6 +10,8 @@
         -->
     </style>
     <style name="AppTheme" parent="AppBaseTheme">
+        <item name="android:itemBackground">@color/white</item>
+
         <!-- Customize your theme here. -->
 <!--        <item name="colorPrimary">@color/colorPrimary</item>-->
 <!--        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>-->
