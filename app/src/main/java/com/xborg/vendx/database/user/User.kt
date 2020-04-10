@@ -90,7 +90,10 @@ interface UserDao {
     fun insert(user: User)
 
     @Query("SELECT * from user_table LIMIT 1")
-    fun get(): LiveData<User?>?
+    fun getLiveData(): LiveData<User?>?
+
+    @Query("SELECT * from user_table LIMIT 1")
+    fun get(): User
 
     @Query("DELETE FROM user_table")
     fun clear()

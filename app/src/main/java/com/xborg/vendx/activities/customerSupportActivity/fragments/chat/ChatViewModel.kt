@@ -48,8 +48,10 @@ class ChatViewModel (
 
                     val _chats = ArrayList<ChatMessage>()
                     for (document in documents!!) {
+
                         _chats.add(
                             ChatMessage(
+                                userId = document["userId"] as String,
                                 text = document["text"] as String,
                                 time = document["time"] as Timestamp
                             )
@@ -63,6 +65,7 @@ class ChatViewModel (
     fun sendMessageToChat(message: String) {
 
         val chatMessage = ChatMessage(
+            userId = userId,
             text = message,
             time = Timestamp.now()
         )

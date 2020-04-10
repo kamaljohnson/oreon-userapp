@@ -74,7 +74,7 @@ class HomeFragment : Fragment() {
             sharedViewModel.getUserLocation.value = true
         }
 
-        viewModel.userDao.get()!!.observe(viewLifecycleOwner, Observer { user ->
+        viewModel.userDao.getLiveData()!!.observe(viewLifecycleOwner, Observer { user ->
             if(user!= null) {
                 viewModel.userInventory.value = user.Inventory
                 viewModel.updateHomeInventoryGroups()
